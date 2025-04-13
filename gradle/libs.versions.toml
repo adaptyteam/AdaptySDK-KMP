@@ -1,0 +1,32 @@
+[versions]
+agp = "8.7.3"
+android-compileSdk = "34"
+android-minSdk = "24"
+android-targetSdk = "34"
+androidx-activityCompose = "1.10.1"
+adapty-bom = "3.5.0"
+compose-multiplatform = "1.7.3"
+dokka = "2.0.0"
+kotlin = "2.1.10"
+kotlinx-binary-validator = "0.16.3"
+kotlinx-coroutine = "1.10.1"
+mavenPublish = "0.31.0"
+adaptyIos = "3.5.0"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+adapty-bom = { module = "io.adapty:adapty-bom", version.ref = "adapty-bom" }
+adapty-android-sdk = { module = "io.adapty:android-sdk" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutine" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinNativeCocoaPods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kotlinx-binary-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binary-validator" }
+vanniktech-mavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "mavenPublish" }
