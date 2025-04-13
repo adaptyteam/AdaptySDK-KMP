@@ -1,0 +1,15 @@
+package = com.adapty.kmp
+language = Objective-C
+
+headers = AdaptySwiftBridge/AdaptySwiftBridge-Swift.h
+headerFilter = AdaptySwiftBridge/*
+
+staticLibraries = libAdaptySwiftBridge.a
+libraryPaths.ios_x64 = ../adapty-swift-bridge/build/Build/Products/Release-iphonesimulator
+libraryPaths.ios_arm64 = ../adapty-swift-bridge/build/Build/Products/Release-iphoneos
+libraryPaths.ios_simulator_arm64 = ../adapty-swift-bridge/build/Build/Products/Release-iphonesimulator
+
+linkerOpts = -L/usr/lib/swift
+linkerOpts.ios_x64 = -ios_simulator_version_min 15.0.0 -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/
+linkerOpts.ios_arm64 = -iphoneos_version_min 15.0.0 -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/
+linkerOpts.ios_simulator_arm64 = -ios_simulator_version_min 15.0.0 -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/
