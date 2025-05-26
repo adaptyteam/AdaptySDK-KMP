@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -8,16 +9,13 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.buildConfig)
     alias(libs.plugins.vanniktech.mavenPublish)
 }
-
-group = "com.adapty"
-version = "0.0.15"
 
 kotlin {
     explicitApi()
     androidTarget {
-//        publishLibraryVariants("release")
         publishAllLibraryVariants()
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -88,16 +86,25 @@ listOf("iphoneos", "iphonesimulator").forEach { sdk ->
 
         commandLine(
             "xcodebuild",
-            "-workspace", "adapty-swift-bridge/AdaptySwiftBridge/AdaptySwiftBridge.xcodeproj/project.xcworkspace",
-            "-scheme", "AdaptySwiftBridge",
-            "-sdk", sdk,
-            "-configuration", "Release",
-            "-derivedDataPath", "adapty-swift-bridge/build"
+            "-workspace",
+            "adapty-swift-bridge/AdaptySwiftBridge/AdaptySwiftBridge.xcodeproj/project.xcworkspace",
+            "-scheme",
+            "AdaptySwiftBridge",
+            "-sdk",
+            sdk,
+            "-configuration",
+            "Release",
+            "-derivedDataPath",
+            "adapty-swift-bridge/build"
         )
         workingDir(rootDir)
 
         inputs.files(
-            fileTree("$projectDir/adapty-swift-bridge/AdaptySwiftBridge/AdaptySwiftBridge.xcodeproj") { exclude("**/xcuserdata") },
+            fileTree("$projectDir/adapty-swift-bridge/AdaptySwiftBridge/AdaptySwiftBridge.xcodeproj") {
+                exclude(
+                    "**/xcuserdata"
+                )
+            },
             fileTree("$projectDir/adapty-swift-bridge/AdaptySwiftBridge")
         )
         outputs.files(
@@ -119,12 +126,22 @@ android {
     }
 }
 
+buildConfig {
+    buildConfigField("ADAPTY_KMP_VERSION", project.properties["adaptyKmpVersion"] as String)
+}
+
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-    signAllPublications()
+    if (!project.gradle.startParameter.taskNames.any { it.contains("publishToMavenLocal") }) {
+        signAllPublications()
+    }
 
-    coordinates(group.toString(), "adapty-kmp", version.toString())
+    coordinates(
+        groupId = "com.adapty",
+        artifactId = "adapty-kmp",
+        version = project.properties["adaptyKmpVersion"] as String
+    )
 
     pom {
         name = "My library"

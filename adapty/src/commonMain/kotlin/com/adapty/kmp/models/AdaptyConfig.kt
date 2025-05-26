@@ -1,5 +1,7 @@
 package com.adapty.kmp.models
 
+import KMPAdapty.adapty.BuildConfig
+
 public class AdaptyConfig private constructor(
     internal val apiKey: String,
     internal val observerMode: Boolean,
@@ -21,7 +23,7 @@ public class AdaptyConfig private constructor(
 ) {
     internal companion object {
         const val SDK_NAME = "kmp"
-        const val SDK_VERSION = "0.0.4" // TODO update lib version
+        const val SDK_VERSION = BuildConfig.ADAPTY_KMP_VERSION
     }
 
     /**
