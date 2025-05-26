@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.konan.target.KonanTarget
@@ -38,16 +39,18 @@ kotlin {
             else -> error("Unsupported target ${iosTarget.konanTarget}")
         }
         val derivedDataBuildDir = "$rootDir/adapty-swift-bridge/build/Build/Products"
+        val xcodeBuildTaskName = "build${platform.capitalize()}"
 
         iosTarget.compilations {
             val main by getting {
                 cinterops.create("AdaptySwiftBridge") {
                     defFile("src/nativeInterop/cinterop/AdaptySwiftBridge.def")
                     val interopTask = tasks[interopProcessingTaskName]
-                    interopTask.dependsOn("build${platform.capitalize()}")
+                    interopTask.dependsOn(xcodeBuildTaskName)
                     val archBuildDir = "$derivedDataBuildDir/Release-$platform/includes"
                     includeDirs.headerFilterOnly(archBuildDir)
                 }
+                compileTaskProvider.dependsOn(xcodeBuildTaskName)
             }
 
         }
@@ -100,6 +103,7 @@ listOf("iphoneos", "iphonesimulator").forEach { sdk ->
         outputs.files(
             fileTree("$projectDir/build/Release-${sdk}")
         )
+        outputs.upToDateWhen { false }
     }
 }
 
