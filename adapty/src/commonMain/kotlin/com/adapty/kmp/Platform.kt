@@ -1,3 +1,6 @@
 package com.adapty.kmp
 
-internal expect fun adaptyImpl(): AdaptyContract
+import com.adapty.kmp.internal.plugin.AdaptyPlugin
+
+internal expect val adaptyPlugin: AdaptyPlugin
+internal expect val isAndroidPlatform: Boolean

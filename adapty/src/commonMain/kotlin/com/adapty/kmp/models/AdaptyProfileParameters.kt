@@ -9,6 +9,7 @@ public class AdaptyProfileParameters private constructor(
     public val birthday: String?,
     public val analyticsDisabled: Boolean?,
     public val customAttributes: Map<String, Any?>?,
+    public val attStatus: Int? // iOS only
 ) {
 
     public fun builder(): Builder = Builder.from(this)
@@ -21,7 +22,8 @@ public class AdaptyProfileParameters private constructor(
         private var gender: String? = null,
         private var birthday: String? = null,
         private var analyticsDisabled: Boolean? = null,
-        private val customAttributes: MutableMap<String, Any?> = hashMapOf()
+        private val customAttributes: MutableMap<String, Any?> = hashMapOf(),
+        private var attStatus: Int? = null
     ) {
 
         public constructor() : this(null)
@@ -63,32 +65,38 @@ public class AdaptyProfileParameters private constructor(
         }
 
         public fun withRemovedCustomAttribute(key: String): Builder = apply {
-            customAttributes[key] = null
+            if (customAttributes.containsKey(key)) customAttributes.remove(key)
+            else customAttributes[key] = null
+        }
+
+        public fun withAttStatus(attStatus: Int?): Builder = apply {
+            this.attStatus = attStatus
         }
 
         public fun build(): AdaptyProfileParameters {
             return AdaptyProfileParameters(
-                this.email,
-                this.phoneNumber,
-                this.firstName,
-                this.lastName,
-                this.gender,
-                this.birthday,
-                this.analyticsDisabled,
-                this.customAttributes.takeIf { attrs -> attrs.isNotEmpty() }
+                email = this.email,
+                phoneNumber = this.phoneNumber,
+                firstName = this.firstName,
+                lastName = this.lastName,
+                gender = this.gender,
+                birthday = this.birthday,
+                analyticsDisabled = this.analyticsDisabled,
+                customAttributes = this.customAttributes.takeIf { attrs -> attrs.isNotEmpty() },
+                attStatus = this.attStatus
             )
         }
 
         internal companion object {
             fun from(params: AdaptyProfileParameters) = Builder(
-                params.email,
-                params.phoneNumber,
-                params.firstName,
-                params.lastName,
-                params.gender,
-                params.birthday,
-                params.analyticsDisabled,
-                params.customAttributes?.toMutableMap() ?: mutableMapOf()
+                email = params.email,
+                phoneNumber = params.phoneNumber,
+                firstName = params.firstName,
+                lastName = params.lastName,
+                gender = params.gender,
+                birthday = params.birthday,
+                analyticsDisabled = params.analyticsDisabled,
+                customAttributes = params.customAttributes?.toMutableMap() ?: mutableMapOf()
             )
         }
     }

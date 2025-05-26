@@ -5,9 +5,24 @@ public class AdaptyConfig private constructor(
     internal val observerMode: Boolean,
     internal val customerUserId: String?,
     internal val ipAddressCollectionDisabled: Boolean,
-    internal val adIdCollectionDisabled: Boolean,
-    internal val backendBaseUrl: String,
+    internal val googleAdvertisingIdCollection: Boolean,
+    internal val appleIdfaCollectionDisabled: Boolean,
+    internal val backendBaseUrl: String?,
+    internal val backendFallbackBaseUrl: String?,
+    internal val backendConfigsBaseUrl: String?,
+    internal val backendProxyHost: String?,
+    internal val backendProxyPort: Int?,
+    internal val serverCluster: String?,
+    internal val crossPlatformSDKName: String,
+    internal val crossPlatformSDKVersion: String,
+    internal val activateUI: Boolean,
+    internal val logLevel: AdaptyLogLevel?,
+    internal val mediaCache: MediaCacheConfiguration,
 ) {
+    internal companion object {
+        const val SDK_NAME = "kmp"
+        const val SDK_VERSION = "0.0.4" // TODO update lib version
+    }
 
     /**
      * @property[apiKey] You can find it in your app settings
@@ -16,61 +31,96 @@ public class AdaptyConfig private constructor(
     public class Builder(private val apiKey: String) {
 
         private var customerUserId: String? = null
-
         private var observerMode = false
-
         private var ipAddressCollectionDisabled = false
+        private var googleAdvertisingIdCollection = false
+        private var appleIdfaCollectionDisabled = false
+        private var backendBaseUrl: String? = null
+        private var backendFallbackBaseUrl: String? = null
+        private var backendConfigsBaseUrl: String? = null
+        private var backendProxyHost: String? = null
+        private var backendProxyPort: Int? = null
+        private var serverCluster: String? = null
+        private var crossPlatformSDKName: String = SDK_NAME
+        private var crossPlatformSDKVersion: String = SDK_VERSION
+        private var activateUI: Boolean = false
+        private var logLevel: AdaptyLogLevel? = AdaptyLogLevel.INFO
+        private var mediaCache: MediaCacheConfiguration = MediaCacheConfiguration()
 
-        private var adIdCollectionDisabled = false
+        public fun withCustomerUserId(id: String?): Builder = apply { this.customerUserId = id }
+        public fun withObserverMode(enabled: Boolean): Builder =
+            apply { this.observerMode = enabled }
 
-        private var backendBaseUrl = ServerCluster.DEFAULT.url
+        public fun withIpAddressCollectionDisabled(disabled: Boolean): Builder =
+            apply { this.ipAddressCollectionDisabled = disabled }
 
-        /**
-         * @param[customerUserId] User identifier in your system.
-         *
-         * Default value is `null`.
-         */
-        public fun withCustomerUserId(customerUserId: String?): Builder = apply {
-            this.customerUserId = customerUserId
+        public fun withGoogleAdvertisingIdCollectionDisabled(disabled: Boolean): Builder =
+            apply { this.googleAdvertisingIdCollection = disabled }
+
+        public fun withAppleIdfaCollectionDisabled(disabled: Boolean): Builder =
+            apply { this.appleIdfaCollectionDisabled = disabled }
+
+        public fun withBackendBaseUrl(url: String): Builder = apply { this.backendBaseUrl = url }
+        public fun withBackendFallbackBaseUrl(url: String): Builder =
+            apply { this.backendFallbackBaseUrl = url }
+
+        public fun withBackendConfigsBaseUrl(url: String): Builder =
+            apply { this.backendConfigsBaseUrl = url }
+
+        public fun withBackendProxyHost(host: String): Builder =
+            apply { this.backendProxyHost = host }
+
+        public fun withBackendProxyPort(port: Int): Builder = apply { this.backendProxyPort = port }
+        internal fun withCrossPlatformSDKName(name: String): Builder =
+            apply { this.crossPlatformSDKName = name }
+
+        internal fun withCrossPlatformSDKVersion(version: String): Builder =
+            apply { this.crossPlatformSDKVersion = version }
+
+        public fun withServerCluster(cluster: ServerCluster): Builder = apply {
+            this.serverCluster = when (cluster) {
+                ServerCluster.EU -> "eu"
+                else -> "default"
+            }
         }
 
-        /**
-         * @param[observerMode] A boolean value controlling [Observer mode](https://adapty.io/docs/observer-vs-full-mode).
-         * Turn it on if you handle purchases and subscription status yourself and use Adapty for sending
-         * subscription events and analytics.
-         *
-         * Default value is `false`.
-         */
-        public fun withObserverMode(observerMode: Boolean): Builder = apply {
-            this.observerMode = observerMode
-        }
+        public fun withActivateUI(enabled: Boolean): Builder = apply { this.activateUI = enabled }
+        public fun withLogLevel(level: AdaptyLogLevel): Builder = apply { this.logLevel = level }
+        public fun withMediaCacheConfiguration(config: MediaCacheConfiguration): Builder =
+            apply { this.mediaCache = config }
 
-        public fun withIpAddressCollectionDisabled(disabled: Boolean): Builder = apply {
-            this.ipAddressCollectionDisabled = disabled
-        }
-
-        public fun withAdIdCollectionDisabled(disabled: Boolean): Builder = apply {
-            this.adIdCollectionDisabled = disabled
-        }
-
-        public fun withServerCluster(serverCluster: ServerCluster): Builder = apply {
-            this.backendBaseUrl = serverCluster.url
-        }
 
         public fun build(): AdaptyConfig {
             return AdaptyConfig(
-                apiKey,
-                observerMode,
-                customerUserId,
-                ipAddressCollectionDisabled,
-                adIdCollectionDisabled,
-                backendBaseUrl,
+                apiKey = apiKey,
+                customerUserId = customerUserId,
+                observerMode = observerMode,
+                appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
+                googleAdvertisingIdCollection = googleAdvertisingIdCollection,
+                ipAddressCollectionDisabled = ipAddressCollectionDisabled,
+                backendBaseUrl = backendBaseUrl,
+                backendFallbackBaseUrl = backendFallbackBaseUrl,
+                backendConfigsBaseUrl = backendConfigsBaseUrl,
+                backendProxyHost = backendProxyHost,
+                backendProxyPort = backendProxyPort,
+                serverCluster = serverCluster,
+                crossPlatformSDKName = crossPlatformSDKName,
+                crossPlatformSDKVersion = crossPlatformSDKVersion,
+                activateUI = activateUI,
+                logLevel = logLevel,
+                mediaCache = mediaCache
             )
         }
     }
 
-    public enum class ServerCluster(internal val url: String) {
-        DEFAULT("https://api.adapty.io/api/v1"),
-        EU("https://api-eu.adapty.io/api/v1"),
+    public enum class ServerCluster {
+        DEFAULT,
+        EU
     }
+
+    public data class MediaCacheConfiguration(
+        val memoryStorageTotalCostLimit: Int = 100 * 1024 * 1024, //100mb
+        val memoryStorageCountLimit: Int = Int.MAX_VALUE,
+        val diskStorageSizeLimit: Int = 100 * 1024 * 1024, //100mb
+    )
 }

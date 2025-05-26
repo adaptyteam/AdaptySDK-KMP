@@ -1,53 +1,23 @@
 package com.adapty.kmp.models
 
 
-public interface AdaptyPaywall{
+public data class AdaptyPaywall internal constructor(
+    public val placementId: String,
+    public val instanceIdentity: String,
+    public val name: String,
+    public val audienceName: String,
+    public val abTestName: String,
+    public val variationId: String,
+    public val revision: Int,
+    public val remoteConfig: AdaptyPaywallRemoteConfig? = null,
+    internal val viewConfiguration: AdaptyPaywallViewConfiguration? = null,
+    internal val products: List<AdaptyPaywallProductReference> = emptyList(),
+    internal val payloadData: String? = null,
+    internal val version: Long = 0L
+) {
+    val hasViewConfiguration: Boolean
+        get() = viewConfiguration != null
 
-    public sealed class FetchPolicy {
-
-        public class ReloadRevalidatingCacheData private constructor(): FetchPolicy() {
-
-            internal companion object {
-                fun create() = ReloadRevalidatingCacheData()
-            }
-
-            override fun toString(): String {
-                return "ReloadRevalidatingCacheData"
-            }
-        }
-
-        public class ReturnCacheDataElseLoad private constructor(): FetchPolicy() {
-
-            internal companion object {
-                fun create() = ReturnCacheDataElseLoad()
-            }
-
-            override fun toString(): String {
-                return "ReturnCacheDataElseLoad"
-            }
-        }
-
-        public class ReturnCacheDataIfNotExpiredElseLoad private constructor(public val maxAgeMillis: Long) : FetchPolicy() {
-
-            internal companion object {
-                fun create(maxAgeMillis: Long) = ReturnCacheDataIfNotExpiredElseLoad(maxAgeMillis)
-            }
-
-            override fun toString(): String {
-                return "ReturnCacheDataIfNotExpiredElseLoad(maxAgeMillis=$maxAgeMillis)"
-            }
-        }
-
-        public companion object {
-
-            public val ReloadRevalidatingCacheData: FetchPolicy = FetchPolicy.ReloadRevalidatingCacheData.create()
-
-            public val ReturnCacheDataElseLoad: FetchPolicy = FetchPolicy.ReturnCacheDataElseLoad.create()
-
-            public fun ReturnCacheDataIfNotExpiredElseLoad(maxAgeMillis: Long): FetchPolicy = ReturnCacheDataIfNotExpiredElseLoad.create(maxAgeMillis)
-
-            public val Default: FetchPolicy = ReloadRevalidatingCacheData
-        }
-    }
+    val vendorProductIds: List<String> get() = products.map { it.vendorId }
 
 }

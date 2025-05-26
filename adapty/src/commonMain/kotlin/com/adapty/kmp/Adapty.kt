@@ -1,72 +1,64 @@
 package com.adapty.kmp
 
-import com.adapty.kmp.errors.AdaptyError
-import com.adapty.kmp.listeners.OnProfileUpdatedListener
+import com.adapty.kmp.internal.AdaptyImpl
+import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyError
+import com.adapty.kmp.models.AdaptyIosRefundPreference
+import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyPaywall
+import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
-import com.adapty.kmp.models.AdaptySubscriptionUpdateParameters
-import com.adapty.kmp.utils.AdaptyLogHandler
-import com.adapty.kmp.utils.AdaptyLogLevel
-import com.adapty.kmp.utils.FileLocation
-import com.adapty.kmp.utils.TransactionInfo
+import com.adapty.kmp.models.AdaptyResult
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-public object Adapty : AdaptyContract by adaptyImpl()
+public object Adapty : AdaptyContract by AdaptyImpl(adaptyPlugin = adaptyPlugin)
 
 internal interface AdaptyContract {
-    fun activate(config: AdaptyConfig)
+    fun activate(configuration: AdaptyConfig, onError: (AdaptyError?) -> Unit = {})
     fun identify(customerUserId: String, onError: (AdaptyError?) -> Unit = {})
     fun updateProfile(params: AdaptyProfileParameters, onError: (AdaptyError?) -> Unit = {})
-    fun getProfile(onResult: (Result<AdaptyProfile>) -> Unit)
-    fun getPaywall(
+    suspend fun getProfile(): AdaptyResult<AdaptyProfile>
+    suspend fun getPaywall(
         placementId: String,
         locale: String? = null,
-        fetchPolicy: AdaptyPaywall.FetchPolicy = AdaptyPaywall.FetchPolicy.Default,
-        loadTimeout: Duration = 5.seconds,
-        onResult: (Result<AdaptyPaywall>) -> Unit,
-    )
+        fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default,
+        loadTimeout: Duration = 5.seconds
+    ): AdaptyResult<AdaptyPaywall>
 
-    fun getPaywallProducts(
-        paywall: AdaptyPaywall,
-        onResult: (Result<List<AdaptyPaywallProduct>>) -> Unit,
-    )
+    suspend fun getPaywallProducts(paywall: AdaptyPaywall): AdaptyResult<List<AdaptyPaywallProduct>>
 
-    fun makePurchase(
+    suspend fun makePurchase(
         product: AdaptyPaywallProduct,
-        subscriptionUpdateParams: AdaptySubscriptionUpdateParameters? = null,
-        isOfferPersonalized: Boolean = false,
-        onResult: (Result<AdaptyPurchaseResult>) -> Unit,
-    )
+        subscriptionUpdateParams: AdaptyAndroidSubscriptionUpdateParameters? = null,
+        isOfferPersonalized: Boolean = false
+    ): AdaptyResult<AdaptyPurchaseResult>
 
-    fun restorePurchases(callback: (Result<AdaptyProfile>) -> Unit)
+    suspend fun restorePurchases(): AdaptyResult<AdaptyProfile>
 
     fun updateAttribution(
-        attribution: Any,
+        attribution: Map<String, Any>,
         source: String,
         onError: (AdaptyError?) -> Unit = {},
     )
 
     fun setIntegrationIdentifier(key: String, value: String, onError: (AdaptyError?) -> Unit = {})
 
-    fun reportTransaction(
-        transactionInfo: TransactionInfo,
-        variationId: String? = null,
-        onResult: (Result<AdaptyProfile>) -> Unit,
-    )
+    suspend fun reportTransaction(
+        transactionId: String,
+        variationId: String? = null
+    ): AdaptyResult<AdaptyProfile>
 
     fun logout(onError: (AdaptyError?) -> Unit = {})
     fun setOnProfileUpdatedListener(onProfileUpdatedListener: OnProfileUpdatedListener?)
 
-    var logLevel: AdaptyLogLevel
+    fun setLogLevel(logLevel: AdaptyLogLevel)
 
-    fun setLogHandler(logHandler: AdaptyLogHandler)
-
-    fun setFallbackPaywalls(location: FileLocation, onError: (AdaptyError?) -> Unit = {})
+    fun setFallbackPaywalls(assetId: String, onError: (AdaptyError?) -> Unit = {})
 
     fun logShowPaywall(paywall: AdaptyPaywall, onError: (AdaptyError?) -> Unit = {})
 
@@ -77,13 +69,27 @@ internal interface AdaptyContract {
         onError: (AdaptyError?) -> Unit = {}
     )
 
-    fun getPaywallForDefaultAudience(
+    suspend fun getPaywallForDefaultAudience(
         placementId: String,
         locale: String? = null,
-        fetchPolicy: AdaptyPaywall.FetchPolicy = AdaptyPaywall.FetchPolicy.Default,
-        onResult: (Result<AdaptyPaywall>) -> Unit
+        fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default
+    ): AdaptyResult<AdaptyPaywall>
+
+    suspend fun isActivated(): Boolean
+
+    suspend fun createWebPaywallUrl(
+        paywall: AdaptyPaywall? = null,
+        product: AdaptyPaywallProduct? = null
+    ): AdaptyResult<String>
+
+    suspend fun openWebPaywall(
+        paywall: AdaptyPaywall? = null,
+        product: AdaptyPaywallProduct? = null,
+        onError: (AdaptyError?) -> Unit = {}
     )
 
-    val isActivated: Boolean
+    suspend fun presentCodeRedemptionSheet(onError: (AdaptyError?) -> Unit = {})
+    suspend fun updateRefundPreference(preference: AdaptyIosRefundPreference): AdaptyResult<Boolean>
+    suspend fun updateCollectingRefundDataConsent(consent: Boolean): AdaptyResult<Boolean>
 
 }

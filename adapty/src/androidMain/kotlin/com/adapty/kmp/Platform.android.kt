@@ -1,7 +1,8 @@
 package com.adapty.kmp
 
-import android.content.Context
+import com.adapty.kmp.internal.plugin.AdaptyPlugin
+import com.adapty.kmp.internal.plugin.AdaptyPluginImpl
 
-internal lateinit var applicationContext: Context //TODO get application context with startup initializer
 
-internal actual fun adaptyImpl(): AdaptyContract = AdaptyImpl(context = applicationContext)
+internal actual val adaptyPlugin: AdaptyPlugin by lazy { AdaptyPluginImpl() }
+internal actual val isAndroidPlatform: Boolean get() = true

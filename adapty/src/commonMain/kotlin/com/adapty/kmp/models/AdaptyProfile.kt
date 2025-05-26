@@ -2,19 +2,20 @@ package com.adapty.kmp.models
 
 public data class AdaptyProfile internal constructor(
     public val profileId: String,
+    internal val segmentId: String? = null,
     public val customerUserId: String?,
     public val accessLevels: Map<String, AccessLevel>,
     public val subscriptions: Map<String, Subscription>,
     public val nonSubscriptions: Map<String, List<NonSubscription>>,
     public val customAttributes: Map<String, Any>,
-    private val isTestUser: Boolean,
+    public val isTestUser: Boolean,
 ) {
 
     public data class AccessLevel(
         public val id: String,
         public val isActive: Boolean,
         public val vendorProductId: String,
-        public val offerId: String?,
+        public val offerId: String? = null,
         public val store: String,
         public val activatedAt: String,
         public val startsAt: String?,
