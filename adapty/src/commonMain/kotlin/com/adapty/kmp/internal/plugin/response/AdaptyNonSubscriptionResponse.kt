@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class AdaptyNonSubscriptionResponse(
+internal data class AdaptyNonSubscriptionResponse(
     @SerialName("purchase_id")
     val purchaseId: String,
 

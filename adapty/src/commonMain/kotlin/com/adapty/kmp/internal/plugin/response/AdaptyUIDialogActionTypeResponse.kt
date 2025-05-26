@@ -4,7 +4,6 @@ import com.adapty.kmp.models.AdaptyUIDialogActionType
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 internal enum class AdaptyUIDialogActionTypeResponse {
     @SerialName("primary")

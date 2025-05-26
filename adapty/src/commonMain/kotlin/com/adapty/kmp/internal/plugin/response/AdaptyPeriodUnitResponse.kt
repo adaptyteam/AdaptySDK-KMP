@@ -4,7 +4,6 @@ import com.adapty.kmp.models.AdaptyPeriodUnit
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 internal enum class AdaptyPeriodUnitResponse {
     @SerialName("day")

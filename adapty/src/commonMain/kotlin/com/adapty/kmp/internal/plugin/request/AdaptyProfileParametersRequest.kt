@@ -4,7 +4,6 @@ import com.adapty.kmp.models.AdaptyProfileParameters
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 internal data class AdaptyUpdateProfileRequest(
     @SerialName("params") val params: AdaptyProfileParametersRequestData

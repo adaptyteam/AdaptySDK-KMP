@@ -10,9 +10,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 internal interface AdaptyPlugin {
-
     fun initialize()
-
     fun executePlatformSpecific(
         method: String,
         data: String,
@@ -31,12 +29,12 @@ internal inline fun <reified Request, reified Response> AdaptyPlugin.execute(
             if (request is Unit) getEmptyJsonObjectString()
             else createJsonInstance().encodeToString(request)
 
-        logger.log("AdaptyImpl, execute, requestJson for ${method.methodName}: $requestJson")
+        logger.log("AdaptyPlugin sending request for ${method.methodName}, requestJson: $requestJson")
         executePlatformSpecific(
             method = method.methodName,
             data = requestJson
         ) { resultJson ->
-            logger.log("AdaptyImpl, execute, resultJson for ${method.methodName}: $resultJson")
+            logger.log("AdaptyPlugin got response for ${method.methodName}, resultJson: $resultJson")
             onResult(resultJson.asAdaptyResultJsonResponse<Response>())
         }
     } catch (e: Exception) {

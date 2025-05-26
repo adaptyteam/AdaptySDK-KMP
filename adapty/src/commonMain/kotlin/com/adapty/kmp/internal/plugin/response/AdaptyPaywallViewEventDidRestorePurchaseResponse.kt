@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyPaywallViewEventDidRestorePurchaseResponse(
     @SerialName("view")
-    val view: com.adapty.kmp.internal.plugin.response.AdaptyUIViewResponse,
+    val view: AdaptyUIViewResponse,
 
     @SerialName("profile")
-    val profile: com.adapty.kmp.internal.plugin.response.AdaptyProfileResponse,
+    val profile: AdaptyProfileResponse,
 )

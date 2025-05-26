@@ -4,7 +4,6 @@ import com.adapty.kmp.models.AdaptyPaywallProductSubscription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 internal data class AdaptyPaywallProductSubscriptionResponse(
     @SerialName("group_identifier")

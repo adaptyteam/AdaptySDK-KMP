@@ -31,14 +31,3 @@ internal fun AdaptyLogLevel.asAdaptyLogLevelRequest(): AdaptyLogLevelRequestResp
         AdaptyLogLevel.DEBUG -> AdaptyLogLevelRequestResponse.DEBUG
     }
 }
-
-internal fun AdaptyLogLevelRequestResponse.asAdaptyLogLevel(): AdaptyLogLevel {
-
-    return when(this){
-        AdaptyLogLevelRequestResponse.VERBOSE -> AdaptyLogLevel.VERBOSE
-        AdaptyLogLevelRequestResponse.INFO -> AdaptyLogLevel.INFO
-        AdaptyLogLevelRequestResponse.WARN -> AdaptyLogLevel.WARN
-        AdaptyLogLevelRequestResponse.ERROR -> AdaptyLogLevel.ERROR
-        AdaptyLogLevelRequestResponse.DEBUG -> AdaptyLogLevel.DEBUG
-    }
-}

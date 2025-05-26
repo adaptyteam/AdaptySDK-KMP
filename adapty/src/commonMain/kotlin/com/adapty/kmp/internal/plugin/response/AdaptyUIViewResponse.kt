@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class AdaptyUIViewResponse(
+internal data class AdaptyUIViewResponse(
     @SerialName("id")
     val id: String,
 
@@ -13,10 +13,8 @@ public data class AdaptyUIViewResponse(
     val placementId: String,
 
     @SerialName("paywall_variation_id")
-    val paywallVariationId: String,
-
-
-    )
+    val paywallVariationId: String
+)
 
 internal fun AdaptyUIViewResponse.asAdaptyUIView(): AdaptyUIView {
     return AdaptyUIView(

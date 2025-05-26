@@ -1,5 +1,6 @@
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.utils.toJsonObject
+import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductSubscription
@@ -11,7 +12,6 @@ import com.adapty.kmp.models.AdaptyRenewalType
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
 import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
-import com.adapty.kmp.models.AdaptyError
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
@@ -20,7 +20,6 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 object AdaptyPluginResponseTemplate {
-
 
     internal fun getJsonString(method: AdaptyPluginMethod, successData: Any): String =
         when (method) {
@@ -63,7 +62,6 @@ object AdaptyPluginResponseTemplate {
     }
 
     fun errorResponse(error: AdaptyError): String {
-        // Build the error JSON object
         val jsonResponse = buildJsonObject {
             put("error", buildJsonObject {
                 put("adapty_code", error.code.value)
@@ -71,7 +69,7 @@ object AdaptyPluginResponseTemplate {
                 put("detail", error.detail)
             })
         }
-        return jsonResponse.toString() // Convert the JsonObject to a string
+        return jsonResponse.toString()
     }
 
     private fun getSuccessProfileResponse(adaptyProfile: AdaptyProfile): String {

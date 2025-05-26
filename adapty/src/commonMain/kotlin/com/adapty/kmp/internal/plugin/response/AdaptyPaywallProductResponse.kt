@@ -4,7 +4,6 @@ import com.adapty.kmp.models.AdaptyPaywallProduct
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 internal data class AdaptyPaywallProductResponse(
     @SerialName("vendor_product_id")

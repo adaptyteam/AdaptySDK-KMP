@@ -8,9 +8,7 @@ internal class FakeAdaptyPlugin : AdaptyPlugin {
     var capturedRequestMethodName: String? = null
     private var responseJsonString: String? = null
 
-    override fun initialize(onNewEvent: (String, String) -> Unit) {
-
-    }
+    override fun initialize() {}
 
     override fun executePlatformSpecific(
         method: String,

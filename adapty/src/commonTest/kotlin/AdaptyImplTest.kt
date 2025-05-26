@@ -38,7 +38,6 @@ import kotlin.time.Duration.Companion.seconds
 
 
 typealias ApiCallWithErrorCallBack = (onError: (AdaptyError?) -> Unit) -> Unit
-typealias ApiCallWithResult<T> = (onResult: (AdaptyResult<T>) -> Unit) -> Unit
 
 class AdaptyImplTest {
 
