@@ -16,6 +16,7 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
     Application.ActivityLifecycleCallbacks {
 
     private val crossplatformHelper by lazy { CrossplatformHelper.shared }
+    private var currentActivity: Activity? = null
 
     override fun create(context: Context) {
         applicationContext = context.applicationContext
@@ -36,36 +37,25 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
         return emptyList()
     }
 
-    override fun onActivityCreated(activity: Activity, p1: Bundle?) {
-        onActivityUpdated(activity)
-    }
+    override fun onActivityCreated(activity: Activity, p1: Bundle?) {}
 
-    override fun onActivityStarted(activity: Activity) {
-        onActivityUpdated(activity)
-    }
+    override fun onActivityStarted(activity: Activity) {}
 
     override fun onActivityResumed(activity: Activity) {
-        onActivityUpdated(activity)
+        currentActivity = activity
+        crossplatformHelper.setActivity { activity }
     }
 
     override fun onActivityPaused(activity: Activity) {
-        onActivityUpdated(null)
+        if (currentActivity === activity) {
+            currentActivity = null
+            crossplatformHelper.setActivity(null)
+        }
     }
 
-    override fun onActivityStopped(activity: Activity) {
-        onActivityUpdated(null)
-    }
+    override fun onActivityStopped(activity: Activity) {}
 
     override fun onActivitySaveInstanceState(activity: Activity, p1: Bundle) {}
 
-    override fun onActivityDestroyed(activity: Activity) {
-        onActivityUpdated(null)
-    }
-
-    private fun onActivityUpdated(activity: Activity?) {
-        if (activity == null) crossplatformHelper.setActivity(null)
-        else crossplatformHelper.setActivity { activity }
-    }
-
-
+    override fun onActivityDestroyed(activity: Activity) {}
 }
