@@ -34,6 +34,7 @@ androidx-startup-runtime = { module = "androidx.startup:startup-runtime", versio
 
 adapty-bom = { module = "io.adapty:adapty-bom", version.ref = "adapty-bom" }
 adapty-android-sdk = { module = "io.adapty:android-sdk" }
+adapty-android-ui = { module = "io.adapty:android-ui" }
 adapty-internal-crossplatform = { module = "io.adapty.internal:crossplatform", version.ref = "adapty-internal-crossplatform" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutine" }
