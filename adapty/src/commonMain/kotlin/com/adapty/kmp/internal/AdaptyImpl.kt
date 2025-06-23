@@ -43,7 +43,7 @@ import com.adapty.kmp.internal.plugin.response.AdaptyPurchaseResultResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallProduct
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
 import com.adapty.kmp.internal.plugin.response.asAdaptyPurchaseResult
-import com.adapty.kmp.internal.utils.createJsonInstance
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.isAndroidPlatform
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyConfig
@@ -174,7 +174,7 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
     ) = adaptyPlugin.execute<AdaptyUpdateAttributionRequest, Boolean>(
         method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
         request = AdaptyUpdateAttributionRequest(
-            attribution = createJsonInstance().encodeToString(attribution.toAdaptyCustomAttributesRequest()),
+            attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
             source = source
         ),
         onResult = { result ->

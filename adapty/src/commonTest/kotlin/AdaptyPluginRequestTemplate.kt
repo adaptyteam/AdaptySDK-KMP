@@ -11,8 +11,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
-import com.adapty.kmp.internal.utils.createJsonInstance
 import com.adapty.kmp.internal.utils.getEmptyJsonObjectString
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
 import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyProfileParameters
@@ -150,7 +150,7 @@ object AdaptyPluginRequestTemplate {
         val jsonObject = buildJsonObject {
             put(
                 "paywall",
-                createJsonInstance().encodeToJsonElement(
+                jsonInstance.encodeToJsonElement(
                     AdaptyPaywallRequestResponse.serializer(),
                     request.paywall
                 )
@@ -165,7 +165,7 @@ object AdaptyPluginRequestTemplate {
             put("is_offer_personalized", adaptyMakePurchaseRequest.isOfferPersonalized)
             put(
                 "product",
-                createJsonInstance().encodeToJsonElement(
+                jsonInstance.encodeToJsonElement(
                     AdaptyPaywallProductRequest.serializer(),
                     adaptyMakePurchaseRequest.paywallProduct
                 )
@@ -173,7 +173,7 @@ object AdaptyPluginRequestTemplate {
             adaptyMakePurchaseRequest.subscriptionUpdateParams?.let { subscriptionUpdateParams ->
                 put(
                     "subscription_update_params",
-                    createJsonInstance().encodeToJsonElement(
+                    jsonInstance.encodeToJsonElement(
                         AdaptyAndroidSubscriptionUpdateParametersRequest.serializer(),
                         subscriptionUpdateParams
                     )
@@ -210,7 +210,7 @@ object AdaptyPluginRequestTemplate {
         val jsonObject = buildJsonObject {
             put(
                 "paywall",
-                createJsonInstance().encodeToJsonElement(
+                jsonInstance.encodeToJsonElement(
                     AdaptyPaywallRequestResponse.serializer(),
                     request.paywall
                 )

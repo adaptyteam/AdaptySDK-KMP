@@ -2,7 +2,7 @@ package com.adapty.kmp.internal.plugin
 
 import com.adapty.kmp.internal.plugin.response.AdaptyPluginErrorResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyError
-import com.adapty.kmp.internal.utils.createJsonInstance
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyErrorCode
 import com.adapty.kmp.models.AdaptyResult
@@ -36,7 +36,7 @@ internal sealed interface AdaptyPluginResultJsonResponse<out T> {
 }
 
 internal inline fun <reified T> String?.asAdaptyResultJsonResponse(): AdaptyPluginResultJsonResponse<T> {
-    val json = createJsonInstance()
+    val json = jsonInstance
     val jsonString = this ?: return AdaptyPluginResultJsonResponse.Error(
         AdaptyPluginErrorResponse(
             errorCode = AdaptyErrorCode.INTERNAL_PLUGIN_ERROR.value,

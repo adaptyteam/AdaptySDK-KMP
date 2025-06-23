@@ -15,7 +15,7 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptySubscriptionUpdateParametersRequest
 import com.adapty.kmp.internal.plugin.request.toAdaptyCustomAttributesRequest
-import com.adapty.kmp.internal.utils.createJsonInstance
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateReplacementMode
 import com.adapty.kmp.models.AdaptyConfig
@@ -285,7 +285,7 @@ class AdaptyImplTest {
             apiCall = apiCall,
             method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
             param = AdaptyUpdateAttributionRequest(
-                attribution = createJsonInstance().encodeToString(attribution.toAdaptyCustomAttributesRequest()),
+                attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
                 source = source
             )
         )
@@ -461,9 +461,9 @@ class AdaptyImplTest {
         actualJsonString: String?,
         message: String? = null
     ) {
-        val actualJson = createJsonInstance().parseToJsonElement(actualJsonString ?: "").jsonObject
+        val actualJson = jsonInstance.parseToJsonElement(actualJsonString ?: "").jsonObject
         val expectedJson =
-            createJsonInstance().parseToJsonElement(expectedJsonString ?: "").jsonObject
+            jsonInstance.parseToJsonElement(expectedJsonString ?: "").jsonObject
 
         assertEquals(expectedJson, actualJson, message)
     }

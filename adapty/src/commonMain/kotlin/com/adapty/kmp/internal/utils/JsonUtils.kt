@@ -23,7 +23,7 @@ import kotlinx.serialization.json.longOrNull
 
 internal fun getEmptyJsonObjectString(): String = "{}"
 
-internal fun createJsonInstance() = Json {
+internal val jsonInstance = Json {
     encodeDefaults = true
     prettyPrint = true
     ignoreUnknownKeys = true
@@ -32,7 +32,7 @@ internal fun createJsonInstance() = Json {
 
 internal inline fun <reified T> String?.decodeJsonString(): T? {
     return try {
-        val json = createJsonInstance()
+        val json = jsonInstance
         val jsonString = this ?: return null
         val jsonElement = json.parseToJsonElement(jsonString).jsonObject
         json.decodeFromJsonElement<T>(jsonElement)
@@ -59,7 +59,7 @@ internal fun Any?.toJsonElement(): JsonElement = when (this) {
 
 internal fun String.convertJsonToMapOfAny(): Map<String, Any> = runCatching {
     if (this.isEmpty()) return emptyMap()
-    createJsonInstance().parseToJsonElement(this).jsonObject.toMapOfAny()
+    jsonInstance.parseToJsonElement(this).jsonObject.toMapOfAny()
 }.getOrNull() ?: emptyMap()
 
 
