@@ -3,8 +3,8 @@ package com.adapty.kmp.internal.plugin
 import com.adapty.kmp.internal.logger
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.response.AdaptyPluginErrorResponse
-import com.adapty.kmp.internal.utils.createJsonInstance
 import com.adapty.kmp.internal.utils.getEmptyJsonObjectString
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyErrorCode
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -27,7 +27,7 @@ internal inline fun <reified Request, reified Response> AdaptyPlugin.execute(
 
         val requestJson =
             if (request is Unit) getEmptyJsonObjectString()
-            else createJsonInstance().encodeToString(request)
+            else jsonInstance.encodeToString(request)
 
         logger.log("AdaptyPlugin sending request for ${method.methodName}, requestJson: $requestJson")
         executePlatformSpecific(
