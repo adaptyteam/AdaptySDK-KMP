@@ -181,7 +181,7 @@ internal class AdaptyUIImpl(
             }
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidUserActionResponse> {
+                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
                     paywallViewDidDisappear(view = it.view.asAdaptyUIView())
                 }
             }
