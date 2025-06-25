@@ -2,6 +2,8 @@ package com.adapty.kmp.internal.plugin.constants
 
 internal enum class AdaptyPluginEvent(val eventName: String) {
     PAYWALL_VIEW_DID_PERFORM_ACTION("paywall_view_did_perform_action"),
+    PAYWALL_VIEW_DID_APPEAR("paywall_view_did_appear"),
+    PAYWALL_VIEW_DID_DISAPPEAR("paywall_view_did_disappear"),
     PAYWALL_VIEW_DID_PERFORM_SYSTEM_BACK_ACTION("paywall_view_did_perform_system_back_action"),
     PAYWALL_VIEW_DID_SELECT_PRODUCT("paywall_view_did_select_product"),
     PAYWALL_VIEW_DID_START_PURCHASE("paywall_view_did_start_purchase"),

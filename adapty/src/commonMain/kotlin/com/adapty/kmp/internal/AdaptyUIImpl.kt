@@ -15,6 +15,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIShowDialogRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
+import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidAppearOrDisappearResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailLoadingProductsResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailPurchaseResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailRenderingResponse
@@ -165,11 +166,14 @@ internal class AdaptyUIImpl(
         if (this == null) return
         when (event) {
             AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidUserActionResponse> {
-                    paywallViewDidPerformAction(
-                        view = it.view.asAdaptyUIView(),
-                        action = it.action.asAdaptyUIAction()
-                    )
+                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
+                    paywallViewDidAppear(view = it.view.asAdaptyUIView())
+                }
+            }
+
+            AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR -> {
+                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
+                    paywallViewDidDisappear(view = it.view.asAdaptyUIView())
                 }
             }
 

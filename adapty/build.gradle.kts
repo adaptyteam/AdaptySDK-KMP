@@ -82,7 +82,7 @@ kotlin {
 }
 
 //This field needs to be set true only when publishing the library or when ios rebuild is needed
-//Ex: ./gradlew publishToMavenLocal -PshouldForceIosRebuild=true
+//Ex: ./gradlew publishToMavenLocal -PshouldForceIosRebuild=true --no-configuration-cache
 val shouldForceIosRebuild: Boolean = project.findProperty("shouldForceIosRebuild")?.toString()?.toBooleanStrictOrNull() ?: false
 listOf("iphoneos", "iphonesimulator").forEach { sdk ->
     tasks.create<Exec>("build${sdk.capitalize()}") {

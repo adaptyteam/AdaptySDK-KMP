@@ -19,6 +19,9 @@ public interface AdaptyUIObserver {
         }
     }
 
+    public fun paywallViewDidAppear(view: AdaptyUIView) {}
+    public fun paywallViewDidDisappear(view: AdaptyUIView) {}
+
     public fun paywallViewDidSelectProduct(view: AdaptyUIView, productId: String) {}
 
     public fun paywallViewDidStartPurchase(view: AdaptyUIView, product: AdaptyPaywallProduct) {}
