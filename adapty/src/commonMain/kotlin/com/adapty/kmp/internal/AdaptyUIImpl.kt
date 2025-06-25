@@ -166,13 +166,22 @@ internal class AdaptyUIImpl(
         if (this == null) return
         when (event) {
             AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION -> {
+                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidUserActionResponse> {
+                    paywallViewDidPerformAction(
+                        view = it.view.asAdaptyUIView(),
+                        action = it.action.asAdaptyUIAction()
+                    )
+                }
+            }
+
+            AdaptyPluginEvent.PAYWALL_VIEW_DID_APPEAR -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
                     paywallViewDidAppear(view = it.view.asAdaptyUIView())
                 }
             }
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
+                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidUserActionResponse> {
                     paywallViewDidDisappear(view = it.view.asAdaptyUIView())
                 }
             }
