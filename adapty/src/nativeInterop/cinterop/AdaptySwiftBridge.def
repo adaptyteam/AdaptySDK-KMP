@@ -6,7 +6,7 @@ headerFilter = AdaptySwiftBridge/*
 
 staticLibraries = libAdaptySwiftBridge.a
 libraryPaths.ios_x64 = ../adapty-swift-bridge/build/Build/Products/Release-iphonesimulator
-libraryPaths.ios_arm64 = ../adapty-swift-bridge/build/Build/Products/Release-iphonesimulator
+libraryPaths.ios_arm64 = ../adapty-swift-bridge/build/Build/Products/Release-iphoneos
 libraryPaths.ios_simulator_arm64 = ../adapty-swift-bridge/build/Build/Products/Release-iphonesimulator
 
 linkerOpts = -L/usr/lib/swift
