@@ -23,8 +23,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.seconds
 
 class AppViewModel : ViewModel() {
@@ -42,7 +40,7 @@ class AppViewModel : ViewModel() {
     }
 
     private fun initialize() = viewModelScope.launch {
-        delay(100) //TODO Check why we need this delay
+        delay(1000) //Adapty Initialization takes some time
         checkIfAdaptyIsActivated()
         Adapty.setOnProfileUpdatedListener { profile ->
             _uiState.value = _uiState.value.copy(adaptyProfile = profile)
@@ -222,19 +220,19 @@ class AppViewModel : ViewModel() {
                 ),
                 customTimers = mapOf(
                     "CUSTOM_TIMER_24H" to Clock.System.now().plus(86400.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString(),
+                        .toFormattedDateTimeString(),
                     "CUSTOM_TIMER_10H" to Clock.System.now().plus(36000.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString(),
+                        .toFormattedDateTimeString(),
                     "CUSTOM_TIMER_1H" to Clock.System.now().plus(3600.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString(),
+                        .toFormattedDateTimeString(),
                     "CUSTOM_TIMER_10M" to Clock.System.now().plus(600.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString(),
+                        .toFormattedDateTimeString(),
                     "CUSTOM_TIMER_1M" to Clock.System.now().plus(60.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString(),
+                        .toFormattedDateTimeString(),
                     "CUSTOM_TIMER_10S" to Clock.System.now().plus(10.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString(),
+                        .toFormattedDateTimeString(),
                     "CUSTOM_TIMER_5S" to Clock.System.now().plus(5.seconds)
-                        .toLocalDateTime(TimeZone.UTC).toString()
+                        .toFormattedDateTimeString()
                 )
             )
             view?.present()
@@ -246,6 +244,7 @@ class AppViewModel : ViewModel() {
         val isActivated = Adapty.isActivated()
         AppLogger.d("Adapty is activated: $isActivated")
     }
+
 
     private fun restorePurchases() = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true) }

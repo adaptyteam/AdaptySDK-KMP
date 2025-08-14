@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.screens.GeneralInfoScreen
+import com.adapty.exampleapp.screens.LogsScreen
 import com.adapty.exampleapp.screens.PaywallsScreen
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.models.AdaptyError
@@ -62,8 +64,8 @@ fun App() {
 
 
         var selectedTab by rememberSaveable { mutableStateOf(0) }
-        val tabs = listOf("General", "Paywalls")
-        val icons = listOf(Icons.Default.Home, Icons.Default.ShoppingCart)
+        val tabs = listOf("General", "Paywalls", "Logs")
+        val icons = listOf(Icons.Default.Home, Icons.Default.ShoppingCart, Icons.Default.Info)
 
         Scaffold(
             modifier = Modifier.fillMaxWidth().safeDrawingPadding(),
@@ -89,6 +91,9 @@ fun App() {
 
                 1 -> PaywallsScreen(
                     viewModel = appViewModel,
+                    modifier = Modifier.padding(padding)
+                )
+                2 -> LogsScreen(
                     modifier = Modifier.padding(padding)
                 )
             }

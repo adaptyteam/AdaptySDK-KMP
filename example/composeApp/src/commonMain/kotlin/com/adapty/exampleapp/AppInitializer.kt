@@ -30,20 +30,22 @@ object AppInitializer {
                 .withActivateUI(true)
                 .build(),
             onError = { error ->
-                error?.let {
-                    AppLogger.e("Adapty activation failed", it)
+                if (error == null) {
+                    AppLogger.d("Adapty activation success")
+                    MainScope().launch {
+                        Adapty.getPaywallForDefaultAudience(placementId = Constants.EXAMPLE_PAYWALL_ID)
+                            .onSuccess {
+                                AppLogger.d("Adapty Paywall for default audience is fetched: $it")
+                            }.onError { error ->
+                                AppLogger.e("Adapty Paywall for default audience fetching failed", error)
+                            }
+                    }
+                } else {
+                    AppLogger.e("Adapty activation failed", error)
                 }
             }
         )
-        AppLogger.d("Adapty is initialized")
-        MainScope().launch {
-            Adapty.getPaywallForDefaultAudience(placementId = Constants.EXAMPLE_PAYWALL_ID)
-                .onSuccess {
-                    AppLogger.d("Adapty Paywall for default audience is fetched: $it")
-                }.onError { error ->
-                    AppLogger.e("Adapty Paywall for default audience fetching failed", error)
-                }
-        }
+
 
     }
 }
