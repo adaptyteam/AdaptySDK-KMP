@@ -215,6 +215,7 @@ object AdaptyPluginResponseTemplate {
                 add(buildJsonObject {
                     put("vendor_product_id", product.vendorProductId)
                     put("adapty_product_id", product.adaptyProductId)
+                    put("paywall_product_index", product.paywallProductIndex)
                     put("paywall_variation_id", product.paywallVariationId)
                     put("paywall_ab_test_name", product.paywallABTestName)
                     put("paywall_name", product.paywallName)
