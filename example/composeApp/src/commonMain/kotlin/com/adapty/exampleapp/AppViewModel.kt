@@ -46,8 +46,8 @@ class AppViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(adaptyProfile = profile)
         }
         reloadProfile()
-        loadExamplePaywallAndProducts()
-        loadSavedPaywalls()
+//        loadExamplePaywallAndProducts()
+//        loadSavedPaywalls()
     }
 
     fun onErrorDialogDismissed() = viewModelScope.launch(exceptionHandler) {
