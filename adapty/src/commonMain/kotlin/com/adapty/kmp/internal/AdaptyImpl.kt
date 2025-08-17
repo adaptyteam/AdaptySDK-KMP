@@ -134,7 +134,7 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
             method = AdaptyPluginMethod.GET_PAYWALL,
             request = AdaptyGetPaywallRequest(
                 placementId = placementId,
-                locale = locale,
+                locale = locale.takeIf { !it.isNullOrBlank() } ?: "en",
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
                 loadTimeoutInSeconds = loadTimeout.inWholeSeconds
             )
