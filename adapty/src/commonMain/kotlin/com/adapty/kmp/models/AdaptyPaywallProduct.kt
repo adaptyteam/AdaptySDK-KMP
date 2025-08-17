@@ -4,6 +4,7 @@ package com.adapty.kmp.models
 public data class AdaptyPaywallProduct internal constructor(
     val vendorProductId: String,
     internal val adaptyProductId: String,
+    val paywallProductIndex: Int,
     val paywallVariationId: String,
     val paywallABTestName: String,
     val paywallName: String,

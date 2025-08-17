@@ -17,7 +17,7 @@ data class AppUiState(
     val customPaywallLocale: String = "",
     val selectedPolicy: DemoPaywallFetchPolicy = DemoPaywallFetchPolicy.ReloadRevalidatingCacheData,
     val userEnteredCustomerUserId: String = "",
-    val savedPaywallIds: Set<String> = setOf(Constants.EXAMPLE_PAYWALL_ID),
+    val savedPaywallIds: Set<String> = setOf(),
     val savedPaywalls: Map<String, AdaptyPaywall> = mapOf(),
     val isLoading: Boolean = false,
     val error: Throwable? = null

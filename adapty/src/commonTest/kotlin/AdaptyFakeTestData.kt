@@ -166,6 +166,7 @@ internal object AdaptyFakeTestData {
             vendorProductId = "com.example.product.monthly",
             adaptyProductId = "adapty_product_001",
             paywallVariationId = "variation_1",
+            paywallProductIndex = 1,
             paywallABTestName = "main_test",
             paywallName = "Main Paywall",
             audienceName = "main_audience",
