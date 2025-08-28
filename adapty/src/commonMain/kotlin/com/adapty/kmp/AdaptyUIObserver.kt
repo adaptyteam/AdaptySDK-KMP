@@ -31,7 +31,8 @@ public interface AdaptyUIObserver {
         product: AdaptyPaywallProduct,
         purchaseResult: AdaptyPurchaseResult
     ) {
-        view.dismiss()
+        if (purchaseResult !is AdaptyPurchaseResult.UserCanceled)
+            view.dismiss()
     }
 
     public fun paywallViewDidFailPurchase(
