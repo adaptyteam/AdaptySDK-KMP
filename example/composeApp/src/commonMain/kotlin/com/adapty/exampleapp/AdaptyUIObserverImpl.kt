@@ -37,7 +37,6 @@ class AdaptyUIObserverImpl(
     }
 
     override fun paywallViewDidPerformAction(view: AdaptyUIView, action: AdaptyUIAction) {
-        super.paywallViewDidPerformAction(view, action)
         AppLogger.d("Paywall view did perform action of view $view with action $action")
         uiCoroutineScope.launch {
             when (action) {
@@ -67,12 +66,10 @@ class AdaptyUIObserverImpl(
     }
 
     override fun paywallViewDidSelectProduct(view: AdaptyUIView, productId: String) {
-        super.paywallViewDidSelectProduct(view, productId)
         AppLogger.d("Paywall view did select product of view $view with productId $productId")
     }
 
     override fun paywallViewDidStartPurchase(view: AdaptyUIView, product: AdaptyPaywallProduct) {
-        super.paywallViewDidStartPurchase(view, product)
         AppLogger.d("Paywall view did start purchase of view $view with product $product")
     }
 
@@ -81,7 +78,6 @@ class AdaptyUIObserverImpl(
         product: AdaptyPaywallProduct,
         purchaseResult: AdaptyPurchaseResult
     ) {
-        super.paywallViewDidFinishPurchase(view, product, purchaseResult)
         AppLogger.d("Paywall view did finish purchase of view $view with product $product and purchaseResult $purchaseResult")
         when (purchaseResult) {
             is AdaptyPurchaseResult.Success -> {
@@ -100,17 +96,14 @@ class AdaptyUIObserverImpl(
         product: AdaptyPaywallProduct,
         error: AdaptyError
     ) {
-        super.paywallViewDidFailPurchase(view, product, error)
         AppLogger.e("Paywall view did fail purchase of view $view with product $product and error $error")
     }
 
     override fun paywallViewDidStartRestore(view: AdaptyUIView) {
-        super.paywallViewDidStartRestore(view)
         AppLogger.d("Paywall view did start restore of view $view")
     }
 
     override fun paywallViewDidFailRestore(view: AdaptyUIView, error: AdaptyError) {
-        super.paywallViewDidFailRestore(view, error)
         AppLogger.e("Paywall view did fail restore of view $view with error $error")
         uiCoroutineScope.launch {
             view.showDialog(
@@ -122,7 +115,6 @@ class AdaptyUIObserverImpl(
     }
 
     override fun paywallViewDidFailLoadingProducts(view: AdaptyUIView, error: AdaptyError) {
-        super.paywallViewDidFailLoadingProducts(view, error)
         AppLogger.e("Paywall view did fail loading products of view $view with error $error")
     }
 
@@ -131,7 +123,6 @@ class AdaptyUIObserverImpl(
         product: AdaptyPaywallProduct?,
         error: AdaptyError?
     ) {
-        super.paywallViewDidFinishWebPaymentNavigation(view, product, error)
         AppLogger.e("Paywall view did finish web payment navigation of view $view with product $product and error $error")
 
     }
