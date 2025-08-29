@@ -10,3 +10,11 @@ plugins {
     alias(libs.plugins.buildConfig) apply false
     alias(libs.plugins.kotlinx.binary.validator)
 }
+
+apiValidation {
+    @OptIn(kotlinx.validation.ExperimentalBCVApi::class)
+    klib {
+        enabled = true
+    }
+    ignoredProjects += "composeApp"
+}
