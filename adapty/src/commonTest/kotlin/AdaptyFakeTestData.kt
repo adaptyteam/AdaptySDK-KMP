@@ -117,7 +117,8 @@ internal object AdaptyFakeTestData {
                         "stringKey" to "testString"
                     )
                 )
-            )
+            ),
+            payloadData = "testPayloadData",
         )
     }
 
