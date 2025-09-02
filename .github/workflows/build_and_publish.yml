@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup environment
-        uses: ./.github/actions/setup-gradle
+        uses: ./.github/setup-gradle
 
       - name: Check api
         run: ./gradlew apiCheck
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup environment
-        uses: ./.github/actions/setup-gradle
+        uses: ./.github/setup-gradle
 
       - name: Test ${{ matrix.config.target }} targets
         continue-on-error: ${{ matrix.config.continueOnError }}
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup environment
-        uses: ./.github/actions/setup-gradle
+        uses: ./.github/setup-gradle
 
       - name: Generate docs with dokka
         run: ./gradlew dokkaHtmlMultiModule #TODO Needs to be uploaded to Github Pages
