@@ -61,6 +61,7 @@ internal fun AdaptyPaywallRequestResponse.asAdaptyPaywall(): AdaptyPaywall {
         remoteConfig = this.remoteConfig?.asAdaptyPaywallRemoteConfig(),
         viewConfiguration = this.viewConfiguration?.asAdaptyPaywallViewConfiguration(),
         products = this.products.map { it.asAdaptyPaywallProductReference() },
+        payloadData = this.payloadData,
         version = this.responseCreatedAt,
     )
 }
