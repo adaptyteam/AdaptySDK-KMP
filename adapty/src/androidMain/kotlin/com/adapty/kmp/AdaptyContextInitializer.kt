@@ -44,7 +44,6 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
 
     override fun onActivityResumed(activity: Activity) {
         currentActivity = activity
-        crossplatformHelper.setActivity { activity }
     }
 
     override fun onActivityPaused(activity: Activity) {
