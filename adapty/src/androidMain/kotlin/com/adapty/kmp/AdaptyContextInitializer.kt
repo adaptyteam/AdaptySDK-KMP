@@ -50,7 +50,6 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
     override fun onActivityPaused(activity: Activity) {
         if (currentActivity === activity) {
             currentActivity = null
-            crossplatformHelper.setActivity(null)
         }
     }
 
