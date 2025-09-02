@@ -30,6 +30,7 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
             },
             //TODO Check if transformFallbackPaywallLocation in init is necessary transformFallbackPaywallLocation =
         )
+        crossplatformHelper.setActivity { currentActivity }
         (applicationContext as? Application)?.registerActivityLifecycleCallbacks(this)
     }
 
