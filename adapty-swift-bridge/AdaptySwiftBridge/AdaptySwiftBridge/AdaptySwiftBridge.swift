@@ -22,6 +22,16 @@ import AdaptyPlugin
     @objc public static func initialize(onEvent: @escaping (String, String) -> Void) {
         
         Task{ @MainActor in
+            
+            AdaptyPlugin.reqister(setFallbackPaywallsRequests: { assetId in
+                let nsStr = assetId as NSString
+                let filename = nsStr.deletingPathExtension
+                let ext = nsStr.pathExtension.isEmpty ? "json" : nsStr.pathExtension
+                
+                return Bundle.main.url(forResource: filename, withExtension: ext)
+            })
+
+            
             let handler = KMPAdaptySwiftEventHandler(onEvent: onEvent)
             AdaptyPlugin.reqister(eventHandler: handler)
         }

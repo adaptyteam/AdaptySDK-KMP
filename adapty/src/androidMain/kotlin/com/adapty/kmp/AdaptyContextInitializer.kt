@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.startup.Initializer
 import com.adapty.internal.crossplatform.CrossplatformHelper
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
+import com.adapty.utils.FileLocation
 
 
 internal var applicationContext: Context? = null
@@ -28,7 +29,9 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
                     eventDataJsonString = eventDataJsonString
                 )
             },
-            //TODO Check if transformFallbackPaywallLocation in init is necessary transformFallbackPaywallLocation =
+            transformFallbackPaywallLocation = { location ->
+                FileLocation.fromAsset(location)
+            }
         )
         crossplatformHelper.setActivity { currentActivity }
         (applicationContext as? Application)?.registerActivityLifecycleCallbacks(this)
