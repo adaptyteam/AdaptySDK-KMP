@@ -60,6 +60,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization)
                 implementation(libs.kotlinx.coroutine)
+                implementation(libs.kotlinx.datetime)
             }
         }
         val commonTest by getting {

@@ -49,6 +49,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.jvm.JvmName
@@ -90,7 +93,7 @@ internal class AdaptyUIImpl(
         loadTimeout: Duration?,
         preloadProducts: Boolean,
         customTags: Map<String, String>?,
-        customTimers: Map<String, String>?, //TODO customer timers value set type Duration.
+        customTimers: Map<String, LocalDateTime>?,
         androidPersonalizedOffers: Map<String, Boolean>?
     ): AdaptyUIView? {
 
@@ -101,7 +104,7 @@ internal class AdaptyUIImpl(
                 loadTimeOutInSeconds = loadTimeout?.inWholeSeconds,
                 preloadProducts = preloadProducts,
                 customTags = customTags,
-                customTimers = customTimers,
+                customTimers = customTimers?.asAdaptyValidDateTimeFormat(),
                 androidPersonalizedOffers = androidPersonalizedOffers
 
             )
@@ -289,6 +292,23 @@ internal class AdaptyUIImpl(
             }
 
             else -> Unit
+        }
+    }
+
+
+    // Format for date time: YYYY-MM-DDTHH:mm:ss.sssZ
+    private fun Map<String, LocalDateTime>.asAdaptyValidDateTimeFormat(): Map<String, String>{
+
+        return this.mapValues { (_, localDateTime) ->
+            // Milliseconds (3 digits)
+            val ms = (localDateTime.nanosecond / 1_000_000).toString().padStart(3, '0')
+            val offset = "+0000" // UTC offset for UTC
+
+            "${localDateTime.year}-${localDateTime.monthNumber.toString().padStart(2,'0')}-" +
+                    "${localDateTime.dayOfMonth.toString().padStart(2,'0')}T" +
+                    "${localDateTime.hour.toString().padStart(2,'0')}:" +
+                    "${localDateTime.minute.toString().padStart(2,'0')}:" +
+                    "${localDateTime.second.toString().padStart(2,'0')}.$ms$offset"
         }
     }
 

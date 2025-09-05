@@ -23,6 +23,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.seconds
 
 class AppViewModel : ViewModel() {
@@ -220,19 +222,19 @@ class AppViewModel : ViewModel() {
                 ),
                 customTimers = mapOf(
                     "CUSTOM_TIMER_24H" to Clock.System.now().plus(86400.seconds)
-                        .toFormattedDateTimeString(),
+                        .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_10H" to Clock.System.now().plus(36000.seconds)
-                        .toFormattedDateTimeString(),
+                        .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_1H" to Clock.System.now().plus(3600.seconds)
-                        .toFormattedDateTimeString(),
+                        .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_10M" to Clock.System.now().plus(600.seconds)
-                        .toFormattedDateTimeString(),
+                        .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_1M" to Clock.System.now().plus(60.seconds)
-                        .toFormattedDateTimeString(),
+                        .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_10S" to Clock.System.now().plus(10.seconds)
-                        .toFormattedDateTimeString(),
+                        .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_5S" to Clock.System.now().plus(5.seconds)
-                        .toFormattedDateTimeString()
+                        .toLocalDateTime(TimeZone.UTC)
                 )
             )
             view?.present()

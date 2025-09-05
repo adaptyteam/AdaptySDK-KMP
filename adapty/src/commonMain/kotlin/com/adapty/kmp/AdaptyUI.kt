@@ -4,6 +4,7 @@ import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIView
+import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration
 
 public object AdaptyUI : AdaptyUIContract by AdaptyUIImpl(adaptyPlugin = adaptyPlugin)
@@ -17,7 +18,7 @@ internal interface AdaptyUIContract {
         loadTimeout: Duration? = null,
         preloadProducts: Boolean = false,
         customTags: Map<String, String>? = null,
-        customTimers: Map<String, String>? = null, //TODO update time with kotlinx-localdatetime if needed
+        customTimers: Map<String, LocalDateTime>? = null,
         androidPersonalizedOffers: Map<String, Boolean>? = null
     ): AdaptyUIView?
 
