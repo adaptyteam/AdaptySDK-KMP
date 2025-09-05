@@ -26,6 +26,7 @@ object AdaptyPluginResponseTemplate {
             AdaptyPluginMethod.ACTIVATE -> genericSuccessResponse()
             AdaptyPluginMethod.IDENTIFY -> genericSuccessResponse()
             AdaptyPluginMethod.UPDATE_PROFILE -> genericSuccessResponse()
+            AdaptyPluginMethod.UPDATE_ATTRIBUTION -> genericSuccessResponse()
             AdaptyPluginMethod.GET_PROFILE -> getSuccessProfileResponse(successData as AdaptyProfile)
             AdaptyPluginMethod.RESTORE_PURCHASES -> getSuccessProfileResponse(successData as AdaptyProfile)
             AdaptyPluginMethod.LOGOUT -> genericSuccessResponse()

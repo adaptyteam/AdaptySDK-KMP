@@ -37,7 +37,6 @@ import kotlin.test.fail
 import kotlin.time.Duration.Companion.seconds
 
 
-typealias ApiCallWithErrorCallBack = (onError: (AdaptyError?) -> Unit) -> Unit
 
 class AdaptyImplTest {
 
@@ -58,7 +57,7 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `activate method - verify request json and handle success and error`() {
+    fun `activate method - verify request json and handle success and error`() = runTest {
         val config = AdaptyConfig.Builder(AdaptyFakeTestData.API_KEY)
             .withObserverMode(false)
             .withCustomerUserId(AdaptyFakeTestData.CUSTOMER_USER_ID)
@@ -70,36 +69,31 @@ class AdaptyImplTest {
             .withActivateUI(false)
             .build()
 
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.activate(configuration = config, onError = onError)
-        }
 
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+
+        verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.activate(config) },
             method = AdaptyPluginMethod.ACTIVATE,
             param = config,
-            onSuccess = { error -> assertNull(error) },
-            onError = { error -> assertEquals(testError, error) }
+            expectedSuccessData = Unit
         )
     }
 
 
     @Test
-    fun `identify method - verify request and response`() {
+    fun `identify method - verify request and response`() = runTest {
         val customerUserId = AdaptyFakeTestData.CUSTOMER_USER_ID
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.identify(customerUserId = customerUserId, onError = onError)
-        }
 
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+        verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.identify(customerUserId = customerUserId) },
             method = AdaptyPluginMethod.IDENTIFY,
-            param = customerUserId
+            param = customerUserId,
+            expectedSuccessData = Unit
         )
     }
 
     @Test
-    fun `updateProfile method - verify request and response`() {
+    fun `updateProfile method - verify request and response`() = runTest {
         val builder = AdaptyProfileParameters.Builder()
             .withEmail("email@email.com")
             .withPhoneNumber("+18888888888")
@@ -112,14 +106,11 @@ class AdaptyImplTest {
 
         val adaptyProfileParameters = builder.build()
 
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.updateProfile(params = adaptyProfileParameters, onError = onError)
-        }
-
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+        verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.updateProfile(params = adaptyProfileParameters) },
             method = AdaptyPluginMethod.UPDATE_PROFILE,
-            param = adaptyProfileParameters
+            param = adaptyProfileParameters,
+            expectedSuccessData = Unit
         )
     }
 
@@ -145,34 +136,33 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `logout method - verify request and response`() {
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.logout(onError = onError)
-        }
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+    fun `logout method - verify request and response`() = runTest {
+        verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.logout()
+            },
             method = AdaptyPluginMethod.LOGOUT,
-            param = Unit
+            param = Unit,
+            expectedSuccessData = Unit
         )
     }
 
     @Test
-    fun `setIntegrationIdentifier method - verify request and response`() {
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.setIntegrationIdentifier(
-                key = AdaptyFakeTestData.INTEGRATION_KEY,
-                value = AdaptyFakeTestData.INTEGRATION_VALUE,
-                onError = onError
-            )
-        }
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+    fun `setIntegrationIdentifier method - verify request and response`() = runTest {
+        verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.setIntegrationIdentifier(
+                    key = AdaptyFakeTestData.INTEGRATION_KEY,
+                    value = AdaptyFakeTestData.INTEGRATION_VALUE
+                )
+            },
             method = AdaptyPluginMethod.SET_INTEGRATION_IDENTIFIER,
             param = AdaptySetIntegrationIdentifierRequest(
                 keyValues = mapOf(
                     AdaptyFakeTestData.INTEGRATION_KEY to AdaptyFakeTestData.INTEGRATION_VALUE
                 )
-            )
+            ),
+            expectedSuccessData = Unit
         )
     }
 
@@ -261,7 +251,7 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `updateAttribution method - verify request and response`() {
+    fun `updateAttribution method - verify request and response`() = runTest {
 
         val attribution = mapOf(
             "status" to "non_organic|organic|unknown",
@@ -274,20 +264,16 @@ class AdaptyImplTest {
 
         val source = "custom"
 
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.updateAttribution(
-                attribution = attribution,
-                source = source,
-                onError = onError
-            )
-        }
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+        verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.updateAttribution(attribution = attribution, source = source)
+            },
             method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
             param = AdaptyUpdateAttributionRequest(
                 attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
                 source = source
-            )
+            ),
+            expectedSuccessData = Unit
         )
     }
 
@@ -310,46 +296,41 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `setFallBackPaywalls method - verify request and response`() {
+    fun `setFallBackPaywalls method - verify request and response`() = runTest {
         val assetId = AdaptyFakeTestData.ASSET_ID
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.setFallbackPaywalls(assetId = assetId, onError = onError)
-        }
-
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+        verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.setFallbackPaywalls(assetId = assetId)
+            },
             method = AdaptyPluginMethod.SET_FALLBACK_PAYWALLS,
-            param = assetId
+            param = assetId,
+            expectedSuccessData = Unit
         )
     }
 
     @Test
-    fun `logShowPaywall method - verify request and response`() {
+    fun `logShowPaywall method - verify request and response`() = runTest {
         val paywall = AdaptyFakeTestData.getPaywall()
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.logShowPaywall(paywall = paywall, onError = onError)
-        }
-
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+        verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.logShowPaywall(paywall = paywall)
+            },
             method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
-            param = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest())
+            param = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest()),
+            expectedSuccessData = Unit
         )
     }
 
     @Test
-    fun `logShowOnboarding method - verify request and response`() {
-        val apiCall: ApiCallWithErrorCallBack = { onError ->
-            adaptyImpl.logShowOnboarding(
-                name = AdaptyFakeTestData.ONBOARDING_NAME,
-                screenName = AdaptyFakeTestData.ONBOARDING_SCREEN_NAME,
-                screenOrder = AdaptyFakeTestData.ONBOARDING_SCREEN_ORDER,
-                onError = onError
-            )
-        }
-
-        verifyApiCallErrorCallbackBehavior(
-            apiCall = apiCall,
+    fun `logShowOnboarding method - verify request and response`() = runTest {
+        verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.logShowOnboarding(
+                    name = AdaptyFakeTestData.ONBOARDING_NAME,
+                    screenName = AdaptyFakeTestData.ONBOARDING_SCREEN_NAME,
+                    screenOrder = AdaptyFakeTestData.ONBOARDING_SCREEN_ORDER
+                )
+            },
             method = AdaptyPluginMethod.LOG_SHOW_ONBOARDING,
             param = AdaptyLogShowOnboardingRequest(
                 params = AdaptyOnboardingScreenParametersRequest(
@@ -357,42 +338,9 @@ class AdaptyImplTest {
                     onboardingScreenName = AdaptyFakeTestData.ONBOARDING_SCREEN_NAME,
                     onboardingScreenOrder = AdaptyFakeTestData.ONBOARDING_SCREEN_ORDER
                 )
-            )
+            ),
+            expectedSuccessData = Unit
         )
-    }
-
-
-    private fun verifyApiCallErrorCallbackBehavior(
-        apiCall: (onError: (AdaptyError?) -> Unit) -> Unit,
-        method: AdaptyPluginMethod,
-        param: Any,
-        onSuccess: (AdaptyError?) -> Unit = { error -> assertNull(error) },
-        onError: (AdaptyError?) -> Unit = { error -> assertEquals(testError, error) },
-        simulateSuccessResponse: () -> Unit = { fakeAdaptyPlugin.simulateSuccessResponse() },
-        simulateErrorResponse: () -> Unit = { fakeAdaptyPlugin.simulateErrorResponse(testError) },
-    ) {
-        // Simulate a successful response
-        simulateSuccessResponse()
-
-        var actualError: AdaptyError? = null
-
-        // Trigger the API call
-        apiCall.invoke { error -> actualError = error }
-
-        // Verify the JSON request was sent correctly
-        verifyRequestJson(method, param)
-
-        // Verify success case
-        onSuccess(actualError)
-
-        // Now simulate an error response
-        simulateErrorResponse()
-
-        // Trigger the API call again
-        apiCall.invoke { error -> actualError = error }
-
-        // Verify error case
-        onError(actualError)
     }
 
     private suspend fun <T : Any> verifyApiCallResultBehavior(

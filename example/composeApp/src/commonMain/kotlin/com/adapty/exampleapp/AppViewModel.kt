@@ -4,10 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adapty.kmp.Adapty
 import com.adapty.kmp.AdaptyUI
-import com.adapty.kmp.awaitLogShowOnboarding
-import com.adapty.kmp.awaitLogout
-import com.adapty.kmp.awaitSetIntegrationIdentifier
-import com.adapty.kmp.awaitUpdateAttribution
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
@@ -115,7 +111,7 @@ class AppViewModel : ViewModel() {
 
             AppUiEvent.OnClickLogShowOnBoarding -> {
                 _uiState.update { it.copy(isLoading = true) }
-                Adapty.awaitLogShowOnboarding(
+                Adapty.logShowOnboarding(
                     name = "test_name",
                     screenName = "test_screen",
                     screenOrder = 3
@@ -126,7 +122,7 @@ class AppViewModel : ViewModel() {
 
             AppUiEvent.OnClickSetIntegrationIdentifier -> {
                 _uiState.update { it.copy(isLoading = true) }
-                Adapty.awaitSetIntegrationIdentifier(
+                Adapty.setIntegrationIdentifier(
                     key = "test_integration_identifier",
                     value = "test_value"
                 )
@@ -135,7 +131,7 @@ class AppViewModel : ViewModel() {
 
             is AppUiEvent.OnClickUpdateAttribution -> {
                 _uiState.update { it.copy(isLoading = true) }
-                Adapty.awaitUpdateAttribution(
+                Adapty.updateAttribution(
                     attribution = mapOf("test_key" to "test_value"),
                     source = "custom"
                 )
@@ -144,11 +140,9 @@ class AppViewModel : ViewModel() {
 
             is AppUiEvent.OnClickLogShowPaywall -> {
                 AppLogger.d("Invoking Log Show Paywall: ${event.paywall}")
-                Adapty.logShowPaywall(paywall = event.paywall, onError = { error ->
-                    error?.let {
-                        AppLogger.d("Log Show Paywall Error: $it")
-                    }
-                })
+                Adapty.logShowPaywall(paywall = event.paywall).onError {error ->
+                    AppLogger.d("Log Show Paywall Error: $error")
+                }
             }
 
             is AppUiEvent.OnClickProduct -> purchaseProduct(event.product)
@@ -300,7 +294,7 @@ class AppViewModel : ViewModel() {
 
     private fun onClickLogout() = viewModelScope.launch(exceptionHandler) {
         _uiState.update { it.copy(isLoading = true) }
-        Adapty.awaitLogout()
+        Adapty.logout()
 
         _uiState.update {
             it.copy(
@@ -329,12 +323,14 @@ class AppViewModel : ViewModel() {
             .withCustomAttribute("test_double_key", 12.0)
             .build()
 
-        Adapty.updateProfile(params = profileParameters, onError = { error ->
-            error?.let {
-                AppLogger.e("Profile update error: $it")
+        Adapty.updateProfile(params = profileParameters)
+            .onSuccess {
+                _uiState.update { it.copy(isLoading = false) }
             }
-            _uiState.update { it.copy(error = error, isLoading = false) }
-        })
+            .onError {error ->
+                AppLogger.e("Profile update error: $error")
+                _uiState.update { it.copy(error = error, isLoading = false) }
+            }
     }
 
     private fun reloadProfile() = viewModelScope.launch(exceptionHandler) {

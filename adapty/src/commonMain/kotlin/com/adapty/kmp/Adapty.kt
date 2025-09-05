@@ -19,9 +19,9 @@ import kotlin.time.Duration.Companion.seconds
 public object Adapty : AdaptyContract by AdaptyImpl(adaptyPlugin = adaptyPlugin)
 
 internal interface AdaptyContract {
-    fun activate(configuration: AdaptyConfig, onError: (AdaptyError?) -> Unit = {})
-    fun identify(customerUserId: String, onError: (AdaptyError?) -> Unit = {})
-    fun updateProfile(params: AdaptyProfileParameters, onError: (AdaptyError?) -> Unit = {})
+    suspend fun activate(configuration: AdaptyConfig): AdaptyResult<Unit>
+    suspend fun identify(customerUserId: String): AdaptyResult<Unit>
+    suspend fun updateProfile(params: AdaptyProfileParameters): AdaptyResult<Unit>
     suspend fun getProfile(): AdaptyResult<AdaptyProfile>
     suspend fun getPaywall(
         placementId: String,
@@ -40,34 +40,29 @@ internal interface AdaptyContract {
 
     suspend fun restorePurchases(): AdaptyResult<AdaptyProfile>
 
-    fun updateAttribution(
-        attribution: Map<String, Any>,
-        source: String,
-        onError: (AdaptyError?) -> Unit = {},
-    )
+    suspend fun updateAttribution(attribution: Map<String, Any>, source: String): AdaptyResult<Unit>
 
-    fun setIntegrationIdentifier(key: String, value: String, onError: (AdaptyError?) -> Unit = {})
+    suspend fun setIntegrationIdentifier(key: String, value: String): AdaptyResult<Unit>
 
     suspend fun reportTransaction(
         transactionId: String,
         variationId: String? = null
     ): AdaptyResult<AdaptyProfile>
 
-    fun logout(onError: (AdaptyError?) -> Unit = {})
+    suspend fun logout(): AdaptyResult<Unit>
     fun setOnProfileUpdatedListener(onProfileUpdatedListener: OnProfileUpdatedListener?)
 
     fun setLogLevel(logLevel: AdaptyLogLevel)
 
-    fun setFallbackPaywalls(assetId: String, onError: (AdaptyError?) -> Unit = {})
+    suspend fun setFallbackPaywalls(assetId: String): AdaptyResult<Unit>
 
-    fun logShowPaywall(paywall: AdaptyPaywall, onError: (AdaptyError?) -> Unit = {})
+    suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit>
 
-    fun logShowOnboarding(
+    suspend fun logShowOnboarding(
         name: String?,
         screenName: String?,
-        screenOrder: Int,
-        onError: (AdaptyError?) -> Unit = {}
-    )
+        screenOrder: Int
+    ): AdaptyResult<Unit>
 
     suspend fun getPaywallForDefaultAudience(
         placementId: String,

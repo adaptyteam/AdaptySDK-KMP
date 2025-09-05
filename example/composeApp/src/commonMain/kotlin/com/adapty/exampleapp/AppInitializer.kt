@@ -19,26 +19,27 @@ object AppInitializer {
             Platform.Ios -> BuildConfig.ADAPTY_IOS_API_KEY
         }
 
-        Adapty.activate(
-            AdaptyConfig.Builder(adaptyKey)
-                .withLogLevel(AdaptyLogLevel.DEBUG)
-                .withObserverMode(false) //default false
-                .withCustomerUserId(null)
-                .withIpAddressCollectionDisabled(false) //default false
-                .withAppleIdfaCollectionDisabled(false)
-                .withGoogleAdvertisingIdCollectionDisabled(false) // default false
-                .withActivateUI(true)
-                .build(),
-            onError = { error ->
-                if (error == null) {
+        MainScope().launch {
+
+            Adapty.activate(
+                AdaptyConfig.Builder(adaptyKey)
+                    .withLogLevel(AdaptyLogLevel.DEBUG)
+                    .withObserverMode(false) //default false
+                    .withCustomerUserId(null)
+                    .withIpAddressCollectionDisabled(false) //default false
+                    .withAppleIdfaCollectionDisabled(false)
+                    .withGoogleAdvertisingIdCollectionDisabled(false) // default false
+                    .withActivateUI(true)
+                    .build()
+            )
+                .onSuccess {
                     AppLogger.d("Adapty activation success")
-                } else {
+                }
+                .onError { error ->
                     AppLogger.e("Adapty activation failed", error)
                 }
-            }
-        )
 
-
+        }
     }
 }
 

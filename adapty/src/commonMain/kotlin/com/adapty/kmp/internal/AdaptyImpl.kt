@@ -86,36 +86,26 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
         }
 
 
-    override fun activate(configuration: AdaptyConfig, onError: (AdaptyError?) -> Unit) {
+    override suspend fun activate(configuration: AdaptyConfig): AdaptyResult<Unit> {
         adaptyPlugin.initialize()
-        adaptyPlugin.execute<AdaptyConfigurationRequest, Boolean>(
+        return adaptyPlugin.awaitExecute<AdaptyConfigurationRequest, Boolean>(
             method = AdaptyPluginMethod.ACTIVATE,
-            request = configuration.asAdaptyConfigurationRequest(),
-            onResult = { result ->
-                //TODO verify that if error is null should call onError?
-                onError(result.getErrorOrNull())
-            }
-        )
+            request = configuration.asAdaptyConfigurationRequest()
+        ).asAdaptyResult {}
     }
 
-    override fun identify(customerUserId: String, onError: (AdaptyError?) -> Unit) =
-        adaptyPlugin.execute<AdaptyIdentifyRequest, Boolean>(
+    override suspend fun identify(customerUserId: String): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyIdentifyRequest, Boolean>(
             method = AdaptyPluginMethod.IDENTIFY,
-            request = AdaptyIdentifyRequest(customerUserId = customerUserId),
-            onResult = { result ->
-                onError(result.getErrorOrNull())
-            }
-        )
+            request = AdaptyIdentifyRequest(customerUserId = customerUserId)
+        ).asAdaptyResult { }
 
 
-    override fun updateProfile(params: AdaptyProfileParameters, onError: (AdaptyError?) -> Unit) =
-        adaptyPlugin.execute<AdaptyUpdateProfileRequest, Boolean>(
+    override suspend fun updateProfile(params: AdaptyProfileParameters): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyUpdateProfileRequest, Boolean>(
             method = AdaptyPluginMethod.UPDATE_PROFILE,
-            request = params.asAdaptyUpdateProfileRequest(),
-            onResult = { result ->
-                onError(result.getErrorOrNull())
-            }
-        )
+            request = params.asAdaptyUpdateProfileRequest()
+        ).asAdaptyResult { }
 
     override suspend fun getProfile(): AdaptyResult<AdaptyProfile> =
         adaptyPlugin.awaitExecute<Unit, AdaptyProfileResponse>(
@@ -167,34 +157,24 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
             request = Unit
         ).asAdaptyResult { it.asAdaptyProfile() }
 
-    override fun updateAttribution(
+    override suspend fun updateAttribution(
         attribution: Map<String, Any>,
-        source: String,
-        onError: (AdaptyError?) -> Unit
-    ) = adaptyPlugin.execute<AdaptyUpdateAttributionRequest, Boolean>(
+        source: String
+    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyUpdateAttributionRequest, Boolean>(
         method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
         request = AdaptyUpdateAttributionRequest(
             attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
             source = source
-        ),
-        onResult = { result ->
-            onError(result.getErrorOrNull())
-        }
-    )
+        )
+    ).asAdaptyResult { }
 
-    override fun setIntegrationIdentifier(
-        key: String,
-        value: String,
-        onError: (AdaptyError?) -> Unit
-    ) = adaptyPlugin.execute<AdaptySetIntegrationIdentifierRequest, Boolean>(
-        method = AdaptyPluginMethod.SET_INTEGRATION_IDENTIFIER,
-        request = AdaptySetIntegrationIdentifierRequest(
-            keyValues = mapOf(key to value)
-        ),
-        onResult = { result ->
-            onError(result.getErrorOrNull())
-        }
-    )
+    override suspend fun setIntegrationIdentifier(key: String, value: String): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptySetIntegrationIdentifierRequest, Boolean>(
+            method = AdaptyPluginMethod.SET_INTEGRATION_IDENTIFIER,
+            request = AdaptySetIntegrationIdentifierRequest(
+                keyValues = mapOf(key to value)
+            )
+        ).asAdaptyResult { }
 
     override suspend fun reportTransaction(
         transactionId: String,
@@ -208,13 +188,10 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
             )
         ).asAdaptyResult { it.asAdaptyProfile() }
 
-    override fun logout(onError: (AdaptyError?) -> Unit) = adaptyPlugin.execute<Unit, Boolean>(
+    override suspend fun logout(): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<Unit, Boolean>(
         method = AdaptyPluginMethod.LOGOUT,
-        request = Unit,
-        onResult = { result ->
-            onError(result.getErrorOrNull())
-        }
-    )
+        request = Unit
+    ).asAdaptyResult { }
 
     override fun setOnProfileUpdatedListener(onProfileUpdatedListener: OnProfileUpdatedListener?) {
         this.onProfileUpdatedListener = onProfileUpdatedListener
@@ -234,31 +211,24 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
         )
     }
 
-    override fun setFallbackPaywalls(assetId: String, onError: (AdaptyError?) -> Unit) =
-        adaptyPlugin.execute<AdaptySetFallbackPaywallsRequest, Boolean>(
+    override suspend fun setFallbackPaywalls(assetId: String): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptySetFallbackPaywallsRequest, Boolean>(
             method = AdaptyPluginMethod.SET_FALLBACK_PAYWALLS,
-            request = AdaptySetFallbackPaywallsRequest(assetId = assetId),
-            onResult = { result ->
-                onError(result.getErrorOrNull())
-            }
-        )
+            request = AdaptySetFallbackPaywallsRequest(assetId = assetId)
+        ).asAdaptyResult { }
 
 
-    override fun logShowPaywall(paywall: AdaptyPaywall, onError: (AdaptyError?) -> Unit) =
-        adaptyPlugin.execute<AdaptyLogShowPaywallRequest, Boolean>(
+    override suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyLogShowPaywallRequest, Boolean>(
             method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
-            request = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest()),
-            onResult = { result ->
-                onError(result.getErrorOrNull())
-            }
-        )
+            request = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest())
+        ).asAdaptyResult { }
 
-    override fun logShowOnboarding(
+    override suspend fun logShowOnboarding(
         name: String?,
         screenName: String?,
-        screenOrder: Int,
-        onError: (AdaptyError?) -> Unit
-    ) = adaptyPlugin.execute<AdaptyLogShowOnboardingRequest, Boolean>(
+        screenOrder: Int
+    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyLogShowOnboardingRequest, Boolean>(
         method = AdaptyPluginMethod.LOG_SHOW_ONBOARDING,
         request = AdaptyLogShowOnboardingRequest(
             params = AdaptyOnboardingScreenParametersRequest(
@@ -266,11 +236,8 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
                 onboardingName = name,
                 onboardingScreenName = screenName
             )
-        ),
-        onResult = { result ->
-            onError(result.getErrorOrNull())
-        }
-    )
+        )
+    ).asAdaptyResult { }
 
     override suspend fun getPaywallForDefaultAudience(
         placementId: String,
