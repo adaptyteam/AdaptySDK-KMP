@@ -441,14 +441,6 @@ private fun OtherActionsSection(
         )
 
         ListActionTile(
-            title = "Send Onboarding Order 1",
-            isActive = !uiState.isLoading,
-            onClick = {
-                onUiEvent(AppUiEvent.OnClickLogShowOnBoarding)
-            }
-        )
-
-        ListActionTile(
             title = "Present Code Redemption Sheet",
             onClick = {
 

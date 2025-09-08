@@ -15,10 +15,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIdentifyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateCollectingRefundDataRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateRefundPreferenceRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyLogShowOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingScreenParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
@@ -223,21 +221,6 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
             method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
             request = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest())
         ).asAdaptyResult { }
-
-    override suspend fun logShowOnboarding(
-        name: String?,
-        screenName: String?,
-        screenOrder: Int
-    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyLogShowOnboardingRequest, Boolean>(
-        method = AdaptyPluginMethod.LOG_SHOW_ONBOARDING,
-        request = AdaptyLogShowOnboardingRequest(
-            params = AdaptyOnboardingScreenParametersRequest(
-                onboardingScreenOrder = screenOrder,
-                onboardingName = name,
-                onboardingScreenName = screenName
-            )
-        )
-    ).asAdaptyResult { }
 
     override suspend fun getPaywallForDefaultAudience(
         placementId: String,

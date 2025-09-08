@@ -60,7 +60,6 @@ sealed interface AppUiEvent {
     data object OnClickUpdateProfile : AppUiEvent
     data object OnClickSetIntegrationIdentifier : AppUiEvent
     data object OnClickUpdateAttribution : AppUiEvent
-    data object OnClickLogShowOnBoarding : AppUiEvent
     data class OnCustomerUserIdInputChanged(val value: String) : AppUiEvent
     data class OnNewFetchPolicySelected(val policy: AppUiState.DemoPaywallFetchPolicy) : AppUiEvent
     data object OnClickRefreshExamplePaywall : AppUiEvent

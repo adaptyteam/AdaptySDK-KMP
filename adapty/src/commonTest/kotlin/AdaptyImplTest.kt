@@ -3,10 +3,8 @@ import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyLogShowOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingScreenParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
@@ -32,10 +30,8 @@ import kotlinx.serialization.json.jsonObject
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import kotlin.test.fail
 import kotlin.time.Duration.Companion.seconds
-
 
 
 class AdaptyImplTest {
@@ -317,28 +313,6 @@ class AdaptyImplTest {
             },
             method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
             param = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest()),
-            expectedSuccessData = Unit
-        )
-    }
-
-    @Test
-    fun `logShowOnboarding method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
-            apiCall = {
-                adaptyImpl.logShowOnboarding(
-                    name = AdaptyFakeTestData.ONBOARDING_NAME,
-                    screenName = AdaptyFakeTestData.ONBOARDING_SCREEN_NAME,
-                    screenOrder = AdaptyFakeTestData.ONBOARDING_SCREEN_ORDER
-                )
-            },
-            method = AdaptyPluginMethod.LOG_SHOW_ONBOARDING,
-            param = AdaptyLogShowOnboardingRequest(
-                params = AdaptyOnboardingScreenParametersRequest(
-                    onboardingName = AdaptyFakeTestData.ONBOARDING_NAME,
-                    onboardingScreenName = AdaptyFakeTestData.ONBOARDING_SCREEN_NAME,
-                    onboardingScreenOrder = AdaptyFakeTestData.ONBOARDING_SCREEN_ORDER
-                )
-            ),
             expectedSuccessData = Unit
         )
     }

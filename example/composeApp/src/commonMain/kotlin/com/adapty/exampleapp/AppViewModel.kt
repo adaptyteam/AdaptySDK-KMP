@@ -109,17 +109,6 @@ class AppViewModel : ViewModel() {
                 updateProfile()
             }
 
-            AppUiEvent.OnClickLogShowOnBoarding -> {
-                _uiState.update { it.copy(isLoading = true) }
-                Adapty.logShowOnboarding(
-                    name = "test_name",
-                    screenName = "test_screen",
-                    screenOrder = 3
-                )
-                _uiState.update { it.copy(isLoading = false) }
-            }
-
-
             AppUiEvent.OnClickSetIntegrationIdentifier -> {
                 _uiState.update { it.copy(isLoading = true) }
                 Adapty.setIntegrationIdentifier(

@@ -10,7 +10,6 @@ internal enum class AdaptyPluginMethod(val methodName: String) {
     GET_PAYWALL("get_paywall"),
     GET_PAYWALL_PRODUCTS("get_paywall_products"),
     LOG_SHOW_PAYWALL("log_show_paywall"),
-    LOG_SHOW_ONBOARDING("log_show_onboarding"),
     GET_PAYWALL_FOR_DEFAULT_AUDIENCE("get_paywall_for_default_audience"),
     UPDATE_ATTRIBUTION("update_attribution_data"),
     RESTORE_PURCHASES("restore_purchases"),

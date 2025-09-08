@@ -41,7 +41,6 @@ object AdaptyPluginResponseTemplate {
             AdaptyPluginMethod.REPORT_TRANSACTION -> getSuccessReportTransactionResponse(successData as AdaptyProfile)
             AdaptyPluginMethod.SET_FALLBACK_PAYWALLS -> genericSuccessResponse()
             AdaptyPluginMethod.LOG_SHOW_PAYWALL -> genericSuccessResponse()
-            AdaptyPluginMethod.LOG_SHOW_ONBOARDING -> genericSuccessResponse()
             AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getSuccessPaywallResponse(
                 successData as AdaptyPaywall
             )

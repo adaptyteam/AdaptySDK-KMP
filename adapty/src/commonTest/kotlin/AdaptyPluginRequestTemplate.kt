@@ -3,7 +3,6 @@ import com.adapty.kmp.internal.plugin.request.AdaptyAndroidSubscriptionUpdatePar
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyLogShowOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
@@ -40,7 +39,6 @@ object AdaptyPluginRequestTemplate {
         AdaptyPluginMethod.REPORT_TRANSACTION -> getReportTransactionRequestJsonString(param as AdaptyReportTransactionRequest)
         AdaptyPluginMethod.SET_FALLBACK_PAYWALLS -> getSetFallbackPaywallsRequestJsonString(param as String)
         AdaptyPluginMethod.LOG_SHOW_PAYWALL -> getAdaptyLogShowPaywallRequest(param as AdaptyLogShowPaywallRequest)
-        AdaptyPluginMethod.LOG_SHOW_ONBOARDING -> getAdaptyLogShowOnboardingRequest(param as AdaptyLogShowOnboardingRequest)
         AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getAdaptyGetPaywallForDefaultAudienceRequest(
             param as AdaptyGetPaywallForDefaultAudienceRequest
         )
@@ -215,17 +213,6 @@ object AdaptyPluginRequestTemplate {
                     request.paywall
                 )
             )
-        }
-        return jsonObject.toString()
-    }
-
-    private fun getAdaptyLogShowOnboardingRequest(request: AdaptyLogShowOnboardingRequest): String {
-        val jsonObject = buildJsonObject {
-            put("params", buildJsonObject {
-                put("onboarding_screen_order", request.params.onboardingScreenOrder)
-                put("onboarding_name", request.params.onboardingName)
-                put("onboarding_screen_name", request.params.onboardingScreenName)
-            })
         }
         return jsonObject.toString()
     }

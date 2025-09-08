@@ -58,12 +58,6 @@ internal interface AdaptyContract {
 
     suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit>
 
-    suspend fun logShowOnboarding(
-        name: String?,
-        screenName: String?,
-        screenOrder: Int
-    ): AdaptyResult<Unit>
-
     suspend fun getPaywallForDefaultAudience(
         placementId: String,
         locale: String? = null,
