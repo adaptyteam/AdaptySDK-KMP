@@ -15,7 +15,8 @@ public interface AdaptyUIObserver {
     ) {
         when (action) {
             is AdaptyUIAction.CloseAction, is AdaptyUIAction.AndroidSystemBackAction -> view.dismiss()
-            else -> {}
+            is AdaptyUIAction.OpenUrlAction -> openUrl(action.url)
+            is AdaptyUIAction.CustomAction -> {}
         }
     }
 
