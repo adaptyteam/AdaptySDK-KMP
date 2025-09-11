@@ -43,6 +43,7 @@ import com.adapty.kmp.models.AdaptyUIView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -64,10 +65,13 @@ internal class AdaptyUIImpl(
     private val mainDispatcher: CoroutineContext = Dispatchers.Main,
 ) : AdaptyUIContract {
 
+    private var observerJob: Job? = null
+
     private var observer: AdaptyUIObserver? = null
         @JvmName("setUIObserverFromJava")
         set(value) {
-            appMainScope.launch {
+            observerJob?.cancel()
+            observerJob = appMainScope.launch {
                 AdaptyPluginEventHandler.viewEventFlow
                     .catch {
                         logger.log("AdaptyUIImpl, onNewEventReceived, error: $it")
