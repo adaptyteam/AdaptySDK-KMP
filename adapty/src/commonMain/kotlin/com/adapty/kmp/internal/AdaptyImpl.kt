@@ -56,7 +56,6 @@ import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
-import com.adapty.kmp.models.onError
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -275,9 +274,8 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
 
     override suspend fun openWebPaywall(
         paywall: AdaptyPaywall?,
-        product: AdaptyPaywallProduct?,
-        onError: (AdaptyError?) -> Unit
-    ) {
+        product: AdaptyPaywallProduct?
+    ): AdaptyResult<Unit> {
         val request = when {
             paywall != null -> AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest())
             product != null -> AdaptyWebPaywallRequest.fromPaywallProduct(product.asAdaptyPaywallProductRequest())
@@ -286,27 +284,27 @@ internal class AdaptyImpl(private val adaptyPlugin: AdaptyPlugin) : AdaptyContra
                     code = AdaptyErrorCode.WRONG_PARAMETER,
                     message = "Either Paywall or product must be provided"
                 )
-                onError(error)
-                return
+                return AdaptyResult.Error(error)
             }
         }
 
-        val result = adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, Boolean>(
+        return adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, Boolean>(
             method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
             request = request
-        ).asAdaptyResult { it }
-
-        result.onError(onError)
+        ).asAdaptyResult { }
     }
 
-    override suspend fun presentCodeRedemptionSheet(onError: (AdaptyError?) -> Unit) {
-        if (isAndroidPlatform) return
-        val result = adaptyPlugin.awaitExecute<Unit, Boolean>(
+    override suspend fun presentCodeRedemptionSheet(): AdaptyResult<Unit> {
+        if (isAndroidPlatform) return AdaptyResult.Error(
+            AdaptyError(
+                code = AdaptyErrorCode.DEVELOPER_ERROR,
+                message = "This method is only available for iOS"
+            )
+        )
+        return adaptyPlugin.awaitExecute<Unit, Boolean>(
             method = AdaptyPluginMethod.PRESENT_CODE_REDEMPTION_SHEET,
             request = Unit
-        ).asAdaptyResult { it }
-
-        result.onError(onError)
+        ).asAdaptyResult { }
     }
 
     override suspend fun updateRefundPreference(preference: AdaptyIosRefundPreference): AdaptyResult<Boolean> {

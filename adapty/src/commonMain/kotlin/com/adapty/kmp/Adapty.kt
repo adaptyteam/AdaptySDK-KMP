@@ -3,7 +3,6 @@ package com.adapty.kmp
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyConfig
-import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyPaywall
@@ -73,11 +72,10 @@ internal interface AdaptyContract {
 
     suspend fun openWebPaywall(
         paywall: AdaptyPaywall? = null,
-        product: AdaptyPaywallProduct? = null,
-        onError: (AdaptyError?) -> Unit = {}
-    )
+        product: AdaptyPaywallProduct? = null
+    ): AdaptyResult<Unit>
 
-    suspend fun presentCodeRedemptionSheet(onError: (AdaptyError?) -> Unit = {})
+    suspend fun presentCodeRedemptionSheet(): AdaptyResult<Unit>
     suspend fun updateRefundPreference(preference: AdaptyIosRefundPreference): AdaptyResult<Boolean>
     suspend fun updateCollectingRefundDataConsent(consent: Boolean): AdaptyResult<Boolean>
 

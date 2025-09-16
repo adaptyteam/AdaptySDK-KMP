@@ -11,8 +11,8 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun logShowPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun logout (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun makePurchase (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun presentCodeRedemptionSheet (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun presentCodeRedemptionSheet (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setFallbackPaywalls (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

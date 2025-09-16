@@ -41,6 +41,7 @@ import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
+import com.adapty.kmp.models.onError
 import kotlinx.coroutines.launch
 
 
@@ -447,9 +448,9 @@ private fun OtherActionsSection(
                 coroutineScope.launch {
                     AppLogger.d("Invoking present code redemption sheet")
 
-                    Adapty.presentCodeRedemptionSheet(onError = {
-                        AppLogger.e("PaywallContentSection, presentCodeRedemptionSheet, error: $it")
-                    })
+                    Adapty.presentCodeRedemptionSheet().onError { error ->
+                        AppLogger.e("PaywallContentSection, presentCodeRedemptionSheet, error: $error")
+                    }
                 }
             }
         )
@@ -525,9 +526,9 @@ private fun PaywallContentSection(
             onClick = {
                 coroutineScope.launch {
                     AppLogger.d("Invoking openWebPaywall, paywall: $paywall")
-                    Adapty.openWebPaywall(paywall = paywall, onError = {
-                        AppLogger.e("PaywallContentSection, openWebPaywall, error: $it")
-                    })
+                    Adapty.openWebPaywall(paywall = paywall).onError { error ->
+                        AppLogger.e("PaywallContentSection, openWebPaywall, error: $error")
+                    }
                 }
             }
         )
