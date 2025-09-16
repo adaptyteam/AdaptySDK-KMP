@@ -306,7 +306,7 @@ internal class AdaptyUIImpl(
         return this.mapValues { (_, localDateTime) ->
             // Milliseconds (3 digits)
             val ms = (localDateTime.nanosecond / 1_000_000).toString().padStart(3, '0')
-            val offset = "+0000" // UTC offset for UTC
+            val offset = "Z" // UTC offset for UTC
 
             "${localDateTime.year}-${localDateTime.monthNumber.toString().padStart(2,'0')}-" +
                     "${localDateTime.dayOfMonth.toString().padStart(2,'0')}T" +
