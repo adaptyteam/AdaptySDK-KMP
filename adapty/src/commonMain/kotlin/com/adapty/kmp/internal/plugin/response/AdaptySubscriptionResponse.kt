@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class AdaptySubscriptionResponse(
+internal data class AdaptySubscriptionResponse(
     @SerialName("store")
     val store: String,
 

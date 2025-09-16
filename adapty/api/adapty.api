@@ -1,33 +1,32 @@
 public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public static final field INSTANCE Lcom/adapty/kmp/Adapty;
-	public fun activate (Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/jvm/functions/Function1;)V
+	public fun activate (Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun createWebPaywallUrl (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getPaywall-zkXUZaI (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getPaywallForDefaultAudience (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getPaywallProducts (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getProfile (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun identify (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public fun identify (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun isActivated (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun logShowOnboarding (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/functions/Function1;)V
-	public fun logShowPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/jvm/functions/Function1;)V
-	public fun logout (Lkotlin/jvm/functions/Function1;)V
+	public fun logShowPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun logout (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun makePurchase (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun presentCodeRedemptionSheet (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun setFallbackPaywalls (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public fun setIntegrationIdentifier (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public fun setFallbackPaywalls (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun setIntegrationIdentifier (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setLogLevel (Lcom/adapty/kmp/models/AdaptyLogLevel;)V
 	public fun setOnProfileUpdatedListener (Lcom/adapty/kmp/OnProfileUpdatedListener;)V
-	public fun updateAttribution (Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public fun updateAttribution (Ljava/util/Map;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateCollectingRefundDataConsent (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun updateProfile (Lcom/adapty/kmp/models/AdaptyProfileParameters;Lkotlin/jvm/functions/Function1;)V
+	public fun updateProfile (Lcom/adapty/kmp/models/AdaptyProfileParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateRefundPreference (Lcom/adapty/kmp/models/AdaptyIosRefundPreference;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/adapty/kmp/AdaptyExt_androidKt {
-	public static final fun activate (Lcom/adapty/kmp/Adapty;Landroid/content/Context;Lcom/adapty/kmp/models/AdaptyConfig;)V
+	public static final fun activate (Lcom/adapty/kmp/Adapty;Landroid/content/Context;Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
@@ -70,86 +69,8 @@ public final class com/adapty/kmp/AdaptyUIObserver$DefaultImpls {
 	public static fun paywallViewDidStartRestore (Lcom/adapty/kmp/AdaptyUIObserver;Lcom/adapty/kmp/models/AdaptyUIView;)V
 }
 
-public final class com/adapty/kmp/CoroutineExtKt {
-	public static final fun awaitActivate (Lcom/adapty/kmp/Adapty;Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitIdentify (Lcom/adapty/kmp/Adapty;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitLogShowOnboarding (Lcom/adapty/kmp/Adapty;Ljava/lang/String;Ljava/lang/String;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitLogShowPaywall (Lcom/adapty/kmp/Adapty;Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitLogout (Lcom/adapty/kmp/Adapty;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitSetFallbackPaywalls (Lcom/adapty/kmp/Adapty;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitSetIntegrationIdentifier (Lcom/adapty/kmp/Adapty;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitUpdateAttribution (Lcom/adapty/kmp/Adapty;Ljava/util/Map;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun awaitUpdateProfile (Lcom/adapty/kmp/Adapty;Lcom/adapty/kmp/models/AdaptyProfileParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public abstract interface class com/adapty/kmp/OnProfileUpdatedListener {
 	public abstract fun onProfileReceived (Lcom/adapty/kmp/models/AdaptyProfile;)V
-}
-
-public final class com/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse {
-	public static final field Companion Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component10 ()Ljava/lang/String;
-	public final fun component11 ()Ljava/lang/String;
-	public final fun component12 ()Ljava/lang/String;
-	public final fun component13 ()Z
-	public final fun component14 ()Z
-	public final fun component15 ()Z
-	public final fun component16 ()Z
-	public final fun component17 ()Ljava/lang/String;
-	public final fun component18 ()Ljava/lang/String;
-	public final fun component19 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component20 ()Ljava/lang/String;
-	public final fun component21 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Z
-	public final fun component6 ()Z
-	public final fun component7 ()Ljava/lang/String;
-	public final fun component8 ()Ljava/lang/String;
-	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getActivatedAt ()Ljava/lang/String;
-	public final fun getActiveIntroductoryOfferType ()Ljava/lang/String;
-	public final fun getActivePromotionalOfferId ()Ljava/lang/String;
-	public final fun getActivePromotionalOfferType ()Ljava/lang/String;
-	public final fun getBillingIssueDetectedAt ()Ljava/lang/String;
-	public final fun getCancellationReason ()Ljava/lang/String;
-	public final fun getExpiresAt ()Ljava/lang/String;
-	public final fun getOfferId ()Ljava/lang/String;
-	public final fun getRenewedAt ()Ljava/lang/String;
-	public final fun getStartsAt ()Ljava/lang/String;
-	public final fun getStore ()Ljava/lang/String;
-	public final fun getUnsubscribedAt ()Ljava/lang/String;
-	public final fun getVendorOriginalTransactionId ()Ljava/lang/String;
-	public final fun getVendorProductId ()Ljava/lang/String;
-	public final fun getVendorTransactionId ()Ljava/lang/String;
-	public final fun getWillRenew ()Z
-	public fun hashCode ()I
-	public final fun isActive ()Z
-	public final fun isInGracePeriod ()Z
-	public final fun isLifetime ()Z
-	public final fun isRefund ()Z
-	public final fun isSandbox ()Z
-	public fun toString ()Ljava/lang/String;
-}
-
-public synthetic class com/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse$$serializer;
-	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse;)V
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-}
-
-public final class com/adapty/kmp/internal/plugin/response/AdaptySubscriptionResponse$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class com/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters {
