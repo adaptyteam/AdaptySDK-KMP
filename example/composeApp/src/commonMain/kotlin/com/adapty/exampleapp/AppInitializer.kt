@@ -13,12 +13,7 @@ object AppInitializer {
 
     fun initialize() {
         AppLogger.initialize()
-
-        val adaptyKey = when (getPlatform()) {
-            Platform.Android -> BuildConfig.ADAPTY_ANDROID_API_KEY
-            Platform.Ios -> BuildConfig.ADAPTY_IOS_API_KEY
-        }
-
+        val adaptyKey = BuildConfig.ADAPTY_API_KEY
         MainScope().launch {
 
             Adapty.activate(

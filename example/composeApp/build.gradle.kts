@@ -79,8 +79,7 @@ android {
 }
 
 buildConfig {
-    buildConfigField("ADAPTY_ANDROID_API_KEY", gradleLocalProperties(rootDir, providers).getProperty("ADAPTY_ANDROID_API_KEY"))
-    buildConfigField("ADAPTY_IOS_API_KEY", gradleLocalProperties(rootDir, providers).getProperty("ADAPTY_IOS_API_KEY"))
+    buildConfigField("ADAPTY_API_KEY", gradleLocalProperties(rootDir, providers).getProperty("ADAPTY_API_KEY"))
 }
 
 dependencies {

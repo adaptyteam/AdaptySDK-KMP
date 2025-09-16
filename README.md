@@ -6,10 +6,9 @@ Kotlin Multiplatform SDK of Adapty.
 - check your system with [KDoctor](https://github.com/Kotlin/kdoctor)
 - install JDK 17 or higher on your machine
 - add `local.properties` file to the project root and set a path to Android SDK there
-- Add Adapty API keys into `local.properties`
+- Add Adapty API key into `local.properties`
 ```agsl
-ADAPTY_ANDROID_API_KEY = YOUR_API_KEY
-ADAPTY_IOS_API_KEY = YOUR_API_KEY
+ADAPTY_API_KEY = YOUR_API_KEY
 ```
 
 ### Android
