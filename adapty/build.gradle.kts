@@ -143,7 +143,7 @@ mavenPublishing {
     }
 
     coordinates(
-        groupId = "com.adapty",
+        groupId = "io.adapty",
         artifactId = "adapty-kmp",
         version = project.properties["adaptyKmpVersion"] as String
     )
