@@ -1,32 +1,85 @@
-# AdaptySDK-KMP
-Kotlin Multiplatform SDK of Adapty.
+<h1 align="center" style="border-bottom: none">
+<b>
+    <a href="https://adapty.io/?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP">
+        <img src="https://adapty-portal-media-production.s3.amazonaws.com/github/logo-adapty-new.svg">
+    </a>
+</b>
+<br>Easy In-App Purchases Integration to
+<br>Make Your Kotlin Multiplatform App Profitable
+</h1>
 
-## Before running Demo App!
+<p align="center">
+<a href="https://github.com/adaptyteam/AdaptySDK-KMP/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg"></a>
+</p>
 
-- check your system with [KDoctor](https://github.com/Kotlin/kdoctor)
-- install JDK 17 or higher on your machine
-- add `local.properties` file to the project root and set a path to Android SDK there
-- Add Adapty API key into `local.properties`
-```agsl
-ADAPTY_API_KEY = YOUR_API_KEY
-```
 
-### Android
+<p align="center">
+    <a href="https://adapty.io?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP"><b>Website</b></a> •
+    <a href="https://x.com/AdaptyTeam"><b>Follow us on X</b></a>
+</p>
 
-To run the example application on android device/emulator:
+![Adapty: CRM for mobile apps with subscriptions](https://adapty-portal-media-production.s3.amazonaws.com/github/adapty-schema.png)
 
-- open project in Android Studio and run imported android run configuration
+Adapty SDK is an open-source framework that makes implementing in-app subscriptions in Kotlin Multiplatform fast and easy. It’s 100% open-source, native and lightweight.
 
-To build the application bundle:
+## Why Adapty?
 
-- run `./gradlew :example:composeApp:assembleDebug`
-- find `.apk` file in `exmaple/composeApp/build/outputs/apk/debug/composeApp-debug.apk`
+- [On-the-fly paywalls price testing](https://docs.adapty.io/docs/ab-test?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP). Test different prices, duration, offers, messages, and designs simultaneously, all without new app releases.
+- [Full customer's payment history](https://docs.adapty.io/docs/profiles-crm?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP). Explore the user's payment events from the trial start to subscription cancellation or billing issues.
+- [In-app purchase data integration](https://docs.adapty.io/docs/events?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP). Send subscription events to 3rd-party analytics, attribution, and ad services with no coding, even if the user uninstalls the app.
+- [No server code implementation](https://docs.adapty.io/docs/kmp-sdk-overview?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP). Integrate in-app purchases with server-side receipt validation in minutes. Apple Promotional Offers supported out-of-the-box.
+- [Advanced analytics](https://docs.adapty.io/docs/analytics-charts?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP). Analyze your app real-time metrics with advanced filters, such as Ad network, Ad campaign, country, A/B test, etc.
 
-### iOS
+<h3 align="center" style="border-bottom: none; margin-top: -15px; margin-bottom: -15px; font-size: 150%">
+<a href="https://adapty.io/schedule-demo?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP_schedule-demo">Talk to Us to Learn More</a>
+</h3>
 
-To run the example application on iPhone device/simulator:
+## Integrate IAPs Within a Few Hours Without Server Coding 
 
-- Open `example/iosApp/iosApp.xcproject` in Xcode and run standard configuration
-- Or
-  use [Kotlin Multiplatform Mobile plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile)
-  for Android Studio
+**Adapty handles everything, from free trials to refunds, in a simple, developer-friendly SDK.**
+
+- Free trials, upgrades, downgrades, crossgrades, family sharing, renewals, promo offers, intro offers, promo codes, and more – Adapty SDK does everything with a single line of code.
+- Easy subscription management.
+- One-time purchases and lifetime subscriptions supported.
+- Sync subscribers' states across iOS, Android, and Web.
+
+## Price Testing for In-app Purchases on Kotlin Multiplatform Without App Releases
+
+- Optimize in-app subscriptions with the paywall A/B testing. Conversions, trials, revenue, cancellations, and more — everything is calculated for you: each paywall and each A/B test.
+- Change images, colors, layouts, and literally anything with a custom JSON. Configure different prices, trial periods, promo offers, and more in Adapty without app releases.
+
+## Paywall A/B Testing on Kotlin Multiplatform
+
+![Adapty: In-app subscriptions with paywall A/B testing](https://adapty-portal-media-production.s3.amazonaws.com/github/ab-test-new.png)
+
+- Conversions, trials, revenue, cancellations, and more  everything is calculated for you: each paywall and each A/B test.
+- Change images, colors, layouts and literally anything with a custom JSON.
+- Price testing is seamlessly integrated for any platform.
+
+## Real-time Analytics for Your Kotlin Multiplatform App
+
+![Adapty: How Adapty works](https://adapty-portal-media-production.s3.amazonaws.com/github/analyticss.gif)
+
+- Manage the subscription's state without managing transactions.
+- 99.5% accuracy with App Store Connect.
+- View and analyze data by attributes, such as status, channels, campaigns, and more.
+- Filter, group, and measure metrics by attribution, platform, custom users' segments, and more in a few clicks.
+
+## Mobile App Monetization's Largest Community
+
+Ask questions, participate in discussions about Adapty-related topics, become a part of our community for mobile app developers and marketers. Learn how to monetize your app, ask questions, post jobs, read industry news and analytics. Ad free.
+
+<a href="https://discord.gg/subscriptions-hub"><img src="https://adapty-portal-media-production.s3.amazonaws.com/github/join-discord.svg" /></a>
+
+## Contributing
+
+- Feel free to open an issue, we check all of them or drop us an email at [support@adapty.io](mailto:support@adapty.io) and tell us everything you want.
+- Want to suggest a feature? Just contact us or open an issue in the repo.
+
+## Like Adapty SDK? 
+
+So do we! Feel free to star the repo ⭐️⭐️⭐️ and make our developers happy!
+
+## License
+
+Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-KMP/blob/main/LICENSE) for details.
