@@ -39,7 +39,7 @@ object AdaptyPluginResponseTemplate {
 
             AdaptyPluginMethod.MAKE_PURCHASE -> getSuccessPurchaseResultResponse(successData as AdaptyPurchaseResult)
             AdaptyPluginMethod.REPORT_TRANSACTION -> getSuccessReportTransactionResponse(successData as AdaptyProfile)
-            AdaptyPluginMethod.SET_FALLBACK_PAYWALLS -> genericSuccessResponse()
+            AdaptyPluginMethod.SET_FALLBACK -> genericSuccessResponse()
             AdaptyPluginMethod.LOG_SHOW_PAYWALL -> genericSuccessResponse()
             AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getSuccessPaywallResponse(
                 successData as AdaptyPaywall
@@ -180,14 +180,20 @@ object AdaptyPluginResponseTemplate {
         }
 
         val paywallResponseJson = buildJsonObject {
-            put("developer_id", adaptyPaywall.placementId)
+            put("placement", buildJsonObject {
+                put("developer_id", adaptyPaywall.placement.id)
+                put("audience_name", adaptyPaywall.placement.audienceName)
+                put("revision", adaptyPaywall.placement.revision)
+                put("ab_test_name", adaptyPaywall.placement.abTestName)
+                put("placement_audience_version_id", adaptyPaywall.placement.placementAudienceVersionId)
+
+            })
+            put("developer_id", adaptyPaywall.placement.id)
             put("paywall_id", adaptyPaywall.instanceIdentity)
             put("paywall_name", adaptyPaywall.name)
-            put("audience_name", adaptyPaywall.audienceName)
-            put("ab_test_name", adaptyPaywall.abTestName)
             put("variation_id", adaptyPaywall.variationId)
-            put("revision", adaptyPaywall.revision)
-            put("response_created_at", adaptyPaywall.version)
+            put("request_locale", adaptyPaywall.requestLocale)
+            put("response_created_at", adaptyPaywall.responseCreatedAt)
             adaptyPaywall.remoteConfig?.let { remoteConfig ->
                 put("remote_config", buildJsonObject {
                     put("lang", remoteConfig.locale)

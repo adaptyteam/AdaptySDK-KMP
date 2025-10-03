@@ -2,17 +2,17 @@ package com.adapty.kmp.models
 
 import com.adapty.kmp.AdaptyUI
 
-public data class AdaptyUIView internal constructor(
+public data class AdaptyUIPaywallView internal constructor(
     val id: String,
     val placementId: String,
-    val paywallVariationId: String
+    val variationId: String
 ) {
-    public fun present() {
-        AdaptyUI.presentPaywallView(this)
+    public suspend fun present(): AdaptyResult<Unit> {
+        return AdaptyUI.presentPaywallView(this)
     }
 
-    public fun dismiss() {
-        AdaptyUI.dismissPaywallView(this)
+    public suspend fun dismiss(): AdaptyResult<Unit> {
+        return AdaptyUI.dismissPaywallView(this)
     }
 
     public suspend fun showDialog(
@@ -20,10 +20,10 @@ public data class AdaptyUIView internal constructor(
         content: String,
         primaryActionTitle: String,
         secondaryActionTitle: String? = null
-    ): AdaptyUIDialogActionType {
+    ): AdaptyResult<AdaptyUIDialogActionType> {
 
         return AdaptyUI.showDialog(
-            view = this,
+            viewId = this.id,
             title = title,
             content = content,
             primaryActionTitle = primaryActionTitle,

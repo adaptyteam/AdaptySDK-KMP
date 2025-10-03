@@ -1,5 +1,4 @@
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
-import com.adapty.kmp.internal.plugin.request.AdaptyAndroidSubscriptionUpdateParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
@@ -7,6 +6,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
@@ -37,7 +37,7 @@ object AdaptyPluginRequestTemplate {
         AdaptyPluginMethod.MAKE_PURCHASE -> getMakePurchaseRequestJsonString(param as AdaptyMakePurchaseRequest)
         AdaptyPluginMethod.UPDATE_ATTRIBUTION -> getUpdateAttributionRequestJsonString(param as AdaptyUpdateAttributionRequest)
         AdaptyPluginMethod.REPORT_TRANSACTION -> getReportTransactionRequestJsonString(param as AdaptyReportTransactionRequest)
-        AdaptyPluginMethod.SET_FALLBACK_PAYWALLS -> getSetFallbackPaywallsRequestJsonString(param as String)
+        AdaptyPluginMethod.SET_FALLBACK -> getSetFallbackPaywallsRequestJsonString(param as String)
         AdaptyPluginMethod.LOG_SHOW_PAYWALL -> getAdaptyLogShowPaywallRequest(param as AdaptyLogShowPaywallRequest)
         AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getAdaptyGetPaywallForDefaultAudienceRequest(
             param as AdaptyGetPaywallForDefaultAudienceRequest
@@ -160,7 +160,6 @@ object AdaptyPluginRequestTemplate {
     private fun getMakePurchaseRequestJsonString(adaptyMakePurchaseRequest: AdaptyMakePurchaseRequest): String {
 
         val jsonObject = buildJsonObject {
-            put("is_offer_personalized", adaptyMakePurchaseRequest.isOfferPersonalized)
             put(
                 "product",
                 jsonInstance.encodeToJsonElement(
@@ -168,14 +167,12 @@ object AdaptyPluginRequestTemplate {
                     adaptyMakePurchaseRequest.paywallProduct
                 )
             )
-            adaptyMakePurchaseRequest.subscriptionUpdateParams?.let { subscriptionUpdateParams ->
-                put(
-                    "subscription_update_params",
-                    jsonInstance.encodeToJsonElement(
-                        AdaptyAndroidSubscriptionUpdateParametersRequest.serializer(),
-                        subscriptionUpdateParams
-                    )
-                )
+
+            adaptyMakePurchaseRequest.parameters?.let { parameters ->
+                put("parameters",jsonInstance.encodeToJsonElement(
+                    AdaptyPurchaseParametersRequest.serializer(),
+                    parameters
+                ))
             }
 
         }

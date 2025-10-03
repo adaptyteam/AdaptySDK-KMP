@@ -1,9 +1,15 @@
 package com.adapty.kmp
 
 import com.adapty.kmp.internal.AdaptyUIImpl
+import com.adapty.kmp.models.AdaptyCustomAsset
+import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
+import com.adapty.kmp.models.AdaptyProductIdentifier
+import com.adapty.kmp.models.AdaptyPurchaseParameters
+import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.AdaptyUIDialogActionType
-import com.adapty.kmp.models.AdaptyUIView
+import com.adapty.kmp.models.AdaptyUIOnboardingView
+import com.adapty.kmp.models.AdaptyUIPaywallView
 import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration
 
@@ -11,7 +17,17 @@ public object AdaptyUI : AdaptyUIContract by AdaptyUIImpl(adaptyPlugin = adaptyP
 
 internal interface AdaptyUIContract {
 
-    fun setObserver(observer: AdaptyUIObserver)
+
+    fun registerOnboardingEventsListener(
+        observer: AdaptyUIOnboardingsEventsObserver,
+        viewId: String
+    )
+
+    fun unregisterOnboardingEventsListener(viewId: String)
+
+
+    fun setPaywallsEventsObserver(observer: AdaptyUIPaywallsEventsObserver)
+    fun setOnboardingsEventsObserver(observer: AdaptyUIOnboardingsEventsObserver)
 
     suspend fun createPaywallView(
         paywall: AdaptyPaywall,
@@ -19,16 +35,21 @@ internal interface AdaptyUIContract {
         preloadProducts: Boolean = false,
         customTags: Map<String, String>? = null,
         customTimers: Map<String, LocalDateTime>? = null,
-        androidPersonalizedOffers: Map<String, Boolean>? = null
-    ): AdaptyUIView?
+        customAssets: Map<String, AdaptyCustomAsset>? = null,
+        productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null
+    ): AdaptyResult<AdaptyUIPaywallView>
 
-    fun presentPaywallView(view: AdaptyUIView)
-    fun dismissPaywallView(view: AdaptyUIView)
+    suspend fun createOnboardingView(onboarding: AdaptyOnboarding): AdaptyResult<AdaptyUIOnboardingView>
+    suspend fun presentOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit>
+
+    suspend fun presentPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
+    suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
+    suspend fun dismissOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit>
     suspend fun showDialog(
-        view: AdaptyUIView,
+        viewId: String,
         title: String,
         content: String,
         primaryActionTitle: String,
         secondaryActionTitle: String? = null
-    ): AdaptyUIDialogActionType
+    ): AdaptyResult<AdaptyUIDialogActionType>
 }

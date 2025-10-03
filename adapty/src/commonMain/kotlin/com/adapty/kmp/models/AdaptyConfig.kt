@@ -12,6 +12,7 @@ public class AdaptyConfig private constructor(
     internal val backendBaseUrl: String?,
     internal val backendFallbackBaseUrl: String?,
     internal val backendConfigsBaseUrl: String?,
+    internal val backendUABaseUrl: String?,
     internal val backendProxyHost: String?,
     internal val backendProxyPort: Int?,
     internal val serverCluster: String?,
@@ -40,6 +41,7 @@ public class AdaptyConfig private constructor(
         private var backendBaseUrl: String? = null
         private var backendFallbackBaseUrl: String? = null
         private var backendConfigsBaseUrl: String? = null
+        private var backendUABaseUrl: String? = null
         private var backendProxyHost: String? = null
         private var backendProxyPort: Int? = null
         private var serverCluster: String? = null
@@ -66,8 +68,8 @@ public class AdaptyConfig private constructor(
         public fun withBackendFallbackBaseUrl(url: String): Builder =
             apply { this.backendFallbackBaseUrl = url }
 
-        public fun withBackendConfigsBaseUrl(url: String): Builder =
-            apply { this.backendConfigsBaseUrl = url }
+        public fun withBackendConfigsBaseUrl(url: String): Builder = apply { this.backendConfigsBaseUrl = url }
+        public fun withBackendUABaseUrl(url: String): Builder = apply { this.backendUABaseUrl = url }
 
         public fun withBackendProxyHost(host: String): Builder =
             apply { this.backendProxyHost = host }
@@ -110,7 +112,8 @@ public class AdaptyConfig private constructor(
                 crossPlatformSDKVersion = crossPlatformSDKVersion,
                 activateUI = activateUI,
                 logLevel = logLevel,
-                mediaCache = mediaCache
+                mediaCache = mediaCache,
+                backendUABaseUrl = backendUABaseUrl
             )
         }
     }

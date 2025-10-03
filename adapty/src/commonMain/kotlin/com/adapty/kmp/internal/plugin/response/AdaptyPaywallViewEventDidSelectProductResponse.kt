@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyPaywallViewEventDidSelectProductResponse(
     @SerialName("view")
-    val view: AdaptyUIViewResponse,
+    val view: AdaptyUIPaywallViewResponse,
 
     @SerialName("product_id")
     val productId: String,

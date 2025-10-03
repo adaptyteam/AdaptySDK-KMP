@@ -21,6 +21,7 @@ internal data class AdaptyConfigurationRequestData(
     @SerialName("backend_base_url") val backendBaseUrl: String? = null,
     @SerialName("backend_fallback_base_url") val backendFallbackBaseUrl: String? = null,
     @SerialName("backend_configs_base_url") val backendConfigsBaseUrl: String? = null,
+    @SerialName("backend_ua_base_url") val backendUaBaseUrl: String? = null,
     @SerialName("backend_proxy_host") val backendProxyHost: String? = null,
     @SerialName("backend_proxy_port") val backendProxyPort: Int? = null,
     @SerialName("log_level") val logLevel: AdaptyLogLevelRequestResponse? = null,

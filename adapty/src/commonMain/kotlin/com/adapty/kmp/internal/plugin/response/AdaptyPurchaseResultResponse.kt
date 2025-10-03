@@ -20,14 +20,20 @@ internal sealed class AdaptyPurchaseResultResponse {
 
     @Serializable
     @SerialName("success")
-    data class Success(val profile: AdaptyProfileResponse) : AdaptyPurchaseResultResponse()
+    data class Success(
+        @SerialName("profile") val profile: AdaptyProfileResponse,
+        @SerialName("jws_transaction") val jwsTransaction: String? = null
+    ) : AdaptyPurchaseResultResponse()
 }
 
 internal fun AdaptyPurchaseResultResponse.asAdaptyPurchaseResult(): AdaptyPurchaseResult {
     return when (this) {
         is AdaptyPurchaseResultResponse.Pending -> AdaptyPurchaseResult.Pending
         is AdaptyPurchaseResultResponse.UserCancelled -> AdaptyPurchaseResult.UserCanceled
-        is AdaptyPurchaseResultResponse.Success -> AdaptyPurchaseResult.Success(profile = profile.asAdaptyProfile())
+        is AdaptyPurchaseResultResponse.Success -> AdaptyPurchaseResult.Success(
+            profile = profile.asAdaptyProfile(),
+            jwsTransaction = jwsTransaction
+        )
     }
 }
 

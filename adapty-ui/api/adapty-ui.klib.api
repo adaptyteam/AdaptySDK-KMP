@@ -1,0 +1,12 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <KMPAdapty:adapty-ui>
+final val com.adapty.kmp.ui/com_adapty_kmp_ui_IosNativeViewFactory$stableprop // com.adapty.kmp.ui/com_adapty_kmp_ui_IosNativeViewFactory$stableprop|#static{}com_adapty_kmp_ui_IosNativeViewFactory$stableprop[0]
+
+final fun com.adapty.kmp.ui/AdaptyUIOnboardingPlatformView(com.adapty.kmp.models/AdaptyOnboarding, androidx.compose.ui/Modifier?, kotlin/Function1<com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/Unit>?, kotlin/Function1<com.adapty.kmp.models/AdaptyError, kotlin/Unit>?, kotlin/Function2<com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String, kotlin/Unit>?, kotlin/Function2<com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String, kotlin/Unit>?, kotlin/Function2<com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String, kotlin/Unit>?, kotlin/Function3<com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String, com.adapty.kmp.models/AdaptyOnboardingsStateUpdatedParams, kotlin/Unit>?, kotlin/Function2<com.adapty.kmp.models/AdaptyUIOnboardingMeta, com.adapty.kmp.models/AdaptyOnboardingsAnalyticsEvent, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.adapty.kmp.ui/AdaptyUIOnboardingPlatformView|AdaptyUIOnboardingPlatformView(com.adapty.kmp.models.AdaptyOnboarding;androidx.compose.ui.Modifier?;kotlin.Function1<com.adapty.kmp.models.AdaptyUIOnboardingMeta,kotlin.Unit>?;kotlin.Function1<com.adapty.kmp.models.AdaptyError,kotlin.Unit>?;kotlin.Function2<com.adapty.kmp.models.AdaptyUIOnboardingMeta,kotlin.String,kotlin.Unit>?;kotlin.Function2<com.adapty.kmp.models.AdaptyUIOnboardingMeta,kotlin.String,kotlin.Unit>?;kotlin.Function2<com.adapty.kmp.models.AdaptyUIOnboardingMeta,kotlin.String,kotlin.Unit>?;kotlin.Function3<com.adapty.kmp.models.AdaptyUIOnboardingMeta,kotlin.String,com.adapty.kmp.models.AdaptyOnboardingsStateUpdatedParams,kotlin.Unit>?;kotlin.Function2<com.adapty.kmp.models.AdaptyUIOnboardingMeta,com.adapty.kmp.models.AdaptyOnboardingsAnalyticsEvent,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.adapty.kmp.ui/com_adapty_kmp_ui_IosNativeViewFactory$stableprop_getter(): kotlin/Int // com.adapty.kmp.ui/com_adapty_kmp_ui_IosNativeViewFactory$stableprop_getter|com_adapty_kmp_ui_IosNativeViewFactory$stableprop_getter(){}[0]

@@ -1,0 +1,4 @@
+public final class com/adapty/kmp/ui/AdaptyUIOnboardingPlatformViewKt {
+	public static final fun AdaptyUIOnboardingPlatformView (Lcom/adapty/kmp/models/AdaptyOnboarding;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+

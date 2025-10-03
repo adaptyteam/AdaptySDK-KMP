@@ -7,6 +7,10 @@
 
 import Foundation
 import AdaptyPlugin
+import AdaptyUI
+import Adapty
+import SwiftUI
+import UIKit
 
 @objc class AdaptySwiftBridge: NSObject {
     
@@ -23,20 +27,77 @@ import AdaptyPlugin
         
         Task{ @MainActor in
             
-            AdaptyPlugin.reqister(setFallbackPaywallsRequests: { assetId in
+            let assetResolver: (String) -> URL? = { assetId in
                 let nsStr = assetId as NSString
                 let filename = nsStr.deletingPathExtension
-                let ext = nsStr.pathExtension.isEmpty ? "json" : nsStr.pathExtension
-                
-                return Bundle.main.url(forResource: filename, withExtension: ext)
-            })
+                let ext = nsStr.pathExtension.isEmpty ? nil : nsStr.pathExtension
 
+                return Bundle.main.url(forResource: filename, withExtension: ext)
+            }
             
+            if #available(iOS 15.0, *) {
+                AdaptyPlugin.register(createPaywallView: assetResolver)
+            }
+
+            AdaptyPlugin.register(setFallbackRequests: assetResolver)
+
             let handler = KMPAdaptySwiftEventHandler(onEvent: onEvent)
-            AdaptyPlugin.reqister(eventHandler: handler)
+            AdaptyPlugin.register(eventHandler: handler)
+            
         }
         
     }
+    
+    
+    
+    @objc public static func createNativeOnboardingView(
+        jsonString: String,
+        id: String,
+        onEvent: @escaping (String, String) -> Void
+    ) -> UIViewController {
+        let containerView = UIViewController()
+        let handler = KMPAdaptySwiftEventHandler(onEvent: onEvent)
+
+        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, visionOS 1.0, *){
+            Task { @MainActor in
+                guard let onboarding = await AdaptyPlugin.executeCreateNativeOnboardingView(withJson: jsonString) else {
+                    print("Failed to create onboarding from JSON")
+                    return
+                }
+                
+                do {
+                    // Build configuration from onboarding object
+                    let configuration = try AdaptyUI.getOnboardingConfiguration(forOnboarding: onboarding)
+                    
+                    // Create the actual onboarding view
+                    let uiView = AdaptyOnboardingPlatformViewWrapper(
+                        viewId: id,
+                        eventHandler: handler,
+                        configuration: configuration
+                    )
+                    
+                    containerView.view.addSubview(uiView)
+                    
+                    // Auto-layout to fill parent
+                    uiView.translatesAutoresizingMaskIntoConstraints = false
+                    NSLayoutConstraint.activate([
+                        uiView.leadingAnchor.constraint(equalTo: containerView.view.leadingAnchor),
+                        uiView.trailingAnchor.constraint(equalTo: containerView.view.trailingAnchor),
+                        uiView.topAnchor.constraint(equalTo: containerView.view.topAnchor),
+                        uiView.bottomAnchor.constraint(equalTo: containerView.view.bottomAnchor),
+                    ])
+                } catch {
+                    print("Failed to get onboarding configuration: \(error)")
+                }
+            }
+        } else {
+            print("Onboarding Native UI requires iOS 15.0 or later.")
+        }
+
+        return containerView
+    }
+
+    
     
 }
 

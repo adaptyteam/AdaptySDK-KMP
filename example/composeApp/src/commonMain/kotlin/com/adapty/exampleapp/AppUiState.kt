@@ -1,6 +1,9 @@
 package com.adapty.exampleapp
 
+import com.adapty.kmp.models.AdaptyInstallationStatus
+import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
 import com.adapty.kmp.models.AdaptyIosRefundPreference
+import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
@@ -9,6 +12,7 @@ import kotlin.time.Duration.Companion.seconds
 
 data class AppUiState(
     val adaptyProfile: AdaptyProfile? = null,
+    val installationStatus: AdaptyInstallationStatus = AdaptyInstallationStatusNotDetermined,
     val examplePaywall: AdaptyPaywall? = null,
     val examplePaywallProducts: List<AdaptyPaywallProduct> = emptyList(),
     val customPaywall: AdaptyPaywall? = null,
@@ -19,7 +23,13 @@ data class AppUiState(
     val userEnteredCustomerUserId: String = "",
     val savedPaywallIds: Set<String> = setOf(),
     val savedPaywalls: Map<String, AdaptyPaywall> = mapOf(),
+    val savedOnboardingIds: Set<String> = setOf(),
+    val savedOnboardings: Map<String, AdaptyOnboarding> = mapOf(),
+    val onboardingLocale: String? = null,
+    val showOnboardingToastEvents: Boolean = true,
     val isLoading: Boolean = false,
+    val isLoadingOnboard: Boolean = false,
+    val nativeOnboardingView: AdaptyOnboarding? = null,
     val error: Throwable? = null
 ) {
     enum class DemoPaywallFetchPolicy {
@@ -78,7 +88,18 @@ sealed interface AppUiEvent {
 
     data class OnClickUpdateConsent(val consent: Boolean) : AppUiEvent
     data class OnNewPaywallIdAdded(val paywallId: String) : AppUiEvent
+    data class OnClickPresentPaywallView(val paywall: AdaptyPaywall) : AppUiEvent
+
     data class CreateAndPresentPaywallView(val paywall: AdaptyPaywall, val loadProducts: Boolean) :
         AppUiEvent
+
+    data class OnNewOnboardingIdAdded(val onboardingId: String) : AppUiEvent
+    data class OnClickPresentOnboarding(val onboarding: AdaptyOnboarding) : AppUiEvent
+    data class OnClickPresentOnboardingNativeView(val onboarding: AdaptyOnboarding) : AppUiEvent
+    object OnToggleOnboardingShowToastEvents : AppUiEvent
+    data class OnChangeOnboardingLocale(val locale: String) : AppUiEvent
+    data object OnClickUpdateInstallationDetails : AppUiEvent
+    data object OnCloseNativeOnboardingView : AppUiEvent
+
 
 }

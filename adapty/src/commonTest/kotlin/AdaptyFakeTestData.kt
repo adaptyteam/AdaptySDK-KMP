@@ -2,11 +2,12 @@ import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductReference
 import com.adapty.kmp.models.AdaptyPaywallProductSubscription
-import com.adapty.kmp.models.AdaptyPaywallRemoteConfig
 import com.adapty.kmp.models.AdaptyPeriodUnit
+import com.adapty.kmp.models.AdaptyPlacement
 import com.adapty.kmp.models.AdaptyPrice
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
+import com.adapty.kmp.models.AdaptyRemoteConfig
 import com.adapty.kmp.models.AdaptyRenewalType
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
@@ -81,13 +82,16 @@ internal object AdaptyFakeTestData {
 
     fun getPaywall(): AdaptyPaywall {
         return AdaptyPaywall(
-            placementId = "123",
+            placement = AdaptyPlacement(
+                id = "123",
+                audienceName = "testAudience",
+                abTestName = "test",
+                revision = 1,
+                placementAudienceVersionId = "test"
+            ),
             instanceIdentity = "456",
-            audienceName = "testAudience",
             name = "testPaywall",
-            abTestName = "test",
             variationId = "1",
-            revision = 1,
             products = listOf(
                 AdaptyPaywallProductReference(
                     vendorId = "1",
@@ -97,7 +101,7 @@ internal object AdaptyFakeTestData {
                     basePlanId = "basePlanId - #4",
                 )
             ),
-            remoteConfig = AdaptyPaywallRemoteConfig(
+            remoteConfig = AdaptyRemoteConfig(
                 dataJsonString = buildJsonObject {
                     put("stringKey", "testString")
                     put("intKey", 123)
@@ -119,6 +123,8 @@ internal object AdaptyFakeTestData {
                 )
             ),
             payloadData = "testPayloadData",
+            requestLocale = "en",
+            webPurchaseUrl = null
         )
     }
 
