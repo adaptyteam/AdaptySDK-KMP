@@ -3,8 +3,6 @@ package com.adapty.exampleapp.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,7 +18,10 @@ import androidx.compose.ui.Modifier
 import com.adapty.exampleapp.AppLogger
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.ui.AdaptyUIOnboardingPlatformView
+import kmpadapty.example.composeapp.generated.resources.Res
+import kmpadapty.example.composeapp.generated.resources.ic_close
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,7 +44,7 @@ fun OnboardingNativeViewScreen(
                     IconButton(onClick = {
                         onNavigateBack()
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(painterResource(Res.drawable.ic_close), contentDescription = "Back")
                     }
                 }
             )

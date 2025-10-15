@@ -7,11 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,6 +37,12 @@ import com.adapty.exampleapp.screens.OnboardingNativeViewScreen
 import com.adapty.exampleapp.screens.PaywallsScreen
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.models.AdaptyError
+import kmpadapty.example.composeapp.generated.resources.Res
+import kmpadapty.example.composeapp.generated.resources.ic_home
+import kmpadapty.example.composeapp.generated.resources.ic_info
+import kmpadapty.example.composeapp.generated.resources.ic_shopping_cart
+import kmpadapty.example.composeapp.generated.resources.ic_star
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -75,10 +76,10 @@ fun App() {
         var selectedTab by rememberSaveable { mutableStateOf(0) }
         val tabs = listOf("General", "Paywalls", "Onboardings", "Logs")
         val icons = listOf(
-            Icons.Default.Home,
-            Icons.Default.ShoppingCart,
-            Icons.Default.Star,
-            Icons.Default.Info
+            Res.drawable.ic_home,
+            Res.drawable.ic_shopping_cart,
+            Res.drawable.ic_star,
+            Res.drawable.ic_info
         )
 
         Scaffold(
@@ -88,7 +89,12 @@ fun App() {
                 NavigationBar {
                     tabs.forEachIndexed { index, label ->
                         NavigationBarItem(
-                            icon = { Icon(icons[index], contentDescription = label) },
+                            icon = {
+                                Icon(
+                                    painterResource(icons[index]),
+                                    contentDescription = label
+                                )
+                            },
                             label = { Text(label) },
                             selected = selectedTab == index,
                             onClick = { selectedTab = index }
