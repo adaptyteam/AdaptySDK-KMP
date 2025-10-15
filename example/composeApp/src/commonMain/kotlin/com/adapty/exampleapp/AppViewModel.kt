@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.adapty.exampleapp
 
 import androidx.lifecycle.ViewModel
@@ -25,11 +27,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 class AppViewModel : ViewModel() {
 
