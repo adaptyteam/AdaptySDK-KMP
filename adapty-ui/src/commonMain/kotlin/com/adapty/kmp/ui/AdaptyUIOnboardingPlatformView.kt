@@ -16,6 +16,24 @@ import com.adapty.kmp.models.AdaptyUIOnboardingMeta
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import kotlinx.coroutines.CoroutineScope
 
+
+/**
+ * Displays an embedded onboarding as a platform view in your Compose UI hierarchy.
+ *
+ * This Composable allows you to embed an onboarding directly in your UI rather than
+ * presenting it as a full-screen modal. It provides inline callbacks for various
+ * events, such as loading completion, errors, user actions, state updates, and analytics.
+ *
+ * @param onboarding The onboarding instance to display.
+ * @param modifier Optional [Modifier] for styling and layout.
+ * @param onDidFinishLoading Callback invoked when the onboarding finishes loading successfully.
+ * @param onDidFailWithError Callback invoked when the onboarding fails to load.
+ * @param onCloseAction Callback invoked when a close action is triggered by the user.
+ * @param onPaywallAction Callback invoked when a paywall action is triggered by the user.
+ * @param onCustomAction Callback invoked when a custom action is triggered by the user.
+ * @param onStateUpdatedAction Callback invoked when the state of an onboarding element is updated.
+ * @param onAnalyticsEvent Callback invoked when an analytics event occurs within the onboarding.
+ */
 @OptIn(AdaptyKMPInternal::class)
 @Composable
 public fun AdaptyUIOnboardingPlatformView(
