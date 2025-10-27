@@ -25,6 +25,13 @@ internal interface AdaptyUIContract {
 
     fun unregisterOnboardingEventsListener(viewId: String)
 
+    fun registerPaywallEventsListener(
+        observer: AdaptyUIPaywallsEventsObserver,
+        viewId: String
+    )
+
+    fun unregisterPaywallEventsListener(viewId: String)
+
 
     fun setPaywallsEventsObserver(observer: AdaptyUIPaywallsEventsObserver)
     fun setOnboardingsEventsObserver(observer: AdaptyUIOnboardingsEventsObserver)

@@ -85,8 +85,8 @@ internal class AdaptyUIImpl(
 
     private var paywallsEventObserver: AdaptyUIPaywallsEventsObserver? = null
     private var onboardingsEventObserver: AdaptyUIOnboardingsEventsObserver? = null
-    private var nativeOnboardingViewsEventObserver: MutableMap<String, AdaptyUIOnboardingsEventsObserver> =
-        mutableMapOf()
+    private var nativeOnboardingViewsEventObserver: MutableMap<String, AdaptyUIOnboardingsEventsObserver> = mutableMapOf()
+    private var nativePaywallViewsEventObserver: MutableMap<String, AdaptyUIPaywallsEventsObserver> = mutableMapOf()
     private var eventsListenerJob: Job? = null
 
 
@@ -114,6 +114,17 @@ internal class AdaptyUIImpl(
 
     override fun unregisterOnboardingEventsListener(viewId: String) {
         nativeOnboardingViewsEventObserver.remove(viewId)
+    }
+
+    override fun registerPaywallEventsListener(
+        observer: AdaptyUIPaywallsEventsObserver,
+        viewId: String
+    ) {
+        nativePaywallViewsEventObserver[viewId] = observer
+    }
+
+    override fun unregisterPaywallEventsListener(viewId: String) {
+        nativePaywallViewsEventObserver.remove(viewId)
     }
 
     override fun setPaywallsEventsObserver(observer: AdaptyUIPaywallsEventsObserver) {

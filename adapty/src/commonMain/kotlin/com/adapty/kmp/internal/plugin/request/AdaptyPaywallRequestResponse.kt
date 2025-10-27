@@ -1,11 +1,14 @@
 package com.adapty.kmp.internal.plugin.request
 
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewConfigurationResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyRemoteConfigResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallRemoteConfig
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallRemoteConfigResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallViewConfiguration
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallViewConfigurationResponse
+import com.adapty.kmp.internal.utils.jsonInstance
+import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
