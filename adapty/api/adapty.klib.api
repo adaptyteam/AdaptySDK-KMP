@@ -10,6 +10,22 @@ open annotation class com.adapty.kmp.internal/AdaptyKMPInternal : kotlin/Annotat
     constructor <init>() // com.adapty.kmp.internal/AdaptyKMPInternal.<init>|<init>(){}[0]
 }
 
+final enum class com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest : kotlin/Enum<com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest> { // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest|null[0]
+    enum entry FULLSCREEN // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.FULLSCREEN|null[0]
+    enum entry PAGESHEET // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.PAGESHEET|null[0]
+
+    final val entries // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest> // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest> // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.values|values#static(){}[0]
+
+    final object Companion : kotlinx.serialization.internal/SerializerFactory { // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest> // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.Companion.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // com.adapty.kmp.internal.plugin.request/AdaptyUIIOSPresentationStyleRequest.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    }
+}
+
 final enum class com.adapty.kmp.models/AdaptyAndroidSubscriptionUpdateReplacementMode : kotlin/Enum<com.adapty.kmp.models/AdaptyAndroidSubscriptionUpdateReplacementMode> { // com.adapty.kmp.models/AdaptyAndroidSubscriptionUpdateReplacementMode|null[0]
     enum entry CHARGE_FULL_PRICE // com.adapty.kmp.models/AdaptyAndroidSubscriptionUpdateReplacementMode.CHARGE_FULL_PRICE|null[0]
     enum entry CHARGE_PRORATED_PRICE // com.adapty.kmp.models/AdaptyAndroidSubscriptionUpdateReplacementMode.CHARGE_PRORATED_PRICE|null[0]
@@ -170,6 +186,17 @@ final enum class com.adapty.kmp.models/AdaptyUIDialogActionType : kotlin/Enum<co
 
     final fun valueOf(kotlin/String): com.adapty.kmp.models/AdaptyUIDialogActionType // com.adapty.kmp.models/AdaptyUIDialogActionType.valueOf|valueOf#static(kotlin.String){}[0]
     final fun values(): kotlin/Array<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIDialogActionType.values|values#static(){}[0]
+}
+
+final enum class com.adapty.kmp.models/AdaptyUIIOSPresentationStyle : kotlin/Enum<com.adapty.kmp.models/AdaptyUIIOSPresentationStyle> { // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle|null[0]
+    enum entry FULLSCREEN // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.FULLSCREEN|null[0]
+    enum entry PAGESHEET // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.PAGESHEET|null[0]
+
+    final val entries // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.adapty.kmp.models/AdaptyUIIOSPresentationStyle> // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.adapty.kmp.models/AdaptyUIIOSPresentationStyle // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.adapty.kmp.models/AdaptyUIIOSPresentationStyle> // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.values|values#static(){}[0]
 }
 
 abstract fun interface com.adapty.kmp/OnProfileUpdatedListener { // com.adapty.kmp/OnProfileUpdatedListener|null[0]
@@ -391,16 +418,19 @@ sealed interface com.adapty.kmp.models/AdaptyPaywallFetchPolicy { // com.adapty.
 
 sealed interface com.adapty.kmp.models/AdaptyPurchaseResult { // com.adapty.kmp.models/AdaptyPurchaseResult|null[0]
     final class Success : com.adapty.kmp.models/AdaptyPurchaseResult { // com.adapty.kmp.models/AdaptyPurchaseResult.Success|null[0]
-        constructor <init>(com.adapty.kmp.models/AdaptyProfile, kotlin/String? = ...) // com.adapty.kmp.models/AdaptyPurchaseResult.Success.<init>|<init>(com.adapty.kmp.models.AdaptyProfile;kotlin.String?){}[0]
+        constructor <init>(com.adapty.kmp.models/AdaptyProfile, kotlin/String? = ..., kotlin/String? = ...) // com.adapty.kmp.models/AdaptyPurchaseResult.Success.<init>|<init>(com.adapty.kmp.models.AdaptyProfile;kotlin.String?;kotlin.String?){}[0]
 
-        final val jwsTransaction // com.adapty.kmp.models/AdaptyPurchaseResult.Success.jwsTransaction|{}jwsTransaction[0]
-            final fun <get-jwsTransaction>(): kotlin/String? // com.adapty.kmp.models/AdaptyPurchaseResult.Success.jwsTransaction.<get-jwsTransaction>|<get-jwsTransaction>(){}[0]
+        final val appleJwsTransaction // com.adapty.kmp.models/AdaptyPurchaseResult.Success.appleJwsTransaction|{}appleJwsTransaction[0]
+            final fun <get-appleJwsTransaction>(): kotlin/String? // com.adapty.kmp.models/AdaptyPurchaseResult.Success.appleJwsTransaction.<get-appleJwsTransaction>|<get-appleJwsTransaction>(){}[0]
+        final val googlePurchaseToken // com.adapty.kmp.models/AdaptyPurchaseResult.Success.googlePurchaseToken|{}googlePurchaseToken[0]
+            final fun <get-googlePurchaseToken>(): kotlin/String? // com.adapty.kmp.models/AdaptyPurchaseResult.Success.googlePurchaseToken.<get-googlePurchaseToken>|<get-googlePurchaseToken>(){}[0]
         final val profile // com.adapty.kmp.models/AdaptyPurchaseResult.Success.profile|{}profile[0]
             final fun <get-profile>(): com.adapty.kmp.models/AdaptyProfile // com.adapty.kmp.models/AdaptyPurchaseResult.Success.profile.<get-profile>|<get-profile>(){}[0]
 
         final fun component1(): com.adapty.kmp.models/AdaptyProfile // com.adapty.kmp.models/AdaptyPurchaseResult.Success.component1|component1(){}[0]
         final fun component2(): kotlin/String? // com.adapty.kmp.models/AdaptyPurchaseResult.Success.component2|component2(){}[0]
-        final fun copy(com.adapty.kmp.models/AdaptyProfile = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPurchaseResult.Success // com.adapty.kmp.models/AdaptyPurchaseResult.Success.copy|copy(com.adapty.kmp.models.AdaptyProfile;kotlin.String?){}[0]
+        final fun component3(): kotlin/String? // com.adapty.kmp.models/AdaptyPurchaseResult.Success.component3|component3(){}[0]
+        final fun copy(com.adapty.kmp.models/AdaptyProfile = ..., kotlin/String? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPurchaseResult.Success // com.adapty.kmp.models/AdaptyPurchaseResult.Success.copy|copy(com.adapty.kmp.models.AdaptyProfile;kotlin.String?;kotlin.String?){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyPurchaseResult.Success.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyPurchaseResult.Success.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyPurchaseResult.Success.toString|toString(){}[0]
@@ -499,8 +529,9 @@ final class com.adapty.kmp.models/AdaptyConfig { // com.adapty.kmp.models/Adapty
         final fun withBackendProxyHost(kotlin/String): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withBackendProxyHost|withBackendProxyHost(kotlin.String){}[0]
         final fun withBackendProxyPort(kotlin/Int): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withBackendProxyPort|withBackendProxyPort(kotlin.Int){}[0]
         final fun withBackendUABaseUrl(kotlin/String): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withBackendUABaseUrl|withBackendUABaseUrl(kotlin.String){}[0]
-        final fun withCustomerUserId(kotlin/String?): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withCustomerUserId|withCustomerUserId(kotlin.String?){}[0]
+        final fun withCustomerUserId(kotlin/String?, kotlin/String? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withCustomerUserId|withCustomerUserId(kotlin.String?;kotlin.String?;kotlin.String?){}[0]
         final fun withGoogleAdvertisingIdCollectionDisabled(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withGoogleAdvertisingIdCollectionDisabled|withGoogleAdvertisingIdCollectionDisabled(kotlin.Boolean){}[0]
+        final fun withGoogleEnablePendingPrepaidPlans(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withGoogleEnablePendingPrepaidPlans|withGoogleEnablePendingPrepaidPlans(kotlin.Boolean){}[0]
         final fun withIpAddressCollectionDisabled(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withIpAddressCollectionDisabled|withIpAddressCollectionDisabled(kotlin.Boolean){}[0]
         final fun withLogLevel(com.adapty.kmp.models/AdaptyLogLevel): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withLogLevel|withLogLevel(com.adapty.kmp.models.AdaptyLogLevel){}[0]
         final fun withMediaCacheConfiguration(com.adapty.kmp.models/AdaptyConfig.MediaCacheConfiguration): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withMediaCacheConfiguration|withMediaCacheConfiguration(com.adapty.kmp.models.AdaptyConfig.MediaCacheConfiguration){}[0]
@@ -526,6 +557,15 @@ final class com.adapty.kmp.models/AdaptyConfig { // com.adapty.kmp.models/Adapty
         final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyConfig.MediaCacheConfiguration.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyConfig.MediaCacheConfiguration.toString|toString(){}[0]
     }
+}
+
+final class com.adapty.kmp.models/AdaptyCustomerIdentity { // com.adapty.kmp.models/AdaptyCustomerIdentity|null[0]
+    constructor <init>(kotlin/String?, kotlin/String?) // com.adapty.kmp.models/AdaptyCustomerIdentity.<init>|<init>(kotlin.String?;kotlin.String?){}[0]
+
+    final val androidObfuscatedAccountId // com.adapty.kmp.models/AdaptyCustomerIdentity.androidObfuscatedAccountId|{}androidObfuscatedAccountId[0]
+        final fun <get-androidObfuscatedAccountId>(): kotlin/String? // com.adapty.kmp.models/AdaptyCustomerIdentity.androidObfuscatedAccountId.<get-androidObfuscatedAccountId>|<get-androidObfuscatedAccountId>(){}[0]
+    final val iosAppAccountToken // com.adapty.kmp.models/AdaptyCustomerIdentity.iosAppAccountToken|{}iosAppAccountToken[0]
+        final fun <get-iosAppAccountToken>(): kotlin/String? // com.adapty.kmp.models/AdaptyCustomerIdentity.iosAppAccountToken.<get-iosAppAccountToken>|<get-iosAppAccountToken>(){}[0]
 }
 
 final class com.adapty.kmp.models/AdaptyError : kotlin/Exception { // com.adapty.kmp.models/AdaptyError|null[0]
@@ -756,6 +796,8 @@ final class com.adapty.kmp.models/AdaptyOnboardingsTextInput : com.adapty.kmp.mo
 final class com.adapty.kmp.models/AdaptyPaywall { // com.adapty.kmp.models/AdaptyPaywall|null[0]
     final val hasViewConfiguration // com.adapty.kmp.models/AdaptyPaywall.hasViewConfiguration|{}hasViewConfiguration[0]
         final fun <get-hasViewConfiguration>(): kotlin/Boolean // com.adapty.kmp.models/AdaptyPaywall.hasViewConfiguration.<get-hasViewConfiguration>|<get-hasViewConfiguration>(){}[0]
+    final val idForNativePlatformView // com.adapty.kmp.models/AdaptyPaywall.idForNativePlatformView|{}idForNativePlatformView[0]
+        final fun <get-idForNativePlatformView>(): kotlin/String // com.adapty.kmp.models/AdaptyPaywall.idForNativePlatformView.<get-idForNativePlatformView>|<get-idForNativePlatformView>(){}[0]
     final val instanceIdentity // com.adapty.kmp.models/AdaptyPaywall.instanceIdentity|{}instanceIdentity[0]
         final fun <get-instanceIdentity>(): kotlin/String // com.adapty.kmp.models/AdaptyPaywall.instanceIdentity.<get-instanceIdentity>|<get-instanceIdentity>(){}[0]
     final val name // com.adapty.kmp.models/AdaptyPaywall.name|{}name[0]
@@ -781,6 +823,8 @@ final class com.adapty.kmp.models/AdaptyPaywall { // com.adapty.kmp.models/Adapt
 }
 
 final class com.adapty.kmp.models/AdaptyPaywallProduct { // com.adapty.kmp.models/AdaptyPaywallProduct|null[0]
+    final val accessLevelId // com.adapty.kmp.models/AdaptyPaywallProduct.accessLevelId|{}accessLevelId[0]
+        final fun <get-accessLevelId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.accessLevelId.<get-accessLevelId>|<get-accessLevelId>(){}[0]
     final val audienceName // com.adapty.kmp.models/AdaptyPaywallProduct.audienceName|{}audienceName[0]
         final fun <get-audienceName>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.audienceName.<get-audienceName>|<get-audienceName>(){}[0]
     final val isFamilyShareable // com.adapty.kmp.models/AdaptyPaywallProduct.isFamilyShareable|{}isFamilyShareable[0]
@@ -799,6 +843,8 @@ final class com.adapty.kmp.models/AdaptyPaywallProduct { // com.adapty.kmp.model
         final fun <get-paywallVariationId>(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.paywallVariationId.<get-paywallVariationId>|<get-paywallVariationId>(){}[0]
     final val price // com.adapty.kmp.models/AdaptyPaywallProduct.price|{}price[0]
         final fun <get-price>(): com.adapty.kmp.models/AdaptyPrice // com.adapty.kmp.models/AdaptyPaywallProduct.price.<get-price>|<get-price>(){}[0]
+    final val productType // com.adapty.kmp.models/AdaptyPaywallProduct.productType|{}productType[0]
+        final fun <get-productType>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.productType.<get-productType>|<get-productType>(){}[0]
     final val regionCode // com.adapty.kmp.models/AdaptyPaywallProduct.regionCode|{}regionCode[0]
         final fun <get-regionCode>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.regionCode.<get-regionCode>|<get-regionCode>(){}[0]
     final val subscription // com.adapty.kmp.models/AdaptyPaywallProduct.subscription|{}subscription[0]
@@ -807,30 +853,36 @@ final class com.adapty.kmp.models/AdaptyPaywallProduct { // com.adapty.kmp.model
         final fun <get-vendorProductId>(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.vendorProductId.<get-vendorProductId>|<get-vendorProductId>(){}[0]
 
     final fun component1(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component1|component1(){}[0]
-    final fun component10(): kotlin/Boolean // com.adapty.kmp.models/AdaptyPaywallProduct.component10|component10(){}[0]
-    final fun component11(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.component11|component11(){}[0]
-    final fun component12(): com.adapty.kmp.models/AdaptyPrice // com.adapty.kmp.models/AdaptyPaywallProduct.component12|component12(){}[0]
-    final fun component13(): com.adapty.kmp.models/AdaptyPaywallProductSubscription? // com.adapty.kmp.models/AdaptyPaywallProduct.component13|component13(){}[0]
+    final fun component10(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component10|component10(){}[0]
+    final fun component11(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component11|component11(){}[0]
+    final fun component12(): kotlin/Boolean // com.adapty.kmp.models/AdaptyPaywallProduct.component12|component12(){}[0]
+    final fun component13(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.component13|component13(){}[0]
+    final fun component14(): com.adapty.kmp.models/AdaptyPrice // com.adapty.kmp.models/AdaptyPaywallProduct.component14|component14(){}[0]
+    final fun component15(): com.adapty.kmp.models/AdaptyPaywallProductSubscription? // com.adapty.kmp.models/AdaptyPaywallProduct.component15|component15(){}[0]
     final fun component3(): kotlin/Int // com.adapty.kmp.models/AdaptyPaywallProduct.component3|component3(){}[0]
-    final fun component4(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component4|component4(){}[0]
-    final fun component5(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component5|component5(){}[0]
+    final fun component4(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.component4|component4(){}[0]
+    final fun component5(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.component5|component5(){}[0]
     final fun component6(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component6|component6(){}[0]
-    final fun component7(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.component7|component7(){}[0]
+    final fun component7(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component7|component7(){}[0]
     final fun component8(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component8|component8(){}[0]
-    final fun component9(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.component9|component9(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Boolean = ..., kotlin/String? = ..., com.adapty.kmp.models/AdaptyPrice = ..., com.adapty.kmp.models/AdaptyPaywallProductSubscription? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPaywallProduct // com.adapty.kmp.models/AdaptyPaywallProduct.copy|copy(kotlin.String;kotlin.String;kotlin.Int;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String;kotlin.String;kotlin.Boolean;kotlin.String?;com.adapty.kmp.models.AdaptyPrice;com.adapty.kmp.models.AdaptyPaywallProductSubscription?;kotlin.String?){}[0]
+    final fun component9(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProduct.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/Int = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String = ..., kotlin/Boolean = ..., kotlin/String? = ..., com.adapty.kmp.models/AdaptyPrice = ..., com.adapty.kmp.models/AdaptyPaywallProductSubscription? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPaywallProduct // com.adapty.kmp.models/AdaptyPaywallProduct.copy|copy(kotlin.String;kotlin.String;kotlin.Int;kotlin.String?;kotlin.String?;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String;kotlin.String;kotlin.Boolean;kotlin.String?;com.adapty.kmp.models.AdaptyPrice;com.adapty.kmp.models.AdaptyPaywallProductSubscription?;kotlin.String?){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyPaywallProduct.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyPaywallProduct.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProduct.toString|toString(){}[0]
 }
 
 final class com.adapty.kmp.models/AdaptyPaywallProductReference { // com.adapty.kmp.models/AdaptyPaywallProductReference|null[0]
-    constructor <init>(kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.adapty.kmp.models/AdaptyPaywallProductReference.<init>|<init>(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String?, kotlin/String?, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.adapty.kmp.models/AdaptyPaywallProductReference.<init>|<init>(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
 
+    final val accessLevelId // com.adapty.kmp.models/AdaptyPaywallProductReference.accessLevelId|{}accessLevelId[0]
+        final fun <get-accessLevelId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.accessLevelId.<get-accessLevelId>|<get-accessLevelId>(){}[0]
     final val basePlanId // com.adapty.kmp.models/AdaptyPaywallProductReference.basePlanId|{}basePlanId[0]
         final fun <get-basePlanId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.basePlanId.<get-basePlanId>|<get-basePlanId>(){}[0]
     final val offerId // com.adapty.kmp.models/AdaptyPaywallProductReference.offerId|{}offerId[0]
         final fun <get-offerId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.offerId.<get-offerId>|<get-offerId>(){}[0]
+    final val productType // com.adapty.kmp.models/AdaptyPaywallProductReference.productType|{}productType[0]
+        final fun <get-productType>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.productType.<get-productType>|<get-productType>(){}[0]
     final val promotionalOfferId // com.adapty.kmp.models/AdaptyPaywallProductReference.promotionalOfferId|{}promotionalOfferId[0]
         final fun <get-promotionalOfferId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.promotionalOfferId.<get-promotionalOfferId>|<get-promotionalOfferId>(){}[0]
     final val vendorId // com.adapty.kmp.models/AdaptyPaywallProductReference.vendorId|{}vendorId[0]
@@ -843,7 +895,9 @@ final class com.adapty.kmp.models/AdaptyPaywallProductReference { // com.adapty.
     final fun component4(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component4|component4(){}[0]
     final fun component5(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component5|component5(){}[0]
     final fun component6(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component6|component6(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPaywallProductReference // com.adapty.kmp.models/AdaptyPaywallProductReference.copy|copy(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    final fun component7(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component7|component7(){}[0]
+    final fun component8(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component8|component8(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPaywallProductReference // com.adapty.kmp.models/AdaptyPaywallProductReference.copy|copy(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyPaywallProductReference.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyPaywallProductReference.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProductReference.toString|toString(){}[0]
@@ -1217,8 +1271,6 @@ final class com.adapty.kmp.models/AdaptyPurchaseParameters { // com.adapty.kmp.m
 
         final fun build(): com.adapty.kmp.models/AdaptyPurchaseParameters // com.adapty.kmp.models/AdaptyPurchaseParameters.Builder.build|build(){}[0]
         final fun setIsOfferPersonalized(kotlin/Boolean?): com.adapty.kmp.models/AdaptyPurchaseParameters.Builder // com.adapty.kmp.models/AdaptyPurchaseParameters.Builder.setIsOfferPersonalized|setIsOfferPersonalized(kotlin.Boolean?){}[0]
-        final fun setObfuscatedAccountId(kotlin/String?): com.adapty.kmp.models/AdaptyPurchaseParameters.Builder // com.adapty.kmp.models/AdaptyPurchaseParameters.Builder.setObfuscatedAccountId|setObfuscatedAccountId(kotlin.String?){}[0]
-        final fun setObfuscatedProfileId(kotlin/String?): com.adapty.kmp.models/AdaptyPurchaseParameters.Builder // com.adapty.kmp.models/AdaptyPurchaseParameters.Builder.setObfuscatedProfileId|setObfuscatedProfileId(kotlin.String?){}[0]
         final fun setSubscriptionUpdateParams(com.adapty.kmp.models/AdaptyAndroidSubscriptionUpdateParameters?): com.adapty.kmp.models/AdaptyPurchaseParameters.Builder // com.adapty.kmp.models/AdaptyPurchaseParameters.Builder.setSubscriptionUpdateParams|setSubscriptionUpdateParams(com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters?){}[0]
     }
 }
@@ -1375,7 +1427,7 @@ final class com.adapty.kmp.models/AdaptyUIOnboardingView { // com.adapty.kmp.mod
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyUIOnboardingView.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIOnboardingView.toString|toString(){}[0]
     final suspend fun dismiss(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIOnboardingView.dismiss|dismiss(){}[0]
-    final suspend fun present(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIOnboardingView.present|present(){}[0]
+    final suspend fun present(com.adapty.kmp.models/AdaptyUIIOSPresentationStyle = ...): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIOnboardingView.present|present(com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIOnboardingView.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
 
@@ -1395,8 +1447,12 @@ final class com.adapty.kmp.models/AdaptyUIPaywallView { // com.adapty.kmp.models
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyUIPaywallView.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIPaywallView.toString|toString(){}[0]
     final suspend fun dismiss(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIPaywallView.dismiss|dismiss(){}[0]
-    final suspend fun present(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIPaywallView.present|present(){}[0]
+    final suspend fun present(com.adapty.kmp.models/AdaptyUIIOSPresentationStyle = ...): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIPaywallView.present|present(com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIPaywallView.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
+}
+
+final object com.adapty.kmp.internal.plugin/AdaptyPluginEventHandler { // com.adapty.kmp.internal.plugin/AdaptyPluginEventHandler|null[0]
+    final fun onNewEvent(kotlin/String?, kotlin/String) // com.adapty.kmp.internal.plugin/AdaptyPluginEventHandler.onNewEvent|onNewEvent(kotlin.String?;kotlin.String){}[0]
 }
 
 final object com.adapty.kmp.models/AdaptyInstallationStatusNotAvailable : com.adapty.kmp.models/AdaptyInstallationStatus { // com.adapty.kmp.models/AdaptyInstallationStatusNotAvailable|null[0]
@@ -1466,7 +1522,7 @@ final object com.adapty.kmp/Adapty : com.adapty.kmp/AdaptyContract { // com.adap
     final suspend fun getPaywallForDefaultAudience(kotlin/String, kotlin/String?, com.adapty.kmp.models/AdaptyPaywallFetchPolicy): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyPaywall> // com.adapty.kmp/Adapty.getPaywallForDefaultAudience|getPaywallForDefaultAudience(kotlin.String;kotlin.String?;com.adapty.kmp.models.AdaptyPaywallFetchPolicy){}[0]
     final suspend fun getPaywallProducts(com.adapty.kmp.models/AdaptyPaywall): com.adapty.kmp.models/AdaptyResult<kotlin.collections/List<com.adapty.kmp.models/AdaptyPaywallProduct>> // com.adapty.kmp/Adapty.getPaywallProducts|getPaywallProducts(com.adapty.kmp.models.AdaptyPaywall){}[0]
     final suspend fun getProfile(): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyProfile> // com.adapty.kmp/Adapty.getProfile|getProfile(){}[0]
-    final suspend fun identify(kotlin/String): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.identify|identify(kotlin.String){}[0]
+    final suspend fun identify(kotlin/String, kotlin/String?, kotlin/String?): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.identify|identify(kotlin.String;kotlin.String?;kotlin.String?){}[0]
     final suspend fun isActivated(): kotlin/Boolean // com.adapty.kmp/Adapty.isActivated|isActivated(){}[0]
     final suspend fun logShowPaywall(com.adapty.kmp.models/AdaptyPaywall): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.logShowPaywall|logShowPaywall(com.adapty.kmp.models.AdaptyPaywall){}[0]
     final suspend fun logout(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.logout|logout(){}[0]
@@ -1485,15 +1541,17 @@ final object com.adapty.kmp/Adapty : com.adapty.kmp/AdaptyContract { // com.adap
 
 final object com.adapty.kmp/AdaptyUI : com.adapty.kmp/AdaptyUIContract { // com.adapty.kmp/AdaptyUI|null[0]
     final fun registerOnboardingEventsListener(com.adapty.kmp/AdaptyUIOnboardingsEventsObserver, kotlin/String) // com.adapty.kmp/AdaptyUI.registerOnboardingEventsListener|registerOnboardingEventsListener(com.adapty.kmp.AdaptyUIOnboardingsEventsObserver;kotlin.String){}[0]
+    final fun registerPaywallEventsListener(com.adapty.kmp/AdaptyUIPaywallsEventsObserver, kotlin/String) // com.adapty.kmp/AdaptyUI.registerPaywallEventsListener|registerPaywallEventsListener(com.adapty.kmp.AdaptyUIPaywallsEventsObserver;kotlin.String){}[0]
     final fun setOnboardingsEventsObserver(com.adapty.kmp/AdaptyUIOnboardingsEventsObserver) // com.adapty.kmp/AdaptyUI.setOnboardingsEventsObserver|setOnboardingsEventsObserver(com.adapty.kmp.AdaptyUIOnboardingsEventsObserver){}[0]
     final fun setPaywallsEventsObserver(com.adapty.kmp/AdaptyUIPaywallsEventsObserver) // com.adapty.kmp/AdaptyUI.setPaywallsEventsObserver|setPaywallsEventsObserver(com.adapty.kmp.AdaptyUIPaywallsEventsObserver){}[0]
     final fun unregisterOnboardingEventsListener(kotlin/String) // com.adapty.kmp/AdaptyUI.unregisterOnboardingEventsListener|unregisterOnboardingEventsListener(kotlin.String){}[0]
+    final fun unregisterPaywallEventsListener(kotlin/String) // com.adapty.kmp/AdaptyUI.unregisterPaywallEventsListener|unregisterPaywallEventsListener(kotlin.String){}[0]
     final suspend fun createOnboardingView(com.adapty.kmp.models/AdaptyOnboarding): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIOnboardingView> // com.adapty.kmp/AdaptyUI.createOnboardingView|createOnboardingView(com.adapty.kmp.models.AdaptyOnboarding){}[0]
     final suspend fun createPaywallView(com.adapty.kmp.models/AdaptyPaywall, kotlin.time/Duration?, kotlin/Boolean, kotlin.collections/Map<kotlin/String, kotlin/String>?, kotlin.collections/Map<kotlin/String, kotlinx.datetime/LocalDateTime>?, kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyCustomAsset>?, kotlin.collections/Map<com.adapty.kmp.models/AdaptyProductIdentifier, com.adapty.kmp.models/AdaptyPurchaseParameters>?): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIPaywallView> // com.adapty.kmp/AdaptyUI.createPaywallView|createPaywallView(com.adapty.kmp.models.AdaptyPaywall;kotlin.time.Duration?;kotlin.Boolean;kotlin.collections.Map<kotlin.String,kotlin.String>?;kotlin.collections.Map<kotlin.String,kotlinx.datetime.LocalDateTime>?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyCustomAsset>?;kotlin.collections.Map<com.adapty.kmp.models.AdaptyProductIdentifier,com.adapty.kmp.models.AdaptyPurchaseParameters>?){}[0]
     final suspend fun dismissOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.dismissOnboardingView|dismissOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView){}[0]
     final suspend fun dismissPaywallView(com.adapty.kmp.models/AdaptyUIPaywallView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.dismissPaywallView|dismissPaywallView(com.adapty.kmp.models.AdaptyUIPaywallView){}[0]
-    final suspend fun presentOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentOnboardingView|presentOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView){}[0]
-    final suspend fun presentPaywallView(com.adapty.kmp.models/AdaptyUIPaywallView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentPaywallView|presentPaywallView(com.adapty.kmp.models.AdaptyUIPaywallView){}[0]
+    final suspend fun presentOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView, com.adapty.kmp.models/AdaptyUIIOSPresentationStyle): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentOnboardingView|presentOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView;com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
+    final suspend fun presentPaywallView(com.adapty.kmp.models/AdaptyUIPaywallView, com.adapty.kmp.models/AdaptyUIIOSPresentationStyle): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentPaywallView|presentPaywallView(com.adapty.kmp.models.AdaptyUIPaywallView;com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/String?): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp/AdaptyUI.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
 
@@ -1503,6 +1561,7 @@ final val com.adapty.kmp.models/isSuccess // com.adapty.kmp.models/isSuccess|@co
     final fun <#A1: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A1>).<get-isSuccess>(): kotlin/Boolean // com.adapty.kmp.models/isSuccess.<get-isSuccess>|<get-isSuccess>@com.adapty.kmp.models.AdaptyResult<0:0>(){0§<kotlin.Any?>}[0]
 
 final fun (com.adapty.kmp.models/AdaptyOnboarding).com.adapty.kmp.internal.plugin.request/asJsonString(): kotlin/String // com.adapty.kmp.internal.plugin.request/asJsonString|asJsonString@com.adapty.kmp.models.AdaptyOnboarding(){}[0]
+final fun com.adapty.kmp.internal.plugin.request/createPaywallViewRequestJsonString(com.adapty.kmp.models/AdaptyPaywall, kotlin.collections/Map<kotlin/String, kotlin/String>?, kotlin.collections/Map<kotlin/String, kotlinx.datetime/LocalDateTime>?, kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyCustomAsset>?, kotlin.collections/Map<com.adapty.kmp.models/AdaptyProductIdentifier, com.adapty.kmp.models/AdaptyPurchaseParameters>?): kotlin/String // com.adapty.kmp.internal.plugin.request/createPaywallViewRequestJsonString|createPaywallViewRequestJsonString(com.adapty.kmp.models.AdaptyPaywall;kotlin.collections.Map<kotlin.String,kotlin.String>?;kotlin.collections.Map<kotlin.String,kotlinx.datetime.LocalDateTime>?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyCustomAsset>?;kotlin.collections.Map<com.adapty.kmp.models.AdaptyProductIdentifier,com.adapty.kmp.models.AdaptyPurchaseParameters>?){}[0]
 final inline fun <#A: kotlin/Any?, #B: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.adapty.kmp.models/fold(kotlin/Function1<#A, #B>, kotlin/Function1<com.adapty.kmp.models/AdaptyError, #B>): #B // com.adapty.kmp.models/fold|fold@com.adapty.kmp.models.AdaptyResult<0:0>(kotlin.Function1<0:0,0:1>;kotlin.Function1<com.adapty.kmp.models.AdaptyError,0:1>){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
 final inline fun <#A: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.adapty.kmp.models/exceptionOrNull(): com.adapty.kmp.models/AdaptyError? // com.adapty.kmp.models/exceptionOrNull|exceptionOrNull@com.adapty.kmp.models.AdaptyResult<0:0>(){0§<kotlin.Any?>}[0]
 final inline fun <#A: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.adapty.kmp.models/getOrNull(): #A? // com.adapty.kmp.models/getOrNull|getOrNull@com.adapty.kmp.models.AdaptyResult<0:0>(){0§<kotlin.Any?>}[0]

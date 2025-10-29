@@ -314,7 +314,7 @@ class AppViewModel : ViewModel() {
 //                "hero_image" to AdaptyCustomAsset.localImageData(
 //                    data = imageByteData
 //                ),
-                "hero_video" to AdaptyCustomAsset.localVideoResource(
+                "hero_video" to AdaptyCustomAsset.localVideoFile(
                     path = localVideoResourcePath
                 ),
 //                "custom_color_orange" to AdaptyCustomAsset.color(
