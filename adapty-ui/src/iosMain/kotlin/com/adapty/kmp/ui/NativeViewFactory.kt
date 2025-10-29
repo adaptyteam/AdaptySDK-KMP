@@ -13,6 +13,12 @@ internal interface NativeViewFactory {
         id: String,
         onEvent: (String?, String?) -> Unit
     ): UIViewController
+
+    fun createNativePaywallView(
+        jsonString: String,
+        id: String,
+        onEvent: (String?, String?) -> Unit
+    ): UIViewController
 }
 
 internal class IosNativeViewFactory : NativeViewFactory {
@@ -28,5 +34,21 @@ internal class IosNativeViewFactory : NativeViewFactory {
             onEvent = onEvent
         ) as UIViewController
     }
+
+    @OptIn(ExperimentalForeignApi::class)
+    override fun createNativePaywallView(
+        jsonString: String,
+        id: String,
+        onEvent: (String?, String?) -> Unit
+    ): UIViewController {
+        //TODO fix below
+        return AdaptySwiftBridge.createNativePaywallViewWithJsonString(
+            jsonString = jsonString,
+            id = id,
+            onEvent = onEvent
+        ) as UIViewController
+    }
+
+
 
 }

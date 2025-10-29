@@ -47,7 +47,6 @@ public fun AdaptyUIPaywallPlatformView(
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
 
-
         AdaptyUI.registerPaywallEventsListener(
             viewId = paywall.idForNativePlatformView,
             observer = object : AdaptyUIPaywallsEventsObserver {

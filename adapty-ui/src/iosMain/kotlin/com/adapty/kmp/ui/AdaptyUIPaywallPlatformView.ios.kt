@@ -5,13 +5,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitInteropProperties
 import androidx.compose.ui.viewinterop.UIKitViewController
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
-import com.adapty.kmp.internal.plugin.request.asJsonString
+import com.adapty.kmp.internal.plugin.request.createPaywallViewRequestJsonString
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.datetime.LocalDateTime
+
+@OptIn(AdaptyKMPInternal::class, ExperimentalForeignApi::class)
 
 @Composable
 internal actual fun AdaptyUIPaywallPlatformView(
@@ -25,9 +29,18 @@ internal actual fun AdaptyUIPaywallPlatformView(
 
     val factory = remember { IosNativeViewFactory() }
     val view = remember(factory) {
-        factory.createNativeOnboardingView(
-            jsonString = onboarding.asJsonString(),
-            id = onboarding.idForNativePlatformView,
+
+        val jsonString = createPaywallViewRequestJsonString(
+            paywall = paywall,
+            customTags = customTags,
+            customTimers = customTimers,
+            customAssets = customAssets,
+            productPurchaseParams = productPurchaseParams
+        )
+
+        factory.createNativePaywallView(
+            jsonString = jsonString,
+            id = paywall.idForNativePlatformView,
             onEvent = { eventName, eventDataJsonString ->
                 AdaptyPluginEventHandler.onNewEvent(
                     eventName = eventName,

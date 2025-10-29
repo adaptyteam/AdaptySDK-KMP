@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModelStoreOwner
 import com.adapty.internal.crossplatform.ui.Dependencies.safeInject
 import com.adapty.internal.crossplatform.ui.PaywallUiManager
 import com.adapty.internal.utils.InternalAdaptyApi
@@ -34,7 +35,7 @@ internal actual fun AdaptyUIPaywallPlatformView(
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
 ) {
 
-    val viewModelStoreOwner = LocalActivity.current ?: return
+    val viewModelStoreOwner = LocalActivity.current as? ViewModelStoreOwner ?: return
     val context = LocalContext.current
     val paywallUiManager: PaywallUiManager? by safeInject<PaywallUiManager>()
 
@@ -51,7 +52,6 @@ internal actual fun AdaptyUIPaywallPlatformView(
                     productPurchaseParams = productPurchaseParams
                 ),
                 id = paywall.idForNativePlatformView,
-                platformViewOnEvent = null
             )
         }
     }
