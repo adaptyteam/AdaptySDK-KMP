@@ -1,23 +1,37 @@
 package com.adapty.kmp.models
 
+import com.adapty.kmp.internal.AdaptyKMPInternal
+
 
 public data class AdaptyPaywall internal constructor(
-    public val placementId: String,
+    public val placement: AdaptyPlacement,
     public val instanceIdentity: String,
     public val name: String,
-    public val audienceName: String,
-    public val abTestName: String,
     public val variationId: String,
-    public val revision: Int,
-    public val remoteConfig: AdaptyPaywallRemoteConfig? = null,
+    public val remoteConfig: AdaptyRemoteConfig? = null,
     internal val viewConfiguration: AdaptyPaywallViewConfiguration? = null,
     internal val products: List<AdaptyPaywallProductReference> = emptyList(),
     internal val payloadData: String? = null,
-    internal val version: Long = 0L
+    internal val webPurchaseUrl: String?,
+    internal val requestLocale: String?,
+    internal val responseCreatedAt: Long = 0L
 ) {
+    internal companion object {
+        const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_paywall_"
+    }
     val hasViewConfiguration: Boolean
         get() = viewConfiguration != null
 
-    val vendorProductIds: List<String> get() = products.map { it.vendorId }
+    val productIdentifiers: List<AdaptyProductIdentifier>
+        get() = products.map {
+            AdaptyProductIdentifier(
+                vendorProductId = it.vendorId,
+                basePlanId = it.basePlanId,
+                adaptyProductId = it.adaptyProductId
+            )
+        }
+
+    @AdaptyKMPInternal
+    val idForNativePlatformView: String = "${AdaptyOnboarding.Companion.PREFIX_NATIVE_PLATFORM_VIEW}$instanceIdentity"
 
 }

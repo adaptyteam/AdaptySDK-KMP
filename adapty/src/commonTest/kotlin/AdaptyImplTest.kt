@@ -11,7 +11,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequ
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
-import com.adapty.kmp.internal.plugin.request.asAdaptySubscriptionUpdateParametersRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.toAdaptyCustomAttributesRequest
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
@@ -23,8 +23,10 @@ import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.fold
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.jsonObject
 import kotlin.test.BeforeTest
@@ -49,7 +51,10 @@ class AdaptyImplTest {
     @BeforeTest
     fun setUp() {
         fakeAdaptyPlugin = FakeAdaptyPlugin()
-        adaptyImpl = AdaptyImpl(fakeAdaptyPlugin)
+        adaptyImpl = AdaptyImpl(
+            adaptyPlugin = fakeAdaptyPlugin,
+            appMainScope = TestScope()
+        )
     }
 
     @Test
@@ -198,7 +203,7 @@ class AdaptyImplTest {
             param = AdaptyGetPaywallForDefaultAudienceRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
                 locale = AdaptyFakeTestData.LOCALE,
-                fetchPolicy = com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
+                fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
             expectedSuccessData = AdaptyFakeTestData.getPaywall()
         )
@@ -223,24 +228,26 @@ class AdaptyImplTest {
     fun `makePurchase method - verify request and response`() = runTest {
         val paywallProduct = AdaptyFakeTestData.getPaywallProductList()[0]
         val isOfferPersonalized = true
-        val subscriptionUpdateParameters = AdaptyAndroidSubscriptionUpdateParameters(
+        val androidSubscriptionUpdateParameters = AdaptyAndroidSubscriptionUpdateParameters(
             oldSubVendorProductId = "old_vendor_product_id",
             replacementMode = AdaptyAndroidSubscriptionUpdateReplacementMode.CHARGE_FULL_PRICE,
         )
+        val parameters = AdaptyPurchaseParameters.Builder()
+            .setSubscriptionUpdateParams(androidSubscriptionUpdateParameters)
+            .setIsOfferPersonalized(isOfferPersonalized)
+            .build()
 
         verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.makePurchase(
                     product = paywallProduct,
-                    isOfferPersonalized = isOfferPersonalized,
-                    subscriptionUpdateParams = subscriptionUpdateParameters
+                    parameters = parameters
                 )
             },
             method = AdaptyPluginMethod.MAKE_PURCHASE,
             param = AdaptyMakePurchaseRequest(
                 paywallProduct = paywallProduct.asAdaptyPaywallProductRequest(),
-                isOfferPersonalized = isOfferPersonalized,
-                subscriptionUpdateParams = subscriptionUpdateParameters.asAdaptySubscriptionUpdateParametersRequest()
+                parameters = parameters.asAdaptyPurchaseParametersRequest()
             ),
             expectedSuccessData = AdaptyFakeTestData.getSuccessPurchaseResult(),
         )
@@ -292,13 +299,13 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `setFallBackPaywalls method - verify request and response`() = runTest {
+    fun `setFallBack method - verify request and response`() = runTest {
         val assetId = AdaptyFakeTestData.ASSET_ID
         verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.setFallbackPaywalls(assetId = assetId)
+                adaptyImpl.setFallback(assetId = assetId)
             },
-            method = AdaptyPluginMethod.SET_FALLBACK_PAYWALLS,
+            method = AdaptyPluginMethod.SET_FALLBACK,
             param = assetId,
             expectedSuccessData = Unit
         )

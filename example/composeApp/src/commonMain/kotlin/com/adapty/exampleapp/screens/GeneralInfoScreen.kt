@@ -37,7 +37,9 @@ import com.adapty.exampleapp.components.ListSection
 import com.adapty.exampleapp.components.ListTextFieldTile
 import com.adapty.exampleapp.components.ListTextTile
 import com.adapty.kmp.Adapty
-import com.adapty.kmp.AdaptyUI
+import com.adapty.kmp.models.AdaptyInstallationStatusDetermined
+import com.adapty.kmp.models.AdaptyInstallationStatusNotAvailable
+import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
@@ -73,6 +75,7 @@ private fun GeneralInfoScreenContent(
 ) {
     Column(modifier = modifier.verticalScroll(rememberScrollState()).padding(bottom = 16.dp)) {
         ProfileIdSection(uiState, onUiEvent)
+        InstallationDetailsSection(uiState, onUiEvent)
         IdentifyCustomerIdSection(uiState, onUiEvent)
         ProfileInfoSection(uiState, onUiEvent)
         ExampleABPaywallTestSection(uiState, onUiEvent)
@@ -106,6 +109,76 @@ fun ProfileIdSection(
             }
         )
     }
+}
+
+@Composable
+fun InstallationDetailsSection(
+    uiState: AppUiState,
+    onUiEvent: (AppUiEvent) -> Unit
+) {
+    val installationStatus = uiState.installationStatus
+
+    when (installationStatus) {
+        is AdaptyInstallationStatusDetermined -> {
+            ListSection(headerText = "Installation Details") {
+                ListTextTile(title = "Status", subtitle = "determined")
+                ListTextTile(title = "ID", subtitle = installationStatus.details.installId)
+                ListTextTile(
+                    title = "Install Time",
+                    subtitle = installationStatus.details.installTime.toString()
+                )
+                ListTextTile(
+                    title = "App Launch Count",
+                    subtitle = installationStatus.details.appLaunchCount.toString()
+                )
+                ListTextTile(
+                    title = "Payload",
+                    subtitle = installationStatus.details.payload?.jsonString
+                )
+                ListActionTile(
+                    title = "Update",
+                    onClick = {
+                        onUiEvent(AppUiEvent.OnClickUpdateInstallationDetails)
+                    }
+                )
+            }
+        }
+
+        AdaptyInstallationStatusNotAvailable -> {
+            ListSection(headerText = "Installation Details") {
+                ListTextTile(
+                    title = "Status",
+                    subtitle = "notAvailable"
+                )
+
+                ListActionTile(
+                    title = "Update",
+                    onClick = {
+                        onUiEvent(AppUiEvent.OnClickUpdateInstallationDetails)
+                    }
+                )
+            }
+        }
+
+        AdaptyInstallationStatusNotDetermined -> {
+
+            ListSection(headerText = "Installation Details") {
+                ListTextTile(
+                    title = "Status",
+                    subtitle = "notDetermined"
+                )
+
+                ListActionTile(
+                    title = "Update",
+                    onClick = {
+                        onUiEvent(AppUiEvent.OnClickUpdateInstallationDetails)
+                    }
+                )
+            }
+        }
+    }
+
+
 }
 
 
@@ -375,7 +448,7 @@ private fun CustomPaywallSection(
                 }
             )
         } else {
-            ListTextTile(title = "Paywall Id", subtitle = uiState.customPaywall.placementId)
+            ListTextTile(title = "Paywall Id", subtitle = uiState.customPaywall.placement.id)
 
             PaywallContentSection(
                 paywall = uiState.customPaywall,
@@ -468,12 +541,12 @@ private fun PaywallContentSection(
     Column {
         ListTextTile(title = "Name", subtitle = paywall.name)
         ListTextTile(title = "Variation", subtitle = paywall.variationId)
-        ListTextTile(title = "Revision", subtitle = paywall.revision.toString())
+        ListTextTile(title = "Revision", subtitle = paywall.placement.revision.toString())
         ListTextTile(title = "Locale", subtitle = paywall.remoteConfig?.locale.orEmpty())
 
         if (products == null) {
-            paywall.vendorProductIds.forEach {
-                ListTextTile(title = it)
+            paywall.productIdentifiers.forEach {
+                ListTextTile(title = it.vendorProductId)
             }
         } else {
             products.forEach { product ->
@@ -507,16 +580,7 @@ private fun PaywallContentSection(
             ListActionTile(
                 title = "Present View",
                 onClick = {
-                    coroutineScope.launch {
-                        try {
-                            AppLogger.d("Invoking createPaywallView, paywall: $paywall")
-                            val paywallView = AdaptyUI.createPaywallView(paywall = paywall)
-                            paywallView?.present()
-                        } catch (e: Exception) {
-                            AppLogger.e("PaywallContentSection, createPaywallView, error: $e")
-                        }
-
-                    }
+                    onUiEvent(AppUiEvent.OnClickPresentPaywallView(paywall = paywall))
                 }
             )
         }

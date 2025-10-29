@@ -1,6 +1,9 @@
+@file:OptIn(AdaptyKMPInternal::class)
+
 package com.adapty.kmp.internal.plugin
 
 import com.adapty.kmp.AdaptySwiftBridge
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)

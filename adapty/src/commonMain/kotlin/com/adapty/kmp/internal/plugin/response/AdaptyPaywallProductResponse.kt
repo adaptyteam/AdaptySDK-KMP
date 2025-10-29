@@ -18,6 +18,12 @@ internal data class AdaptyPaywallProductResponse(
     @SerialName("paywall_variation_id")
     val paywallVariationId: String,
 
+    @SerialName("product_type")
+    val productType: String?,
+
+    @SerialName("access_level_id")
+    val accessLevelId: String?,
+
     @SerialName("paywall_ab_test_name")
     val paywallAbTestName: String,
 
@@ -53,6 +59,8 @@ internal fun AdaptyPaywallProductResponse.asAdaptyPaywallProduct(): AdaptyPaywal
     return AdaptyPaywallProduct(
         vendorProductId = vendorProductId,
         adaptyProductId = adaptyProductId,
+        productType = productType,
+        accessLevelId = accessLevelId,
         paywallProductIndex = paywallProductIndex,
         paywallABTestName = paywallAbTestName,
         paywallName = paywallName,

@@ -1,6 +1,7 @@
 package com.adapty.kmp.internal.plugin.request
 
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
+import com.adapty.kmp.models.AdaptyPurchaseParameters
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -1,3 +1,5 @@
+@file:OptIn(AdaptyKMPInternal::class)
+
 package com.adapty.kmp
 
 import android.app.Activity
@@ -6,6 +8,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.startup.Initializer
 import com.adapty.internal.crossplatform.CrossplatformHelper
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
 import com.adapty.utils.FileLocation
 
@@ -29,8 +32,14 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
                     eventDataJsonString = eventDataJsonString
                 )
             },
-            transformFallbackPaywallLocation = { location ->
-                FileLocation.fromAsset(location)
+            transformFileLocation = { fullPath ->
+                val prefix = "file:///android_asset/"
+                val relativePath = if (fullPath.startsWith(prefix)) {
+                    fullPath.substring(prefix.length)
+                } else {
+                    fullPath
+                }
+                FileLocation.fromAsset(relativePath)
             }
         )
         crossplatformHelper.setActivity { currentActivity }

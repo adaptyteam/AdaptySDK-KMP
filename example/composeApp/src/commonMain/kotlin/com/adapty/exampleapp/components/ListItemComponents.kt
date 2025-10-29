@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -47,7 +46,10 @@ import com.adapty.kmp.Adapty
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.exceptionOrNull
 import com.adapty.kmp.models.getOrNull
+import kmpadapty.example.composeapp.generated.resources.Res
+import kmpadapty.example.composeapp.generated.resources.ic_close
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
@@ -252,7 +254,7 @@ fun ListTextFieldTile(
         trailingIcon = {
             if (value.isNotEmpty()) {
                 IconButton(onClick = { onChanged?.invoke("") }) {
-                    Icon(Icons.Default.Close, contentDescription = "Clear")
+                    Icon(painterResource(Res.drawable.ic_close), contentDescription = "Clear")
                 }
             }
         }
@@ -318,3 +320,30 @@ fun ListActionTile(
         }
     }
 }
+
+@Composable
+fun ListToggleTile(
+    title: String,
+    value: Boolean,
+    onChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        Switch(
+            checked = value,
+            onCheckedChange = { onChanged(it) }
+        )
+    }
+}
+

@@ -30,13 +30,13 @@ kotlin {
     sourceSets {
         
         androidMain.dependencies {
-            implementation(project(":adapty"))
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
 
             implementation(projects.adapty)
+            implementation(projects.adaptyUi)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

@@ -29,4 +29,5 @@ dependencyResolutionManagement {
 }
 
 include(":adapty")
+include(":adapty-ui")
 include(":example:composeApp")

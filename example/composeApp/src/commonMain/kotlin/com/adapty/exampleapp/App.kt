@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,13 +27,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.screens.GeneralInfoScreen
 import com.adapty.exampleapp.screens.LogsScreen
+import com.adapty.exampleapp.screens.OnBoardingScreen
+import com.adapty.exampleapp.screens.OnboardingNativeViewScreen
+import com.adapty.exampleapp.screens.PaywallNativeViewScreen
 import com.adapty.exampleapp.screens.PaywallsScreen
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.models.AdaptyError
+import kmpadapty.example.composeapp.generated.resources.Res
+import kmpadapty.example.composeapp.generated.resources.ic_home
+import kmpadapty.example.composeapp.generated.resources.ic_info
+import kmpadapty.example.composeapp.generated.resources.ic_shopping_cart
+import kmpadapty.example.composeapp.generated.resources.ic_star
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -54,18 +60,28 @@ fun App() {
         val error: ErrorDialogState? = ErrorDialogState.from(error = uiState.error)
 
         LaunchedEffect(Unit) {
-            AdaptyUI.setObserver(
-                AdaptyUIObserverImpl(
+            AdaptyUI.setPaywallsEventsObserver(
+                AdaptyUIPaywallsEventsObserverImpl(
                     uiCoroutineScope = coroutineScope,
                     uriHandler = localUriHandler
+                )
+            )
+            AdaptyUI.setOnboardingsEventsObserver(
+                AdaptyUIOnboardingsEventsObserverImpl(
+                    uiCoroutineScope = coroutineScope
                 )
             )
         }
 
 
         var selectedTab by rememberSaveable { mutableStateOf(0) }
-        val tabs = listOf("General", "Paywalls", "Logs")
-        val icons = listOf(Icons.Default.Home, Icons.Default.ShoppingCart, Icons.Default.Info)
+        val tabs = listOf("General", "Paywalls", "Onboardings", "Logs")
+        val icons = listOf(
+            Res.drawable.ic_home,
+            Res.drawable.ic_shopping_cart,
+            Res.drawable.ic_star,
+            Res.drawable.ic_info
+        )
 
         Scaffold(
             modifier = Modifier.fillMaxWidth().safeDrawingPadding(),
@@ -74,7 +90,12 @@ fun App() {
                 NavigationBar {
                     tabs.forEachIndexed { index, label ->
                         NavigationBarItem(
-                            icon = { Icon(icons[index], contentDescription = label) },
+                            icon = {
+                                Icon(
+                                    painterResource(icons[index]),
+                                    contentDescription = label
+                                )
+                            },
                             label = { Text(label) },
                             selected = selectedTab == index,
                             onClick = { selectedTab = index }
@@ -93,12 +114,38 @@ fun App() {
                     viewModel = appViewModel,
                     modifier = Modifier.padding(padding)
                 )
-                2 -> LogsScreen(
+
+                2 -> OnBoardingScreen(
+                    viewModel = appViewModel,
+                    modifier = Modifier.padding(padding)
+                )
+
+                3 -> LogsScreen(
                     modifier = Modifier.padding(padding)
                 )
             }
-
             ErrorDialog(state = error, onDismiss = appViewModel::onErrorDialogDismissed)
+        }
+        uiState.nativeOnboardingView?.let { onboarding ->
+            OnboardingNativeViewScreen(
+                modifier = Modifier.fillMaxSize().zIndex(2f),
+                showToastEvents = uiState.showOnboardingToastEvents,
+                onboarding = onboarding,
+                onNavigateBack = {
+                    appViewModel.onUiEvent(AppUiEvent.OnCloseNativeOnboardingView)
+                }
+            )
+        }
+
+        uiState.nativePaywallView?.let { paywall ->
+            PaywallNativeViewScreen(
+                modifier = Modifier.fillMaxSize().zIndex(2f),
+                showToastEvents = uiState.showOnboardingToastEvents,
+                paywall = paywall,
+                onNavigateBack = {
+                    appViewModel.onUiEvent(AppUiEvent.OnCloseNativePaywallView)
+                }
+            )
         }
     }
 }

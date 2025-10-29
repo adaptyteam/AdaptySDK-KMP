@@ -1,22 +1,22 @@
 package com.adapty.kmp.internal.plugin.request
 
-import com.adapty.kmp.models.AdaptyPaywall
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallRemoteConfigResponse
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewConfigurationResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyRemoteConfigResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallRemoteConfig
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallRemoteConfigResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallViewConfiguration
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallViewConfigurationResponse
+import com.adapty.kmp.internal.utils.jsonInstance
+import com.adapty.kmp.models.AdaptyOnboarding
+import com.adapty.kmp.models.AdaptyPaywall
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class AdaptyPaywallRequestResponse(
-    @SerialName("developer_id")
-    val developerId: String,
-
-    @SerialName("audience_name")
-    val audienceName: String? = null,
+    @SerialName("placement")
+    val placement: AdaptyPlacementRequestResponse,
 
     @SerialName("paywall_id")
     val paywallId: String,
@@ -27,17 +27,11 @@ internal data class AdaptyPaywallRequestResponse(
     @SerialName("response_created_at")
     val responseCreatedAt: Long,
 
-    @SerialName("revision")
-    val revision: Int,
-
     @SerialName("variation_id")
     val variationId: String,
 
-    @SerialName("ab_test_name")
-    val abTestName: String,
-
     @SerialName("remote_config")
-    val remoteConfig: AdaptyPaywallRemoteConfigResponse? = null,
+    val remoteConfig: AdaptyRemoteConfigResponse? = null,
 
     @SerialName("paywall_builder")
     val viewConfiguration: AdaptyPaywallViewConfigurationResponse? = null,
@@ -46,40 +40,44 @@ internal data class AdaptyPaywallRequestResponse(
     val products: List<AdaptyPaywallProductReferenceRequestResponse>,
 
     @SerialName("payload_data")
-    val payloadData: String? = null
+    val payloadData: String? = null,
+
+    @SerialName("request_locale")
+    val requestLocale: String?,
+
+    @SerialName("web_purchase_url")
+    val webPurchaseUrl: String? = null
 )
 
 internal fun AdaptyPaywallRequestResponse.asAdaptyPaywall(): AdaptyPaywall {
     return AdaptyPaywall(
-        placementId = this.developerId,
         instanceIdentity = this.paywallId,
         name = this.paywallName,
-        audienceName = this.audienceName ?: "",
-        abTestName = this.abTestName,
         variationId = this.variationId,
-        revision = this.revision,
         remoteConfig = this.remoteConfig?.asAdaptyPaywallRemoteConfig(),
         viewConfiguration = this.viewConfiguration?.asAdaptyPaywallViewConfiguration(),
         products = this.products.map { it.asAdaptyPaywallProductReference() },
         payloadData = this.payloadData,
-        version = this.responseCreatedAt,
+        responseCreatedAt = this.responseCreatedAt,
+        placement = this.placement.asAdaptyPlacement(),
+        requestLocale = this.requestLocale,
+        webPurchaseUrl = this.webPurchaseUrl
     )
 }
 
 internal fun AdaptyPaywall.asAdaptyPaywallRequest(): AdaptyPaywallRequestResponse {
 
     return AdaptyPaywallRequestResponse(
-        developerId = this.placementId,
         paywallId = this.instanceIdentity,
         paywallName = this.name,
-        audienceName = this.audienceName,
-        abTestName = this.abTestName,
         variationId = this.variationId,
-        revision = this.revision,
         remoteConfig = this.remoteConfig?.asAdaptyPaywallRemoteConfigResponse(),
         viewConfiguration = this.viewConfiguration?.asAdaptyPaywallViewConfigurationResponse(),
         products = this.products.map { it.asAdaptyPaywallProductReferenceRequest() },
         payloadData = this.payloadData,
-        responseCreatedAt = version
+        responseCreatedAt = responseCreatedAt,
+        placement = this.placement.asAdaptyPlacementRequestResponse(),
+        requestLocale = this.requestLocale,
+        webPurchaseUrl = this.webPurchaseUrl,
     )
 }

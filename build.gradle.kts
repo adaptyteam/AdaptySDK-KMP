@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
@@ -17,4 +19,11 @@ apiValidation {
         enabled = true
     }
     ignoredProjects += "composeApp"
+}
+
+allprojects {
+    val excludedModules = listOf("composeApp", "example")
+    if (name !in excludedModules) {
+        apply(plugin = "org.jetbrains.dokka")
+    }
 }
