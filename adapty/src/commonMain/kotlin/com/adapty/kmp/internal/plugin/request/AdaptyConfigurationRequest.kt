@@ -13,9 +13,11 @@ internal data class AdaptyConfigurationRequest(
 internal data class AdaptyConfigurationRequestData(
     @SerialName("api_key") val apiKey: String,
     @SerialName("customer_user_id") val customerUserId: String? = null,
+    @SerialName("customer_identity_parameters") val customerIdentityParameters: AdaptyCustomerIdentityRequest? = null,
     @SerialName("observer_mode") val observerMode: Boolean = false,
     @SerialName("apple_idfa_collection_disabled") val appleIdfaCollectionDisabled: Boolean = false,
     @SerialName("google_adid_collection_disabled") val googleAdidCollectionDisabled: Boolean = false,
+    @SerialName("google_enable_pending_prepaid_plans") val googleEnablePendingPrepaidPlans: Boolean = false,
     @SerialName("ip_address_collection_disabled") val ipAddressCollectionDisabled: Boolean = false,
     @SerialName("server_cluster") val serverCluster: String? = null,
     @SerialName("backend_base_url") val backendBaseUrl: String? = null,
@@ -59,9 +61,11 @@ internal fun AdaptyConfig.asAdaptyConfigurationRequest(): AdaptyConfigurationReq
     val configurationData = AdaptyConfigurationRequestData(
         apiKey = apiKey,
         customerUserId = customerUserId,
+        customerIdentityParameters = customerIdentity?.asAdaptyCustomerIdentityRequest(),
         observerMode = observerMode,
         appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
         googleAdidCollectionDisabled = googleAdvertisingIdCollection,
+        googleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans,
         ipAddressCollectionDisabled = ipAddressCollectionDisabled,
         serverCluster = serverCluster,
         backendBaseUrl = backendBaseUrl,

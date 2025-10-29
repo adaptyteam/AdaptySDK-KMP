@@ -8,6 +8,7 @@ public class AdaptyConfig private constructor(
     internal val customerUserId: String?,
     internal val ipAddressCollectionDisabled: Boolean,
     internal val googleAdvertisingIdCollection: Boolean,
+    internal val googleEnablePendingPrepaidPlans: Boolean,
     internal val appleIdfaCollectionDisabled: Boolean,
     internal val backendBaseUrl: String?,
     internal val backendFallbackBaseUrl: String?,
@@ -21,6 +22,7 @@ public class AdaptyConfig private constructor(
     internal val activateUI: Boolean,
     internal val logLevel: AdaptyLogLevel?,
     internal val mediaCache: MediaCacheConfiguration,
+    internal val customerIdentity: AdaptyCustomerIdentity?
 ) {
     internal companion object {
         const val SDK_NAME = "kmp"
@@ -37,6 +39,7 @@ public class AdaptyConfig private constructor(
         private var observerMode = false
         private var ipAddressCollectionDisabled = false
         private var googleAdvertisingIdCollection = false
+        private var googleEnablePendingPrepaidPlans = false
         private var appleIdfaCollectionDisabled = false
         private var backendBaseUrl: String? = null
         private var backendFallbackBaseUrl: String? = null
@@ -50,8 +53,21 @@ public class AdaptyConfig private constructor(
         private var activateUI: Boolean = false
         private var logLevel: AdaptyLogLevel? = AdaptyLogLevel.INFO
         private var mediaCache: MediaCacheConfiguration = MediaCacheConfiguration()
+        private var customerIdentity: AdaptyCustomerIdentity? = null
 
-        public fun withCustomerUserId(id: String?): Builder = apply { this.customerUserId = id }
+
+        public fun withCustomerUserId(
+            id: String?,
+            iosAppAccountToken: String? = null,
+            androidObfuscatedAccountId: String? = null
+        ): Builder = apply {
+            this.customerUserId = id
+            customerIdentity = AdaptyCustomerIdentity.createIfNotEmpty(
+                iosAppAccountToken = iosAppAccountToken,
+                androidObfuscatedAccountId = androidObfuscatedAccountId
+            )
+        }
+
         public fun withObserverMode(enabled: Boolean): Builder =
             apply { this.observerMode = enabled }
 
@@ -61,6 +77,9 @@ public class AdaptyConfig private constructor(
         public fun withGoogleAdvertisingIdCollectionDisabled(disabled: Boolean): Builder =
             apply { this.googleAdvertisingIdCollection = disabled }
 
+        public fun withGoogleEnablePendingPrepaidPlans(enabled: Boolean): Builder =
+            apply { this.googleEnablePendingPrepaidPlans = enabled }
+
         public fun withAppleIdfaCollectionDisabled(disabled: Boolean): Builder =
             apply { this.appleIdfaCollectionDisabled = disabled }
 
@@ -68,8 +87,11 @@ public class AdaptyConfig private constructor(
         public fun withBackendFallbackBaseUrl(url: String): Builder =
             apply { this.backendFallbackBaseUrl = url }
 
-        public fun withBackendConfigsBaseUrl(url: String): Builder = apply { this.backendConfigsBaseUrl = url }
-        public fun withBackendUABaseUrl(url: String): Builder = apply { this.backendUABaseUrl = url }
+        public fun withBackendConfigsBaseUrl(url: String): Builder =
+            apply { this.backendConfigsBaseUrl = url }
+
+        public fun withBackendUABaseUrl(url: String): Builder =
+            apply { this.backendUABaseUrl = url }
 
         public fun withBackendProxyHost(host: String): Builder =
             apply { this.backendProxyHost = host }
@@ -101,6 +123,7 @@ public class AdaptyConfig private constructor(
                 observerMode = observerMode,
                 appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
                 googleAdvertisingIdCollection = googleAdvertisingIdCollection,
+                googleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans,
                 ipAddressCollectionDisabled = ipAddressCollectionDisabled,
                 backendBaseUrl = backendBaseUrl,
                 backendFallbackBaseUrl = backendFallbackBaseUrl,
@@ -113,7 +136,8 @@ public class AdaptyConfig private constructor(
                 activateUI = activateUI,
                 logLevel = logLevel,
                 mediaCache = mediaCache,
-                backendUABaseUrl = backendUABaseUrl
+                backendUABaseUrl = backendUABaseUrl,
+                customerIdentity = customerIdentity
             )
         }
     }

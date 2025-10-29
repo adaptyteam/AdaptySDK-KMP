@@ -17,6 +17,7 @@ import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
 import kmpadapty.example.composeapp.generated.resources.Res
@@ -27,10 +28,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
@@ -192,7 +193,8 @@ class AppViewModel : ViewModel() {
 
             is AppUiEvent.CreateAndPresentPaywallView -> createAndPresentPaywallView(
                 paywall = event.paywall,
-                loadProducts = event.loadProducts
+                loadProducts = event.loadProducts,
+                iosPresentationStyle = event.iosPresentationStyle
             )
 
             is AppUiEvent.OnNewOnboardingIdAdded -> {
@@ -208,8 +210,13 @@ class AppViewModel : ViewModel() {
                 }
             }
 
-            is AppUiEvent.OnClickPresentOnboarding -> createAndPresentOnboarding(event.onboarding)
+            is AppUiEvent.OnClickPresentOnboarding -> createAndPresentOnboarding(
+                onboarding = event.onboarding,
+                presentationStyle = event.presentationStyle
+            )
+
             is AppUiEvent.OnClickPresentOnboardingNativeView -> showOnboardingNativeView(event.onboarding)
+            is AppUiEvent.OnClickPresentPaywallNativeView -> showNativePaywallView(event.paywall)
             AppUiEvent.OnToggleOnboardingShowToastEvents -> {
                 _uiState.update { currentState ->
                     currentState.copy(showOnboardingToastEvents = !currentState.showOnboardingToastEvents)
@@ -222,6 +229,10 @@ class AppViewModel : ViewModel() {
 
             AppUiEvent.OnCloseNativeOnboardingView -> {
                 _uiState.update { it.copy(nativeOnboardingView = null) }
+            }
+
+            AppUiEvent.OnCloseNativePaywallView -> {
+                _uiState.update { it.copy(nativePaywallView = null) }
             }
 
         }
@@ -284,7 +295,11 @@ class AppViewModel : ViewModel() {
 
 
     @OptIn(ExperimentalResourceApi::class)
-    private fun createAndPresentPaywallView(paywall: AdaptyPaywall, loadProducts: Boolean) =
+    private fun createAndPresentPaywallView(
+        paywall: AdaptyPaywall,
+        loadProducts: Boolean,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle
+    ) =
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
@@ -338,7 +353,7 @@ class AppViewModel : ViewModel() {
                 ),
                 customAssets = customAssets
             ).onSuccess { view ->
-                view.present()
+                view.present(iosPresentationStyle = iosPresentationStyle)
             }.onError { error ->
                 _uiState.update { it.copy(error = error) }
             }
@@ -544,11 +559,14 @@ class AppViewModel : ViewModel() {
         }
     }
 
-    private fun createAndPresentOnboarding(onboarding: AdaptyOnboarding) = viewModelScope.launch {
+    private fun createAndPresentOnboarding(
+        onboarding: AdaptyOnboarding,
+        presentationStyle: AdaptyUIIOSPresentationStyle
+    ) = viewModelScope.launch {
         _uiState.update { it.copy(isLoadingOnboard = true) }
         AdaptyUI
             .createOnboardingView(onboarding = onboarding)
-            .onSuccess { view -> view.present() }
+            .onSuccess { view -> view.present(iosPresentationStyle = presentationStyle) }
             .onError { adaptyError ->
                 _uiState.update { currentState -> currentState.copy(error = adaptyError) }
             }
@@ -558,6 +576,10 @@ class AppViewModel : ViewModel() {
 
     private fun showOnboardingNativeView(onboarding: AdaptyOnboarding) = viewModelScope.launch {
         _uiState.update { it.copy(nativeOnboardingView = onboarding) }
+    }
+
+    private fun showNativePaywallView(paywall: AdaptyPaywall) = viewModelScope.launch {
+        _uiState.update { it.copy(nativePaywallView = paywall) }
     }
 
 

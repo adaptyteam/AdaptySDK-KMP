@@ -7,8 +7,8 @@ public data class AdaptyUIPaywallView internal constructor(
     val placementId: String,
     val variationId: String
 ) {
-    public suspend fun present(): AdaptyResult<Unit> {
-        return AdaptyUI.presentPaywallView(this)
+    public suspend fun present(iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN): AdaptyResult<Unit> {
+        return AdaptyUI.presentPaywallView(view = this, iosPresentationStyle = iosPresentationStyle)
     }
 
     public suspend fun dismiss(): AdaptyResult<Unit> {

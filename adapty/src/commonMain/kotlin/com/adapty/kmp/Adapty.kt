@@ -2,7 +2,6 @@ package com.adapty.kmp
 
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.internal.plugin.constants.Constants.DEFAULT_LOAD_TIMEOUT
-import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyInstallationStatus
 import com.adapty.kmp.models.AdaptyIosRefundPreference
@@ -13,6 +12,7 @@ import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
 import kotlin.time.Duration
@@ -21,7 +21,12 @@ public object Adapty : AdaptyContract by AdaptyImpl(adaptyPlugin = adaptyPlugin)
 
 internal interface AdaptyContract {
     suspend fun activate(configuration: AdaptyConfig): AdaptyResult<Unit>
-    suspend fun identify(customerUserId: String): AdaptyResult<Unit>
+    suspend fun identify(
+        customerUserId: String,
+        iosAppAccountToken: String? = null,
+        androidObfuscatedAccountId: String? = null
+    ): AdaptyResult<Unit>
+
     suspend fun updateProfile(params: AdaptyProfileParameters): AdaptyResult<Unit>
     suspend fun getProfile(): AdaptyResult<AdaptyProfile>
     suspend fun getCurrentInstallationStatus(): AdaptyResult<AdaptyInstallationStatus>
@@ -46,6 +51,7 @@ internal interface AdaptyContract {
         locale: String? = null,
         fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default
     ): AdaptyResult<AdaptyOnboarding>
+
     suspend fun makePurchase(
         product: AdaptyPaywallProduct,
         parameters: AdaptyPurchaseParameters? = null

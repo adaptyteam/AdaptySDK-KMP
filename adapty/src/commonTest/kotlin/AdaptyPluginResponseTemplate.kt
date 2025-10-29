@@ -175,6 +175,8 @@ object AdaptyPluginResponseTemplate {
                     put("win_back_offer_id", product.winBackOfferId)
                     put("base_plan_id", product.basePlanId)
                     put("offer_id", product.offerId)
+                    put("product_type", product.productType)
+                    put("access_level_id", product.accessLevelId)
                 })
             }
         }
@@ -230,6 +232,8 @@ object AdaptyPluginResponseTemplate {
                     put("localized_title", product.localizedTitle)
                     put("is_family_shareable", product.isFamilyShareable)
                     put("region_code", product.regionCode)
+                    put("access_level_id", product.accessLevelId)
+                    put("product_type", product.productType)
 
                     // Price
                     put("price", buildPriceJson(product.price))

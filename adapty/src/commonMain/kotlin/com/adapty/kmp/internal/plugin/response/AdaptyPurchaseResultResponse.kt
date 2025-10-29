@@ -22,7 +22,8 @@ internal sealed class AdaptyPurchaseResultResponse {
     @SerialName("success")
     data class Success(
         @SerialName("profile") val profile: AdaptyProfileResponse,
-        @SerialName("jws_transaction") val jwsTransaction: String? = null
+        @SerialName("apple_jws_transaction") val appleJwsTransaction: String? = null,
+        @SerialName("google_purchase_token") val googlePurchaseToken: String? = null
     ) : AdaptyPurchaseResultResponse()
 }
 
@@ -32,7 +33,8 @@ internal fun AdaptyPurchaseResultResponse.asAdaptyPurchaseResult(): AdaptyPurcha
         is AdaptyPurchaseResultResponse.UserCancelled -> AdaptyPurchaseResult.UserCanceled
         is AdaptyPurchaseResultResponse.Success -> AdaptyPurchaseResult.Success(
             profile = profile.asAdaptyProfile(),
-            jwsTransaction = jwsTransaction
+            appleJwsTransaction = appleJwsTransaction,
+            googlePurchaseToken = googlePurchaseToken
         )
     }
 }

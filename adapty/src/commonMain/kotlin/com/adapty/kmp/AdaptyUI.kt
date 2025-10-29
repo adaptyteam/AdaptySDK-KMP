@@ -8,6 +8,7 @@ import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.AdaptyUIDialogActionType
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
 import kotlinx.datetime.LocalDateTime
@@ -47,9 +48,16 @@ internal interface AdaptyUIContract {
     ): AdaptyResult<AdaptyUIPaywallView>
 
     suspend fun createOnboardingView(onboarding: AdaptyOnboarding): AdaptyResult<AdaptyUIOnboardingView>
-    suspend fun presentOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit>
+    suspend fun presentOnboardingView(
+        view: AdaptyUIOnboardingView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+    ): AdaptyResult<Unit>
 
-    suspend fun presentPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
+    suspend fun presentPaywallView(
+        view: AdaptyUIPaywallView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+    ): AdaptyResult<Unit>
+
     suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
     suspend fun dismissOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit>
     suspend fun showDialog(

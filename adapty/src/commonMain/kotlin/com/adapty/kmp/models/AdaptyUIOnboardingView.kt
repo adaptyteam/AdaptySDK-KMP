@@ -12,8 +12,11 @@ public data class AdaptyUIOnboardingView internal constructor(
     val isStandaloneView: Boolean = !id.startsWith(PREFIX_NATIVE_PLATFORM_VIEW)
 
 
-    public suspend fun present(): AdaptyResult<Unit> {
-        return AdaptyUI.presentOnboardingView(this)
+    public suspend fun present(iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN): AdaptyResult<Unit> {
+        return AdaptyUI.presentOnboardingView(
+            view = this,
+            iosPresentationStyle = iosPresentationStyle
+        )
     }
 
     public suspend fun dismiss(): AdaptyResult<Unit> {

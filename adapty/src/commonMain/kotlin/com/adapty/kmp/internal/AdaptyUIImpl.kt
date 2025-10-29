@@ -21,6 +21,7 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyCustomAssetRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyUIIOSPresentationStyleRequest
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventDidFailWithErrorResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventDidFinishLoadingResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventOnAnalyticsActionResponse
@@ -62,6 +63,7 @@ import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.AdaptyUIAction
 import com.adapty.kmp.models.AdaptyUIDialogActionType
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
 import kotlinx.coroutines.CoroutineScope
@@ -85,8 +87,10 @@ internal class AdaptyUIImpl(
 
     private var paywallsEventObserver: AdaptyUIPaywallsEventsObserver? = null
     private var onboardingsEventObserver: AdaptyUIOnboardingsEventsObserver? = null
-    private var nativeOnboardingViewsEventObserver: MutableMap<String, AdaptyUIOnboardingsEventsObserver> = mutableMapOf()
-    private var nativePaywallViewsEventObserver: MutableMap<String, AdaptyUIPaywallsEventsObserver> = mutableMapOf()
+    private var nativeOnboardingViewsEventObserver: MutableMap<String, AdaptyUIOnboardingsEventsObserver> =
+        mutableMapOf()
+    private var nativePaywallViewsEventObserver: MutableMap<String, AdaptyUIPaywallsEventsObserver> =
+        mutableMapOf()
     private var eventsListenerJob: Job? = null
 
 
@@ -163,10 +167,16 @@ internal class AdaptyUIImpl(
         ).asAdaptyResult { it.asAdaptyUIView() }
     }
 
-    override suspend fun presentPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit> {
+    override suspend fun presentPaywallView(
+        view: AdaptyUIPaywallView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle
+    ): AdaptyResult<Unit> {
         return adaptyPlugin.awaitExecute<AdaptyUIPresentViewRequest, Boolean>(
             method = AdaptyPluginMethod.PRESENT_PAYWALL_VIEW,
-            request = AdaptyUIPresentViewRequest(id = view.id)
+            request = AdaptyUIPresentViewRequest(
+                id = view.id,
+                iosPresentationStyle = iosPresentationStyle.asAdaptyUIIOSPresentationStyleRequest()
+            )
         ).asAdaptyResult { }
     }
 
@@ -210,10 +220,16 @@ internal class AdaptyUIImpl(
         ).asAdaptyResult { it.asAdaptyUIOnboardingView() }
     }
 
-    override suspend fun presentOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit> {
+    override suspend fun presentOnboardingView(
+        view: AdaptyUIOnboardingView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle
+    ): AdaptyResult<Unit> {
         return adaptyPlugin.awaitExecute<AdaptyUIPresentViewRequest, Boolean>(
             method = AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW,
-            request = AdaptyUIPresentViewRequest(id = view.id)
+            request = AdaptyUIPresentViewRequest(
+                id = view.id,
+                iosPresentationStyle = iosPresentationStyle.asAdaptyUIIOSPresentationStyleRequest()
+            )
         ).asAdaptyResult { }
     }
 

@@ -107,13 +107,11 @@ import UIKit
 
         if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, visionOS 1.0, *){
             Task { @MainActor in
-                guard let jsonString  else {
-                    throw AdaptyPluginError.platformViewError("Paywall Configuration Data Not Found")
-                }
-
+               
                 do {
-                    let configuration = try AdaptyUI.getPaywallViewConfiguration(withJson: jsonString)
-
+                    
+                    let configuration = try await AdaptyPlugin.getPaywallViewConfiguration(withJson: jsonString)
+                    
                     guard let parentVC = UIApplication.shared.keyWindow?.rootViewController else {
                         throw AdaptyPluginError.platformViewError("Compose Host Controller Not Found")
                     }

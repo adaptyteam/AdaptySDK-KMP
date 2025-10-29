@@ -34,6 +34,7 @@ import com.adapty.exampleapp.screens.GeneralInfoScreen
 import com.adapty.exampleapp.screens.LogsScreen
 import com.adapty.exampleapp.screens.OnBoardingScreen
 import com.adapty.exampleapp.screens.OnboardingNativeViewScreen
+import com.adapty.exampleapp.screens.PaywallNativeViewScreen
 import com.adapty.exampleapp.screens.PaywallsScreen
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.models.AdaptyError
@@ -132,6 +133,17 @@ fun App() {
                 onboarding = onboarding,
                 onNavigateBack = {
                     appViewModel.onUiEvent(AppUiEvent.OnCloseNativeOnboardingView)
+                }
+            )
+        }
+
+        uiState.nativePaywallView?.let { paywall ->
+            PaywallNativeViewScreen(
+                modifier = Modifier.fillMaxSize().zIndex(2f),
+                showToastEvents = uiState.showOnboardingToastEvents,
+                paywall = paywall,
+                onNavigateBack = {
+                    appViewModel.onUiEvent(AppUiEvent.OnCloseNativePaywallView)
                 }
             )
         }

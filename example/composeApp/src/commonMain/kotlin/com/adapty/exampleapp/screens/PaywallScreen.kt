@@ -26,9 +26,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.AppUiEvent
 import com.adapty.exampleapp.AppUiState
 import com.adapty.exampleapp.AppViewModel
+import com.adapty.exampleapp.Platform
 import com.adapty.exampleapp.components.ListActionTile
 import com.adapty.exampleapp.components.ListSection
 import com.adapty.exampleapp.components.ListTextTile
+import com.adapty.exampleapp.getPlatform
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 
 
 @Composable
@@ -83,7 +86,7 @@ fun PaywallsScreen(modifier: Modifier, viewModel: AppViewModel = viewModel()) {
 
         Button(
             onClick = { showDialog = true }, modifier =
-            Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                Modifier.fillMaxWidth().padding(horizontal = 20.dp)
         ) {
             Text("Add Paywall")
         }
@@ -128,25 +131,65 @@ private fun PaywallsListScreen(
                             subtitleColor = if (paywall.hasViewConfiguration) Color(0xFF32CD32) else Color.Red
                         )
 
+                        // Present Native View action
+                        ListActionTile(
+                            title = "Present Native View",
+                            showProgress = uiState.isLoading,
+                            onClick = {
+                                onUiEvent(
+                                    AppUiEvent.OnClickPresentPaywallNativeView(paywall = paywall)
+                                )
+                            }
+                        )
+
                         if (paywall.hasViewConfiguration) {
                             ListActionTile(
-                                title = "Present",
+                                title = "Present Full Screen",
                                 onClick = {
                                     onUiEvent(
                                         AppUiEvent.CreateAndPresentPaywallView(
                                             paywall = paywall,
-                                            loadProducts = false
+                                            loadProducts = false,
+                                            iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
                                         )
                                     )
                                 }
                             )
                             ListActionTile(
-                                title = "Load Products and Present",
+                                title = "Load Products and Present (FullScreen)",
                                 onClick = {
                                     onUiEvent(
                                         AppUiEvent.CreateAndPresentPaywallView(
                                             paywall = paywall,
-                                            loadProducts = true
+                                            loadProducts = true,
+                                            iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+                                        )
+                                    )
+                                }
+                            )
+                        }
+
+                        if (paywall.hasViewConfiguration && getPlatform() == Platform.Ios) {
+                            ListActionTile(
+                                title = "Present Sheet",
+                                onClick = {
+                                    onUiEvent(
+                                        AppUiEvent.CreateAndPresentPaywallView(
+                                            paywall = paywall,
+                                            loadProducts = false,
+                                            iosPresentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET
+                                        )
+                                    )
+                                }
+                            )
+                            ListActionTile(
+                                title = "Load Products and Present (Sheet)",
+                                onClick = {
+                                    onUiEvent(
+                                        AppUiEvent.CreateAndPresentPaywallView(
+                                            paywall = paywall,
+                                            loadProducts = true,
+                                            iosPresentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET
                                         )
                                     )
                                 }
