@@ -47,7 +47,7 @@ fun PaywallNativeViewScreen(
         modifier = modifier.fillMaxWidth(),
         topBar = {
             TopAppBar(
-                title = { Text("Onboarding ${paywall.placement.id}") },
+                title = { Text("Paywall ${paywall.placement.id}") },
                 navigationIcon = {
                     IconButton(onClick = {
                         onNavigateBack()
