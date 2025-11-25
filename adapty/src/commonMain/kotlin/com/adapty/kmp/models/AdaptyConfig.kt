@@ -9,11 +9,8 @@ public class AdaptyConfig private constructor(
     internal val ipAddressCollectionDisabled: Boolean,
     internal val googleAdvertisingIdCollection: Boolean,
     internal val googleEnablePendingPrepaidPlans: Boolean,
+    internal val googleLocalAccessLevelAllowed: Boolean,
     internal val appleIdfaCollectionDisabled: Boolean,
-    internal val backendBaseUrl: String?,
-    internal val backendFallbackBaseUrl: String?,
-    internal val backendConfigsBaseUrl: String?,
-    internal val backendUABaseUrl: String?,
     internal val backendProxyHost: String?,
     internal val backendProxyPort: Int?,
     internal val serverCluster: String?,
@@ -40,11 +37,8 @@ public class AdaptyConfig private constructor(
         private var ipAddressCollectionDisabled = false
         private var googleAdvertisingIdCollection = false
         private var googleEnablePendingPrepaidPlans = false
+        private var googleLocalAccessLevelAllowed = false
         private var appleIdfaCollectionDisabled = false
-        private var backendBaseUrl: String? = null
-        private var backendFallbackBaseUrl: String? = null
-        private var backendConfigsBaseUrl: String? = null
-        private var backendUABaseUrl: String? = null
         private var backendProxyHost: String? = null
         private var backendProxyPort: Int? = null
         private var serverCluster: String? = null
@@ -80,18 +74,11 @@ public class AdaptyConfig private constructor(
         public fun withGoogleEnablePendingPrepaidPlans(enabled: Boolean): Builder =
             apply { this.googleEnablePendingPrepaidPlans = enabled }
 
+        public fun withGoogleLocalAccessLevelAllowed(enabled: Boolean): Builder =
+            apply { this.googleLocalAccessLevelAllowed = enabled }
+
         public fun withAppleIdfaCollectionDisabled(disabled: Boolean): Builder =
             apply { this.appleIdfaCollectionDisabled = disabled }
-
-        public fun withBackendBaseUrl(url: String): Builder = apply { this.backendBaseUrl = url }
-        public fun withBackendFallbackBaseUrl(url: String): Builder =
-            apply { this.backendFallbackBaseUrl = url }
-
-        public fun withBackendConfigsBaseUrl(url: String): Builder =
-            apply { this.backendConfigsBaseUrl = url }
-
-        public fun withBackendUABaseUrl(url: String): Builder =
-            apply { this.backendUABaseUrl = url }
 
         public fun withBackendProxyHost(host: String): Builder =
             apply { this.backendProxyHost = host }
@@ -124,10 +111,8 @@ public class AdaptyConfig private constructor(
                 appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
                 googleAdvertisingIdCollection = googleAdvertisingIdCollection,
                 googleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans,
+                googleLocalAccessLevelAllowed = googleLocalAccessLevelAllowed,
                 ipAddressCollectionDisabled = ipAddressCollectionDisabled,
-                backendBaseUrl = backendBaseUrl,
-                backendFallbackBaseUrl = backendFallbackBaseUrl,
-                backendConfigsBaseUrl = backendConfigsBaseUrl,
                 backendProxyHost = backendProxyHost,
                 backendProxyPort = backendProxyPort,
                 serverCluster = serverCluster,
@@ -136,7 +121,6 @@ public class AdaptyConfig private constructor(
                 activateUI = activateUI,
                 logLevel = logLevel,
                 mediaCache = mediaCache,
-                backendUABaseUrl = backendUABaseUrl,
                 customerIdentity = customerIdentity
             )
         }
