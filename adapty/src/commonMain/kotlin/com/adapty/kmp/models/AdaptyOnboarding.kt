@@ -27,7 +27,7 @@ public data class AdaptyOnboarding internal constructor(
     internal val onboardingBuilderConfigUrl: String,
 ) {
     internal companion object {
-        const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_"
+        const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_onboarding_"
     }
 
     @AdaptyKMPInternal

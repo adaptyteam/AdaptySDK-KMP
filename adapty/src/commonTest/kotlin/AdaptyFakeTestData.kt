@@ -99,6 +99,9 @@ internal object AdaptyFakeTestData {
                     promotionalOfferId = "promotionalOfferId - #3",
                     winBackOfferId = "winBackOfferId -#2",
                     basePlanId = "basePlanId - #4",
+                    offerId = "offerId - #5",
+                    productType = "productType",
+                    accessLevelId = "accessLevelId"
                 )
             ),
             remoteConfig = AdaptyRemoteConfig(
@@ -183,7 +186,9 @@ internal object AdaptyFakeTestData {
             regionCode = "US",
             price = price,
             subscription = subscription,
-            payloadData = null
+            payloadData = null,
+            accessLevelId = "accessLevelId",
+            productType = "productType",
         )
 
         return listOf(product)

@@ -31,6 +31,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyConfigurationRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyCustomerIdentityRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyIosRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyLogLevelRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyOnboarding
@@ -52,6 +53,7 @@ import com.adapty.kmp.internal.plugin.response.asAdaptyPurchaseResult
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.isAndroidPlatform
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyCustomerIdentity
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyErrorCode
 import com.adapty.kmp.models.AdaptyInstallationStatus
@@ -99,10 +101,20 @@ internal class AdaptyImpl(
         ).asAdaptyResult {}
     }
 
-    override suspend fun identify(customerUserId: String): AdaptyResult<Unit> =
+    override suspend fun identify(
+        customerUserId: String,
+        iosAppAccountToken: String?,
+        androidObfuscatedAccountId: String?
+    ): AdaptyResult<Unit> =
         adaptyPlugin.awaitExecute<AdaptyIdentifyRequest, Boolean>(
             method = AdaptyPluginMethod.IDENTIFY,
-            request = AdaptyIdentifyRequest(customerUserId = customerUserId)
+            request = AdaptyIdentifyRequest(
+                customerUserId = customerUserId,
+                parameters = AdaptyCustomerIdentity.createIfNotEmpty(
+                    iosAppAccountToken = iosAppAccountToken,
+                    androidObfuscatedAccountId = androidObfuscatedAccountId
+                )?.asAdaptyCustomerIdentityRequest()
+            )
         ).asAdaptyResult { }
 
 

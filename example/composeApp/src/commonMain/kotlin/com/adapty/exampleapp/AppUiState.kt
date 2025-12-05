@@ -8,6 +8,7 @@ import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import kotlin.time.Duration.Companion.seconds
 
 data class AppUiState(
@@ -30,6 +31,7 @@ data class AppUiState(
     val isLoading: Boolean = false,
     val isLoadingOnboard: Boolean = false,
     val nativeOnboardingView: AdaptyOnboarding? = null,
+    val nativePaywallView: AdaptyPaywall? = null,
     val error: Throwable? = null
 ) {
     enum class DemoPaywallFetchPolicy {
@@ -90,16 +92,26 @@ sealed interface AppUiEvent {
     data class OnNewPaywallIdAdded(val paywallId: String) : AppUiEvent
     data class OnClickPresentPaywallView(val paywall: AdaptyPaywall) : AppUiEvent
 
-    data class CreateAndPresentPaywallView(val paywall: AdaptyPaywall, val loadProducts: Boolean) :
+    data class CreateAndPresentPaywallView(
+        val paywall: AdaptyPaywall,
+        val loadProducts: Boolean,
+        val iosPresentationStyle: AdaptyUIIOSPresentationStyle
+    ) :
         AppUiEvent
 
     data class OnNewOnboardingIdAdded(val onboardingId: String) : AppUiEvent
-    data class OnClickPresentOnboarding(val onboarding: AdaptyOnboarding) : AppUiEvent
+    data class OnClickPresentOnboarding(
+        val onboarding: AdaptyOnboarding,
+        val presentationStyle: AdaptyUIIOSPresentationStyle
+    ) : AppUiEvent
+
     data class OnClickPresentOnboardingNativeView(val onboarding: AdaptyOnboarding) : AppUiEvent
+    data class OnClickPresentPaywallNativeView(val paywall: AdaptyPaywall) : AppUiEvent
     object OnToggleOnboardingShowToastEvents : AppUiEvent
     data class OnChangeOnboardingLocale(val locale: String) : AppUiEvent
     data object OnClickUpdateInstallationDetails : AppUiEvent
     data object OnCloseNativeOnboardingView : AppUiEvent
+    data object OnCloseNativePaywallView : AppUiEvent
 
 
 }

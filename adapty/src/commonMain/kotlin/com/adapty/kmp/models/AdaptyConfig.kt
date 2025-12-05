@@ -25,10 +25,6 @@ import KMPAdapty.adapty.BuildConfig
  * @property ipAddressCollectionDisabled Disables IP address collection if `true`. Default value is false.
  * @property googleAdvertisingIdCollection Enables Google Advertising ID collection when `true`. Default value is false.
  * @property appleIdfaCollectionDisabled Disables IDFA collection (iOS only) if `true`. Default value is false.
- * @property backendBaseUrl Custom backend base URL for debugging or proxying requests.
- * @property backendFallbackBaseUrl Fallback backend base URL.
- * @property backendConfigsBaseUrl Base URL for fetching remote configuration.
- * @property backendUABaseUrl Base URL for the User Acquisition service.
  * @property backendProxyHost Custom proxy host (for internal use).
  * @property backendProxyPort Custom proxy port (for internal use).
  * @property serverCluster Region of Adapty’s backend servers (default or EU).
@@ -44,11 +40,9 @@ public class AdaptyConfig private constructor(
     internal val customerUserId: String?,
     internal val ipAddressCollectionDisabled: Boolean,
     internal val googleAdvertisingIdCollection: Boolean,
+    internal val googleEnablePendingPrepaidPlans: Boolean,
+    internal val googleLocalAccessLevelAllowed: Boolean,
     internal val appleIdfaCollectionDisabled: Boolean,
-    internal val backendBaseUrl: String?,
-    internal val backendFallbackBaseUrl: String?,
-    internal val backendConfigsBaseUrl: String?,
-    internal val backendUABaseUrl: String?,
     internal val backendProxyHost: String?,
     internal val backendProxyPort: Int?,
     internal val serverCluster: String?,
@@ -57,6 +51,7 @@ public class AdaptyConfig private constructor(
     internal val activateUI: Boolean,
     internal val logLevel: AdaptyLogLevel?,
     internal val mediaCache: MediaCacheConfiguration,
+    internal val customerIdentity: AdaptyCustomerIdentity?
 ) {
     internal companion object {
         const val SDK_NAME = "kmp"
@@ -83,11 +78,9 @@ public class AdaptyConfig private constructor(
         private var observerMode = false
         private var ipAddressCollectionDisabled = false
         private var googleAdvertisingIdCollection = false
+        private var googleEnablePendingPrepaidPlans = false
+        private var googleLocalAccessLevelAllowed = false
         private var appleIdfaCollectionDisabled = false
-        private var backendBaseUrl: String? = null
-        private var backendFallbackBaseUrl: String? = null
-        private var backendConfigsBaseUrl: String? = null
-        private var backendUABaseUrl: String? = null
         private var backendProxyHost: String? = null
         private var backendProxyPort: Int? = null
         private var serverCluster: String? = null
@@ -96,9 +89,21 @@ public class AdaptyConfig private constructor(
         private var activateUI: Boolean = false
         private var logLevel: AdaptyLogLevel? = AdaptyLogLevel.INFO
         private var mediaCache: MediaCacheConfiguration = MediaCacheConfiguration()
+        private var customerIdentity: AdaptyCustomerIdentity? = null
+
 
         /** Unique identifier for the current user in your system */
-        public fun withCustomerUserId(id: String?): Builder = apply { this.customerUserId = id }
+        public fun withCustomerUserId(
+            id: String?,
+            iosAppAccountToken: String? = null,
+            androidObfuscatedAccountId: String? = null
+        ): Builder = apply {
+            this.customerUserId = id
+            customerIdentity = AdaptyCustomerIdentity.createIfNotEmpty(
+                iosAppAccountToken = iosAppAccountToken,
+                androidObfuscatedAccountId = androidObfuscatedAccountId
+            )
+        }
 
         /** Enables observer mode if your app handles purchases manually. */
         public fun withObserverMode(enabled: Boolean): Builder =
@@ -112,30 +117,19 @@ public class AdaptyConfig private constructor(
         public fun withGoogleAdvertisingIdCollectionDisabled(disabled: Boolean): Builder =
             apply { this.googleAdvertisingIdCollection = disabled }
 
+        public fun withGoogleEnablePendingPrepaidPlans(enabled: Boolean): Builder =
+            apply { this.googleEnablePendingPrepaidPlans = enabled }
+
+        public fun withGoogleLocalAccessLevelAllowed(enabled: Boolean): Builder =
+            apply { this.googleLocalAccessLevelAllowed = enabled }
+
         /** Disables/Enables IDFA collection (iOS only). Default value is false. */
         public fun withAppleIdfaCollectionDisabled(disabled: Boolean): Builder =
             apply { this.appleIdfaCollectionDisabled = disabled }
 
-        /** Sets custom backend URLs (useful for testing or proxying). */
-        public fun withBackendBaseUrl(url: String): Builder = apply { this.backendBaseUrl = url }
-
-        /** Sets custom backend URLs (useful for testing or proxying). */
-        public fun withBackendFallbackBaseUrl(url: String): Builder =
-            apply { this.backendFallbackBaseUrl = url }
-
-        /** Sets custom backend URLs (useful for testing or proxying). */
-        public fun withBackendConfigsBaseUrl(url: String): Builder =
-            apply { this.backendConfigsBaseUrl = url }
-
-        /** Sets custom backend URLs (useful for testing or proxying). */
-        public fun withBackendUABaseUrl(url: String): Builder =
-            apply { this.backendUABaseUrl = url }
-
-        /** Sets custom backend URLs (useful for testing or proxying). */
         public fun withBackendProxyHost(host: String): Builder =
             apply { this.backendProxyHost = host }
 
-        /** Sets custom backend URLs (useful for testing or proxying). */
         public fun withBackendProxyPort(port: Int): Builder = apply { this.backendProxyPort = port }
         internal fun withCrossPlatformSDKName(name: String): Builder =
             apply { this.crossPlatformSDKName = name }
@@ -169,10 +163,9 @@ public class AdaptyConfig private constructor(
                 observerMode = observerMode,
                 appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
                 googleAdvertisingIdCollection = googleAdvertisingIdCollection,
+                googleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans,
+                googleLocalAccessLevelAllowed = googleLocalAccessLevelAllowed,
                 ipAddressCollectionDisabled = ipAddressCollectionDisabled,
-                backendBaseUrl = backendBaseUrl,
-                backendFallbackBaseUrl = backendFallbackBaseUrl,
-                backendConfigsBaseUrl = backendConfigsBaseUrl,
                 backendProxyHost = backendProxyHost,
                 backendProxyPort = backendProxyPort,
                 serverCluster = serverCluster,
@@ -181,7 +174,7 @@ public class AdaptyConfig private constructor(
                 activateUI = activateUI,
                 logLevel = logLevel,
                 mediaCache = mediaCache,
-                backendUABaseUrl = backendUABaseUrl
+                customerIdentity = customerIdentity
             )
         }
     }

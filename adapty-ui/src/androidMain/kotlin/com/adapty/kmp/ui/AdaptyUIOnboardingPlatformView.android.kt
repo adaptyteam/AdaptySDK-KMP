@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModelStoreOwner
 import com.adapty.internal.crossplatform.ui.Dependencies.safeInject
 import com.adapty.internal.crossplatform.ui.OnboardingUiManager
 import com.adapty.internal.utils.InternalAdaptyApi
@@ -24,7 +25,7 @@ internal actual fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
     modifier: Modifier,
 ) {
-    val viewModelStoreOwner = LocalActivity.current ?: return
+    val viewModelStoreOwner = LocalActivity.current as? ViewModelStoreOwner ?: return
     val context = LocalContext.current
     val onboardingUiManager: OnboardingUiManager? by safeInject<OnboardingUiManager>()
 

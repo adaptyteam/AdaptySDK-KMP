@@ -20,8 +20,8 @@ public data class AdaptyUIPaywallView internal constructor(
      *
      * @return [AdaptyResult] indicating success or failure of the operation.
      */
-    public suspend fun present(): AdaptyResult<Unit> {
-        return AdaptyUI.presentPaywallView(this)
+    public suspend fun present(iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN): AdaptyResult<Unit> {
+        return AdaptyUI.presentPaywallView(view = this, iosPresentationStyle = iosPresentationStyle)
     }
 
     /**

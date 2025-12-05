@@ -26,11 +26,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.AppUiEvent
 import com.adapty.exampleapp.AppUiState
 import com.adapty.exampleapp.AppViewModel
+import com.adapty.exampleapp.Platform
 import com.adapty.exampleapp.components.ListActionTile
 import com.adapty.exampleapp.components.ListSection
 import com.adapty.exampleapp.components.ListTextFieldTile
 import com.adapty.exampleapp.components.ListTextTile
 import com.adapty.exampleapp.components.ListToggleTile
+import com.adapty.exampleapp.getPlatform
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 
 @Composable
 fun OnBoardingScreen(
@@ -156,10 +159,32 @@ private fun OnboardingListScreen(
 
                         // Present action
                         ListActionTile(
-                            title = "Present",
+                            title = "Present Full Screen",
                             showProgress = uiState.isLoadingOnboard,
-                            onClick = { onUiEvent(AppUiEvent.OnClickPresentOnboarding(onboarding)) }
+                            onClick = {
+                                onUiEvent(
+                                    AppUiEvent.OnClickPresentOnboarding(
+                                        onboarding = onboarding,
+                                        presentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+                                    )
+                                )
+                            }
                         )
+
+                        if (getPlatform() == Platform.Ios) {
+                            ListActionTile(
+                                title = "Present Page Sheet",
+                                showProgress = uiState.isLoadingOnboard,
+                                onClick = {
+                                    onUiEvent(
+                                        AppUiEvent.OnClickPresentOnboarding(
+                                            onboarding = onboarding,
+                                            presentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET
+                                        )
+                                    )
+                                }
+                            )
+                        }
 
                         // Present Native View action
                         ListActionTile(

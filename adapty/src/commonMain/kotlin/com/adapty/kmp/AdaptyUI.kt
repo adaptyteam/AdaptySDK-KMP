@@ -8,6 +8,7 @@ import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.AdaptyUIDialogActionType
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
 import kotlinx.datetime.LocalDateTime
@@ -61,6 +62,13 @@ internal interface AdaptyUIContract {
      * @param viewId The unique identifier of the onboarding view.
      */
     fun unregisterOnboardingEventsListener(viewId: String)
+
+    fun registerPaywallEventsListener(
+        observer: AdaptyUIPaywallsEventsObserver,
+        viewId: String
+    )
+
+    fun unregisterPaywallEventsListener(viewId: String)
 
 
     /**
@@ -146,22 +154,6 @@ internal interface AdaptyUIContract {
     ): AdaptyResult<AdaptyUIPaywallView>
 
     /**
-     * Presents the provided paywall view.
-     *
-     * @param view The paywall view to present.
-     * @return [AdaptyResult] indicating success or error.
-     */
-    suspend fun presentPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
-
-    /**
-     * Dismisses the currently displayed paywall view.
-     *
-     * @param view The paywall view to dismiss.
-     * @return [AdaptyResult] indicating success or error.
-     */
-    suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
-
-    /**
      * Creates an onboarding view from the provided [AdaptyOnboarding] model.
      *
      * @param onboarding The onboarding configuration object.
@@ -177,8 +169,29 @@ internal interface AdaptyUIContract {
      * @param view The onboarding view to present.
      * @return [AdaptyResult] indicating success or error.
      */
-    suspend fun presentOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit>
+    suspend fun presentOnboardingView(
+        view: AdaptyUIOnboardingView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+    ): AdaptyResult<Unit>
 
+    /**
+     * Presents the provided paywall view.
+     *
+     * @param view The paywall view to present.
+     * @return [AdaptyResult] indicating success or error.
+     */
+    suspend fun presentPaywallView(
+        view: AdaptyUIPaywallView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+    ): AdaptyResult<Unit>
+
+    /**
+     * Dismisses the currently displayed paywall view.
+     *
+     * @param view The paywall view to dismiss.
+     * @return [AdaptyResult] indicating success or error.
+     */
+    suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
 
     /**
      * Dismisses the currently displayed onboarding view.

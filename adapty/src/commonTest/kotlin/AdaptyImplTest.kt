@@ -203,7 +203,7 @@ class AdaptyImplTest {
             param = AdaptyGetPaywallForDefaultAudienceRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
                 locale = AdaptyFakeTestData.LOCALE,
-                fetchPolicy = com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
+                fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
             expectedSuccessData = AdaptyFakeTestData.getPaywall()
         )

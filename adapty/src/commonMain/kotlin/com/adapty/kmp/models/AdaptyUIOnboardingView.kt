@@ -39,8 +39,11 @@ public data class AdaptyUIOnboardingView internal constructor(
      * Use a global event observer via [AdaptyUI.setOnboardingsEventsObserver] for handling events before presenting.
      * @return [AdaptyResult] indicating success or failure.
      */
-    public suspend fun present(): AdaptyResult<Unit> {
-        return AdaptyUI.presentOnboardingView(this)
+    public suspend fun present(iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN): AdaptyResult<Unit> {
+        return AdaptyUI.presentOnboardingView(
+            view = this,
+            iosPresentationStyle = iosPresentationStyle
+        )
     }
 
     /**

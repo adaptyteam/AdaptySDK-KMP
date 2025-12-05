@@ -61,7 +61,7 @@ import UIKit
         if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, visionOS 1.0, *){
             Task { @MainActor in
                 guard let onboarding = await AdaptyPlugin.executeCreateNativeOnboardingView(withJson: jsonString) else {
-                    print("Failed to create onboarding from JSON")
+                    throw AdaptyPluginError.platformViewError("Onboarding Configuration Data Not Found")
                     return
                 }
                 
@@ -97,6 +97,56 @@ import UIKit
         return containerView
     }
 
+    @objc public static func createNativePaywallView(
+        jsonString: String,
+        id: String,
+        onEvent: @escaping (String, String) -> Void
+    ) -> UIViewController {
+        let containerView = UIViewController()
+        let handler = KMPAdaptySwiftEventHandler(onEvent: onEvent)
+
+        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, visionOS 1.0, *){
+            Task { @MainActor in
+               
+                do {
+                    
+                    let configuration = try await AdaptyPlugin.getPaywallViewConfiguration(withJson: jsonString)
+                    
+                   
+                    guard let parentVC = UIApplication.shared.topMostViewController() else {
+                        throw AdaptyPluginError.platformViewError("Compose Host Controller Not Found")
+                    }
+                    
+                    
+                    // Create the actual onboarding view
+                    let uiView = AdaptyPaywallPlatformViewWrapper(
+                        viewId: id,
+                        eventHandler: handler,
+                        configuration: configuration,
+                        parentVC: parentVC
+                    )
+
+                    containerView.view.addSubview(uiView)
+
+                    // Auto-layout to fill parent
+                    uiView.translatesAutoresizingMaskIntoConstraints = false
+                    NSLayoutConstraint.activate([
+                        uiView.leadingAnchor.constraint(equalTo: containerView.view.leadingAnchor),
+                        uiView.trailingAnchor.constraint(equalTo: containerView.view.trailingAnchor),
+                        uiView.topAnchor.constraint(equalTo: containerView.view.topAnchor),
+                        uiView.bottomAnchor.constraint(equalTo: containerView.view.bottomAnchor),
+                    ])
+                } catch {
+                    print("Failed to get paywall configuration: \(error)")
+                }
+            }
+        } else {
+            print("Paywall Native UI requires iOS 15.0 or later.")
+        }
+
+        return containerView
+    }
+
     
     
 }
@@ -123,3 +173,24 @@ final class KMPAdaptySwiftEventHandler: EventHandler {
     
     
 }
+
+extension UIApplication {
+    func topMostViewController(base: UIViewController? = nil) -> UIViewController? {
+        let baseVC = base ?? connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?.rootViewController
+
+        if let nav = baseVC as? UINavigationController {
+            return topMostViewController(base: nav.visibleViewController)
+        }
+        if let tab = baseVC as? UITabBarController {
+            return topMostViewController(base: tab.selectedViewController)
+        }
+        if let presented = baseVC?.presentedViewController {
+            return topMostViewController(base: presented)
+        }
+        return baseVC
+    }
+}
+

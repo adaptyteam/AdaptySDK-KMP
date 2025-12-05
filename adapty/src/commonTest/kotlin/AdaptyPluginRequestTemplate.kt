@@ -59,6 +59,7 @@ object AdaptyPluginRequestTemplate {
                 put("observer_mode", configuration.observerMode)
                 put("apple_idfa_collection_disabled", configuration.appleIdfaCollectionDisabled)
                 put("google_adid_collection_disabled", configuration.googleAdvertisingIdCollection)
+                put("google_enable_pending_prepaid_plans", configuration.googleEnablePendingPrepaidPlans)
                 put("ip_address_collection_disabled", configuration.ipAddressCollectionDisabled)
                 put("server_cluster", configuration.serverCluster)
                 put("log_level", "debug")

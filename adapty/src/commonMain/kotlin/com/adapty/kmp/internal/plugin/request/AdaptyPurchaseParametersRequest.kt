@@ -9,19 +9,13 @@ internal data class AdaptyPurchaseParametersRequest(
     @SerialName("subscription_update_params")
     val androidSubscriptionUpdateParams: AdaptyAndroidSubscriptionUpdateParametersRequest?,
     @SerialName("is_offer_personalized")
-    val isOfferPersonalized: Boolean?,
-    @SerialName("obfuscated_account_id")
-    val obfuscatedAccountId: String?,
-    @SerialName("obfuscated_profile_id")
-    val obfuscatedProfileId: String?
+    val isOfferPersonalized: Boolean?
 )
 
 internal fun AdaptyPurchaseParameters.asAdaptyPurchaseParametersRequest(): AdaptyPurchaseParametersRequest {
 
     return AdaptyPurchaseParametersRequest(
         isOfferPersonalized = isOfferPersonalized,
-        obfuscatedAccountId = obfuscatedAccountId,
-        obfuscatedProfileId = obfuscatedProfileId,
         androidSubscriptionUpdateParams = subscriptionUpdateParams?.asAdaptySubscriptionUpdateParametersRequest()
     )
 }

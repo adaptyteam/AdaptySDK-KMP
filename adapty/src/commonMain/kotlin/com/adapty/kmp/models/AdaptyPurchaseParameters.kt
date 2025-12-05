@@ -11,12 +11,6 @@ public class AdaptyPurchaseParameters private constructor(
 
     /** Specifies whether the offer is personalized to the buyer (use for Android). */
     internal var isOfferPersonalized: Boolean? = null,
-
-    /** The obfuscated account identifier (use for Android). */
-    internal var obfuscatedAccountId: String? = null,
-
-    /** The obfuscated profile identifier (use for Android). */
-    internal var obfuscatedProfileId: String? = null
 ) {
 
     /**

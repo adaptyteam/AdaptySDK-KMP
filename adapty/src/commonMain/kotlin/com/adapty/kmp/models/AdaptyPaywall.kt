@@ -1,5 +1,7 @@
 package com.adapty.kmp.models
 
+import com.adapty.kmp.internal.AdaptyKMPInternal
+
 
 /**
  * Represents a paywall retrieved from Adapty.
@@ -27,6 +29,9 @@ public data class AdaptyPaywall internal constructor(
     internal val requestLocale: String?,
     internal val responseCreatedAt: Long = 0L
 ) {
+    internal companion object {
+        const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_paywall_"
+    }
 
     /**
      * Returns `true` if the paywall is built using the Adapty Paywall Builder.
@@ -46,5 +51,8 @@ public data class AdaptyPaywall internal constructor(
                 adaptyProductId = it.adaptyProductId
             )
         }
+
+    @AdaptyKMPInternal
+    val idForNativePlatformView: String = "${AdaptyOnboarding.Companion.PREFIX_NATIVE_PLATFORM_VIEW}$instanceIdentity"
 
 }

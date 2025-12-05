@@ -13,7 +13,8 @@ public sealed interface AdaptyPurchaseResult {
      */
     public data class Success(
         public val profile: AdaptyProfile,
-        public val jwsTransaction: String? = null
+        public val appleJwsTransaction: String? = null,
+        public val googlePurchaseToken: String? = null
     ) : AdaptyPurchaseResult
 
     /** The purchase was canceled by the user. */
