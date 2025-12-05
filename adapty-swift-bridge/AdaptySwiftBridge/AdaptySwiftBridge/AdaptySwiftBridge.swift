@@ -112,18 +112,12 @@ import UIKit
                     
                     let configuration = try await AdaptyPlugin.getPaywallViewConfiguration(withJson: jsonString)
                     
-                   
-                    guard let parentVC = UIApplication.shared.topMostViewController() else {
-                        throw AdaptyPluginError.platformViewError("Compose Host Controller Not Found")
-                    }
-                    
-                    
-                    // Create the actual onboarding view
+                    // Create the actual paywall view
                     let uiView = AdaptyPaywallPlatformViewWrapper(
                         viewId: id,
                         eventHandler: handler,
                         configuration: configuration,
-                        parentVC: parentVC
+                        parentVC: containerView
                     )
 
                     containerView.view.addSubview(uiView)
@@ -173,24 +167,3 @@ final class KMPAdaptySwiftEventHandler: EventHandler {
     
     
 }
-
-extension UIApplication {
-    func topMostViewController(base: UIViewController? = nil) -> UIViewController? {
-        let baseVC = base ?? connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow }?.rootViewController
-
-        if let nav = baseVC as? UINavigationController {
-            return topMostViewController(base: nav.visibleViewController)
-        }
-        if let tab = baseVC as? UITabBarController {
-            return topMostViewController(base: tab.selectedViewController)
-        }
-        if let presented = baseVC?.presentedViewController {
-            return topMostViewController(base: presented)
-        }
-        return baseVC
-    }
-}
-
