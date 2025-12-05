@@ -1,5 +1,32 @@
 package com.adapty.kmp.models
 
+/**
+ * Enumerates all possible error codes returned by the Adapty SDK.
+ *
+ * Each [AdaptyError] includes a corresponding [AdaptyErrorCode] that helps identify
+ * the source or type of failure, such as network issues, StoreKit problems,
+ * or internal SDK errors.
+ *
+ * These values may come from:
+ * - System StoreKit errors (for iOS and macOS)
+ * - Platform or SDK-level issues
+ * - Adapty backend errors
+ *
+ * You can use this to implement more granular error handling and user feedback.
+ *
+ * Example:
+ * ```
+ * when (error.code) {
+ *     AdaptyErrorCode.PAYMENT_CANCELLED -> showMessage("Purchase cancelled.")
+ *     AdaptyErrorCode.ITEM_UNAVAILABLE -> showMessage("This item is not available.")
+ *     else -> logError(error)
+ * }
+ * ```
+ *
+ * @property value The raw integer value of the error, corresponding to platform or backend codes.
+ *
+ * @see AdaptyError
+ */
 public enum class AdaptyErrorCode(internal val value: Int) {
 
     //////////////////////////////
