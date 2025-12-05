@@ -32,13 +32,6 @@ public class AdaptyPurchaseParameters private constructor(
         public fun setIsOfferPersonalized(value: Boolean?): Builder =
             apply { parameters.isOfferPersonalized = value }
 
-        /** Sets the obfuscated account identifier. */
-        public fun setObfuscatedAccountId(value: String?): Builder =
-            apply { parameters.obfuscatedAccountId = value }
-
-        /** Sets the obfuscated profile identifier. */
-        public fun setObfuscatedProfileId(value: String?): Builder =
-            apply { parameters.obfuscatedProfileId = value }
 
         /** Builds and returns the configured [AdaptyPurchaseParameters] instance. */
         public fun build(): AdaptyPurchaseParameters = parameters
