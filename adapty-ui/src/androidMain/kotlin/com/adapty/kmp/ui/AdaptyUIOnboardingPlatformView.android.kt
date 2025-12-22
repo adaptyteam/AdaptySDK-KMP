@@ -15,14 +15,16 @@ import com.adapty.internal.crossplatform.ui.Dependencies.safeInject
 import com.adapty.internal.crossplatform.ui.OnboardingUiManager
 import com.adapty.internal.utils.InternalAdaptyApi
 import com.adapty.kmp.internal.AdaptyKMPInternal
-import com.adapty.kmp.internal.plugin.request.asJsonString
+import com.adapty.kmp.internal.plugin.request.createOnboardingViewRequestJsonString
 import com.adapty.kmp.models.AdaptyOnboarding
+import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.ui.onboardings.AdaptyOnboardingView
 
 @OptIn(AdaptyKMPInternal::class)
 @Composable
 internal actual fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
+    externalUrlsPresentation: AdaptyWebPresentation,
     modifier: Modifier,
 ) {
     val viewModelStoreOwner = LocalActivity.current as? ViewModelStoreOwner ?: return
@@ -34,7 +36,10 @@ internal actual fun AdaptyUIOnboardingPlatformView(
             onboardingUiManager?.setupOnboardingView(
                 onboardingView = this,
                 viewModelStoreOwner = viewModelStoreOwner,
-                args = onboarding.asJsonString(),
+                args = createOnboardingViewRequestJsonString(
+                    onboarding = onboarding,
+                    externalUrlsPresentation = externalUrlsPresentation
+                ),
                 id = onboarding.idForNativePlatformView
             )
         }

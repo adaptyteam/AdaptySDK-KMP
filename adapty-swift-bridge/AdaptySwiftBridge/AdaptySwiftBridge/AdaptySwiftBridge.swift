@@ -60,14 +60,9 @@ import UIKit
 
         if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, visionOS 1.0, *){
             Task { @MainActor in
-                guard let onboarding = await AdaptyPlugin.executeCreateNativeOnboardingView(withJson: jsonString) else {
-                    throw AdaptyPluginError.platformViewError("Onboarding Configuration Data Not Found")
-                    return
-                }
-                
                 do {
                     // Build configuration from onboarding object
-                    let configuration = try AdaptyUI.getOnboardingConfiguration(forOnboarding: onboarding)
+                    let configuration = try await AdaptyPlugin.getOnboardingViewConfiguration(withJson: jsonString)
                     
                     // Create the actual onboarding view
                     let uiView = AdaptyOnboardingPlatformViewWrapper(

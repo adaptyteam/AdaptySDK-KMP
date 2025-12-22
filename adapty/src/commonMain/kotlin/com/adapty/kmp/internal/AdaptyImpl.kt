@@ -41,6 +41,7 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyUpdateProfileRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.toAdaptyCustomAttributesRequest
 import com.adapty.kmp.internal.plugin.response.AdaptyGetCurrentInstallationStatusResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyPaywallProductResponse
@@ -68,6 +69,7 @@ import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
 import kotlinx.coroutines.CoroutineScope
@@ -301,11 +303,20 @@ internal class AdaptyImpl(
 
     override suspend fun openWebPaywall(
         paywall: AdaptyPaywall?,
-        product: AdaptyPaywallProduct?
+        product: AdaptyPaywallProduct?,
+        openIn: AdaptyWebPresentation
     ): AdaptyResult<Unit> {
         val request = when {
-            paywall != null -> AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest())
-            product != null -> AdaptyWebPaywallRequest.fromPaywallProduct(product.asAdaptyPaywallProductRequest())
+            paywall != null -> AdaptyWebPaywallRequest.fromPaywall(
+                paywall = paywall.asAdaptyPaywallRequest(),
+                webPresentationRequest = openIn.asAdaptyWebPresentationRequest()
+            )
+
+            product != null -> AdaptyWebPaywallRequest.fromPaywallProduct(
+                product = product.asAdaptyPaywallProductRequest(),
+                webPresentationRequest = openIn.asAdaptyWebPresentationRequest()
+            )
+
             else -> {
                 val error = AdaptyError(
                     code = AdaptyErrorCode.WRONG_PARAMETER,

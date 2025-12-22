@@ -7,8 +7,9 @@ import androidx.compose.ui.viewinterop.UIKitInteropProperties
 import androidx.compose.ui.viewinterop.UIKitViewController
 import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
-import com.adapty.kmp.internal.plugin.request.asJsonString
+import com.adapty.kmp.internal.plugin.request.createOnboardingViewRequestJsonString
 import com.adapty.kmp.models.AdaptyOnboarding
+import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.cinterop.ExperimentalForeignApi
 
 
@@ -16,12 +17,16 @@ import kotlinx.cinterop.ExperimentalForeignApi
 @Composable
 internal actual fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
+    externalUrlsPresentation: AdaptyWebPresentation,
     modifier: Modifier,
 ) {
     val factory = remember { IosNativeViewFactory() }
     val view = remember(factory) {
         factory.createNativeOnboardingView(
-            jsonString = onboarding.asJsonString(),
+            jsonString = createOnboardingViewRequestJsonString(
+                onboarding = onboarding,
+                externalUrlsPresentation = externalUrlsPresentation
+            ),
             id = onboarding.idForNativePlatformView,
             onEvent = { eventName, eventDataJsonString ->
                 AdaptyPluginEventHandler.onNewEvent(

@@ -34,6 +34,7 @@ import com.adapty.exampleapp.components.ListTextTile
 import com.adapty.exampleapp.components.ListToggleTile
 import com.adapty.exampleapp.getPlatform
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
+import com.adapty.kmp.models.AdaptyWebPresentation
 
 @Composable
 fun OnBoardingScreen(
@@ -165,7 +166,8 @@ private fun OnboardingListScreen(
                                 onUiEvent(
                                     AppUiEvent.OnClickPresentOnboarding(
                                         onboarding = onboarding,
-                                        presentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+                                        presentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN,
+                                        externalUrlsPresentation = AdaptyWebPresentation.IN_APP_BROWSER
                                     )
                                 )
                             }
@@ -179,7 +181,8 @@ private fun OnboardingListScreen(
                                     onUiEvent(
                                         AppUiEvent.OnClickPresentOnboarding(
                                             onboarding = onboarding,
-                                            presentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET
+                                            presentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET,
+                                            externalUrlsPresentation = AdaptyWebPresentation.IN_APP_BROWSER
                                         )
                                     )
                                 }

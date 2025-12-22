@@ -9,6 +9,7 @@ import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
+import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlin.time.Duration.Companion.seconds
 
 data class AppUiState(
@@ -102,7 +103,8 @@ sealed interface AppUiEvent {
     data class OnNewOnboardingIdAdded(val onboardingId: String) : AppUiEvent
     data class OnClickPresentOnboarding(
         val onboarding: AdaptyOnboarding,
-        val presentationStyle: AdaptyUIIOSPresentationStyle
+        val presentationStyle: AdaptyUIIOSPresentationStyle,
+        val externalUrlsPresentation: AdaptyWebPresentation
     ) : AppUiEvent
 
     data class OnClickPresentOnboardingNativeView(val onboarding: AdaptyOnboarding) : AppUiEvent

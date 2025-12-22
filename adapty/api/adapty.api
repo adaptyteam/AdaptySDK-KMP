@@ -14,7 +14,7 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun logShowPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun logout (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun makePurchase (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun presentCodeRedemptionSheet (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -35,7 +35,7 @@ public final class com/adapty/kmp/AdaptyExt_androidKt {
 
 public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public static final field INSTANCE Lcom/adapty/kmp/AdaptyUI;
-	public fun createOnboardingView (Lcom/adapty/kmp/models/AdaptyOnboarding;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun createOnboardingView (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun createPaywallView-HOf25JM (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/time/Duration;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun dismissOnboardingView (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun dismissPaywallView (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -125,6 +125,10 @@ public final class com/adapty/kmp/internal/plugin/AdaptyPluginEventHandler {
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyOnboardingRequestResponseKt {
 	public static final fun asJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;)Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateOnboardingViewRequestKt {
+	public static final fun createOnboardingViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Ljava/lang/String;
 }
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreatePaywallViewRequestKt {
@@ -1363,5 +1367,13 @@ public final class com/adapty/kmp/models/AdaptyUIPaywallView {
 	public final fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun showDialog$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyWebPresentation : java/lang/Enum {
+	public static final field EXTERNAL_BROWSER Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public static final field IN_APP_BROWSER Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyWebPresentation;
 }
 

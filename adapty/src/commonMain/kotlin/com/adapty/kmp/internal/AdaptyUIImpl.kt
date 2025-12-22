@@ -22,6 +22,7 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyUIIOSPresentationStyleRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventDidFailWithErrorResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventDidFinishLoadingResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventOnAnalyticsActionResponse
@@ -66,6 +67,7 @@ import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
+import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -211,11 +213,15 @@ internal class AdaptyUIImpl(
         ).asAdaptyResult { it.asAdaptyUIDialogActionType() }
     }
 
-    override suspend fun createOnboardingView(onboarding: AdaptyOnboarding): AdaptyResult<AdaptyUIOnboardingView> {
+    override suspend fun createOnboardingView(
+        onboarding: AdaptyOnboarding,
+        externalUrlsPresentation: AdaptyWebPresentation
+    ): AdaptyResult<AdaptyUIOnboardingView> {
         return adaptyPlugin.awaitExecute<AdaptyUICreateOnboardingViewRequest, AdaptyUIOnboardingViewResponse>(
             method = AdaptyPluginMethod.CREATE_ONBOARDING_VIEW,
             request = AdaptyUICreateOnboardingViewRequest(
-                onboarding = onboarding.asAdaptyOnboardingRequest()
+                onboarding = onboarding.asAdaptyOnboardingRequest(),
+                externalUrlsPresentation = externalUrlsPresentation.asAdaptyWebPresentationRequest()
             )
         ).asAdaptyResult { it.asAdaptyUIOnboardingView() }
     }

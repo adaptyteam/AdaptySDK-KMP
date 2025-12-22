@@ -11,6 +11,7 @@ import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
+import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration
 
@@ -157,11 +158,15 @@ internal interface AdaptyUIContract {
      * Creates an onboarding view from the provided [AdaptyOnboarding] model.
      *
      * @param onboarding The onboarding configuration object.
+     * @param externalUrlsPresentation Defines where the web  should be opened. Defaults to [AdaptyWebPresentation.IN_APP_BROWSER].
      * @return [AdaptyResult] containing the created [AdaptyUIOnboardingView] or an error.
      *
      * @see AdaptyUIOnboardingView
      */
-    suspend fun createOnboardingView(onboarding: AdaptyOnboarding): AdaptyResult<AdaptyUIOnboardingView>
+    suspend fun createOnboardingView(
+        onboarding: AdaptyOnboarding,
+        externalUrlsPresentation: AdaptyWebPresentation = AdaptyWebPresentation.IN_APP_BROWSER
+    ): AdaptyResult<AdaptyUIOnboardingView>
 
     /**
      * Presents the provided onboarding view.

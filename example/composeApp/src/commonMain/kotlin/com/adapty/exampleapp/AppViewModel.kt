@@ -18,6 +18,7 @@ import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
+import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
 import kmpadapty.example.composeapp.generated.resources.Res
@@ -212,7 +213,8 @@ class AppViewModel : ViewModel() {
 
             is AppUiEvent.OnClickPresentOnboarding -> createAndPresentOnboarding(
                 onboarding = event.onboarding,
-                presentationStyle = event.presentationStyle
+                presentationStyle = event.presentationStyle,
+                externalUrlsPresentation = event.externalUrlsPresentation
             )
 
             is AppUiEvent.OnClickPresentOnboardingNativeView -> showOnboardingNativeView(event.onboarding)
@@ -561,11 +563,12 @@ class AppViewModel : ViewModel() {
 
     private fun createAndPresentOnboarding(
         onboarding: AdaptyOnboarding,
-        presentationStyle: AdaptyUIIOSPresentationStyle
+        presentationStyle: AdaptyUIIOSPresentationStyle,
+        externalUrlsPresentation: AdaptyWebPresentation
     ) = viewModelScope.launch {
         _uiState.update { it.copy(isLoadingOnboard = true) }
         AdaptyUI
-            .createOnboardingView(onboarding = onboarding)
+            .createOnboardingView(onboarding = onboarding, externalUrlsPresentation = externalUrlsPresentation)
             .onSuccess { view -> view.present(iosPresentationStyle = presentationStyle) }
             .onError { adaptyError ->
                 _uiState.update { currentState -> currentState.copy(error = adaptyError) }

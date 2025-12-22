@@ -14,6 +14,7 @@ import com.adapty.kmp.models.AdaptyOnboardingsAnalyticsEvent
 import com.adapty.kmp.models.AdaptyOnboardingsStateUpdatedParams
 import com.adapty.kmp.models.AdaptyUIOnboardingMeta
 import com.adapty.kmp.models.AdaptyUIOnboardingView
+import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.coroutines.CoroutineScope
 
 
@@ -25,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
  * events, such as loading completion, errors, user actions, state updates, and analytics.
  *
  * @param onboarding The onboarding instance to display.
+ * @param externalUrlsPresentation Defines where the web  should be opened. Defaults to [AdaptyWebPresentation.IN_APP_BROWSER].
  * @param modifier Optional [Modifier] for styling and layout.
  * @param onDidFinishLoading Callback invoked when the onboarding finishes loading successfully.
  * @param onDidFailWithError Callback invoked when the onboarding fails to load.
@@ -39,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 public fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
     modifier: Modifier = Modifier,
+    externalUrlsPresentation: AdaptyWebPresentation = AdaptyWebPresentation.IN_APP_BROWSER,
     onDidFinishLoading: (meta: AdaptyUIOnboardingMeta) -> Unit = {},
     onDidFailWithError: (error: AdaptyError) -> Unit = {},
     onCloseAction: (meta: AdaptyUIOnboardingMeta, actionId: String) -> Unit = { _, _ -> },
@@ -120,6 +123,7 @@ public fun AdaptyUIOnboardingPlatformView(
 
     AdaptyUIOnboardingPlatformView(
         onboarding = onboarding,
+        externalUrlsPresentation = externalUrlsPresentation,
         modifier = modifier,
     )
 }
@@ -127,5 +131,6 @@ public fun AdaptyUIOnboardingPlatformView(
 @Composable
 internal expect fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
+    externalUrlsPresentation: AdaptyWebPresentation,
     modifier: Modifier = Modifier
 )

@@ -15,6 +15,7 @@ import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlin.time.Duration
 
 /**
@@ -347,14 +348,29 @@ internal interface AdaptyContract {
     ): AdaptyResult<String>
 
     /**
-     * Opens a web paywall or product.
-     * openWebPaywall(product) that generates URLs by paywall and adds the product data to URLs as well.
-     * openWebPaywall(paywall) that generates URLs by paywall without adding the product data to URLs.
-     * Use it when your products in the Adapty paywall differ from those in the web paywall.
-     * */
+     * Opens a web-based paywall or a specific product.
+     *
+     * Depending on the provided parameters, the SDK generates a web URL and opens it
+     * either in the device's external browser or in an in-app browser.
+     *
+     * - If [product] is provided, the URL is generated from the paywall and includes
+     *   product data.
+     * - If only [paywall] is provided, the URL is generated from the paywall without
+     *   attaching product data. This is useful when products configured in the
+     *   Adapty paywall differ from those used on the web.
+     *
+     * @param paywall The Adapty paywall used to generate the web URL.
+     * @param product The specific product to open. When provided, product data is
+     * added to the generated URL.
+     * @param openIn Defines where the web paywall should be opened.
+     * Defaults to [AdaptyWebPresentation.IN_APP_BROWSER].
+     *
+     * @return [AdaptyResult] indicating whether the paywall was successfully opened.
+     */
     suspend fun openWebPaywall(
         paywall: AdaptyPaywall? = null,
-        product: AdaptyPaywallProduct? = null
+        product: AdaptyPaywallProduct? = null,
+        openIn: AdaptyWebPresentation = AdaptyWebPresentation.IN_APP_BROWSER
     ): AdaptyResult<Unit>
 
     /** Ios ONLY. Presents a code redemption sheet on iOS that enables the user to redeem codes provided by your app. */
