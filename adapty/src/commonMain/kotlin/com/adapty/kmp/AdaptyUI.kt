@@ -158,7 +158,8 @@ internal interface AdaptyUIContract {
      * Creates an onboarding view from the provided [AdaptyOnboarding] model.
      *
      * @param onboarding The onboarding configuration object.
-     * @param externalUrlsPresentation Defines where the web  should be opened. Defaults to [AdaptyWebPresentation.IN_APP_BROWSER].
+     * @param externalUrlsPresentation Specifies how and where external URLs opened from the onboarding
+     * should be presented. Defaults to [AdaptyWebPresentation.IN_APP_BROWSER].
      * @return [AdaptyResult] containing the created [AdaptyUIOnboardingView] or an error.
      *
      * @see AdaptyUIOnboardingView

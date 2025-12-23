@@ -363,14 +363,14 @@ internal interface AdaptyContract {
      * @param product The specific product to open. When provided, product data is
      * added to the generated URL.
      * @param openIn Defines where the web paywall should be opened.
-     * Defaults to [AdaptyWebPresentation.IN_APP_BROWSER].
+     * Defaults to [AdaptyWebPresentation.EXTERNAL_BROWSER].
      *
      * @return [AdaptyResult] indicating whether the paywall was successfully opened.
      */
     suspend fun openWebPaywall(
         paywall: AdaptyPaywall? = null,
         product: AdaptyPaywallProduct? = null,
-        openIn: AdaptyWebPresentation = AdaptyWebPresentation.IN_APP_BROWSER
+        openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER
     ): AdaptyResult<Unit>
 
     /** Ios ONLY. Presents a code redemption sheet on iOS that enables the user to redeem codes provided by your app. */
