@@ -533,6 +533,7 @@ final class com.adapty.kmp.models/AdaptyConfig { // com.adapty.kmp.models/Adapty
 
         final fun build(): com.adapty.kmp.models/AdaptyConfig // com.adapty.kmp.models/AdaptyConfig.Builder.build|build(){}[0]
         final fun withActivateUI(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withActivateUI|withActivateUI(kotlin.Boolean){}[0]
+        final fun withAppleClearDataOnBackup(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withAppleClearDataOnBackup|withAppleClearDataOnBackup(kotlin.Boolean){}[0]
         final fun withAppleIdfaCollectionDisabled(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withAppleIdfaCollectionDisabled|withAppleIdfaCollectionDisabled(kotlin.Boolean){}[0]
         final fun withBackendProxyHost(kotlin/String): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withBackendProxyHost|withBackendProxyHost(kotlin.String){}[0]
         final fun withBackendProxyPort(kotlin/Int): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withBackendProxyPort|withBackendProxyPort(kotlin.Int){}[0]

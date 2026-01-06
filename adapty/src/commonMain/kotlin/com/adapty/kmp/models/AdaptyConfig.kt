@@ -41,6 +41,7 @@ public class AdaptyConfig private constructor(
     internal val ipAddressCollectionDisabled: Boolean,
     internal val googleAdvertisingIdCollection: Boolean,
     internal val googleEnablePendingPrepaidPlans: Boolean,
+    internal val appleClearDataOnBackup: Boolean,
     internal val googleLocalAccessLevelAllowed: Boolean,
     internal val appleIdfaCollectionDisabled: Boolean,
     internal val backendProxyHost: String?,
@@ -79,6 +80,7 @@ public class AdaptyConfig private constructor(
         private var ipAddressCollectionDisabled = false
         private var googleAdvertisingIdCollection = false
         private var googleEnablePendingPrepaidPlans = false
+        private var appleClearDataOnBackup = false
         private var googleLocalAccessLevelAllowed = false
         private var appleIdfaCollectionDisabled = false
         private var backendProxyHost: String? = null
@@ -119,6 +121,12 @@ public class AdaptyConfig private constructor(
 
         public fun withGoogleEnablePendingPrepaidPlans(enabled: Boolean): Builder =
             apply { this.googleEnablePendingPrepaidPlans = enabled }
+
+        /**
+         *  Controlling whether the SDK will create a new profile when the app is restored from an iCloud backup. Default is false
+         */
+        public fun withAppleClearDataOnBackup(enabled: Boolean): Builder =
+            apply { this.appleClearDataOnBackup = enabled }
 
         public fun withGoogleLocalAccessLevelAllowed(enabled: Boolean): Builder =
             apply { this.googleLocalAccessLevelAllowed = enabled }
@@ -164,6 +172,7 @@ public class AdaptyConfig private constructor(
                 appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
                 googleAdvertisingIdCollection = googleAdvertisingIdCollection,
                 googleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans,
+                appleClearDataOnBackup = appleClearDataOnBackup,
                 googleLocalAccessLevelAllowed = googleLocalAccessLevelAllowed,
                 ipAddressCollectionDisabled = ipAddressCollectionDisabled,
                 backendProxyHost = backendProxyHost,

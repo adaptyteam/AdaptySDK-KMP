@@ -35,6 +35,7 @@ class AdaptyUIPaywallsEventsObserverImpl(
 
     override fun paywallViewDidFailRendering(view: AdaptyUIPaywallView, error: AdaptyError) {
         AppLogger.e("Paywall view did fail rendering of view $view with error $error")
+        uiCoroutineScope.launch { view.dismiss() }
     }
 
     override fun paywallViewDidPerformAction(view: AdaptyUIPaywallView, action: AdaptyUIAction) {
