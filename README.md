@@ -94,4 +94,4 @@ So do we! Feel free to star the repo ⭐️⭐️⭐️ and make our developers 
 
 ## License
 
-Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-KMP/blob/master/LICENSE) for details.
+Adapty is available under the MIT license. [Click here](https://github.com/adaptyteam/AdaptySDK-KMP/blob/main/LICENSE) for details.
