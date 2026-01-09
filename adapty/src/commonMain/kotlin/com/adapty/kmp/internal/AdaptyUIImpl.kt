@@ -87,8 +87,10 @@ internal class AdaptyUIImpl(
     private val mainDispatcher: CoroutineContext = Dispatchers.Main,
 ) : AdaptyUIContract {
 
-    private var paywallsEventObserver: AdaptyUIPaywallsEventsObserver? = null
-    private var onboardingsEventObserver: AdaptyUIOnboardingsEventsObserver? = null
+    private var paywallsEventObserver: AdaptyUIPaywallsEventsObserver =
+        object : AdaptyUIPaywallsEventsObserver {}
+    private var onboardingsEventObserver: AdaptyUIOnboardingsEventsObserver =
+        object : AdaptyUIOnboardingsEventsObserver {}
     private var nativeOnboardingViewsEventObserver: MutableMap<String, AdaptyUIOnboardingsEventsObserver> =
         mutableMapOf()
     private var nativePaywallViewsEventObserver: MutableMap<String, AdaptyUIPaywallsEventsObserver> =
@@ -253,7 +255,11 @@ internal class AdaptyUIImpl(
         when (event) {
             AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidUserActionResponse> {
-                    paywallsEventObserver?.paywallViewDidPerformAction(
+                    paywallsEventObserver.paywallViewDidPerformAction(
+                        view = it.view.asAdaptyUIView(),
+                        action = it.action.asAdaptyUIAction()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidPerformAction(
                         view = it.view.asAdaptyUIView(),
                         action = it.action.asAdaptyUIAction()
                     )
@@ -262,19 +268,25 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_APPEAR -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
-                    paywallsEventObserver?.paywallViewDidAppear(view = it.view.asAdaptyUIView())
+                    paywallsEventObserver.paywallViewDidAppear(view = it.view.asAdaptyUIView())
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidAppear(view = it.view.asAdaptyUIView())
                 }
             }
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
-                    paywallsEventObserver?.paywallViewDidDisappear(view = it.view.asAdaptyUIView())
+                    paywallsEventObserver.paywallViewDidDisappear(view = it.view.asAdaptyUIView())
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidDisappear(view = it.view.asAdaptyUIView())
                 }
             }
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_SYSTEM_BACK_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyUIPaywallViewResponse> {
-                    paywallsEventObserver?.paywallViewDidPerformAction(
+                    paywallsEventObserver.paywallViewDidPerformAction(
+                        view = it.asAdaptyUIView(),
+                        action = AdaptyUIAction.AndroidSystemBackAction
+                    )
+                    nativePaywallViewsEventObserver[it.id]?.paywallViewDidPerformAction(
                         view = it.asAdaptyUIView(),
                         action = AdaptyUIAction.AndroidSystemBackAction
                     )
@@ -283,7 +295,11 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_SELECT_PRODUCT -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidSelectProductResponse> {
-                    paywallsEventObserver?.paywallViewDidSelectProduct(
+                    paywallsEventObserver.paywallViewDidSelectProduct(
+                        view = it.view.asAdaptyUIView(),
+                        productId = it.productId
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidSelectProduct(
                         view = it.view.asAdaptyUIView(),
                         productId = it.productId
                     )
@@ -292,7 +308,11 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_START_PURCHASE -> {
                 dataJsonString.decodeJsonSafely<com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventWillPurchaseResponse> {
-                    paywallsEventObserver?.paywallViewDidStartPurchase(
+                    paywallsEventObserver.paywallViewDidStartPurchase(
+                        view = it.view.asAdaptyUIView(),
+                        product = it.product.asAdaptyPaywallProduct()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidStartPurchase(
                         view = it.view.asAdaptyUIView(),
                         product = it.product.asAdaptyPaywallProduct()
                     )
@@ -301,7 +321,12 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidPurchaseResponse> {
-                    paywallsEventObserver?.paywallViewDidFinishPurchase(
+                    paywallsEventObserver.paywallViewDidFinishPurchase(
+                        view = it.view.asAdaptyUIView(),
+                        product = it.product.asAdaptyPaywallProduct(),
+                        purchaseResult = it.purchasedResult.asAdaptyPurchaseResult()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFinishPurchase(
                         view = it.view.asAdaptyUIView(),
                         product = it.product.asAdaptyPaywallProduct(),
                         purchaseResult = it.purchasedResult.asAdaptyPurchaseResult()
@@ -311,7 +336,12 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_PURCHASE -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailPurchaseResponse> {
-                    paywallsEventObserver?.paywallViewDidFailPurchase(
+                    paywallsEventObserver.paywallViewDidFailPurchase(
+                        view = it.view.asAdaptyUIView(),
+                        product = it.product.asAdaptyPaywallProduct(),
+                        error = it.error.asAdaptyError()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFailPurchase(
                         view = it.view.asAdaptyUIView(),
                         product = it.product.asAdaptyPaywallProduct(),
                         error = it.error.asAdaptyError()
@@ -322,7 +352,10 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_START_RESTORE -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventWillRestorePurchaseResponse> {
-                    paywallsEventObserver?.paywallViewDidStartRestore(
+                    paywallsEventObserver.paywallViewDidStartRestore(
+                        view = it.view.asAdaptyUIView()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidStartRestore(
                         view = it.view.asAdaptyUIView()
                     )
                 }
@@ -330,7 +363,11 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_RESTORE -> {
                 dataJsonString.decodeJsonSafely<com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidRestorePurchaseResponse> {
-                    paywallsEventObserver?.paywallViewDidFinishRestore(
+                    paywallsEventObserver.paywallViewDidFinishRestore(
+                        view = it.view.asAdaptyUIView(),
+                        profile = it.profile.asAdaptyProfile()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFinishRestore(
                         view = it.view.asAdaptyUIView(),
                         profile = it.profile.asAdaptyProfile()
                     )
@@ -339,7 +376,11 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RESTORE -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailRestorePurchaseResponse> {
-                    paywallsEventObserver?.paywallViewDidFailRestore(
+                    paywallsEventObserver.paywallViewDidFailRestore(
+                        view = it.view.asAdaptyUIView(),
+                        error = it.error.asAdaptyError()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFailRestore(
                         view = it.view.asAdaptyUIView(),
                         error = it.error.asAdaptyError()
                     )
@@ -348,7 +389,11 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RENDERING -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailRenderingResponse> {
-                    paywallsEventObserver?.paywallViewDidFailRendering(
+                    paywallsEventObserver.paywallViewDidFailRendering(
+                        view = it.view.asAdaptyUIView(),
+                        error = it.error.asAdaptyError()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFailRendering(
                         view = it.view.asAdaptyUIView(),
                         error = it.error.asAdaptyError()
                     )
@@ -357,7 +402,11 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_LOADING_PRODUCTS -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailLoadingProductsResponse> {
-                    paywallsEventObserver?.paywallViewDidFailLoadingProducts(
+                    paywallsEventObserver.paywallViewDidFailLoadingProducts(
+                        view = it.view.asAdaptyUIView(),
+                        error = it.error.asAdaptyError()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFailLoadingProducts(
                         view = it.view.asAdaptyUIView(),
                         error = it.error.asAdaptyError()
                     )
@@ -366,7 +415,12 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION -> {
                 dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFinishWebPaymentNavigationResponse> {
-                    paywallsEventObserver?.paywallViewDidFinishWebPaymentNavigation(
+                    paywallsEventObserver.paywallViewDidFinishWebPaymentNavigation(
+                        view = it.view.asAdaptyUIView(),
+                        product = it.product?.asAdaptyPaywallProduct(),
+                        error = it.error?.asAdaptyError()
+                    )
+                    nativePaywallViewsEventObserver[it.view.id]?.paywallViewDidFinishWebPaymentNavigation(
                         view = it.view.asAdaptyUIView(),
                         product = it.product?.asAdaptyPaywallProduct(),
                         error = it.error?.asAdaptyError()
@@ -377,7 +431,7 @@ internal class AdaptyUIImpl(
             //Onboarding events
             AdaptyPluginEvent.ONBOARDING_DID_FINISH_LOADING -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventDidFinishLoadingResponse> {
-                    onboardingsEventObserver?.onboardingViewDidFinishLoading(
+                    onboardingsEventObserver.onboardingViewDidFinishLoading(
                         view = it.view.asAdaptyUIOnboardingView(),
                         meta = it.meta.asAdaptyUIOnboardingMeta(),
                     )
@@ -390,7 +444,7 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.ONBOARDING_DID_FAIL_WITH_ERROR -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventDidFailWithErrorResponse> {
-                    onboardingsEventObserver?.onboardingViewDidFailWithError(
+                    onboardingsEventObserver.onboardingViewDidFailWithError(
                         view = it.view.asAdaptyUIOnboardingView(),
                         error = it.error.asAdaptyError(),
                     )
@@ -403,7 +457,7 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.ONBOARDING_ON_ANALYTICS_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventOnAnalyticsActionResponse> {
-                    onboardingsEventObserver?.onboardingViewOnAnalyticsEvent(
+                    onboardingsEventObserver.onboardingViewOnAnalyticsEvent(
                         view = it.view.asAdaptyUIOnboardingView(),
                         meta = it.meta.asAdaptyUIOnboardingMeta(),
                         event = it.event.asAdaptyOnboardingEvent()
@@ -418,7 +472,7 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.ONBOARDING_ON_CLOSE_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventOnCloseActionResponse> {
-                    onboardingsEventObserver?.onboardingViewOnCloseAction(
+                    onboardingsEventObserver.onboardingViewOnCloseAction(
                         view = it.view.asAdaptyUIOnboardingView(),
                         meta = it.meta.asAdaptyUIOnboardingMeta(),
                         actionId = it.actionId
@@ -433,7 +487,7 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.ONBOARDING_ON_CUSTOM_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventOnCustomActionResponse> {
-                    onboardingsEventObserver?.onboardingViewOnCustomAction(
+                    onboardingsEventObserver.onboardingViewOnCustomAction(
                         view = it.view.asAdaptyUIOnboardingView(),
                         meta = it.meta.asAdaptyUIOnboardingMeta(),
                         actionId = it.actionId
@@ -449,7 +503,7 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.ONBOARDING_ON_PAYWALL_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventOnPaywallActionResponse> {
-                    onboardingsEventObserver?.onboardingViewOnPaywallAction(
+                    onboardingsEventObserver.onboardingViewOnPaywallAction(
                         view = it.view.asAdaptyUIOnboardingView(),
                         meta = it.meta.asAdaptyUIOnboardingMeta(),
                         actionId = it.actionId
@@ -464,7 +518,7 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.ONBOARDING_ON_STATE_UPDATED_ACTION -> {
                 dataJsonString.decodeJsonSafely<AdaptyOnboardingViewEventOnStateUpdatedActionResponse> {
-                    onboardingsEventObserver?.onboardingViewOnStateUpdatedAction(
+                    onboardingsEventObserver.onboardingViewOnStateUpdatedAction(
                         view = it.view.asAdaptyUIOnboardingView(),
                         meta = it.meta.asAdaptyUIOnboardingMeta(),
                         params = it.action.asAdaptyOnboardingsStateUpdatedParams(),

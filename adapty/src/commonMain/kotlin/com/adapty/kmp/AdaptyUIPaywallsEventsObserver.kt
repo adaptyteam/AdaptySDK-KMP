@@ -156,7 +156,7 @@ public interface AdaptyUIPaywallsEventsObserver {
      * @param view the [AdaptyUIPaywallView] where the restore occurred.
      * @param profile the updated [AdaptyProfile] of the user.
      */
-    public fun paywallViewDidFinishRestore(view: AdaptyUIPaywallView, profile: AdaptyProfile)
+    public fun paywallViewDidFinishRestore(view: AdaptyUIPaywallView, profile: AdaptyProfile) {}
 
     /**
      * Called when a restore operation fails.
@@ -172,7 +172,7 @@ public interface AdaptyUIPaywallsEventsObserver {
      * @param view the [AdaptyUIPaywallView] where rendering failed.
      * @param error the [AdaptyError] representing the issue.
      */
-    public fun paywallViewDidFailRendering(view: AdaptyUIPaywallView, error: AdaptyError)
+    public fun paywallViewDidFailRendering(view: AdaptyUIPaywallView, error: AdaptyError) {}
 
     /**
      * Called when an error occurs while loading products for the paywall.

@@ -78,10 +78,10 @@ public abstract interface class com/adapty/kmp/AdaptyUIPaywallsEventsObserver {
 	public fun paywallViewDidDisappear (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
 	public fun paywallViewDidFailLoadingProducts (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public fun paywallViewDidFailPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
-	public abstract fun paywallViewDidFailRendering (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public fun paywallViewDidFailRendering (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public fun paywallViewDidFailRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public fun paywallViewDidFinishPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseResult;)V
-	public abstract fun paywallViewDidFinishRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
+	public fun paywallViewDidFinishRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
 	public fun paywallViewDidFinishWebPaymentNavigation (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
 	public static synthetic fun paywallViewDidFinishWebPaymentNavigation$default (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)V
 	public fun paywallViewDidPerformAction (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
@@ -96,8 +96,10 @@ public final class com/adapty/kmp/AdaptyUIPaywallsEventsObserver$DefaultImpls {
 	public static fun paywallViewDidDisappear (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
 	public static fun paywallViewDidFailLoadingProducts (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public static fun paywallViewDidFailPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static fun paywallViewDidFailRendering (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public static fun paywallViewDidFailRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public static fun paywallViewDidFinishPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseResult;)V
+	public static fun paywallViewDidFinishRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
 	public static fun paywallViewDidFinishWebPaymentNavigation (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
 	public static synthetic fun paywallViewDidFinishWebPaymentNavigation$default (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)V
 	public static fun paywallViewDidPerformAction (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIAction;)V

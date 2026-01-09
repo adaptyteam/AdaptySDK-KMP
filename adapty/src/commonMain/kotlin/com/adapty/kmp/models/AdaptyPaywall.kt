@@ -53,6 +53,6 @@ public data class AdaptyPaywall internal constructor(
         }
 
     @AdaptyKMPInternal
-    val idForNativePlatformView: String = "${AdaptyOnboarding.Companion.PREFIX_NATIVE_PLATFORM_VIEW}$instanceIdentity"
+    val idForNativePlatformView: String = "${PREFIX_NATIVE_PLATFORM_VIEW}$instanceIdentity"
 
 }
