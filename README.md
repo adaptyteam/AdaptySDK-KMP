@@ -79,9 +79,13 @@ Ask questions, participate in discussions about Adapty-related topics, become a 
 
 Follow our [quickstart guide](https://adapty.io/docs/kmp-sdk-overview#get-started?utm_source=github&utm_medium=referral&utm_campaign=AdaptySDK-KMP) to install and configure Adapty SDK. Set up purchases in hours instead of weeks 🚀
 
-## Adapty demo apps
+## Examples
 
 [Here](example/) you can find a demo application for Adapty. Before running the app, you will need to configure the project.
+
+📹 **Watch our video guide** for step-by-step integration:
+
+[![Adapty SDK KMP Integration Guide](https://img.youtube.com/vi/JfwJvwnloNw/hqdefault.jpg)](https://www.youtube.com/watch?v=JfwJvwnloNw)
 
 ## Contributing
 
