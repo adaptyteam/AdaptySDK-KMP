@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -19,6 +22,16 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    jvm()
+    wasmJs {
+        browser()
+    }
+    js(IR) {
+        nodejs()
+        browser()
+        binaries.library()
+    }
 
     sourceSets {
         val commonMain by getting {

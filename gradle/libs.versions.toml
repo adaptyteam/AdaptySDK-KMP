@@ -16,6 +16,7 @@ mavenPublish = "0.34.0"
 androidx-startup-runtime = "1.2.0"
 kotlinx-json-serialization = "1.9.0"
 kotlinx-datetime = "0.7.1"
+kotlinx-browser = "0.5.0"
 buildConfig = "5.7.0"
 
 [libraries]
@@ -33,6 +34,9 @@ kotlinx-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 kotlinx-coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutine" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-json-serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser" }
+kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutine" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
