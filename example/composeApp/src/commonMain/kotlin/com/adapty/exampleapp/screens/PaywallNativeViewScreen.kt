@@ -2,6 +2,7 @@ package com.adapty.exampleapp.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,10 +64,10 @@ fun PaywallNativeViewScreen(
             }
         }
 
-    ) {
+    ) { paddingValues ->
 
         AdaptyUIPaywallPlatformView(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
             paywall = paywall,
             customTags = customTags,
             customTimers = customTimers,
