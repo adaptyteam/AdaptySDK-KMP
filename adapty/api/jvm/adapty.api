@@ -1,0 +1,1384 @@
+public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
+	public static final field INSTANCE Lcom/adapty/kmp/Adapty;
+	public fun activate (Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun createWebPaywallUrl (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getCurrentInstallationStatus (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getOnboarding-zkXUZaI (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getOnboardingForDefaultAudience (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getPaywall-zkXUZaI (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getPaywallForDefaultAudience (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getPaywallProducts (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getProfile (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun identify (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun isActivated (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun logShowPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun logout (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun makePurchase (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun presentCodeRedemptionSheet (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun setFallback (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun setIntegrationIdentifier (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun setLogLevel (Lcom/adapty/kmp/models/AdaptyLogLevel;)V
+	public fun setOnInstallationDetailsListener (Lcom/adapty/kmp/OnInstallationDetailsListener;)V
+	public fun setOnProfileUpdatedListener (Lcom/adapty/kmp/OnProfileUpdatedListener;)V
+	public fun updateAttribution (Ljava/util/Map;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun updateCollectingRefundDataConsent (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun updateProfile (Lcom/adapty/kmp/models/AdaptyProfileParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun updateRefundPreference (Lcom/adapty/kmp/models/AdaptyIosRefundPreference;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
+	public static final field INSTANCE Lcom/adapty/kmp/AdaptyUI;
+	public fun createOnboardingView (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun createPaywallView-HOf25JM (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/time/Duration;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun dismissOnboardingView (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun dismissPaywallView (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun presentOnboardingView (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun presentPaywallView (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun registerOnboardingEventsListener (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Ljava/lang/String;)V
+	public fun registerPaywallEventsListener (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Ljava/lang/String;)V
+	public fun setOnboardingsEventsObserver (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;)V
+	public fun setPaywallsEventsObserver (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;)V
+	public fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun unregisterOnboardingEventsListener (Ljava/lang/String;)V
+	public fun unregisterPaywallEventsListener (Ljava/lang/String;)V
+}
+
+public abstract interface class com/adapty/kmp/AdaptyUIOnboardingsEventsObserver {
+	public fun getMainUiScope ()Lkotlinx/coroutines/CoroutineScope;
+	public fun onboardingViewDidFailWithError (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public fun onboardingViewDidFinishLoading (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;)V
+	public fun onboardingViewOnAnalyticsEvent (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent;)V
+	public fun onboardingViewOnCloseAction (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
+	public fun onboardingViewOnCustomAction (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
+	public fun onboardingViewOnPaywallAction (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
+	public fun onboardingViewOnStateUpdatedAction (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams;)V
+}
+
+public final class com/adapty/kmp/AdaptyUIOnboardingsEventsObserver$DefaultImpls {
+	public static fun getMainUiScope (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;)Lkotlinx/coroutines/CoroutineScope;
+	public static fun onboardingViewDidFailWithError (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static fun onboardingViewDidFinishLoading (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;)V
+	public static fun onboardingViewOnAnalyticsEvent (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent;)V
+	public static fun onboardingViewOnCloseAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
+	public static fun onboardingViewOnCustomAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
+	public static fun onboardingViewOnPaywallAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
+	public static fun onboardingViewOnStateUpdatedAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams;)V
+}
+
+public abstract interface class com/adapty/kmp/AdaptyUIPaywallsEventsObserver {
+	public fun getMainUiScope ()Lkotlinx/coroutines/CoroutineScope;
+	public fun paywallViewDidAppear (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
+	public fun paywallViewDidDisappear (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
+	public fun paywallViewDidFailLoadingProducts (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public fun paywallViewDidFailPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
+	public fun paywallViewDidFailRendering (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public fun paywallViewDidFailRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public fun paywallViewDidFinishPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseResult;)V
+	public fun paywallViewDidFinishRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
+	public fun paywallViewDidFinishWebPaymentNavigation (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static synthetic fun paywallViewDidFinishWebPaymentNavigation$default (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)V
+	public fun paywallViewDidPerformAction (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
+	public fun paywallViewDidSelectProduct (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;)V
+	public fun paywallViewDidStartPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;)V
+	public fun paywallViewDidStartRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
+}
+
+public final class com/adapty/kmp/AdaptyUIPaywallsEventsObserver$DefaultImpls {
+	public static fun getMainUiScope (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;)Lkotlinx/coroutines/CoroutineScope;
+	public static fun paywallViewDidAppear (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
+	public static fun paywallViewDidDisappear (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
+	public static fun paywallViewDidFailLoadingProducts (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static fun paywallViewDidFailPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static fun paywallViewDidFailRendering (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static fun paywallViewDidFailRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static fun paywallViewDidFinishPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseResult;)V
+	public static fun paywallViewDidFinishRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
+	public static fun paywallViewDidFinishWebPaymentNavigation (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
+	public static synthetic fun paywallViewDidFinishWebPaymentNavigation$default (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)V
+	public static fun paywallViewDidPerformAction (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
+	public static fun paywallViewDidSelectProduct (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;)V
+	public static fun paywallViewDidStartPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;)V
+	public static fun paywallViewDidStartRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
+}
+
+public abstract interface class com/adapty/kmp/OnInstallationDetailsListener {
+	public abstract fun onInstallationDetailsFailure (Lcom/adapty/kmp/models/AdaptyError;)V
+	public abstract fun onInstallationDetailsSuccess (Lcom/adapty/kmp/models/AdaptyInstallationDetails;)V
+}
+
+public abstract interface class com/adapty/kmp/OnProfileUpdatedListener {
+	public abstract fun onProfileReceived (Lcom/adapty/kmp/models/AdaptyProfile;)V
+}
+
+public abstract interface annotation class com/adapty/kmp/internal/AdaptyKMPInternal : java/lang/annotation/Annotation {
+}
+
+public final class com/adapty/kmp/internal/NoOpAdaptyPluginImpl : com/adapty/kmp/internal/plugin/AdaptyPlugin {
+	public fun <init> ()V
+	public fun executePlatformSpecific (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public fun initialize ()V
+}
+
+public final class com/adapty/kmp/internal/plugin/AdaptyPluginEventHandler {
+	public static final field INSTANCE Lcom/adapty/kmp/internal/plugin/AdaptyPluginEventHandler;
+	public final fun onNewEvent (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class com/adapty/kmp/internal/plugin/request/AdaptyOnboardingRequestResponseKt {
+	public static final fun asJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;)Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateOnboardingViewRequestKt {
+	public static final fun createOnboardingViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreatePaywallViewRequestKt {
+	public static final fun createPaywallViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyPaywall;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest : java/lang/Enum {
+	public static final field Companion Lcom/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest$Companion;
+	public static final field FULLSCREEN Lcom/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest;
+	public static final field PAGESHEET Lcom/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest;
+	public static fun values ()[Lcom/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest;
+}
+
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters {
+	public fun <init> (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public final fun copy (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;)Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOldSubVendorProductId ()Ljava/lang/String;
+	public final fun getReplacementMode ()Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode : java/lang/Enum {
+	public static final field CHARGE_FULL_PRICE Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public static final field CHARGE_PRORATED_PRICE Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public static final field DEFERRED Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public static final field WITHOUT_PRORATION Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public static final field WITH_TIME_PRORATION Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacementMode;
+}
+
+public final class com/adapty/kmp/models/AdaptyConfig {
+	public static final field SDK_NAME Ljava/lang/String;
+	public static final field SDK_VERSION Ljava/lang/String;
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/String;ZZZZZZLjava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/adapty/kmp/models/AdaptyLogLevel;Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;Lcom/adapty/kmp/models/AdaptyCustomerIdentity;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class com/adapty/kmp/models/AdaptyConfig$Builder {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun build ()Lcom/adapty/kmp/models/AdaptyConfig;
+	public final fun withActivateUI (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withAppleClearDataOnBackup (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withAppleIdfaCollectionDisabled (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withBackendProxyHost (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withBackendProxyPort (I)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withCustomerUserId (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public static synthetic fun withCustomerUserId$default (Lcom/adapty/kmp/models/AdaptyConfig$Builder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withGoogleAdvertisingIdCollectionDisabled (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withGoogleEnablePendingPrepaidPlans (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withGoogleLocalAccessLevelAllowed (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withIpAddressCollectionDisabled (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withLogLevel (Lcom/adapty/kmp/models/AdaptyLogLevel;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withMediaCacheConfiguration (Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withObserverMode (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withServerCluster (Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+}
+
+public final class com/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration {
+	public fun <init> ()V
+	public fun <init> (III)V
+	public synthetic fun <init> (IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun copy (III)Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;IIIILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDiskStorageSizeLimit ()I
+	public final fun getMemoryStorageCountLimit ()I
+	public final fun getMemoryStorageTotalCostLimit ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyConfig$ServerCluster : java/lang/Enum {
+	public static final field DEFAULT Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
+	public static final field EU Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyCustomAsset {
+	public static final field Companion Lcom/adapty/kmp/models/AdaptyCustomAsset$Companion;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$ColorAsset : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset$ColorAsset;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$ColorAsset;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset$ColorAsset;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColorHex ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$Companion {
+	public final fun color (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public final fun linearGradient (Ljava/util/List;Ljava/util/List;FFFF)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public static synthetic fun linearGradient$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$Companion;Ljava/util/List;Ljava/util/List;FFFFILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public final fun localImageData ([B)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public final fun localImageFile (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public final fun localImageResource (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public final fun localVideoFile (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+	public final fun localVideoResource (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$LinearGradientAsset : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> (Ljava/util/List;Ljava/util/List;FFFF)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;FFFFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()F
+	public final fun component4 ()F
+	public final fun component5 ()F
+	public final fun component6 ()F
+	public final fun copy (Ljava/util/List;Ljava/util/List;FFFF)Lcom/adapty/kmp/models/AdaptyCustomAsset$LinearGradientAsset;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$LinearGradientAsset;Ljava/util/List;Ljava/util/List;FFFFILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LinearGradientAsset;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColors ()Ljava/util/List;
+	public final fun getEndX ()F
+	public final fun getEndY ()F
+	public final fun getStartX ()F
+	public final fun getStartY ()F
+	public final fun getStops ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$LocalImageData : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> ([B)V
+	public final fun getData ()[B
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$LocalImageFile : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalImageFile;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalImageFile;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalImageFile;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$LocalImageResource : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalImageResource;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalImageResource;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalImageResource;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$LocalVideoFile : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalVideoFile;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalVideoFile;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalVideoFile;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPath ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomAsset$LocalVideoResource : com/adapty/kmp/models/AdaptyCustomAsset {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalVideoResource;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalVideoResource;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyCustomAsset$LocalVideoResource;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAssetId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyCustomerIdentity {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getAndroidObfuscatedAccountId ()Ljava/lang/String;
+	public final fun getIosAppAccountToken ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyError : java/lang/Exception {
+	public fun <init> ()V
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyErrorCode;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyError;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyError;Lcom/adapty/kmp/models/AdaptyErrorCode;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyError;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public final fun getDetail ()Ljava/lang/String;
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
+	public static final field ACTIVATE_ONCE_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ADAPTY_NOT_INITIALIZED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ANALYTICS_DISABLED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field AUTHENTICATION_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field BAD_REQUEST Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field BILLING_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field BILLING_SERVICE_DISCONNECTED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field BILLING_SERVICE_TIMEOUT Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field BILLING_SERVICE_UNAVAILABLE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field BILLING_UNAVAILABLE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CANT_MAKE_PAYMENTS Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CANT_READ_RECEIPT Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CLIENT_INVALID Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CLOUD_SERVICE_NETWORK_CONNECTION_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CLOUD_SERVICE_PERMISSION_DENIED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CLOUD_SERVICE_REVOKED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field CURRENT_SUBSCRIPTION_TO_UPDATE_NOT_FOUND_IN_HISTORY Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field DECODING_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field DEVELOPER_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field EMPTY_RESULT Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ENCODING_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field FEATURE_NOT_SUPPORTED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field FETCH_TIMEOUT_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field INTERNAL_PLUGIN_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field INVALID_JSON Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field INVALID_OFFER_IDENTIFIER Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field INVALID_OFFER_PRICE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field INVALID_SIGNATURE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ITEM_ALREADY_OWNED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ITEM_NOT_OWNED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ITEM_UNAVAILABLE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field MISSING_OFFER_PARAMS Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field NETWORK_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field NO_PRODUCT_IDS_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field NO_PURCHASES_TO_RESTORE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field OPERATION_INTERRUPTED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PAYMENT_CANCELLED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PAYMENT_INVALID Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PAYMENT_NOT_ALLOWED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PENDING_PURCHASE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PRIVACY_ACKNOWLEDGEMENT_REQUIRED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PRODUCT_NOT_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PRODUCT_PURCHASE_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PRODUCT_REQUEST_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PROFILE_WAS_CHANGED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field RECEIVE_RESTORED_TRANSACTIONS_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field REFRESH_RECEIPT_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field SERVER_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field UNAUTHORIZED_REQUEST_DATA Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field UNKNOWN Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field UNSUPPORTED_DATA Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field WRONG_PARAMETER Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyErrorCode;
+}
+
+public final class com/adapty/kmp/models/AdaptyInstallationDetails {
+	public fun <init> (Ljava/lang/String;Lkotlinx/datetime/LocalDateTime;ILcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlinx/datetime/LocalDateTime;
+	public final fun component3 ()I
+	public final fun component4 ()Lcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;
+	public final fun copy (Ljava/lang/String;Lkotlinx/datetime/LocalDateTime;ILcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;)Lcom/adapty/kmp/models/AdaptyInstallationDetails;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyInstallationDetails;Ljava/lang/String;Lkotlinx/datetime/LocalDateTime;ILcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyInstallationDetails;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAppLaunchCount ()I
+	public final fun getInstallId ()Ljava/lang/String;
+	public final fun getInstallTime ()Lkotlinx/datetime/LocalDateTime;
+	public final fun getPayload ()Lcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyInstallationDetails$Payload {
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Ljava/util/Map;)Lcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyInstallationDetails$Payload;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDataMap ()Ljava/util/Map;
+	public final fun getJsonString ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyInstallationStatus {
+}
+
+public final class com/adapty/kmp/models/AdaptyInstallationStatusDetermined : com/adapty/kmp/models/AdaptyInstallationStatus {
+	public fun <init> (Lcom/adapty/kmp/models/AdaptyInstallationDetails;)V
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyInstallationDetails;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyInstallationDetails;)Lcom/adapty/kmp/models/AdaptyInstallationStatusDetermined;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyInstallationStatusDetermined;Lcom/adapty/kmp/models/AdaptyInstallationDetails;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyInstallationStatusDetermined;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDetails ()Lcom/adapty/kmp/models/AdaptyInstallationDetails;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyInstallationStatusNotAvailable : com/adapty/kmp/models/AdaptyInstallationStatus {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyInstallationStatusNotAvailable;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyInstallationStatusNotDetermined : com/adapty/kmp/models/AdaptyInstallationStatus {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyInstallationStatusNotDetermined;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyIosRefundPreference : java/lang/Enum {
+	public static final field DECLINE Lcom/adapty/kmp/models/AdaptyIosRefundPreference;
+	public static final field GRANT Lcom/adapty/kmp/models/AdaptyIosRefundPreference;
+	public static final field NO_PREFERENCE Lcom/adapty/kmp/models/AdaptyIosRefundPreference;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyIosRefundPreference;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyIosRefundPreference;
+}
+
+public final class com/adapty/kmp/models/AdaptyLogLevel : java/lang/Enum {
+	public static final field DEBUG Lcom/adapty/kmp/models/AdaptyLogLevel;
+	public static final field ERROR Lcom/adapty/kmp/models/AdaptyLogLevel;
+	public static final field INFO Lcom/adapty/kmp/models/AdaptyLogLevel;
+	public static final field VERBOSE Lcom/adapty/kmp/models/AdaptyLogLevel;
+	public static final field WARN Lcom/adapty/kmp/models/AdaptyLogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyLogLevel;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyLogLevel;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboarding {
+	public static final field PREFIX_NATIVE_PLATFORM_VIEW Ljava/lang/String;
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyPlacement;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/adapty/kmp/models/AdaptyRemoteConfig;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyRemoteConfig;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;)Lcom/adapty/kmp/models/AdaptyOnboarding;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyRemoteConfig;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboarding;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getIdForNativePlatformView ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPlacement ()Lcom/adapty/kmp/models/AdaptyPlacement;
+	public final fun getRemoteConfig ()Lcom/adapty/kmp/models/AdaptyRemoteConfig;
+	public final fun getVariationId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventOnboardingCompleted : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventOnboardingCompleted;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventOnboardingStarted : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventOnboardingStarted;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventProductsScreenPresented : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventProductsScreenPresented;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventRegistrationScreenPresented : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventRegistrationScreenPresented;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventScreenCompleted : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventScreenCompleted;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventScreenCompleted;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventScreenCompleted;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getElementId ()Ljava/lang/String;
+	public final fun getReply ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventScreenPresented : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventScreenPresented;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventSecondScreenPresented : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventSecondScreenPresented;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventUnknown : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventUnknown;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventUnknown;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventUnknown;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventUserEmailCollected : com/adapty/kmp/models/AdaptyOnboardingsAnalyticsEvent {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyOnboardingsAnalyticsEventUserEmailCollected;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsDatePickerParams : com/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;)Lcom/adapty/kmp/models/AdaptyOnboardingsDatePickerParams;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsDatePickerParams;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsDatePickerParams;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDay ()Ljava/lang/Integer;
+	public final fun getMonth ()Ljava/lang/Integer;
+	public final fun getYear ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsEmailInput : com/adapty/kmp/models/AdaptyOnboardingsInput {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyOnboardingsEmailInput;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsEmailInput;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsEmailInput;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyOnboardingsInput {
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsInputParams : com/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams {
+	public fun <init> (Lcom/adapty/kmp/models/AdaptyOnboardingsInput;)V
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyOnboardingsInput;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyOnboardingsInput;)Lcom/adapty/kmp/models/AdaptyOnboardingsInputParams;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsInputParams;Lcom/adapty/kmp/models/AdaptyOnboardingsInput;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsInputParams;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInput ()Lcom/adapty/kmp/models/AdaptyOnboardingsInput;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsMultiSelectParams : com/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/adapty/kmp/models/AdaptyOnboardingsMultiSelectParams;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsMultiSelectParams;Ljava/util/List;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsMultiSelectParams;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParams ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsNumberInput : com/adapty/kmp/models/AdaptyOnboardingsInput {
+	public fun <init> (D)V
+	public final fun component1 ()D
+	public final fun copy (D)Lcom/adapty/kmp/models/AdaptyOnboardingsNumberInput;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsNumberInput;DILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsNumberInput;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()D
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsSelectParams : com/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyOnboardingsSelectParams;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsSelectParams;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsSelectParams;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams {
+}
+
+public final class com/adapty/kmp/models/AdaptyOnboardingsTextInput : com/adapty/kmp/models/AdaptyOnboardingsInput {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyOnboardingsTextInput;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyOnboardingsTextInput;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyOnboardingsTextInput;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywall {
+	public static final field PREFIX_NATIVE_PLATFORM_VIEW Ljava/lang/String;
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyPlacement;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/adapty/kmp/models/AdaptyRemoteConfig;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyRemoteConfig;Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lcom/adapty/kmp/models/AdaptyPaywall;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyRemoteConfig;Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywall;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getHasViewConfiguration ()Z
+	public final fun getIdForNativePlatformView ()Ljava/lang/String;
+	public final fun getInstanceIdentity ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPlacement ()Lcom/adapty/kmp/models/AdaptyPlacement;
+	public final fun getProductIdentifiers ()Ljava/util/List;
+	public final fun getRemoteConfig ()Lcom/adapty/kmp/models/AdaptyRemoteConfig;
+	public final fun getVariationId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyPaywallFetchPolicy {
+	public static final field Companion Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$Companion;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallFetchPolicy$Companion {
+	public final fun getDefault ()Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReloadRevalidatingCacheData : com/adapty/kmp/models/AdaptyPaywallFetchPolicy {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReloadRevalidatingCacheData;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReturnCacheDataElseLoad : com/adapty/kmp/models/AdaptyPaywallFetchPolicy {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReturnCacheDataElseLoad;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReturnCacheDataIfNotExpiredElseLoad : com/adapty/kmp/models/AdaptyPaywallFetchPolicy {
+	public fun <init> (J)V
+	public final fun component1 ()J
+	public final fun copy (J)Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReturnCacheDataIfNotExpiredElseLoad;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReturnCacheDataIfNotExpiredElseLoad;JILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$ReturnCacheDataIfNotExpiredElseLoad;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxAgeMillis ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallProduct {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Z
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Lcom/adapty/kmp/models/AdaptyPrice;
+	public final fun component15 ()Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;
+	public final fun component3 ()I
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lcom/adapty/kmp/models/AdaptyPrice;Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallProduct;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lcom/adapty/kmp/models/AdaptyPrice;Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallProduct;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccessLevelId ()Ljava/lang/String;
+	public final fun getAudienceName ()Ljava/lang/String;
+	public final fun getLocalizedDescription ()Ljava/lang/String;
+	public final fun getLocalizedTitle ()Ljava/lang/String;
+	public final fun getPaywallABTestName ()Ljava/lang/String;
+	public final fun getPaywallName ()Ljava/lang/String;
+	public final fun getPaywallProductIndex ()I
+	public final fun getPaywallVariationId ()Ljava/lang/String;
+	public final fun getPrice ()Lcom/adapty/kmp/models/AdaptyPrice;
+	public final fun getProductType ()Ljava/lang/String;
+	public final fun getRegionCode ()Ljava/lang/String;
+	public final fun getSubscription ()Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;
+	public final fun getVendorProductId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isFamilyShareable ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallProductReference {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallProductReference;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallProductReference;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallProductReference;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccessLevelId ()Ljava/lang/String;
+	public final fun getBasePlanId ()Ljava/lang/String;
+	public final fun getOfferId ()Ljava/lang/String;
+	public final fun getProductType ()Ljava/lang/String;
+	public final fun getPromotionalOfferId ()Ljava/lang/String;
+	public final fun getVendorId ()Ljava/lang/String;
+	public final fun getWinBackOfferId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallProductSubscription {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lcom/adapty/kmp/models/AdaptySubscriptionOffer;
+	public final fun component5 ()Lcom/adapty/kmp/models/AdaptyRenewalType;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptySubscriptionOffer;Lcom/adapty/kmp/models/AdaptyRenewalType;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptySubscriptionOffer;Lcom/adapty/kmp/models/AdaptyRenewalType;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBasePlanId ()Ljava/lang/String;
+	public final fun getGroupIdentifier ()Ljava/lang/String;
+	public final fun getLocalizedPeriod ()Ljava/lang/String;
+	public final fun getOffer ()Lcom/adapty/kmp/models/AdaptySubscriptionOffer;
+	public final fun getPeriod ()Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
+	public final fun getRenewalType ()Lcom/adapty/kmp/models/AdaptyRenewalType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPaywallViewConfiguration {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLocale ()Ljava/lang/String;
+	public final fun getPaywallBuilderId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPeriodUnit : java/lang/Enum {
+	public static final field DAY Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public static final field MONTH Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public static final field UNKNOWN Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public static final field WEEK Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public static final field YEAR Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+}
+
+public final class com/adapty/kmp/models/AdaptyPlacement {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Z)Lcom/adapty/kmp/models/AdaptyPlacement;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPlacement;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAbTestName ()Ljava/lang/String;
+	public final fun getAudienceName ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getPlacementAudienceVersionId ()Ljava/lang/String;
+	public final fun getRevision ()I
+	public fun hashCode ()I
+	public final fun isTrackingPurchases ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPrice {
+	public final fun component1 ()F
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (FLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPrice;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPrice;FLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPrice;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()F
+	public final fun getCurrencyCode ()Ljava/lang/String;
+	public final fun getCurrencySymbol ()Ljava/lang/String;
+	public final fun getLocalizedString ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProductIdentifier {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProductIdentifier;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyProductIdentifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyProductIdentifier;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBasePlanId ()Ljava/lang/String;
+	public final fun getVendorProductId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfile {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/Map;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun component6 ()Ljava/util/Map;
+	public final fun component7 ()Ljava/util/Map;
+	public final fun component8 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Z)Lcom/adapty/kmp/models/AdaptyProfile;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyProfile;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ZILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyProfile;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccessLevels ()Ljava/util/Map;
+	public final fun getCustomAttributes ()Ljava/util/Map;
+	public final fun getCustomerUserId ()Ljava/lang/String;
+	public final fun getNonSubscriptions ()Ljava/util/Map;
+	public final fun getProfileId ()Ljava/lang/String;
+	public final fun getSubscriptions ()Ljava/util/Map;
+	public fun hashCode ()I
+	public final fun isTestUser ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfile$AccessLevel {
+	public fun <init> (Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Z
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Z
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Ljava/lang/String;
+	public final fun component15 ()Ljava/lang/String;
+	public final fun component16 ()Z
+	public final fun component17 ()Z
+	public final fun component18 ()Ljava/lang/String;
+	public final fun component19 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfile$AccessLevel;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyProfile$AccessLevel;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyProfile$AccessLevel;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActivatedAt ()Ljava/lang/String;
+	public final fun getActiveIntroductoryOfferType ()Ljava/lang/String;
+	public final fun getActivePromotionalOfferId ()Ljava/lang/String;
+	public final fun getActivePromotionalOfferType ()Ljava/lang/String;
+	public final fun getBillingIssueDetectedAt ()Ljava/lang/String;
+	public final fun getCancellationReason ()Ljava/lang/String;
+	public final fun getExpiresAt ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getOfferId ()Ljava/lang/String;
+	public final fun getRenewedAt ()Ljava/lang/String;
+	public final fun getStartsAt ()Ljava/lang/String;
+	public final fun getStore ()Ljava/lang/String;
+	public final fun getUnsubscribedAt ()Ljava/lang/String;
+	public final fun getVendorProductId ()Ljava/lang/String;
+	public final fun getWillRenew ()Z
+	public fun hashCode ()I
+	public final fun isActive ()Z
+	public final fun isInGracePeriod ()Z
+	public final fun isLifetime ()Z
+	public final fun isRefund ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfile$Date {
+	public fun <init> (III)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfile$Gender : java/lang/Enum {
+	public static final field FEMALE Lcom/adapty/kmp/models/AdaptyProfile$Gender;
+	public static final field MALE Lcom/adapty/kmp/models/AdaptyProfile$Gender;
+	public static final field OTHER Lcom/adapty/kmp/models/AdaptyProfile$Gender;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun toString ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfile$Gender;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyProfile$Gender;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfile$NonSubscription {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZ)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZ)Lcom/adapty/kmp/models/AdaptyProfile$NonSubscription;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyProfile$NonSubscription;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyProfile$NonSubscription;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPurchaseId ()Ljava/lang/String;
+	public final fun getPurchasedAt ()Ljava/lang/String;
+	public final fun getStore ()Ljava/lang/String;
+	public final fun getVendorProductId ()Ljava/lang/String;
+	public final fun getVendorTransactionId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isConsumable ()Z
+	public final fun isRefund ()Z
+	public final fun isSandbox ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfile$Subscription {
+	public fun <init> (ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;ZZLjava/lang/String;)V
+	public final fun component1 ()Z
+	public final fun component10 ()Ljava/lang/String;
+	public final fun component11 ()Z
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component13 ()Ljava/lang/String;
+	public final fun component14 ()Ljava/lang/String;
+	public final fun component15 ()Z
+	public final fun component16 ()Z
+	public final fun component17 ()Ljava/lang/String;
+	public final fun component18 ()Ljava/lang/String;
+	public final fun component19 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component20 ()Z
+	public final fun component21 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;ZZLjava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfile$Subscription;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyProfile$Subscription;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;Ljava/lang/String;ZZLjava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyProfile$Subscription;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getActivatedAt ()Ljava/lang/String;
+	public final fun getActiveIntroductoryOfferType ()Ljava/lang/String;
+	public final fun getActivePromotionalOfferId ()Ljava/lang/String;
+	public final fun getActivePromotionalOfferType ()Ljava/lang/String;
+	public final fun getBillingIssueDetectedAt ()Ljava/lang/String;
+	public final fun getCancellationReason ()Ljava/lang/String;
+	public final fun getExpiresAt ()Ljava/lang/String;
+	public final fun getOfferId ()Ljava/lang/String;
+	public final fun getRenewedAt ()Ljava/lang/String;
+	public final fun getStartsAt ()Ljava/lang/String;
+	public final fun getStore ()Ljava/lang/String;
+	public final fun getUnsubscribedAt ()Ljava/lang/String;
+	public final fun getVendorOriginalTransactionId ()Ljava/lang/String;
+	public final fun getVendorProductId ()Ljava/lang/String;
+	public final fun getVendorTransactionId ()Ljava/lang/String;
+	public final fun getWillRenew ()Z
+	public fun hashCode ()I
+	public final fun isActive ()Z
+	public final fun isInGracePeriod ()Z
+	public final fun isLifetime ()Z
+	public final fun isRefund ()Z
+	public final fun isSandbox ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfileParameters {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/util/Map;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun builder ()Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun getAnalyticsDisabled ()Ljava/lang/Boolean;
+	public final fun getAttStatus ()Ljava/lang/Integer;
+	public final fun getBirthday ()Ljava/lang/String;
+	public final fun getCustomAttributes ()Ljava/util/Map;
+	public final fun getEmail ()Ljava/lang/String;
+	public final fun getFirstName ()Ljava/lang/String;
+	public final fun getGender ()Ljava/lang/String;
+	public final fun getLastName ()Ljava/lang/String;
+	public final fun getPhoneNumber ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyProfileParameters$Builder {
+	public fun <init> ()V
+	public final fun build ()Lcom/adapty/kmp/models/AdaptyProfileParameters;
+	public final fun withAttStatus (Ljava/lang/Integer;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withBirthday (Lcom/adapty/kmp/models/AdaptyProfile$Date;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withCustomAttribute (Ljava/lang/String;D)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withCustomAttribute (Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withEmail (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withExternalAnalyticsDisabled (Ljava/lang/Boolean;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withFirstName (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withGender (Lcom/adapty/kmp/models/AdaptyProfile$Gender;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withLastName (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withPhoneNumber (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+	public final fun withRemovedCustomAttribute (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyProfileParameters$Builder;
+}
+
+public final class com/adapty/kmp/models/AdaptyPurchaseParameters {
+}
+
+public final class com/adapty/kmp/models/AdaptyPurchaseParameters$Builder {
+	public fun <init> ()V
+	public final fun build ()Lcom/adapty/kmp/models/AdaptyPurchaseParameters;
+	public final fun setIsOfferPersonalized (Ljava/lang/Boolean;)Lcom/adapty/kmp/models/AdaptyPurchaseParameters$Builder;
+	public final fun setSubscriptionUpdateParams (Lcom/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateParameters;)Lcom/adapty/kmp/models/AdaptyPurchaseParameters$Builder;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyPurchaseResult {
+}
+
+public final class com/adapty/kmp/models/AdaptyPurchaseResult$Pending : com/adapty/kmp/models/AdaptyPurchaseResult {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyPurchaseResult$Pending;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPurchaseResult$Success : com/adapty/kmp/models/AdaptyPurchaseResult {
+	public fun <init> (Lcom/adapty/kmp/models/AdaptyProfile;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Lcom/adapty/kmp/models/AdaptyProfile;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyProfile;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyProfile;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPurchaseResult$Success;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPurchaseResult$Success;Lcom/adapty/kmp/models/AdaptyProfile;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPurchaseResult$Success;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAppleJwsTransaction ()Ljava/lang/String;
+	public final fun getGooglePurchaseToken ()Ljava/lang/String;
+	public final fun getProfile ()Lcom/adapty/kmp/models/AdaptyProfile;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyPurchaseResult$UserCanceled : com/adapty/kmp/models/AdaptyPurchaseResult {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyPurchaseResult$UserCanceled;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyRemoteConfig {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)Lcom/adapty/kmp/models/AdaptyRemoteConfig;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyRemoteConfig;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyRemoteConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDataJsonString ()Ljava/lang/String;
+	public final fun getDataMap ()Ljava/util/Map;
+	public final fun getLocale ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyRenewalType : java/lang/Enum {
+	public static final field AUTORENEWABLE Lcom/adapty/kmp/models/AdaptyRenewalType;
+	public static final field PREPAID Lcom/adapty/kmp/models/AdaptyRenewalType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyRenewalType;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyRenewalType;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyResult {
+}
+
+public final class com/adapty/kmp/models/AdaptyResult$Error : com/adapty/kmp/models/AdaptyResult {
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyError;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyError;)Lcom/adapty/kmp/models/AdaptyResult$Error;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyResult$Error;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyResult$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Lcom/adapty/kmp/models/AdaptyError;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyResult$Success : com/adapty/kmp/models/AdaptyResult {
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/Object;)Lcom/adapty/kmp/models/AdaptyResult$Success;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyResult$Success;Ljava/lang/Object;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyResult$Success;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyResultKt {
+	public static final fun exceptionOrNull (Lcom/adapty/kmp/models/AdaptyResult;)Lcom/adapty/kmp/models/AdaptyError;
+	public static final fun fold (Lcom/adapty/kmp/models/AdaptyResult;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun getOrNull (Lcom/adapty/kmp/models/AdaptyResult;)Ljava/lang/Object;
+	public static final fun isError (Lcom/adapty/kmp/models/AdaptyResult;)Z
+	public static final fun isSuccess (Lcom/adapty/kmp/models/AdaptyResult;)Z
+	public static final fun onError (Lcom/adapty/kmp/models/AdaptyResult;Lkotlin/jvm/functions/Function1;)Lcom/adapty/kmp/models/AdaptyResult;
+	public static final fun onSuccess (Lcom/adapty/kmp/models/AdaptyResult;Lkotlin/jvm/functions/Function1;)Lcom/adapty/kmp/models/AdaptyResult;
+}
+
+public final class com/adapty/kmp/models/AdaptySubscriptionOffer {
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;Ljava/util/List;Ljava/util/List;)Lcom/adapty/kmp/models/AdaptySubscriptionOffer;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptySubscriptionOffer;Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptySubscriptionOffer;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOfferIdentifier ()Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;
+	public final fun getOfferTags ()Ljava/util/List;
+	public final fun getPhases ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptySubscriptionOfferIdentifier {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+	public final fun copy (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;)Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptySubscriptionOfferIdentifier;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getType ()Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode : java/lang/Enum {
+	public static final field FREE_TRIAL Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public static final field PAY_AS_YOU_GO Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public static final field PAY_UP_FRONT Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public static final field UNKNOWN Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+}
+
+public final class com/adapty/kmp/models/AdaptySubscriptionOfferPhase {
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyPrice;
+	public final fun component2 ()I
+	public final fun component3 ()Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public final fun component4 ()Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyPrice;ILcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptySubscriptionOfferPhase;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptySubscriptionOfferPhase;Lcom/adapty/kmp/models/AdaptyPrice;ILcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptySubscriptionOfferPhase;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLocalizedNumberOfPeriods ()Ljava/lang/String;
+	public final fun getLocalizedSubscriptionPeriod ()Ljava/lang/String;
+	public final fun getNumberOfPeriods ()I
+	public final fun getPaymentMode ()Lcom/adapty/kmp/models/AdaptySubscriptionOfferPaymentMode;
+	public final fun getPrice ()Lcom/adapty/kmp/models/AdaptyPrice;
+	public final fun getSubscriptionPeriod ()Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptySubscriptionOfferType : java/lang/Enum {
+	public static final field INTRODUCTORY Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+	public static final field PROMOTIONAL Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+	public static final field WINBACK Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptySubscriptionOfferType;
+}
+
+public final class com/adapty/kmp/models/AdaptySubscriptionPeriod {
+	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public final fun component2 ()I
+	public final fun copy (Lcom/adapty/kmp/models/AdaptyPeriodUnit;I)Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;Lcom/adapty/kmp/models/AdaptyPeriodUnit;IILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getNumberOfUnits ()I
+	public final fun getUnit ()Lcom/adapty/kmp/models/AdaptyPeriodUnit;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adapty/kmp/models/AdaptyUIAction {
+}
+
+public final class com/adapty/kmp/models/AdaptyUIAction$AndroidSystemBackAction : com/adapty/kmp/models/AdaptyUIAction {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyUIAction$AndroidSystemBackAction;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIAction$CloseAction : com/adapty/kmp/models/AdaptyUIAction {
+	public static final field INSTANCE Lcom/adapty/kmp/models/AdaptyUIAction$CloseAction;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIAction$CustomAction : com/adapty/kmp/models/AdaptyUIAction {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIAction$CustomAction;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIAction$CustomAction;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIAction$CustomAction;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAction ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIAction$OpenUrlAction : com/adapty/kmp/models/AdaptyUIAction {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIDialog {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIDialog;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIDialog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIDialog;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/lang/String;
+	public final fun getPrimaryActionTitle ()Ljava/lang/String;
+	public final fun getSecondaryActionTitle ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIDialogActionType : java/lang/Enum {
+	public static final field PRIMARY Lcom/adapty/kmp/models/AdaptyUIDialogActionType;
+	public static final field SECONDARY Lcom/adapty/kmp/models/AdaptyUIDialogActionType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIDialogActionType;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyUIDialogActionType;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIIOSPresentationStyle : java/lang/Enum {
+	public static final field FULLSCREEN Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;
+	public static final field PAGESHEET Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIOnboardingMeta {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;II)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;II)Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;Ljava/lang/String;IIILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOnboardingId ()Ljava/lang/String;
+	public final fun getScreenClientId ()Ljava/lang/String;
+	public final fun getScreenIndex ()I
+	public final fun getScreensTotal ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIOnboardingView {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIOnboardingView;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIOnboardingView;
+	public final fun dismiss (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getPlacementId ()Ljava/lang/String;
+	public final fun getVariationId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isStandaloneView ()Z
+	public final fun present (Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun present$default (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun showDialog$default (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIPaywallView {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIPaywallView;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIPaywallView;
+	public final fun dismiss (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getPlacementId ()Ljava/lang/String;
+	public final fun getVariationId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun present (Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun present$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun showDialog$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyWebPresentation : java/lang/Enum {
+	public static final field EXTERNAL_BROWSER Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public static final field IN_APP_BROWSER Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyWebPresentation;
+}
+

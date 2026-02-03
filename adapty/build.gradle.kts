@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.konan.target.KonanTarget
 
@@ -21,6 +24,16 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    jvm()
+    wasmJs {
+        browser()
+    }
+    js(IR) {
+        nodejs()
+        browser()
+        binaries.library()
+    }
 
 
 
@@ -77,6 +90,10 @@ kotlin {
                 implementation(libs.adapty.android.ui)
                 implementation(libs.adapty.internal.crossplatform)
             }
+        }
+
+        webMain.dependencies {
+            implementation(libs.kotlinx.browser)
         }
     }
 }
