@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class AdaptyIdentifyRequest(
-    @SerialName("customer_user_id") val customerUserId: String
+    @SerialName("customer_user_id") val customerUserId: String,
+    @SerialName("parameters") val parameters: AdaptyCustomerIdentityRequest? = null
 )

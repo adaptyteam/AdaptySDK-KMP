@@ -49,7 +49,6 @@ internal inline fun <reified Request, reified Response> AdaptyPlugin.execute(
         )
     }
 }
-
 internal suspend inline fun <reified Request, reified Response> AdaptyPlugin.awaitExecute(
     method: AdaptyPluginMethod,
     request: Request

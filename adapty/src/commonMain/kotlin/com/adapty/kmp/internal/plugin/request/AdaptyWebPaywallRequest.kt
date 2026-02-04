@@ -7,14 +7,27 @@ import kotlinx.serialization.Serializable
 internal data class AdaptyWebPaywallRequest private constructor(
     @SerialName("product") val paywallProduct: AdaptyPaywallProductRequest? = null,
     @SerialName("paywall") val paywall: AdaptyPaywallRequestResponse? = null,
+    @SerialName("open_in") val webPresentationRequest: AdaptyWebPresentationRequest? = null,
 ) {
     companion object {
-        fun fromPaywall(paywall: AdaptyPaywallRequestResponse): AdaptyWebPaywallRequest {
-            return AdaptyWebPaywallRequest(paywall = paywall)
+        fun fromPaywall(
+            paywall: AdaptyPaywallRequestResponse,
+            webPresentationRequest: AdaptyWebPresentationRequest? = null
+        ): AdaptyWebPaywallRequest {
+            return AdaptyWebPaywallRequest(
+                paywall = paywall,
+                webPresentationRequest = webPresentationRequest
+            )
         }
 
-        fun fromPaywallProduct(product: AdaptyPaywallProductRequest): AdaptyWebPaywallRequest {
-            return AdaptyWebPaywallRequest(paywallProduct = product)
+        fun fromPaywallProduct(
+            product: AdaptyPaywallProductRequest,
+            webPresentationRequest: AdaptyWebPresentationRequest? = null
+        ): AdaptyWebPaywallRequest {
+            return AdaptyWebPaywallRequest(
+                paywallProduct = product,
+                webPresentationRequest = webPresentationRequest
+            )
         }
     }
 }

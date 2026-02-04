@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyPaywallViewEventDidFailRenderingResponse(
     @SerialName("view")
-    val view: AdaptyUIViewResponse,
+    val view: AdaptyUIPaywallViewResponse,
 
     @SerialName("error")
     val error: AdaptyPluginErrorResponse,

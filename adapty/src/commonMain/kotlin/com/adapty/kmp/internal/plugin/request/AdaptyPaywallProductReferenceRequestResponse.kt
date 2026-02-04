@@ -12,6 +12,12 @@ internal data class AdaptyPaywallProductReferenceRequestResponse(
     @SerialName("adapty_product_id")
     val adaptyProductId: String,
 
+    @SerialName("product_type")
+    val productType: String?,
+
+    @SerialName("access_level_id")
+    val accessLevelId: String?,
+
     @SerialName("promotional_offer_id")
     val promotionalOfferId: String? = null, // iOS Only
 
@@ -29,6 +35,8 @@ internal fun AdaptyPaywallProductReferenceRequestResponse.asAdaptyPaywallProduct
     return AdaptyPaywallProductReference(
         vendorId = this.vendorProductId,
         adaptyProductId = this.adaptyProductId,
+        productType = this.productType,
+        accessLevelId = this.accessLevelId,
         promotionalOfferId = this.promotionalOfferId,
         winBackOfferId = this.winBackOfferId,
         basePlanId = this.basePlanId,
@@ -40,6 +48,8 @@ internal fun AdaptyPaywallProductReference.asAdaptyPaywallProductReferenceReques
     return AdaptyPaywallProductReferenceRequestResponse(
         vendorProductId = this.vendorId,
         adaptyProductId = this.adaptyProductId,
+        productType = this.productType,
+        accessLevelId = this.accessLevelId,
         promotionalOfferId = this.promotionalOfferId,
         winBackOfferId = this.winBackOfferId,
         basePlanId = this.basePlanId,

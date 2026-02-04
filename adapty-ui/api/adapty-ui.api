@@ -1,0 +1,8 @@
+public final class com/adapty/kmp/ui/AdaptyUIOnboardingPlatformViewKt {
+	public static final fun AdaptyUIOnboardingPlatformView (Lcom/adapty/kmp/models/AdaptyOnboarding;Landroidx/compose/ui/Modifier;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/adapty/kmp/ui/AdaptyUIPaywallPlatformViewKt {
+	public static final fun AdaptyUIPaywallPlatformView (Lcom/adapty/kmp/models/AdaptyPaywall;Landroidx/compose/ui/Modifier;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+}
+

@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class AdaptyUIPresentViewRequest(
-    @SerialName("id") val id: String
+    @SerialName("id") val id: String,
+    @SerialName("ios_presentation_style") val iosPresentationStyle: AdaptyUIIOSPresentationStyleRequest
 )

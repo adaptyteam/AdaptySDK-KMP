@@ -1,16 +1,27 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.adapty.exampleapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adapty.kmp.Adapty
 import com.adapty.kmp.AdaptyUI
+import com.adapty.kmp.OnInstallationDetailsListener
+import com.adapty.kmp.models.AdaptyCustomAsset
+import com.adapty.kmp.models.AdaptyError
+import com.adapty.kmp.models.AdaptyInstallationDetails
+import com.adapty.kmp.models.AdaptyInstallationStatusDetermined
+import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
+import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
+import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
+import kmpadapty.example.composeapp.generated.resources.Res
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,10 +29,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 class AppViewModel : ViewModel() {
 
@@ -41,8 +54,23 @@ class AppViewModel : ViewModel() {
         delay(1000) //Adapty Initialization takes some time
         checkIfAdaptyIsActivated()
         Adapty.setOnProfileUpdatedListener { profile ->
-            _uiState.value = _uiState.value.copy(adaptyProfile = profile)
+            _uiState.update { it.copy(isLoading = false, adaptyProfile = profile) }
         }
+        Adapty.setOnInstallationDetailsListener(object : OnInstallationDetailsListener {
+            override fun onInstallationDetailsSuccess(details: AdaptyInstallationDetails) {
+                AppLogger.d("Installation details event : $details")
+                _uiState.update {
+                    it.copy(
+                        installationStatus = AdaptyInstallationStatusDetermined(details = details)
+                    )
+                }
+            }
+
+            override fun onInstallationDetailsFailure(error: AdaptyError) {
+                AppLogger.e("Installation details error: $error")
+            }
+
+        })
         reloadProfile()
 //        loadExamplePaywallAndProducts()
 //        loadSavedPaywalls()
@@ -129,7 +157,7 @@ class AppViewModel : ViewModel() {
 
             is AppUiEvent.OnClickLogShowPaywall -> {
                 AppLogger.d("Invoking Log Show Paywall: ${event.paywall}")
-                Adapty.logShowPaywall(paywall = event.paywall).onError {error ->
+                Adapty.logShowPaywall(paywall = event.paywall).onError { error ->
                     AppLogger.d("Log Show Paywall Error: $error")
                 }
             }
@@ -160,16 +188,67 @@ class AppViewModel : ViewModel() {
                 loadSavedPaywalls()
             }
 
+            is AppUiEvent.OnClickPresentPaywallView -> {
+                presentPaywallView(paywall = event.paywall)
+            }
+
             is AppUiEvent.CreateAndPresentPaywallView -> createAndPresentPaywallView(
                 paywall = event.paywall,
-                loadProducts = event.loadProducts
+                loadProducts = event.loadProducts,
+                iosPresentationStyle = event.iosPresentationStyle
             )
+
+            is AppUiEvent.OnNewOnboardingIdAdded -> {
+                _uiState.update { currentState ->
+                    currentState.copy(savedOnboardingIds = setOf(event.onboardingId) + currentState.savedOnboardingIds)
+                }
+                loadSavedOnBoardings()
+            }
+
+            is AppUiEvent.OnChangeOnboardingLocale -> {
+                _uiState.update { currentState ->
+                    currentState.copy(onboardingLocale = event.locale)
+                }
+            }
+
+            is AppUiEvent.OnClickPresentOnboarding -> createAndPresentOnboarding(
+                onboarding = event.onboarding,
+                presentationStyle = event.presentationStyle,
+                externalUrlsPresentation = event.externalUrlsPresentation
+            )
+
+            is AppUiEvent.OnClickPresentOnboardingNativeView -> showOnboardingNativeView(event.onboarding)
+            is AppUiEvent.OnClickPresentPaywallNativeView -> showNativePaywallView(event.paywall)
+            AppUiEvent.OnToggleOnboardingShowToastEvents -> {
+                _uiState.update { currentState ->
+                    currentState.copy(showOnboardingToastEvents = !currentState.showOnboardingToastEvents)
+                }
+            }
+
+            AppUiEvent.OnClickUpdateInstallationDetails -> {
+                getCurrentInstallationStatus()
+            }
+
+            AppUiEvent.OnCloseNativeOnboardingView -> {
+                _uiState.update { it.copy(nativeOnboardingView = null) }
+            }
+
+            AppUiEvent.OnCloseNativePaywallView -> {
+                _uiState.update { it.copy(nativePaywallView = null) }
+            }
+
         }
     }
 
     private fun loadSavedPaywalls() = viewModelScope.launch {
         _uiState.value.savedPaywallIds.forEach { id ->
             loadPaywallData(id)
+        }
+    }
+
+    private fun loadSavedOnBoardings() = viewModelScope.launch {
+        _uiState.value.savedOnboardingIds.forEach { id ->
+            loadOnboardingData(id)
         }
     }
 
@@ -190,11 +269,66 @@ class AppViewModel : ViewModel() {
 
     }
 
-    private fun createAndPresentPaywallView(paywall: AdaptyPaywall, loadProducts: Boolean) =
+    private fun loadOnboardingData(id: String) = viewModelScope.launch {
+        Adapty.getOnboarding(
+            placementId = id,
+            locale = _uiState.value.onboardingLocale.takeIf { !it.isNullOrBlank() }
+        ).onSuccess {
+            _uiState.update { currentUiState ->
+                val updatedOnboardings = currentUiState.savedOnboardings.toMutableMap()
+                updatedOnboardings[id] = it
+                currentUiState.copy(savedOnboardings = updatedOnboardings)
+            }
+        }.onError { error ->
+            AppLogger.e("Error loading onboarding: $error")
+            _uiState.update { it.copy(error = error) }
+        }
+
+    }
+
+    private fun presentPaywallView(paywall: AdaptyPaywall) =
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            AdaptyUI.createPaywallView(paywall = paywall)
+                .onSuccess { view -> view.present() }
+                .onError { error -> _uiState.update { it.copy(error = error) } }
+            _uiState.update { it.copy(isLoading = false) }
+        }
+
+
+    @OptIn(ExperimentalResourceApi::class)
+    private fun createAndPresentPaywallView(
+        paywall: AdaptyPaywall,
+        loadProducts: Boolean,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle
+    ) =
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            val view = AdaptyUI.createPaywallView(
+            val localImageResourcePath = Res.getUri("files/images/Walter_White.png")
+            val localVideoResourcePath = Res.getUri("files/videos/demo_video.mp4")
+            val imageByteData = Res.readBytes("files/images/Walter_White.png")
+
+            val customAssets: Map<String, AdaptyCustomAsset> = mapOf(
+//                "hero_image" to AdaptyCustomAsset.localImageResource(
+//                    path = localImageResourcePath
+//                ),
+//                "hero_image" to AdaptyCustomAsset.localImageData(
+//                    data = imageByteData
+//                ),
+                "hero_video" to AdaptyCustomAsset.localVideoFile(
+                    path = localVideoResourcePath
+                ),
+//                "custom_color_orange" to AdaptyCustomAsset.color(
+//                    colorHex = "#FFFFA500"
+//                ),
+//                "custom_bright_gradient" to AdaptyCustomAsset.linearGradient(
+//                    colors = listOf(""),
+//                )
+            )
+
+
+            AdaptyUI.createPaywallView(
                 paywall = paywall,
                 preloadProducts = loadProducts,
                 customTags = mapOf(
@@ -218,9 +352,13 @@ class AppViewModel : ViewModel() {
                         .toLocalDateTime(TimeZone.UTC),
                     "CUSTOM_TIMER_5S" to Clock.System.now().plus(5.seconds)
                         .toLocalDateTime(TimeZone.UTC)
-                )
-            )
-            view?.present()
+                ),
+                customAssets = customAssets
+            ).onSuccess { view ->
+                view.present(iosPresentationStyle = iosPresentationStyle)
+            }.onError { error ->
+                _uiState.update { it.copy(error = error) }
+            }
             _uiState.update { it.copy(isLoading = false) }
         }
 
@@ -316,7 +454,7 @@ class AppViewModel : ViewModel() {
             .onSuccess {
                 _uiState.update { it.copy(isLoading = false) }
             }
-            .onError {error ->
+            .onError { error ->
                 AppLogger.e("Profile update error: $error")
                 _uiState.update { it.copy(error = error, isLoading = false) }
             }
@@ -331,6 +469,17 @@ class AppViewModel : ViewModel() {
                 _uiState.update { it.copy(adaptyProfile = adaptyProfile, isLoading = false) }
             }.onError { adaptyError ->
                 _uiState.update { it.copy(error = adaptyError, isLoading = false) }
+            }
+    }
+
+    private fun getCurrentInstallationStatus() = viewModelScope.launch(exceptionHandler) {
+        AppLogger.d("Getting current installation status...")
+        Adapty.getCurrentInstallationStatus()
+            .onSuccess { installationStatus ->
+                AppLogger.d("Current Installation status is : $installationStatus")
+                _uiState.update { it.copy(installationStatus = installationStatus) }
+            }.onError { adaptyError ->
+                AppLogger.e("Error getting current installation status: $adaptyError")
             }
     }
 
@@ -410,6 +559,30 @@ class AppViewModel : ViewModel() {
                     }
                 }
         }
+    }
+
+    private fun createAndPresentOnboarding(
+        onboarding: AdaptyOnboarding,
+        presentationStyle: AdaptyUIIOSPresentationStyle,
+        externalUrlsPresentation: AdaptyWebPresentation
+    ) = viewModelScope.launch {
+        _uiState.update { it.copy(isLoadingOnboard = true) }
+        AdaptyUI
+            .createOnboardingView(onboarding = onboarding, externalUrlsPresentation = externalUrlsPresentation)
+            .onSuccess { view -> view.present(iosPresentationStyle = presentationStyle) }
+            .onError { adaptyError ->
+                _uiState.update { currentState -> currentState.copy(error = adaptyError) }
+            }
+
+        _uiState.update { it.copy(isLoadingOnboard = false) }
+    }
+
+    private fun showOnboardingNativeView(onboarding: AdaptyOnboarding) = viewModelScope.launch {
+        _uiState.update { it.copy(nativeOnboardingView = onboarding) }
+    }
+
+    private fun showNativePaywallView(paywall: AdaptyPaywall) = viewModelScope.launch {
+        _uiState.update { it.copy(nativePaywallView = paywall) }
     }
 
 

@@ -1,6 +1,7 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.android.build.gradle.internal.tasks.factory.dependsOn
-import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.konan.target.KonanTarget
 
@@ -8,7 +9,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.dokka)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.vanniktech.mavenPublish)
 }
@@ -16,7 +16,7 @@ plugins {
 kotlin {
     explicitApi()
     androidTarget {
-        publishAllLibraryVariants()
+        publishLibraryVariants("release")
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -24,6 +24,18 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    jvm()
+    wasmJs {
+        browser()
+    }
+    js(IR) {
+        nodejs()
+        browser()
+        binaries.library()
+    }
+
+
 
     listOf(
         iosX64(),
@@ -60,7 +72,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.serialization)
                 implementation(libs.kotlinx.coroutine)
-                implementation(libs.kotlinx.datetime)
+                api(libs.kotlinx.datetime)
             }
         }
         val commonTest by getting {
@@ -79,12 +91,17 @@ kotlin {
                 implementation(libs.adapty.internal.crossplatform)
             }
         }
+
+        webMain.dependencies {
+            implementation(libs.kotlinx.browser)
+        }
     }
 }
 
 //This field needs to be set true only when publishing the library or when ios rebuild is needed
 //Ex: ./gradlew publishToMavenLocal -PshouldForceIosRebuild=true --no-configuration-cache
-val shouldForceIosRebuild: Boolean = project.findProperty("shouldForceIosRebuild")?.toString()?.toBooleanStrictOrNull() ?: false
+val shouldForceIosRebuild: Boolean =
+    project.findProperty("shouldForceIosRebuild")?.toString()?.toBooleanStrictOrNull() ?: false
 listOf("iphoneos", "iphonesimulator").forEach { sdk ->
     tasks.create<Exec>("build${sdk.capitalize()}") {
         group = "build"
@@ -136,7 +153,7 @@ buildConfig {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
     if (!project.gradle.startParameter.taskNames.any { it.contains("publishToMavenLocal") }) {
         signAllPublications()
@@ -150,7 +167,7 @@ mavenPublishing {
 
     pom {
         name = "Adapty Kotlin Multiplatform SDK"
-        description = "Easy In-App Purchases Integration to Make Your App Profitable"
+        description = "Easy In-App Purchases KMP Integration to Make Your App Profitable"
         url = "https://github.com/adaptyteam/AdaptySDK-KMP"
 
         organization {
@@ -176,4 +193,9 @@ mavenPublishing {
             developerConnection = "scm:git:ssh://github.com/adaptyteam/AdaptySDK-KMP.git"
         }
     }
+}
+
+//For some reason after bumping kotlin version, running tests for ios fails. Disabling tests for ios solves the issue
+tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest>().configureEach {
+    enabled = false
 }

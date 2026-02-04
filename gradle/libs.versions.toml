@@ -1,33 +1,26 @@
 [versions]
-agp = "8.7.3"
-android-compileSdk = "35"
+agp = "8.12.3"
+android-compileSdk = "36"
 android-minSdk = "24"
-android-targetSdk = "35"
-androidx-activityCompose = "1.10.1"
-androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.2.1"
-androidx-core-ktx = "1.15.0"
-androidx-lifecycle = "2.8.4"
-androidx-material = "1.12.0"
-adapty-bom = "3.6.3"
-adapty-internal-crossplatform="3.6.2"
-compose-multiplatform = "1.7.3"
+android-targetSdk = "36"
+androidx-activityCompose = "1.11.0"
+androidx-lifecycle = "2.9.4"
+adapty-bom = "3.15.2"
+adapty-internal-crossplatform="3.15.3"
+compose-multiplatform = "1.9.1"
 dokka = "2.0.0"
-kotlin = "2.1.10"
-kotlinx-binary-validator = "0.16.3"
-kotlinx-coroutine = "1.10.1"
-mavenPublish = "0.31.0"
+kotlin = "2.2.21"
+kotlinx-binary-validator = "0.18.1"
+kotlinx-coroutine = "1.10.2"
+mavenPublish = "0.34.0"
 androidx-startup-runtime = "1.2.0"
-kotlinx-json-serialization = "1.8.1"
-kotlinx-datetime = "0.6.2"
-buildConfig = "5.4.0"
+kotlinx-json-serialization = "1.9.0"
+kotlinx-datetime = "0.7.1"
+kotlinx-browser = "0.5.0"
+buildConfig = "5.7.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
-androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup-runtime" }
@@ -41,6 +34,9 @@ kotlinx-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", 
 kotlinx-coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutine" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-json-serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser" }
+kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutine" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
