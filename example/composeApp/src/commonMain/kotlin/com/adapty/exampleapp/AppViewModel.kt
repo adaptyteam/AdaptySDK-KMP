@@ -21,7 +21,6 @@ import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
-import kmpadapty.example.composeapp.generated.resources.Res
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +30,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -296,7 +294,6 @@ class AppViewModel : ViewModel() {
         }
 
 
-    @OptIn(ExperimentalResourceApi::class)
     private fun createAndPresentPaywallView(
         paywall: AdaptyPaywall,
         loadProducts: Boolean,
@@ -305,9 +302,6 @@ class AppViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            val localImageResourcePath = Res.getUri("files/images/Walter_White.png")
-            val localVideoResourcePath = Res.getUri("files/videos/demo_video.mp4")
-            val imageByteData = Res.readBytes("files/images/Walter_White.png")
 
             val customAssets: Map<String, AdaptyCustomAsset> = mapOf(
 //                "hero_image" to AdaptyCustomAsset.localImageResource(
@@ -316,9 +310,9 @@ class AppViewModel : ViewModel() {
 //                "hero_image" to AdaptyCustomAsset.localImageData(
 //                    data = imageByteData
 //                ),
-                "hero_video" to AdaptyCustomAsset.localVideoFile(
-                    path = localVideoResourcePath
-                ),
+//                "hero_video" to AdaptyCustomAsset.localVideoFile(
+//                    path = localVideoResourcePath
+//                ),
 //                "custom_color_orange" to AdaptyCustomAsset.color(
 //                    colorHex = "#FFFFA500"
 //                ),

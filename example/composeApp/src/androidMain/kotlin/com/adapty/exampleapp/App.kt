@@ -26,6 +26,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,13 +40,6 @@ import com.adapty.exampleapp.screens.PaywallNativeViewScreen
 import com.adapty.exampleapp.screens.PaywallsScreen
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.models.AdaptyError
-import kmpadapty.example.composeapp.generated.resources.Res
-import kmpadapty.example.composeapp.generated.resources.ic_home
-import kmpadapty.example.composeapp.generated.resources.ic_info
-import kmpadapty.example.composeapp.generated.resources.ic_shopping_cart
-import kmpadapty.example.composeapp.generated.resources.ic_star
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,10 +72,10 @@ fun App() {
         var selectedTab by rememberSaveable { mutableStateOf(0) }
         val tabs = listOf("General", "Paywalls", "Onboardings", "Logs")
         val icons = listOf(
-            Res.drawable.ic_home,
-            Res.drawable.ic_shopping_cart,
-            Res.drawable.ic_star,
-            Res.drawable.ic_info
+            R.drawable.ic_home,
+            R.drawable.ic_shopping_cart,
+            R.drawable.ic_star,
+            R.drawable.ic_info
         )
 
         Scaffold(

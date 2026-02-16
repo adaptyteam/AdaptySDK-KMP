@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.adapty.exampleapp.AppLogger
@@ -46,10 +47,7 @@ import com.adapty.kmp.Adapty
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.exceptionOrNull
 import com.adapty.kmp.models.getOrNull
-import kmpadapty.example.composeapp.generated.resources.Res
-import kmpadapty.example.composeapp.generated.resources.ic_close
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
@@ -254,7 +252,7 @@ fun ListTextFieldTile(
         trailingIcon = {
             if (value.isNotEmpty()) {
                 IconButton(onClick = { onChanged?.invoke("") }) {
-                    Icon(painterResource(Res.drawable.ic_close), contentDescription = "Clear")
+                    Icon(painterResource(com.adapty.exampleapp.R.drawable.ic_close), contentDescription = "Clear")
                 }
             }
         }

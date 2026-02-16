@@ -13,7 +13,7 @@ object AppInitializer {
 
     fun initialize() {
         AppLogger.initialize()
-        val adaptyKey:String = BuildConfig.ADAPTY_API_KEY?: "ADAPTY_API_KEY_HERE"
+        val adaptyKey:String = BuildConfig.ADAPTY_API_KEY?: "public_live_QzY2YBrm.j0U3MNaKe2HAgeK4XV13"
         MainScope().launch {
 
             Adapty.activate(
