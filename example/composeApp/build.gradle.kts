@@ -25,6 +25,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
+            export("io.adapty:adapty-kmp:3.15.0")
             baseName = "ComposeApp"
             isStatic = true
         }
@@ -60,7 +61,8 @@ kotlin {
         }
         commonMain.dependencies {
 
-            implementation(projects.adapty)
+//            implementation(projects.adapty)
+            api("io.adapty:adapty-kmp:3.15.0")
 //            implementation(projects.adaptyUi)
 //            implementation(compose.runtime)
 //            implementation(compose.foundation)
