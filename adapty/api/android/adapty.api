@@ -739,6 +739,7 @@ public final class com/adapty/kmp/models/AdaptyPaywallProduct {
 	public final fun component13 ()Ljava/lang/String;
 	public final fun component14 ()Lcom/adapty/kmp/models/AdaptyPrice;
 	public final fun component15 ()Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;
+	public final fun component16 ()Ljava/lang/String;
 	public final fun component3 ()I
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
@@ -746,8 +747,8 @@ public final class com/adapty/kmp/models/AdaptyPaywallProduct {
 	public final fun component7 ()Ljava/lang/String;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lcom/adapty/kmp/models/AdaptyPrice;Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallProduct;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lcom/adapty/kmp/models/AdaptyPrice;Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallProduct;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lcom/adapty/kmp/models/AdaptyPrice;Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallProduct;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Lcom/adapty/kmp/models/AdaptyPrice;Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallProduct;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAccessLevelId ()Ljava/lang/String;
 	public final fun getAudienceName ()Ljava/lang/String;
@@ -762,6 +763,7 @@ public final class com/adapty/kmp/models/AdaptyPaywallProduct {
 	public final fun getRegionCode ()Ljava/lang/String;
 	public final fun getSubscription ()Lcom/adapty/kmp/models/AdaptyPaywallProductSubscription;
 	public final fun getVendorProductId ()Ljava/lang/String;
+	public final fun getWebPurchaseUrl ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isFamilyShareable ()Z
 	public fun toString ()Ljava/lang/String;

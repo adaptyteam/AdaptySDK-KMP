@@ -12,6 +12,12 @@ internal data class AdaptyPaywallProductRequest(
     @SerialName("adapty_product_id")
     val adaptyProductId: String,
 
+    @SerialName("access_level_id")
+    val accessLevelId: String?,
+
+    @SerialName("product_type")
+    val productType: String?,
+
     @SerialName("paywall_product_index")
     val paywallProductIndex: Int,
 
@@ -27,6 +33,9 @@ internal data class AdaptyPaywallProductRequest(
     @SerialName("paywall_name")
     val paywallName: String,
 
+    @SerialName("web_purchase_url")
+    val webPurchaseUrl: String? = null,
+
     @SerialName("payload_data")
     val payloadData: String? = null
 )
@@ -41,6 +50,9 @@ internal fun AdaptyPaywallProduct.asAdaptyPaywallProductRequest(): AdaptyPaywall
         paywallVariationId = paywallVariationId,
         paywallABTestName = paywallABTestName,
         paywallName = paywallName,
-        payloadData = payloadData
+        payloadData = payloadData,
+        accessLevelId = accessLevelId,
+        productType = productType,
+        webPurchaseUrl = webPurchaseUrl
     )
 }

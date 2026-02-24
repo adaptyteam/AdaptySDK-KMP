@@ -43,6 +43,7 @@ public data class AdaptyPaywallProduct internal constructor(
     val regionCode: String? = null,
     val price: AdaptyPrice,
     val subscription: AdaptyPaywallProductSubscription? = null,
+    val webPurchaseUrl: String? = null,
     internal val payloadData: String? = null
 )
 
