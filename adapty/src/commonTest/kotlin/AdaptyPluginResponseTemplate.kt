@@ -227,7 +227,6 @@ object AdaptyPluginResponseTemplate {
                     put("paywall_variation_id", product.paywallVariationId)
                     put("paywall_ab_test_name", product.paywallABTestName)
                     put("paywall_name", product.paywallName)
-                    put("audience_name", product.audienceName)
                     put("localized_description", product.localizedDescription)
                     put("localized_title", product.localizedTitle)
                     put("is_family_shareable", product.isFamilyShareable)
@@ -243,6 +242,7 @@ object AdaptyPluginResponseTemplate {
                         put("subscription", buildSubscriptionJson(sub))
                     }
 
+                    put("web_purchase_url", product.webPurchaseUrl)
                     put("payload_data", product.payloadData)
                 })
             }

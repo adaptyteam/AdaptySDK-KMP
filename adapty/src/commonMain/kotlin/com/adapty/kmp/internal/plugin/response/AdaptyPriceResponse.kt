@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyPriceResponse(
     @SerialName("amount")
-    val amount: Float,
+    val amount: Double,
     @SerialName("currency_code")
     val currencyCode: String? = null,
     @SerialName("currency_symbol")

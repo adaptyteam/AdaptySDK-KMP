@@ -13,10 +13,10 @@ internal data class AdaptyPaywallProductRequest(
     val adaptyProductId: String,
 
     @SerialName("access_level_id")
-    val accessLevelId: String?,
+    val accessLevelId: String,
 
     @SerialName("product_type")
-    val productType: String?,
+    val productType: String,
 
     @SerialName("paywall_product_index")
     val paywallProductIndex: Int,
