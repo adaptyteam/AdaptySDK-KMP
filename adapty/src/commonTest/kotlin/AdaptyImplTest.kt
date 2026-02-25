@@ -294,7 +294,7 @@ class AdaptyImplTest {
                 transactionId = AdaptyFakeTestData.TRANSACTION_ID,
                 variationId = AdaptyFakeTestData.VARIATION_ID,
             ),
-            expectedSuccessData = AdaptyFakeTestData.getProfile(),
+            expectedSuccessData = Unit,
         )
     }
 

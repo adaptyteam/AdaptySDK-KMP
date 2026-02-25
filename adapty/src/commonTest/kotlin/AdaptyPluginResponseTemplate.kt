@@ -38,7 +38,7 @@ object AdaptyPluginResponseTemplate {
             }
 
             AdaptyPluginMethod.MAKE_PURCHASE -> getSuccessPurchaseResultResponse(successData as AdaptyPurchaseResult)
-            AdaptyPluginMethod.REPORT_TRANSACTION -> getSuccessReportTransactionResponse(successData as AdaptyProfile)
+            AdaptyPluginMethod.REPORT_TRANSACTION -> genericSuccessResponse()
             AdaptyPluginMethod.SET_FALLBACK -> genericSuccessResponse()
             AdaptyPluginMethod.LOG_SHOW_PAYWALL -> genericSuccessResponse()
             AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getSuccessPaywallResponse(
@@ -344,11 +344,6 @@ object AdaptyPluginResponseTemplate {
         }
         return buildSuccessJsonString(resultJson)
     }
-
-    private fun getSuccessReportTransactionResponse(adaptyProfile: AdaptyProfile): String {
-        return buildSuccessJsonString(buildProfileJson(adaptyProfile = adaptyProfile))
-    }
-
 
     private fun buildSuccessJsonString(jsonElement: JsonElement): String {
         val successDataJson = buildJsonObject {
