@@ -182,7 +182,7 @@ class AdaptyImplTest {
             param = AdaptyGetPaywallRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
                 locale = AdaptyFakeTestData.LOCALE,
-                loadTimeoutInSeconds = 30,
+                loadTimeoutInSeconds = 30.0,
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
             expectedSuccessData = AdaptyFakeTestData.getPaywall()

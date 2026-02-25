@@ -151,7 +151,7 @@ internal class AdaptyImpl(
                 placementId = placementId,
                 locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
-                loadTimeoutInSeconds = loadTimeout.inWholeSeconds
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
             )
         ).asAdaptyResult { it.asAdaptyPaywall() }
 
@@ -389,7 +389,7 @@ internal class AdaptyImpl(
                 placementId = placementId,
                 locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
-                loadTimeoutInSeconds = loadTimeout.inWholeSeconds
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
             )
         ).asAdaptyResult { it.asAdaptyOnboarding() }
 

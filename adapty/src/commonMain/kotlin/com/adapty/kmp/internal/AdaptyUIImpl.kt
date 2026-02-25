@@ -157,7 +157,7 @@ internal class AdaptyUIImpl(
             method = AdaptyPluginMethod.CREATE_PAYWALL_VIEW,
             request = AdaptyUICreatePaywallViewRequest(
                 paywall = paywall.asAdaptyPaywallRequest(),
-                loadTimeOutInSeconds = loadTimeout?.inWholeSeconds,
+                loadTimeOutInSeconds = loadTimeout?.inWholeMilliseconds?.toDouble()?.div(1000.0),
                 preloadProducts = preloadProducts,
                 customTags = customTags,
                 customTimers = customTimers?.asAdaptyValidDateTimeFormat(),
