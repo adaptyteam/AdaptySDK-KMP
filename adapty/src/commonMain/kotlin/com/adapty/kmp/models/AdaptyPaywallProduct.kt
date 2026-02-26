@@ -13,7 +13,6 @@ package com.adapty.kmp.models
  * @property paywallVariationId Variation ID of the parent paywall.
  * @property paywallABTestName A/B test name of the parent paywall.
  * @property paywallName Name of the parent paywall.
- * @property audienceName Optional audience name for targeted paywalls.
  * @property localizedDescription Description of the product in the user's storefront language.
  * The description's language is determined by the storefront that the user's device is connected to,
  * not the preferred language set on the device.
@@ -31,18 +30,18 @@ public data class AdaptyPaywallProduct internal constructor(
     val vendorProductId: String,
     internal val adaptyProductId: String,
     val paywallProductIndex: Int,
-    val productType: String?,
-    val accessLevelId: String?,
+    val productType: String,
+    val accessLevelId: String,
     val paywallVariationId: String,
     val paywallABTestName: String,
     val paywallName: String,
-    val audienceName: String? = null,
     val localizedDescription: String,
     val localizedTitle: String,
     val isFamilyShareable: Boolean,
     val regionCode: String? = null,
     val price: AdaptyPrice,
     val subscription: AdaptyPaywallProductSubscription? = null,
+    val webPurchaseUrl: String? = null,
     internal val payloadData: String? = null
 )
 

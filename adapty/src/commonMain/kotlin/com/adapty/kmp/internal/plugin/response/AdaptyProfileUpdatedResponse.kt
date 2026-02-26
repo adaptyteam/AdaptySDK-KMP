@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyProfileUpdatedResponse(
     @SerialName("profile")
-    val profile: AdaptyProfileResponse? = null
+    val profile: AdaptyProfileResponse
 )

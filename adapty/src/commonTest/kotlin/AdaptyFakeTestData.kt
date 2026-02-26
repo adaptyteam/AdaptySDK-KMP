@@ -136,7 +136,7 @@ internal object AdaptyFakeTestData {
         val price = AdaptyPrice(
             currencyCode = "USD",
             currencySymbol = "$",
-            amount = 9.99f,
+            amount = 9.99,
             localizedString = "$9.99"
         )
 
@@ -179,7 +179,6 @@ internal object AdaptyFakeTestData {
             paywallProductIndex = 1,
             paywallABTestName = "main_test",
             paywallName = "Main Paywall",
-            audienceName = "main_audience",
             localizedDescription = "Full access to premium features.",
             localizedTitle = "Premium Monthly",
             isFamilyShareable = true,
@@ -189,6 +188,7 @@ internal object AdaptyFakeTestData {
             payloadData = null,
             accessLevelId = "accessLevelId",
             productType = "productType",
+            webPurchaseUrl = "https://example.com",
         )
 
         return listOf(product)

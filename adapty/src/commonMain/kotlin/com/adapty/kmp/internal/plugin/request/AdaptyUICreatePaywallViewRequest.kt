@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyUICreatePaywallViewRequest(
     @SerialName("paywall") val paywall: AdaptyPaywallRequestResponse,
-    @SerialName("load_timeout") val loadTimeOutInSeconds: Long?,
+    @SerialName("load_timeout") val loadTimeOutInSeconds: Double?,
     @SerialName("preload_products") val preloadProducts: Boolean = false,
     @SerialName("custom_tags") val customTags: Map<String, String>? = null,
     @SerialName("custom_timers") val customTimers: Map<String, String>? = null,

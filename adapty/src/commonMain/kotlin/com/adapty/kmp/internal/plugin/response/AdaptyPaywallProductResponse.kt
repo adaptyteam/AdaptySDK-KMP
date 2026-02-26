@@ -19,19 +19,16 @@ internal data class AdaptyPaywallProductResponse(
     val paywallVariationId: String,
 
     @SerialName("product_type")
-    val productType: String?,
+    val productType: String,
 
     @SerialName("access_level_id")
-    val accessLevelId: String?,
+    val accessLevelId: String,
 
     @SerialName("paywall_ab_test_name")
     val paywallAbTestName: String,
 
     @SerialName("paywall_name")
     val paywallName: String,
-
-    @SerialName("audience_name")
-    val audienceName: String? = null,
 
     @SerialName("localized_description")
     val localizedDescription: String,
@@ -51,6 +48,9 @@ internal data class AdaptyPaywallProductResponse(
     @SerialName("subscription")
     val subscription: AdaptyPaywallProductSubscriptionResponse? = null,
 
+    @SerialName("web_purchase_url")
+    val webPurchaseUrl: String? = null,
+
     @SerialName("payload_data")
     val payloadData: String? = null
 )
@@ -64,7 +64,6 @@ internal fun AdaptyPaywallProductResponse.asAdaptyPaywallProduct(): AdaptyPaywal
         paywallProductIndex = paywallProductIndex,
         paywallABTestName = paywallAbTestName,
         paywallName = paywallName,
-        audienceName = audienceName,
         paywallVariationId = paywallVariationId,
         localizedDescription = localizedDescription,
         localizedTitle = localizedTitle,
@@ -72,6 +71,7 @@ internal fun AdaptyPaywallProductResponse.asAdaptyPaywallProduct(): AdaptyPaywal
         regionCode = regionCode,
         price = price.asAdaptyPrice(),
         subscription = subscription?.asAdaptyPaywallProductSubscription(),
+        webPurchaseUrl = webPurchaseUrl,
         payloadData = payloadData,
     )
 }

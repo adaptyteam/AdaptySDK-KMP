@@ -38,7 +38,7 @@ object AdaptyPluginResponseTemplate {
             }
 
             AdaptyPluginMethod.MAKE_PURCHASE -> getSuccessPurchaseResultResponse(successData as AdaptyPurchaseResult)
-            AdaptyPluginMethod.REPORT_TRANSACTION -> getSuccessReportTransactionResponse(successData as AdaptyProfile)
+            AdaptyPluginMethod.REPORT_TRANSACTION -> genericSuccessResponse()
             AdaptyPluginMethod.SET_FALLBACK -> genericSuccessResponse()
             AdaptyPluginMethod.LOG_SHOW_PAYWALL -> genericSuccessResponse()
             AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getSuccessPaywallResponse(
@@ -227,7 +227,6 @@ object AdaptyPluginResponseTemplate {
                     put("paywall_variation_id", product.paywallVariationId)
                     put("paywall_ab_test_name", product.paywallABTestName)
                     put("paywall_name", product.paywallName)
-                    put("audience_name", product.audienceName)
                     put("localized_description", product.localizedDescription)
                     put("localized_title", product.localizedTitle)
                     put("is_family_shareable", product.isFamilyShareable)
@@ -243,6 +242,7 @@ object AdaptyPluginResponseTemplate {
                         put("subscription", buildSubscriptionJson(sub))
                     }
 
+                    put("web_purchase_url", product.webPurchaseUrl)
                     put("payload_data", product.payloadData)
                 })
             }
@@ -344,11 +344,6 @@ object AdaptyPluginResponseTemplate {
         }
         return buildSuccessJsonString(resultJson)
     }
-
-    private fun getSuccessReportTransactionResponse(adaptyProfile: AdaptyProfile): String {
-        return buildSuccessJsonString(buildProfileJson(adaptyProfile = adaptyProfile))
-    }
-
 
     private fun buildSuccessJsonString(jsonElement: JsonElement): String {
         val successDataJson = buildJsonObject {

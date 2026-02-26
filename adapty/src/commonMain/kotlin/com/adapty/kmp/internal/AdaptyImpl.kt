@@ -151,7 +151,7 @@ internal class AdaptyImpl(
                 placementId = placementId,
                 locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
-                loadTimeoutInSeconds = loadTimeout.inWholeSeconds
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
             )
         ).asAdaptyResult { it.asAdaptyPaywall() }
 
@@ -202,14 +202,14 @@ internal class AdaptyImpl(
     override suspend fun reportTransaction(
         transactionId: String,
         variationId: String?
-    ): AdaptyResult<AdaptyProfile> =
-        adaptyPlugin.awaitExecute<AdaptyReportTransactionRequest, AdaptyProfileResponse>(
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyReportTransactionRequest, Boolean>(
             method = AdaptyPluginMethod.REPORT_TRANSACTION,
             request = AdaptyReportTransactionRequest(
                 transactionId = transactionId,
                 variationId = variationId
             )
-        ).asAdaptyResult { it.asAdaptyProfile() }
+        ).asAdaptyResult { }
 
     override suspend fun logout(): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<Unit, Boolean>(
         method = AdaptyPluginMethod.LOGOUT,
@@ -389,7 +389,7 @@ internal class AdaptyImpl(
                 placementId = placementId,
                 locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
-                loadTimeoutInSeconds = loadTimeout.inWholeSeconds
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
             )
         ).asAdaptyResult { it.asAdaptyOnboarding() }
 

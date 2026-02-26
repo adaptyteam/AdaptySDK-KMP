@@ -9,6 +9,6 @@ internal data class AdaptyOnboardingViewEventOnStateUpdatedActionResponse(
     val view: AdaptyUIOnboardingViewResponse,
     @SerialName("meta")
     val meta: AdaptyUIOnboardingMetaResponse,
-    @SerialName("action_id")
+    @SerialName("action")
     val action: AdaptyOnboardingStateUpdatedActionResponse
 )

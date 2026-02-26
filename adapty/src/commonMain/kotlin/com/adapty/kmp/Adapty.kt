@@ -208,12 +208,12 @@ internal interface AdaptyContract {
      * string identifier (`purchase.getOrderId()`) of the purchase,
      * where the purchase is an instance of the billing library Purchase class for Android.
      * @param variationId A string identifier of variation. You can get it using variationId property of AdaptyPaywall.
-     * @return [AdaptyResult] containing [AdaptyProfile].
+     * @return [AdaptyResult] containing [Unit].
      */
     suspend fun reportTransaction(
         transactionId: String,
         variationId: String? = null
-    ): AdaptyResult<AdaptyProfile>
+    ): AdaptyResult<Unit>
 
     /** Logs out the current user. */
     suspend fun logout(): AdaptyResult<Unit>

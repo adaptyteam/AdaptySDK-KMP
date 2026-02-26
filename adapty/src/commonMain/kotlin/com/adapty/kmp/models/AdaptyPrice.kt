@@ -9,7 +9,7 @@ package com.adapty.kmp.models
  * @property localizedString Formatted price string for the user's locale, e.g., "$4.99". Nullable.
  */
 public data class AdaptyPrice internal constructor(
-    val amount: Float,
+    val amount: Double,
     val currencyCode: String? = null,
     val currencySymbol: String? = null,
     val localizedString: String? = null
