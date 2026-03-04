@@ -25,5 +25,26 @@ allprojects {
     val excludedModules = listOf("composeApp", "example")
     if (name !in excludedModules) {
         apply(plugin = "org.jetbrains.dokka")
+
+        tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
+            dokkaSourceSets.configureEach {
+                perPackageOption {
+                    matchingRegex.set(".*\\.internal.*")
+                    suppress.set(true)
+                }
+            }
+        }
     }
+}
+
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    notCompatibleWithConfigurationCache("Dokka tasks are not compatible with configuration cache")
+}
+
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTaskPartial>().configureEach {
+    notCompatibleWithConfigurationCache("Dokka tasks are not compatible with configuration cache")
+}
+
+tasks.withType<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>().configureEach {
+    notCompatibleWithConfigurationCache("Dokka tasks are not compatible with configuration cache")
 }
