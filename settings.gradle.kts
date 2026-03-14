@@ -30,4 +30,6 @@ dependencyResolutionManagement {
 
 include(":adapty")
 include(":adapty-ui")
-include(":example:composeApp")
+include(":example:composeMultiplatformApp:composeApp")
+include(":example:kmpNativeUI:shared")
+include(":example:kmpNativeUI:androidApp")

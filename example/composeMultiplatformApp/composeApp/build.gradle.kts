@@ -108,11 +108,16 @@ android {
 }
 
 buildConfig {
+    packageName("KMPAdapty.example.composeApp")
     buildConfigField("ADAPTY_API_KEY", gradleLocalProperties(rootDir, providers).getProperty("ADAPTY_API_KEY"))
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+compose.resources {
+    packageOfResClass = "kmpadapty.example.composeapp.generated.resources"
 }
 
 compose.desktop {
