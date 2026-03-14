@@ -90,7 +90,7 @@ public fun AdaptyUI.createNativePaywallView(
     }
 
     return AdaptyNativePaywallView(
-        view = paywallView,
+        paywallView = paywallView,
         viewId = viewId,
         paywallUiManager = paywallUiManager
     )
@@ -155,7 +155,7 @@ public fun AdaptyUI.createNativeOnboardingView(
     }
 
     return AdaptyNativeOnboardingView(
-        view = onboardingView,
+        onboardingView = onboardingView,
         viewId = viewId,
         onboardingUiManager = onboardingUiManager
     )

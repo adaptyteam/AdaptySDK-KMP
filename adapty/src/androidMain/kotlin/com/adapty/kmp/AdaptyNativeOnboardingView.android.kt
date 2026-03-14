@@ -3,6 +3,7 @@
 
 package com.adapty.kmp
 
+import android.view.View
 import com.adapty.internal.crossplatform.ui.OnboardingUiManager
 import com.adapty.internal.utils.InternalAdaptyApi
 import com.adapty.ui.onboardings.AdaptyOnboardingView
@@ -22,10 +23,13 @@ import com.adapty.ui.onboardings.AdaptyOnboardingView
  * @see AdaptyUI.createNativeOnboardingView
  */
 public class AdaptyNativeOnboardingView internal constructor(
-    public val view: AdaptyOnboardingView,
+    public val onboardingView: AdaptyOnboardingView,
     private val viewId: String,
     private val onboardingUiManager: OnboardingUiManager?,
 ) {
+
+    public val view: View get() = onboardingView
+
     /**
      * Cleans up the native onboarding view by unregistering its event listener
      * and releasing native resources.
@@ -34,6 +38,6 @@ public class AdaptyNativeOnboardingView internal constructor(
      */
     public fun dispose() {
         AdaptyUI.unregisterOnboardingEventsListener(viewId)
-        onboardingUiManager?.clearOnboardingView(view)
+        onboardingUiManager?.clearOnboardingView(onboardingView)
     }
 }

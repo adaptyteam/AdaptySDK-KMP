@@ -33,6 +33,16 @@ public final class com/adapty/kmp/AdaptyExt_androidKt {
 	public static final fun activate (Lcom/adapty/kmp/Adapty;Landroid/content/Context;Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class com/adapty/kmp/AdaptyNativeOnboardingView {
+	public final fun dispose ()V
+	public final fun getView ()Lcom/adapty/ui/onboardings/AdaptyOnboardingView;
+}
+
+public final class com/adapty/kmp/AdaptyNativePaywallView {
+	public final fun dispose ()V
+	public final fun getView ()Lcom/adapty/ui/AdaptyPaywallView;
+}
+
 public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public static final field INSTANCE Lcom/adapty/kmp/AdaptyUI;
 	public fun createOnboardingView (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -48,6 +58,13 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun unregisterOnboardingEventsListener (Ljava/lang/String;)V
 	public fun unregisterPaywallEventsListener (Ljava/lang/String;)V
+}
+
+public final class com/adapty/kmp/AdaptyUIExt_androidKt {
+	public static final fun createNativeOnboardingView (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Lcom/adapty/kmp/AdaptyNativeOnboardingView;
+	public static synthetic fun createNativeOnboardingView$default (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyWebPresentation;ILjava/lang/Object;)Lcom/adapty/kmp/AdaptyNativeOnboardingView;
+	public static final fun createNativePaywallView (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Lcom/adapty/kmp/AdaptyNativePaywallView;
+	public static synthetic fun createNativePaywallView$default (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILjava/lang/Object;)Lcom/adapty/kmp/AdaptyNativePaywallView;
 }
 
 public abstract interface class com/adapty/kmp/AdaptyUIOnboardingsEventsObserver {
