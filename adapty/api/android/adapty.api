@@ -35,12 +35,13 @@ public final class com/adapty/kmp/AdaptyExt_androidKt {
 
 public final class com/adapty/kmp/AdaptyNativeOnboardingView {
 	public final fun dispose ()V
-	public final fun getView ()Lcom/adapty/ui/onboardings/AdaptyOnboardingView;
+	public final fun getOnboardingView ()Lcom/adapty/ui/onboardings/AdaptyOnboardingView;
+	public final fun getView ()Landroid/view/View;
 }
 
 public final class com/adapty/kmp/AdaptyNativePaywallView {
 	public final fun dispose ()V
-	public final fun getView ()Lcom/adapty/ui/AdaptyPaywallView;
+	public final fun getView ()Landroid/view/View;
 }
 
 public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
