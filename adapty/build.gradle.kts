@@ -49,18 +49,18 @@ kotlin {
             else -> error("Unsupported target ${iosTarget.konanTarget}")
         }
         val derivedDataBuildDir = "$rootDir/adapty-swift-bridge/build/Build/Products"
-        val xcodeBuildTaskName = "build${platform.capitalize()}"
+        val dedupTaskName = "dedup${platform.capitalize()}"
 
         iosTarget.compilations {
             val main by getting {
                 cinterops.create("AdaptySwiftBridge") {
                     defFile("src/nativeInterop/cinterop/AdaptySwiftBridge.def")
                     val interopTask = tasks[interopProcessingTaskName]
-                    interopTask.dependsOn(xcodeBuildTaskName)
+                    interopTask.dependsOn(dedupTaskName)
                     val archBuildDir = "$derivedDataBuildDir/Release-$platform/includes"
                     includeDirs.headerFilterOnly(archBuildDir)
                 }
-                compileTaskProvider.dependsOn(xcodeBuildTaskName)
+                compileTaskProvider.dependsOn(dedupTaskName)
             }
 
         }
@@ -133,6 +133,20 @@ listOf("iphoneos", "iphonesimulator").forEach { sdk ->
             fileTree("$projectDir/build/Release-${sdk}")
         )
         if (shouldForceIosRebuild) outputs.upToDateWhen { false }
+    }
+}
+
+// Dedup duplicate .o members in static libraries (GitHub issue #19)
+val dedupScript = "$rootDir/scripts/dedup_static_lib.sh"
+listOf("iphoneos", "iphonesimulator").forEach { sdk ->
+    tasks.register<Exec>("dedup${sdk.capitalize()}") {
+        group = "build"
+        dependsOn("build${sdk.capitalize()}")
+        commandLine(
+            "bash", dedupScript,
+            "$rootDir/adapty-swift-bridge/build/Build/Products/Release-$sdk/libAdaptySwiftBridge.a"
+        )
+        workingDir(rootDir)
     }
 }
 
