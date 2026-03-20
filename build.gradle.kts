@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.vanniktech.mavenPublish) apply false
@@ -18,11 +19,11 @@ apiValidation {
     klib {
         enabled = true
     }
-    ignoredProjects += "composeApp"
+    ignoredProjects += listOf("composeApp", "shared", "androidApp")
 }
 
 allprojects {
-    val excludedModules = listOf("composeApp", "example")
+    val excludedModules = listOf("composeApp", "example", "composeMultiplatformApp", "kmpNativeUI", "shared", "androidApp")
     if (name !in excludedModules) {
         apply(plugin = "org.jetbrains.dokka")
     }

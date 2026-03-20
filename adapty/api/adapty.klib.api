@@ -1,5 +1,6 @@
 // Klib ABI Dump
 // Targets: [iosArm64, iosSimulatorArm64, iosX64, js, wasmJs]
+// Alias: ios => [iosArm64, iosSimulatorArm64, iosX64]
 // Rendering settings:
 // - Signature version: 2
 // - Show manifest properties: true
@@ -1584,3 +1585,25 @@ final inline fun <#A: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.
 final inline fun <#A: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.adapty.kmp.models/getOrNull(): #A? // com.adapty.kmp.models/getOrNull|getOrNull@com.adapty.kmp.models.AdaptyResult<0:0>(){0§<kotlin.Any?>}[0]
 final inline fun <#A: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.adapty.kmp.models/onError(kotlin/Function1<com.adapty.kmp.models/AdaptyError, kotlin/Unit>): com.adapty.kmp.models/AdaptyResult<#A> // com.adapty.kmp.models/onError|onError@com.adapty.kmp.models.AdaptyResult<0:0>(kotlin.Function1<com.adapty.kmp.models.AdaptyError,kotlin.Unit>){0§<kotlin.Any?>}[0]
 final inline fun <#A: kotlin/Any?> (com.adapty.kmp.models/AdaptyResult<#A>).com.adapty.kmp.models/onSuccess(kotlin/Function1<#A, kotlin/Unit>): com.adapty.kmp.models/AdaptyResult<#A> // com.adapty.kmp.models/onSuccess|onSuccess@com.adapty.kmp.models.AdaptyResult<0:0>(kotlin.Function1<0:0,kotlin.Unit>){0§<kotlin.Any?>}[0]
+
+// Targets: [ios]
+final class com.adapty.kmp/AdaptyNativeOnboardingView { // com.adapty.kmp/AdaptyNativeOnboardingView|null[0]
+    final val viewController // com.adapty.kmp/AdaptyNativeOnboardingView.viewController|{}viewController[0]
+        final fun <get-viewController>(): platform.UIKit/UIViewController // com.adapty.kmp/AdaptyNativeOnboardingView.viewController.<get-viewController>|<get-viewController>(){}[0]
+
+    final fun dispose() // com.adapty.kmp/AdaptyNativeOnboardingView.dispose|dispose(){}[0]
+}
+
+// Targets: [ios]
+final class com.adapty.kmp/AdaptyNativePaywallView { // com.adapty.kmp/AdaptyNativePaywallView|null[0]
+    final val viewController // com.adapty.kmp/AdaptyNativePaywallView.viewController|{}viewController[0]
+        final fun <get-viewController>(): platform.UIKit/UIViewController // com.adapty.kmp/AdaptyNativePaywallView.viewController.<get-viewController>|<get-viewController>(){}[0]
+
+    final fun dispose() // com.adapty.kmp/AdaptyNativePaywallView.dispose|dispose(){}[0]
+}
+
+// Targets: [ios]
+final fun (com.adapty.kmp/AdaptyUI).com.adapty.kmp/createNativeOnboardingView(com.adapty.kmp.models/AdaptyOnboarding, com.adapty.kmp/AdaptyUIOnboardingsEventsObserver, com.adapty.kmp.models/AdaptyWebPresentation = ...): com.adapty.kmp/AdaptyNativeOnboardingView // com.adapty.kmp/createNativeOnboardingView|createNativeOnboardingView@com.adapty.kmp.AdaptyUI(com.adapty.kmp.models.AdaptyOnboarding;com.adapty.kmp.AdaptyUIOnboardingsEventsObserver;com.adapty.kmp.models.AdaptyWebPresentation){}[0]
+
+// Targets: [ios]
+final fun (com.adapty.kmp/AdaptyUI).com.adapty.kmp/createNativePaywallView(com.adapty.kmp.models/AdaptyPaywall, com.adapty.kmp/AdaptyUIPaywallsEventsObserver, kotlin.collections/Map<kotlin/String, kotlin/String>? = ..., kotlin.collections/Map<kotlin/String, kotlinx.datetime/LocalDateTime>? = ..., kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyCustomAsset>? = ..., kotlin.collections/Map<com.adapty.kmp.models/AdaptyProductIdentifier, com.adapty.kmp.models/AdaptyPurchaseParameters>? = ...): com.adapty.kmp/AdaptyNativePaywallView // com.adapty.kmp/createNativePaywallView|createNativePaywallView@com.adapty.kmp.AdaptyUI(com.adapty.kmp.models.AdaptyPaywall;com.adapty.kmp.AdaptyUIPaywallsEventsObserver;kotlin.collections.Map<kotlin.String,kotlin.String>?;kotlin.collections.Map<kotlin.String,kotlinx.datetime.LocalDateTime>?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyCustomAsset>?;kotlin.collections.Map<com.adapty.kmp.models.AdaptyProductIdentifier,com.adapty.kmp.models.AdaptyPurchaseParameters>?){}[0]
