@@ -1,5 +1,7 @@
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
+import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
@@ -9,6 +11,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
@@ -17,21 +21,23 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateReplacementMode
 import com.adapty.kmp.models.AdaptyConfig
-import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyErrorCode
+import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
+import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseParameters
-import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.fold
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.jsonObject
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlin.time.Duration.Companion.seconds
 
@@ -40,12 +46,6 @@ class AdaptyImplTest {
 
     private lateinit var fakeAdaptyPlugin: FakeAdaptyPlugin
     private lateinit var adaptyImpl: AdaptyImpl
-
-    private val testError = AdaptyError(
-        code = AdaptyErrorCode.UNKNOWN,
-        message = "Test Error Message",
-        detail = "Test Error Message Detail"
-    )
 
 
     @BeforeTest
@@ -72,7 +72,7 @@ class AdaptyImplTest {
 
 
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = { adaptyImpl.activate(config) },
             method = AdaptyPluginMethod.ACTIVATE,
             param = config,
@@ -85,7 +85,7 @@ class AdaptyImplTest {
     fun `identify method - verify request and response`() = runTest {
         val customerUserId = AdaptyFakeTestData.CUSTOMER_USER_ID
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = { adaptyImpl.identify(customerUserId = customerUserId) },
             method = AdaptyPluginMethod.IDENTIFY,
             param = customerUserId,
@@ -107,7 +107,7 @@ class AdaptyImplTest {
 
         val adaptyProfileParameters = builder.build()
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = { adaptyImpl.updateProfile(params = adaptyProfileParameters) },
             method = AdaptyPluginMethod.UPDATE_PROFILE,
             param = adaptyProfileParameters,
@@ -117,7 +117,7 @@ class AdaptyImplTest {
 
     @Test
     fun `getProfile method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = { adaptyImpl.getProfile() },
             method = AdaptyPluginMethod.GET_PROFILE,
             expectedSuccessData = AdaptyFakeTestData.getProfile()
@@ -127,7 +127,7 @@ class AdaptyImplTest {
     @Test
     fun `restorePurchases method - verify request and response`() = runTest {
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.restorePurchases()
             },
@@ -138,7 +138,7 @@ class AdaptyImplTest {
 
     @Test
     fun `logout method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.logout()
             },
@@ -150,7 +150,7 @@ class AdaptyImplTest {
 
     @Test
     fun `setIntegrationIdentifier method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.setIntegrationIdentifier(
                     key = AdaptyFakeTestData.INTEGRATION_KEY,
@@ -169,7 +169,7 @@ class AdaptyImplTest {
 
     @Test
     fun `getPaywall method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.getPaywall(
                     placementId = AdaptyFakeTestData.PLACEMENT_ID,
@@ -191,7 +191,7 @@ class AdaptyImplTest {
 
     @Test
     fun `getPaywallForDefaultAudience method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.getPaywallForDefaultAudience(
                     placementId = AdaptyFakeTestData.PLACEMENT_ID,
@@ -214,7 +214,7 @@ class AdaptyImplTest {
         val paywall = AdaptyFakeTestData.getPaywall()
         val paywallProductList = AdaptyFakeTestData.getPaywallProductList()
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.getPaywallProducts(paywall = paywall)
             },
@@ -237,7 +237,7 @@ class AdaptyImplTest {
             .setIsOfferPersonalized(isOfferPersonalized)
             .build()
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.makePurchase(
                     product = paywallProduct,
@@ -267,7 +267,7 @@ class AdaptyImplTest {
 
         val source = "custom"
 
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.updateAttribution(attribution = attribution, source = source)
             },
@@ -282,7 +282,7 @@ class AdaptyImplTest {
 
     @Test
     fun `reportTransaction method - verify request and response`() = runTest {
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.reportTransaction(
                     transactionId = AdaptyFakeTestData.TRANSACTION_ID,
@@ -301,7 +301,7 @@ class AdaptyImplTest {
     @Test
     fun `setFallBack method - verify request and response`() = runTest {
         val assetId = AdaptyFakeTestData.ASSET_ID
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.setFallback(assetId = assetId)
             },
@@ -314,7 +314,7 @@ class AdaptyImplTest {
     @Test
     fun `logShowPaywall method - verify request and response`() = runTest {
         val paywall = AdaptyFakeTestData.getPaywall()
-        verifyApiCallResultBehavior(
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.logShowPaywall(paywall = paywall)
             },
@@ -324,76 +324,161 @@ class AdaptyImplTest {
         )
     }
 
-    private suspend fun <T : Any> verifyApiCallResultBehavior(
-        apiCall: suspend () -> AdaptyResult<T>,
-        method: AdaptyPluginMethod,
-        param: Any = Unit,
-        expectedSuccessData: T,
-        onSuccess: (T) -> Unit = { actual -> assertEquals(expectedSuccessData, actual) },
-        onError: (AdaptyError) -> Unit = { error -> assertEquals(testError, error) },
-        simulateSuccessResponse: () -> Unit = {
-            fakeAdaptyPlugin.simulateSuccessResponseForMethod(method, expectedSuccessData)
-        },
-        simulateErrorResponse: () -> Unit = {
-            fakeAdaptyPlugin.simulateErrorResponse(testError)
-        },
-    ) {
-        // Simulate a successful response
-        simulateSuccessResponse()
-
-        // Trigger the API call
-        var result = apiCall()
-
-        // Verify the JSON request was sent correctly
-        verifyRequestJson(method, param)
-
-        // Verify success case
-        result.fold(
-            onSuccess = onSuccess,
-            onError = { error ->
-                fail("Expected success but got error: $error")
+    @Test
+    fun `getCurrentInstallationStatus method - verify request and response`() = runTest {
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.getCurrentInstallationStatus() },
+            method = AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS,
+            expectedSuccessData = AdaptyInstallationStatusNotDetermined,
+            onSuccess = { actual ->
+                assertEquals(AdaptyInstallationStatusNotDetermined, actual)
             }
         )
+    }
 
-        // Now simulate an error response
-        simulateErrorResponse()
+    @Test
+    fun `isActivated method - verify request and response`() = runTest {
+        // Simulate success with true
+        fakeAdaptyPlugin.simulateSuccessResponseForMethod(
+            AdaptyPluginMethod.IS_ACTIVATED, true
+        )
+        val resultTrue = adaptyImpl.isActivated()
+        assertEquals(
+            AdaptyPluginMethod.IS_ACTIVATED.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
+        assertTrue(resultTrue)
 
-        // Trigger the API call again
-        result = apiCall()
+        // Simulate success with false
+        fakeAdaptyPlugin.simulateSuccessResponseForMethod(
+            AdaptyPluginMethod.IS_ACTIVATED, false
+        )
+        val resultFalse = adaptyImpl.isActivated()
+        assertFalse(resultFalse)
+    }
 
-        //Verify error case
-        result.fold(
-            onSuccess = { successData ->
-                fail("Expected error but got success: $successData")
+    @Test
+    fun `getOnboarding method - verify request and response`() = runTest {
+        val onboarding = AdaptyFakeTestData.getOnboarding()
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.getOnboarding(
+                    placementId = AdaptyFakeTestData.PLACEMENT_ID,
+                    locale = AdaptyFakeTestData.LOCALE,
+                    loadTimeout = 30.seconds,
+                    fetchPolicy = AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad
+                )
             },
-            onError = onError
+            method = AdaptyPluginMethod.GET_ONBOARDING,
+            param = AdaptyGetOnboardingRequest(
+                placementId = AdaptyFakeTestData.PLACEMENT_ID,
+                locale = AdaptyFakeTestData.LOCALE,
+                loadTimeoutInSeconds = 30.0,
+                fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
+            ),
+            expectedSuccessData = onboarding
         )
     }
 
-
-    private fun verifyRequestJson(method: AdaptyPluginMethod, param: Any) {
-        val expectedMethodName = method.methodName
-        val expectedRequestJson =
-            AdaptyPluginRequestTemplate.getJsonString(method = method, param = param)
-
-        val actualRequestJson = fakeAdaptyPlugin.capturedRequestJsonString
-        val actualMethodName = fakeAdaptyPlugin.capturedRequestMethodName
-
-        assertEquals(expectedMethodName, actualMethodName)
-        assertJsonStringEquals(expectedRequestJson, actualRequestJson)
+    @Test
+    fun `getOnboardingForDefaultAudience method - verify request and response`() = runTest {
+        val onboarding = AdaptyFakeTestData.getOnboarding()
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.getOnboardingForDefaultAudience(
+                    placementId = AdaptyFakeTestData.PLACEMENT_ID,
+                    locale = AdaptyFakeTestData.LOCALE,
+                    fetchPolicy = AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad
+                )
+            },
+            method = AdaptyPluginMethod.GET_ONBOARDING_FOR_DEFAULT_AUDIENCE,
+            param = AdaptyGetOnboardingForDefaultAudienceRequest(
+                placementId = AdaptyFakeTestData.PLACEMENT_ID,
+                locale = AdaptyFakeTestData.LOCALE,
+                fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
+            ),
+            expectedSuccessData = onboarding
+        )
     }
 
+    @Test
+    fun `createWebPaywallUrl method - verify request and response`() = runTest {
+        val paywall = AdaptyFakeTestData.getPaywall()
+        val expectedUrl = "https://pay.adapty.io/test"
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.createWebPaywallUrl(paywall = paywall)
+            },
+            method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
+            param = AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest()),
+            expectedSuccessData = expectedUrl,
+        )
+    }
 
-    // Helper function to assert that two JSON strings are equivalent
-    private fun assertJsonStringEquals(
-        expectedJsonString: String?,
-        actualJsonString: String?,
-        message: String? = null
-    ) {
-        val actualJson = jsonInstance.parseToJsonElement(actualJsonString ?: "").jsonObject
-        val expectedJson =
-            jsonInstance.parseToJsonElement(expectedJsonString ?: "").jsonObject
+    @Test
+    fun `openWebPaywall method - verify request and response`() = runTest {
+        val paywall = AdaptyFakeTestData.getPaywall()
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.openWebPaywall(
+                    paywall = paywall,
+                    openIn = AdaptyWebPresentation.IN_APP_BROWSER
+                )
+            },
+            method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
+            param = AdaptyWebPaywallRequest.fromPaywall(
+                paywall = paywall.asAdaptyPaywallRequest(),
+                webPresentationRequest = AdaptyWebPresentationRequest.IN_APP_BROWSER
+            ),
+            expectedSuccessData = Unit
+        )
+    }
 
-        assertEquals(expectedJson, actualJson, message)
+    @Test
+    fun `presentCodeRedemptionSheet method - returns error on Android`() = runTest {
+        // presentCodeRedemptionSheet is iOS-only; on Android it returns an error immediately
+        val result = adaptyImpl.presentCodeRedemptionSheet()
+        result.fold(
+            onSuccess = { fail("Expected error on Android but got success") },
+            onError = { error ->
+                assertEquals(AdaptyErrorCode.DEVELOPER_ERROR, error.code)
+            }
+        )
+    }
+
+    @Test
+    fun `updateRefundPreference method - returns error on Android`() = runTest {
+        // updateRefundPreference is iOS-only; on Android it returns an error immediately
+        val result = adaptyImpl.updateRefundPreference(
+            preference = AdaptyIosRefundPreference.NO_PREFERENCE
+        )
+        result.fold(
+            onSuccess = { fail("Expected error on Android but got success") },
+            onError = { error ->
+                assertEquals(AdaptyErrorCode.DEVELOPER_ERROR, error.code)
+            }
+        )
+    }
+
+    @Test
+    fun `updateCollectingRefundDataConsent method - returns error on Android`() = runTest {
+        // updateCollectingRefundDataConsent is iOS-only; on Android it returns an error immediately
+        val result = adaptyImpl.updateCollectingRefundDataConsent(consent = true)
+        result.fold(
+            onSuccess = { fail("Expected error on Android but got success") },
+            onError = { error ->
+                assertEquals(AdaptyErrorCode.DEVELOPER_ERROR, error.code)
+            }
+        )
+    }
+
+    @Test
+    fun `setLogLevel method - verify request is sent`() = runTest {
+        adaptyImpl.setLogLevel(AdaptyLogLevel.DEBUG)
+
+        assertEquals(
+            AdaptyPluginMethod.SET_LOG_LEVEL.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
     }
 }
