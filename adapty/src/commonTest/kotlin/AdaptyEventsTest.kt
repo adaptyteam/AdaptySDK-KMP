@@ -38,6 +38,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -80,7 +81,7 @@ class AdaptyEventsTest {
 
     private val paywallObserver = object : AdaptyUIPaywallsEventsObserver {
 
-        override val mainUiScope: CoroutineScope get() = CoroutineScope(Dispatchers.Default)
+        override val mainUiScope: CoroutineScope get() = TestScope()
 
         override fun paywallViewDidPerformAction(
             view: AdaptyUIPaywallView,
@@ -187,8 +188,8 @@ class AdaptyEventsTest {
 
     private val onboardingObserver = object : AdaptyUIOnboardingsEventsObserver {
 
-        override val mainUiScope: CoroutineScope get() = CoroutineScope(Dispatchers.Default)
-
+        override val mainUiScope: CoroutineScope get() = TestScope()
+        
         override fun onboardingViewDidFinishLoading(
             view: AdaptyUIOnboardingView,
             meta: AdaptyUIOnboardingMeta
