@@ -189,7 +189,7 @@ class AdaptyEventsTest {
     private val onboardingObserver = object : AdaptyUIOnboardingsEventsObserver {
 
         override val mainUiScope: CoroutineScope get() = TestScope()
-        
+
         override fun onboardingViewDidFinishLoading(
             view: AdaptyUIOnboardingView,
             meta: AdaptyUIOnboardingMeta
