@@ -1,3 +1,4 @@
+import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductReference
@@ -15,6 +16,9 @@ import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
 import com.adapty.kmp.models.AdaptySubscriptionOfferPhase
 import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
+import com.adapty.kmp.models.AdaptyUIDialogActionType
+import com.adapty.kmp.models.AdaptyUIOnboardingView
+import com.adapty.kmp.models.AdaptyUIPaywallView
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -35,6 +39,19 @@ internal object AdaptyFakeTestData {
     const val ONBOARDING_SCREEN_NAME = "onboarding_screen_name_#1"
     const val ONBOARDING_NAME = "onboarding_name_#4"
     const val ONBOARDING_SCREEN_ORDER = 3
+
+    const val VIEW_ID = "test_view_id_#1"
+    const val ONBOARDING_ID = "test_onboarding_id_#1"
+    const val ONBOARDING_BUILDER_CONFIG_URL = "https://example.com/onboarding/config"
+
+    // Event-specific constants
+    const val EVENT_VIEW_ID = "test_view_id_event"
+    const val ACTION_ID = "test_action_id"
+    const val SCREEN_CLIENT_ID = "screen_001"
+    const val SCREEN_INDEX = 2
+    const val TOTAL_SCREENS = 5
+    const val PRODUCT_ID = "com.example.product.monthly"
+    const val ADAPTY_PRODUCT_ID = "adapty_product_001"
 
 
     fun getProfile(): AdaptyProfile {
@@ -197,6 +214,46 @@ internal object AdaptyFakeTestData {
 
     fun getSuccessPurchaseResult(): AdaptyPurchaseResult {
         return AdaptyPurchaseResult.Success(profile = getProfile())
+    }
+
+    fun getOnboarding(): AdaptyOnboarding {
+        return AdaptyOnboarding(
+            placement = AdaptyPlacement(
+                id = "123",
+                audienceName = "testAudience",
+                abTestName = "test",
+                revision = 1,
+                placementAudienceVersionId = "test"
+            ),
+            id = ONBOARDING_ID,
+            name = ONBOARDING_NAME,
+            variationId = "1",
+            remoteConfig = null,
+            payloadData = null,
+            requestLocale = LOCALE,
+            responseCreatedAt = 0L,
+            onboardingBuilderConfigUrl = ONBOARDING_BUILDER_CONFIG_URL
+        )
+    }
+
+    fun getUIPaywallView(): AdaptyUIPaywallView {
+        return AdaptyUIPaywallView(
+            id = VIEW_ID,
+            placementId = PLACEMENT_ID,
+            variationId = VARIATION_ID
+        )
+    }
+
+    fun getUIOnboardingView(): AdaptyUIOnboardingView {
+        return AdaptyUIOnboardingView(
+            id = VIEW_ID,
+            placementId = PLACEMENT_ID,
+            variationId = VARIATION_ID
+        )
+    }
+
+    fun getDialogActionType(): AdaptyUIDialogActionType {
+        return AdaptyUIDialogActionType.PRIMARY
     }
 
 }

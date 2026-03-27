@@ -1,15 +1,29 @@
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
+import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateCollectingRefundDataRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyIosRefundPreferenceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUICreatePaywallViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIShowDialogRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.utils.getEmptyJsonObjectString
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
@@ -42,6 +56,41 @@ object AdaptyPluginRequestTemplate {
         AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getAdaptyGetPaywallForDefaultAudienceRequest(
             param as AdaptyGetPaywallForDefaultAudienceRequest
         )
+
+        AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.IS_ACTIVATED -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.PRESENT_CODE_REDEMPTION_SHEET -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.GET_ONBOARDING -> getOnboardingRequestJsonString(param as AdaptyGetOnboardingRequest)
+        AdaptyPluginMethod.GET_ONBOARDING_FOR_DEFAULT_AUDIENCE -> getOnboardingForDefaultAudienceRequestJsonString(
+            param as AdaptyGetOnboardingForDefaultAudienceRequest
+        )
+
+        AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL -> getWebPaywallRequestJsonString(param as AdaptyWebPaywallRequest)
+        AdaptyPluginMethod.OPEN_WEB_PAYWALL -> getWebPaywallRequestJsonString(param as AdaptyWebPaywallRequest)
+        AdaptyPluginMethod.UPDATE_REFUND_PREFERENCE -> getUpdateRefundPreferenceRequestJsonString(
+            param as AdaptyIosUpdateRefundPreferenceRequest
+        )
+
+        AdaptyPluginMethod.UPDATE_COLLECTING_REFUND_DATA_CONSENT -> getUpdateCollectingRefundDataConsentRequestJsonString(
+            param as AdaptyIosUpdateCollectingRefundDataRequest
+        )
+
+        AdaptyPluginMethod.SET_LOG_LEVEL -> getEmptyJsonObjectString()
+
+        // UI methods
+        AdaptyPluginMethod.CREATE_PAYWALL_VIEW -> getCreatePaywallViewRequestJsonString(
+            param as AdaptyUICreatePaywallViewRequest
+        )
+
+        AdaptyPluginMethod.PRESENT_PAYWALL_VIEW -> getPresentViewRequestJsonString(param as AdaptyUIPresentViewRequest)
+        AdaptyPluginMethod.DISMISS_PAYWALL_VIEW -> getDismissViewRequestJsonString(param as AdaptyUIDismissViewRequest)
+        AdaptyPluginMethod.SHOW_DIALOG -> getShowDialogRequestJsonString(param as AdaptyUIShowDialogRequest)
+        AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getCreateOnboardingViewRequestJsonString(
+            param as AdaptyUICreateOnboardingViewRequest
+        )
+
+        AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW -> getPresentViewRequestJsonString(param as AdaptyUIPresentViewRequest)
+        AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> getDismissViewRequestJsonString(param as AdaptyUIDismissViewRequest)
 
         else -> throw Exception(
             "Unknown method type. Please, provide request json template in " +
@@ -228,4 +277,143 @@ object AdaptyPluginRequestTemplate {
         return jsonObject.toString()
     }
 
+    private fun getOnboardingRequestJsonString(request: AdaptyGetOnboardingRequest): String {
+        return buildJsonObject {
+            put("placement_id", request.placementId)
+            put("locale", request.locale)
+            put("load_timeout", request.loadTimeoutInSeconds)
+            request.fetchPolicy?.let {
+                put("fetch_policy", buildFetchPolicyJsonObject(it))
+            }
+        }.toString()
+    }
+
+    private fun getOnboardingForDefaultAudienceRequestJsonString(request: AdaptyGetOnboardingForDefaultAudienceRequest): String {
+        return buildJsonObject {
+            put("placement_id", request.placementId)
+            put("locale", request.locale)
+            request.fetchPolicy?.let {
+                put("fetch_policy", buildFetchPolicyJsonObject(it))
+            }
+        }.toString()
+    }
+
+    private fun getWebPaywallRequestJsonString(request: AdaptyWebPaywallRequest): String {
+        return buildJsonObject {
+            request.paywallProduct?.let {
+                put(
+                    "product",
+                    jsonInstance.encodeToJsonElement(
+                        AdaptyPaywallProductRequest.serializer(),
+                        it
+                    )
+                )
+            }
+            request.paywall?.let {
+                put(
+                    "paywall",
+                    jsonInstance.encodeToJsonElement(
+                        AdaptyPaywallRequestResponse.serializer(),
+                        it
+                    )
+                )
+            }
+            request.webPresentationRequest?.let {
+                put("open_in", it.toSerialName())
+            }
+        }.toString()
+    }
+
+    private fun getUpdateRefundPreferenceRequestJsonString(request: AdaptyIosUpdateRefundPreferenceRequest): String {
+        return buildJsonObject {
+            put("refund_preference", request.refundPreference.toSerialName())
+        }.toString()
+    }
+
+    private fun getUpdateCollectingRefundDataConsentRequestJsonString(request: AdaptyIosUpdateCollectingRefundDataRequest): String {
+        return buildJsonObject {
+            put("consent", request.consent)
+        }.toString()
+    }
+
+    private fun getCreatePaywallViewRequestJsonString(request: AdaptyUICreatePaywallViewRequest): String {
+        return buildJsonObject {
+            put(
+                "paywall",
+                jsonInstance.encodeToJsonElement(
+                    AdaptyPaywallRequestResponse.serializer(),
+                    request.paywall
+                )
+            )
+            request.loadTimeOutInSeconds?.let { put("load_timeout", it) }
+            put("preload_products", request.preloadProducts)
+            request.customTags?.let {
+                putJsonObject("custom_tags") {
+                    it.forEach { (key, value) -> put(key, value) }
+                }
+            }
+            request.customTimers?.let {
+                putJsonObject("custom_timers") {
+                    it.forEach { (key, value) -> put(key, value) }
+                }
+            }
+        }.toString()
+    }
+
+    private fun getPresentViewRequestJsonString(request: AdaptyUIPresentViewRequest): String {
+        return buildJsonObject {
+            put("id", request.id)
+            put("ios_presentation_style", request.iosPresentationStyle.toSerialName())
+        }.toString()
+    }
+
+    private fun getDismissViewRequestJsonString(request: AdaptyUIDismissViewRequest): String {
+        return buildJsonObject {
+            put("id", request.id)
+            put("destroy", request.destroy)
+        }.toString()
+    }
+
+    private fun getShowDialogRequestJsonString(request: AdaptyUIShowDialogRequest): String {
+        return buildJsonObject {
+            put("id", request.id)
+            putJsonObject("configuration") {
+                request.configuration.title?.let { put("title", it) }
+                request.configuration.content?.let { put("content", it) }
+                put("default_action_title", request.configuration.defaultActionTitle)
+                request.configuration.secondaryActionTitle?.let { put("secondary_action_title", it) }
+            }
+        }.toString()
+    }
+
+    private fun getCreateOnboardingViewRequestJsonString(request: AdaptyUICreateOnboardingViewRequest): String {
+        return buildJsonObject {
+            put(
+                "onboarding",
+                jsonInstance.encodeToJsonElement(
+                    AdaptyOnboardingRequestResponse.serializer(),
+                    request.onboarding
+                )
+            )
+            request.externalUrlsPresentation?.let {
+                put("external_urls_presentation", it.toSerialName())
+            }
+        }.toString()
+    }
+
+    private fun AdaptyUIIOSPresentationStyleRequest.toSerialName(): String = when (this) {
+        AdaptyUIIOSPresentationStyleRequest.FULLSCREEN -> "full_screen"
+        AdaptyUIIOSPresentationStyleRequest.PAGESHEET -> "page_sheet"
+    }
+
+    private fun AdaptyWebPresentationRequest.toSerialName(): String = when (this) {
+        AdaptyWebPresentationRequest.EXTERNAL_BROWSER -> "browser_out_app"
+        AdaptyWebPresentationRequest.IN_APP_BROWSER -> "browser_in_app"
+    }
+
+    private fun AdaptyIosRefundPreferenceRequest.toSerialName(): String = when (this) {
+        AdaptyIosRefundPreferenceRequest.NO_PREFERENCE -> "no_preference"
+        AdaptyIosRefundPreferenceRequest.GRANT -> "grant"
+        AdaptyIosRefundPreferenceRequest.DECLINE -> "decline"
+    }
 }
