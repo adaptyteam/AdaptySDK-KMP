@@ -1,4 +1,5 @@
 import com.adapty.kmp.internal.AdaptyImpl
+import com.adapty.kmp.isAndroidPlatform
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingRequest
@@ -436,6 +437,7 @@ class AdaptyImplTest {
 
     @Test
     fun `presentCodeRedemptionSheet method - returns error on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
         // presentCodeRedemptionSheet is iOS-only; on Android it returns an error immediately
         val result = adaptyImpl.presentCodeRedemptionSheet()
         result.fold(
@@ -448,6 +450,7 @@ class AdaptyImplTest {
 
     @Test
     fun `updateRefundPreference method - returns error on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
         // updateRefundPreference is iOS-only; on Android it returns an error immediately
         val result = adaptyImpl.updateRefundPreference(
             preference = AdaptyIosRefundPreference.NO_PREFERENCE
@@ -462,6 +465,7 @@ class AdaptyImplTest {
 
     @Test
     fun `updateCollectingRefundDataConsent method - returns error on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
         // updateCollectingRefundDataConsent is iOS-only; on Android it returns an error immediately
         val result = adaptyImpl.updateCollectingRefundDataConsent(consent = true)
         result.fold(
