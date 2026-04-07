@@ -26,21 +26,21 @@ internal sealed interface AdaptyOnboardingStateUpdatedActionResponse {
     @Serializable
     @SerialName("select")
     data class SelectAction(
-        override val elementId: String,
+        @SerialName("element_id") override val elementId: String,
         @SerialName("value") val value: AdaptyUIOnboardingsSelectParamsResponse
     ) : AdaptyOnboardingStateUpdatedActionResponse
 
     @Serializable
     @SerialName("multi_select")
     data class MultiSelectAction(
-        override val elementId: String,
+        @SerialName("element_id") override val elementId: String,
         @SerialName("value") val value: List<AdaptyUIOnboardingsSelectParamsResponse>
     ) : AdaptyOnboardingStateUpdatedActionResponse
 
     @Serializable
     @SerialName("input")
     data class InputAction(
-        override val elementId: String,
+        @SerialName("element_id") override val elementId: String,
         @SerialName("value") val value: InputValue
     ) : AdaptyOnboardingStateUpdatedActionResponse {
 
@@ -64,7 +64,7 @@ internal sealed interface AdaptyOnboardingStateUpdatedActionResponse {
     @Serializable
     @SerialName("date_picker")
     data class DatePickerAction(
-        override val elementId: String,
+        @SerialName("element_id") override val elementId: String,
         @SerialName("value") val value: DateValue
     ) : AdaptyOnboardingStateUpdatedActionResponse {
         @Serializable
