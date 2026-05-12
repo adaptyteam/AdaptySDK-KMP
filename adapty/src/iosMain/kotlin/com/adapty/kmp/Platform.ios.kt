@@ -9,5 +9,5 @@ internal actual val adaptyPlugin: AdaptyPlugin by lazy { AdaptyPluginImpl() }
 internal actual val isAndroidPlatform: Boolean get() = false
 internal actual fun openUrl(url: String) {
     val nsUrl = NSURL.URLWithString(url)
-    nsUrl?.let { UIApplication.sharedApplication.openURL(it) }
+    nsUrl?.let { UIApplication.sharedApplication.openURL(it, emptyMap<Any?, Any>(), null) }
 }
