@@ -14,8 +14,12 @@ public sealed interface AdaptyUIAction {
      * User tapped a button that opens a URL.
      *
      * @property url The URL to open.
+     * @property openIn How the URL should be presented — in an external browser or in-app browser.
      */
-    public data class OpenUrlAction(val url: String) : AdaptyUIAction
+    public data class OpenUrlAction(
+        val url: String,
+        val openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER,
+    ) : AdaptyUIAction
 
     /**
      * User tapped a button that triggers a custom action.

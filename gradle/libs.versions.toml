@@ -14,6 +14,7 @@ kotlin = "2.2.21"
 kotlinx-binary-validator = "0.18.1"
 kotlinx-coroutine = "1.10.2"
 mavenPublish = "0.34.0"
+androidx-browser = "1.8.0"
 androidx-startup-runtime = "1.2.0"
 kotlinx-json-serialization = "1.9.0"
 kotlinx-datetime = "0.7.1"
@@ -27,6 +28,7 @@ androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "androidx-browser" }
 androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup-runtime" }
 
 adapty-bom = { module = "io.adapty:adapty-bom", version.ref = "adapty-bom" }
