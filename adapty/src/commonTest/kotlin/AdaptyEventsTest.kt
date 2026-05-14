@@ -28,6 +28,7 @@ import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyUIAction
+import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.AdaptyUIOnboardingMeta
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
@@ -355,6 +356,42 @@ class AdaptyEventsTest {
             AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
             AdaptyPluginResponseTemplate.getEventJsonString(
                 AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                mapOf("action_type" to "open_url", "action_value" to "https://example.com", "action_open_in" to "browser_out_app")
+            )
+        )
+
+        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
+        assertPaywallViewId()
+        val action = capturedAction
+        assertIs<AdaptyUIAction.OpenUrlAction>(action)
+        assertEquals("https://example.com", action.url)
+        assertEquals(AdaptyWebPresentation.EXTERNAL_BROWSER, action.openIn)
+    }
+
+    @Test
+    fun `paywall view did perform action - open url in app browser`() = runTest(testDispatcher) {
+        sendEventAndWait(
+            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                mapOf("action_type" to "open_url", "action_value" to "https://example.com", "action_open_in" to "browser_in_app")
+            )
+        )
+
+        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
+        assertPaywallViewId()
+        val action = capturedAction
+        assertIs<AdaptyUIAction.OpenUrlAction>(action)
+        assertEquals("https://example.com", action.url)
+        assertEquals(AdaptyWebPresentation.IN_APP_BROWSER, action.openIn)
+    }
+
+    @Test
+    fun `paywall view did perform action - open url without open_in defaults to external browser`() = runTest(testDispatcher) {
+        sendEventAndWait(
+            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
                 mapOf("action_type" to "open_url", "action_value" to "https://example.com")
             )
         )
@@ -364,6 +401,7 @@ class AdaptyEventsTest {
         val action = capturedAction
         assertIs<AdaptyUIAction.OpenUrlAction>(action)
         assertEquals("https://example.com", action.url)
+        assertEquals(AdaptyWebPresentation.EXTERNAL_BROWSER, action.openIn)
     }
 
     @Test
