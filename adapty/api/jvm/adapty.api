@@ -1274,11 +1274,14 @@ public final class com/adapty/kmp/models/AdaptyUIAction$CustomAction : com/adapt
 }
 
 public final class com/adapty/kmp/models/AdaptyUIAction$OpenUrlAction : com/adapty/kmp/models/AdaptyUIAction {
-	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyWebPresentation;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyWebPresentation;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;
+	public final fun component2 ()Lcom/adapty/kmp/models/AdaptyWebPresentation;
+	public final fun copy (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyWebPresentation;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIAction$OpenUrlAction;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOpenIn ()Lcom/adapty/kmp/models/AdaptyWebPresentation;
 	public final fun getUrl ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
