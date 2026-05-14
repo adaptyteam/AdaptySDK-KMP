@@ -21,3 +21,12 @@ internal fun AdaptyWebPresentation.asAdaptyWebPresentationRequest(): AdaptyWebPr
         AdaptyWebPresentation.IN_APP_BROWSER -> AdaptyWebPresentationRequest.IN_APP_BROWSER
     }
 }
+
+
+
+internal fun AdaptyWebPresentationRequest.asAdaptyWebPresentation(): AdaptyWebPresentation {
+    return when (this) {
+        AdaptyWebPresentationRequest.EXTERNAL_BROWSER -> AdaptyWebPresentation.EXTERNAL_BROWSER
+        AdaptyWebPresentationRequest.IN_APP_BROWSER -> AdaptyWebPresentation.IN_APP_BROWSER
+    }
+}

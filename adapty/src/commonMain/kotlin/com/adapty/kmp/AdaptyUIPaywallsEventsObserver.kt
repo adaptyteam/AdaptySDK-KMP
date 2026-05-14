@@ -66,7 +66,7 @@ public interface AdaptyUIPaywallsEventsObserver {
                 mainUiScope.launch { view.dismiss() }
             }
 
-            is AdaptyUIAction.OpenUrlAction -> openUrl(action.url)
+            is AdaptyUIAction.OpenUrlAction -> openUrl(action.url, action.openIn)
             is AdaptyUIAction.CustomAction -> {}
         }
     }

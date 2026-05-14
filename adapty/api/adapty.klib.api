@@ -476,13 +476,16 @@ sealed interface com.adapty.kmp.models/AdaptyUIAction { // com.adapty.kmp.models
     }
 
     final class OpenUrlAction : com.adapty.kmp.models/AdaptyUIAction { // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction|null[0]
-        constructor <init>(kotlin/String) // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.<init>|<init>(kotlin.String){}[0]
+        constructor <init>(kotlin/String, com.adapty.kmp.models/AdaptyWebPresentation = ...) // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.<init>|<init>(kotlin.String;com.adapty.kmp.models.AdaptyWebPresentation){}[0]
 
+        final val openIn // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.openIn|{}openIn[0]
+            final fun <get-openIn>(): com.adapty.kmp.models/AdaptyWebPresentation // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.openIn.<get-openIn>|<get-openIn>(){}[0]
         final val url // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.url|{}url[0]
             final fun <get-url>(): kotlin/String // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.url.<get-url>|<get-url>(){}[0]
 
         final fun component1(): kotlin/String // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.component1|component1(){}[0]
-        final fun copy(kotlin/String = ...): com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.copy|copy(kotlin.String){}[0]
+        final fun component2(): com.adapty.kmp.models/AdaptyWebPresentation // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.component2|component2(){}[0]
+        final fun copy(kotlin/String = ..., com.adapty.kmp.models/AdaptyWebPresentation = ...): com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.copy|copy(kotlin.String;com.adapty.kmp.models.AdaptyWebPresentation){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIAction.OpenUrlAction.toString|toString(){}[0]
