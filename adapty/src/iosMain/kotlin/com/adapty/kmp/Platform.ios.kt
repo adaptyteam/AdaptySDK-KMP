@@ -6,7 +6,10 @@ import com.adapty.kmp.models.AdaptyWebPresentation
 import platform.Foundation.NSURL
 import platform.SafariServices.SFSafariViewController
 import platform.UIKit.UIApplication
+import platform.UIKit.UISceneActivationStateForegroundActive
 import platform.UIKit.UIViewController
+import platform.UIKit.UIWindow
+import platform.UIKit.UIWindowScene
 
 internal actual val adaptyPlugin: AdaptyPlugin by lazy { AdaptyPluginImpl() }
 internal actual val isAndroidPlatform: Boolean get() = false
@@ -30,8 +33,23 @@ internal actual fun openUrl(url: String, openIn: AdaptyWebPresentation) {
 }
 
 private fun findTopViewController(): UIViewController? {
-    val rootVC = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return null
+    val rootVC = findKeyWindow()?.rootViewController ?: return null
     return findTopPresented(rootVC)
+}
+
+private fun findKeyWindow(): UIWindow? {
+    val foregroundScenes = UIApplication.sharedApplication.connectedScenes
+        .filterIsInstance<UIWindowScene>()
+        .filter { it.activationState == UISceneActivationStateForegroundActive }
+        .ifEmpty {
+            UIApplication.sharedApplication.connectedScenes.filterIsInstance<UIWindowScene>()
+        }
+
+    for (scene in foregroundScenes) {
+        val windows = scene.windows.filterIsInstance<UIWindow>()
+        windows.firstOrNull { it.isKeyWindow() }?.let { return it }
+    }
+    return foregroundScenes.firstOrNull()?.windows?.filterIsInstance<UIWindow>()?.firstOrNull()
 }
 
 private fun findTopPresented(controller: UIViewController): UIViewController {
