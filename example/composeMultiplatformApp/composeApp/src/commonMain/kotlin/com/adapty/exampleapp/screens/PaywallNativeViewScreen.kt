@@ -17,11 +17,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.adapty.exampleapp.AppLogger
 import com.adapty.kmp.models.AdaptyCustomAsset
-import com.adapty.kmp.models.AdaptyPaywall
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyUIAction
-import com.adapty.kmp.ui.AdaptyUIPaywallPlatformView
+import com.adapty.kmp.ui.AdaptyUIFlowPlatformView
 import kmpadapty.example.composeapp.generated.resources.Res
 import kmpadapty.example.composeapp.generated.resources.ic_close
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaywallNativeViewScreen(
-    paywall: AdaptyPaywall,
+    flow: AdaptyFlow,
     showToastEvents: Boolean,
     customTags: Map<String, String>? = null,
     customTimers: Map<String, LocalDateTime>? = null,
@@ -48,7 +48,7 @@ fun PaywallNativeViewScreen(
         modifier = modifier.fillMaxWidth(),
         topBar = {
             TopAppBar(
-                title = { Text("Paywall ${paywall.placement.id}") },
+                title = { Text("Paywall ${flow.placement.id}") },
                 navigationIcon = {
                     IconButton(onClick = {
                         onNavigateBack()
@@ -66,9 +66,9 @@ fun PaywallNativeViewScreen(
 
     ) { paddingValues ->
 
-        AdaptyUIPaywallPlatformView(
+        AdaptyUIFlowPlatformView(
             modifier = Modifier.fillMaxSize().padding(paddingValues),
-            paywall = paywall,
+            flow = flow,
             customTags = customTags,
             customTimers = customTimers,
             customAssets = customAssets,
@@ -136,10 +136,10 @@ fun PaywallNativeViewScreen(
                     snackbarHostState.showSnackbar("Action: onDidFailRestore, Error: ${error.message}")
                 }
             },
-            onDidFailRendering = { view, error ->
-                AppLogger.d("#Example# Platform View onDidFailRendering: $error")
+            onDidReceiveError = { view, error ->
+                AppLogger.d("#Example# Platform View onDidReceiveError: $error")
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Action: onDidFailRendering, Error: ${error.message}")
+                    snackbarHostState.showSnackbar("Action: onDidReceiveError, Error: ${error.message}")
                 }
             },
             onDidFailLoadingProducts = { view, error ->

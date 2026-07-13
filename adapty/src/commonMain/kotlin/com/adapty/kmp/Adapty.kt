@@ -3,6 +3,8 @@ package com.adapty.kmp
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.internal.plugin.constants.Constants.DEFAULT_LOAD_TIMEOUT
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyFlow
+import com.adapty.kmp.models.AdaptyFlowPaywall
 import com.adapty.kmp.models.AdaptyInstallationStatus
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyLogLevel
@@ -104,6 +106,11 @@ internal interface AdaptyContract {
      * @param loadTimeout Maximum duration to wait for server response.
      * @return [AdaptyResult] containing [AdaptyPaywall].
      */
+    @Deprecated(
+        "Paywalls are backed by flows as of 4.0.0. Use getFlow(placementId, ...).",
+        ReplaceWith("getFlow(placementId, fetchPolicy, loadTimeout)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun getPaywall(
         placementId: String,
         locale: String? = null,
@@ -112,12 +119,39 @@ internal interface AdaptyContract {
     ): AdaptyResult<AdaptyPaywall>
 
     /**
+     * Fetches a flow by placement ID (cross_platform 4.0.0).
+     *
+     * @param placementId Identifier of the placement in Adapty Dashboard.
+     * @param fetchPolicy Determines whether to fetch from cache or server.
+     * @param loadTimeout Maximum duration to wait for server response.
+     * @return [AdaptyResult] containing [AdaptyFlow].
+     */
+    suspend fun getFlow(
+        placementId: String,
+        fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default,
+        loadTimeout: Duration = DEFAULT_LOAD_TIMEOUT
+    ): AdaptyResult<AdaptyFlow>
+
+    /**
      * Retrieves the products for a given paywall.
      *
      * @param paywall The [AdaptyPaywall] object.
      * @return [AdaptyResult] containing a list of [AdaptyPaywallProduct].
      */
+    @Deprecated(
+        "Use getPaywallProducts(flow: AdaptyFlow) as of 4.0.0.",
+        ReplaceWith("getPaywallProducts(flow)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun getPaywallProducts(paywall: AdaptyPaywall): AdaptyResult<List<AdaptyPaywallProduct>>
+
+    /**
+     * Retrieves the products for a given flow.
+     *
+     * @param flow The [AdaptyFlow] object.
+     * @return [AdaptyResult] containing a list of [AdaptyPaywallProduct].
+     */
+    suspend fun getPaywallProducts(flow: AdaptyFlow): AdaptyResult<List<AdaptyPaywallProduct>>
 
     /**
      * Fetches an onboarding flow by placement ID.
@@ -128,6 +162,10 @@ internal interface AdaptyContract {
      * @param loadTimeout Maximum duration to wait for server response.
      * @return [AdaptyResult] containing [AdaptyOnboarding].
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun getOnboarding(
         placementId: String,
         locale: String? = null,
@@ -147,6 +185,10 @@ internal interface AdaptyContract {
      *
      * @return [AdaptyResult] containing [AdaptyOnboarding].
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun getOnboardingForDefaultAudience(
         placementId: String,
         locale: String? = null,
@@ -318,7 +360,31 @@ internal interface AdaptyContract {
      *
      * Read more on the [Adapty Documentation](https://docs.adapty.io/v2.0/docs/ios-displaying-products#paywall-analytics)
      * */
+    @Deprecated(
+        "Use logShowFlow(flow: AdaptyFlow) as of 4.0.0.",
+        ReplaceWith("logShowFlow(flow)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit>
+
+    /**
+     * Logs a flow view for analytics purposes (cross_platform 4.0.0).
+     *
+     * @param flow The [AdaptyFlow] that was shown to the user.
+     */
+    suspend fun logShowFlow(flow: AdaptyFlow): AdaptyResult<Unit>
+
+    /**
+     * Fetches flow for the default audience (cross_platform 4.0.0).
+     *
+     * @param placementId Identifier of the placement.
+     * @param fetchPolicy Fetch strategy.
+     * @return [AdaptyResult] containing [AdaptyFlow].
+     */
+    suspend fun getFlowForDefaultAudience(
+        placementId: String,
+        fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default
+    ): AdaptyResult<AdaptyFlow>
 
     /**
      * Fetches paywall for the default audience.
@@ -332,6 +398,11 @@ internal interface AdaptyContract {
      *
      * @return [AdaptyResult] containing [AdaptyOnboarding].
      */
+    @Deprecated(
+        "Paywalls are backed by flows as of 4.0.0. Use getFlowForDefaultAudience(placementId, ...).",
+        ReplaceWith("getFlowForDefaultAudience(placementId, fetchPolicy)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun getPaywallForDefaultAudience(
         placementId: String,
         locale: String? = null,
@@ -370,6 +441,22 @@ internal interface AdaptyContract {
     suspend fun openWebPaywall(
         paywall: AdaptyPaywall? = null,
         product: AdaptyPaywallProduct? = null,
+        openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER
+    ): AdaptyResult<Unit>
+
+    /**
+     * Creates a URL for a web paywall from an [AdaptyFlowPaywall] variation (cross_platform 4.0.0).
+     */
+    suspend fun createWebPaywallUrl(flowPaywall: AdaptyFlowPaywall): AdaptyResult<String>
+
+    /**
+     * Opens a web-based paywall from an [AdaptyFlowPaywall] variation (cross_platform 4.0.0).
+     *
+     * @param flowPaywall The flow paywall used to generate the web URL.
+     * @param openIn Where the web paywall should be opened. Defaults to [AdaptyWebPresentation.EXTERNAL_BROWSER].
+     */
+    suspend fun openWebPaywall(
+        flowPaywall: AdaptyFlowPaywall,
         openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER
     ): AdaptyResult<Unit>
 

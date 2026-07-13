@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // deprecated onboarding-view path bridges deprecated APIs
+
 package com.adapty.kmp.models
 
 import com.adapty.kmp.AdaptyUI

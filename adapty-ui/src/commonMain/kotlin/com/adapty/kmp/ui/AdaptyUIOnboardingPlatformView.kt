@@ -36,6 +36,10 @@ import kotlinx.coroutines.CoroutineScope
  * @param onStateUpdatedAction Callback invoked when the state of an onboarding element is updated.
  * @param onAnalyticsEvent Callback invoked when an analytics event occurs within the onboarding.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 @OptIn(AdaptyKMPInternal::class)
 @Composable
 public fun AdaptyUIOnboardingPlatformView(

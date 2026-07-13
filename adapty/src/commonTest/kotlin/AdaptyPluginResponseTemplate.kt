@@ -1,7 +1,11 @@
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginEvent
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
 import com.adapty.kmp.models.AdaptyError
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
@@ -202,55 +206,11 @@ object AdaptyPluginResponseTemplate {
     }
 
     private fun getSuccessPaywallResponse(adaptyPaywall: AdaptyPaywall): String {
-
-        val productsJsonArray = buildJsonArray {
-            adaptyPaywall.products.forEach { product ->
-                add(buildJsonObject {
-                    put("vendor_product_id", product.vendorId)
-                    put("adapty_product_id", product.adaptyProductId)
-                    put("promotional_offer_id", product.promotionalOfferId)
-                    put("win_back_offer_id", product.winBackOfferId)
-                    put("base_plan_id", product.basePlanId)
-                    put("offer_id", product.offerId)
-                    put("product_type", product.productType)
-                    put("access_level_id", product.accessLevelId)
-                })
-            }
-        }
-
-        val paywallResponseJson = buildJsonObject {
-            put("placement", buildJsonObject {
-                put("developer_id", adaptyPaywall.placement.id)
-                put("audience_name", adaptyPaywall.placement.audienceName)
-                put("revision", adaptyPaywall.placement.revision)
-                put("ab_test_name", adaptyPaywall.placement.abTestName)
-                put("placement_audience_version_id", adaptyPaywall.placement.placementAudienceVersionId)
-
-            })
-            put("developer_id", adaptyPaywall.placement.id)
-            put("paywall_id", adaptyPaywall.instanceIdentity)
-            put("paywall_name", adaptyPaywall.name)
-            put("variation_id", adaptyPaywall.variationId)
-            put("request_locale", adaptyPaywall.requestLocale)
-            put("response_created_at", adaptyPaywall.responseCreatedAt)
-            adaptyPaywall.remoteConfig?.let { remoteConfig ->
-                put("remote_config", buildJsonObject {
-                    put("lang", remoteConfig.locale)
-                    put("data", remoteConfig.dataJsonString)
-                })
-            }
-            adaptyPaywall.viewConfiguration?.let { viewConfiguration ->
-                put("paywall_builder", buildJsonObject {
-                    put("paywall_builder_id", viewConfiguration.paywallBuilderId)
-                    put("lang", viewConfiguration.locale)
-                })
-            }
-
-            put("products", productsJsonArray)
-            put("payload_data", "testPayloadData")
-
-        }
-        return buildSuccessJsonString(paywallResponseJson)
+        val flowJson = jsonInstance.encodeToJsonElement(
+            AdaptyFlowRequestResponse.serializer(),
+            adaptyPaywall.asAdaptyFlowRequest()
+        )
+        return buildSuccessJsonString(flowJson)
     }
 
 
@@ -333,6 +293,7 @@ object AdaptyPluginResponseTemplate {
                             AdaptySubscriptionOfferType.INTRODUCTORY -> "introductory"
                             AdaptySubscriptionOfferType.PROMOTIONAL -> "promotional"
                             AdaptySubscriptionOfferType.WINBACK -> "win_back"
+                            AdaptySubscriptionOfferType.CODE -> "code"
                         }
                     )
                 })
@@ -481,6 +442,12 @@ object AdaptyPluginResponseTemplate {
         AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_LOADING_PRODUCTS -> buildPaywallViewWithErrorEvent()
         AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION ->
             buildPaywallViewWebPaymentEvent(params)
+
+        AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION -> buildFlowViewAskPermissionEvent(params)
+        AdaptyPluginEvent.FLOW_VIEW_DID_REQUEST_APP_REVIEW -> buildPaywallViewOnlyEvent()
+        AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE -> buildFlowViewObserverPurchaseEvent()
+        AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_RESTORE -> buildFlowViewObserverRestoreEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ANALYTIC_EVENT -> buildFlowViewAnalyticEvent(params)
 
         // Onboarding view events
         AdaptyPluginEvent.ONBOARDING_DID_FINISH_LOADING -> buildOnboardingViewWithMetaEvent()
@@ -653,6 +620,41 @@ object AdaptyPluginResponseTemplate {
             put("view", buildEventViewJson())
             if (includeProduct) put("product", buildEventProductJson())
             if (includeError) put("error", buildEventErrorJson())
+        }.toString()
+    }
+
+
+    private fun buildFlowViewAskPermissionEvent(params: Map<String, Any?>): String {
+        val permission = params["permission"] as? String ?: "push"
+        val eventId = params["event_id"] as? String ?: "perm_event_1"
+        return buildJsonObject {
+            put("view", buildEventViewJson())
+            put("event_id", eventId)
+            put("permission", permission)
+        }.toString()
+    }
+
+    private fun buildFlowViewObserverPurchaseEvent(
+        eventId: String = "observer_event_1"
+    ): String = buildJsonObject {
+        put("view", buildEventViewJson())
+        put("event_id", eventId)
+        put("product", buildEventProductJson())
+    }.toString()
+
+    private fun buildFlowViewObserverRestoreEvent(
+        eventId: String = "observer_event_2"
+    ): String = buildJsonObject {
+        put("view", buildEventViewJson())
+        put("event_id", eventId)
+    }.toString()
+
+    private fun buildFlowViewAnalyticEvent(params: Map<String, Any?>): String {
+        val name = params["name"] as? String ?: "analytic_event"
+        return buildJsonObject {
+            put("view", buildEventViewJson())
+            put("name", name)
+            put("params", buildJsonObject { })
         }.toString()
     }
 

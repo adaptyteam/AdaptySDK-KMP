@@ -15,7 +15,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.toAdaptyCustomAttributesRequest
 import com.adapty.kmp.internal.utils.jsonInstance
@@ -182,7 +183,6 @@ class AdaptyImplTest {
             method = AdaptyPluginMethod.GET_PAYWALL,
             param = AdaptyGetPaywallRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
-                locale = AdaptyFakeTestData.LOCALE,
                 loadTimeoutInSeconds = 30.0,
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
@@ -203,7 +203,6 @@ class AdaptyImplTest {
             method = AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE,
             param = AdaptyGetPaywallForDefaultAudienceRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
-                locale = AdaptyFakeTestData.LOCALE,
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
             expectedSuccessData = AdaptyFakeTestData.getPaywall()
@@ -220,7 +219,7 @@ class AdaptyImplTest {
                 adaptyImpl.getPaywallProducts(paywall = paywall)
             },
             method = AdaptyPluginMethod.GET_PAYWALL_PRODUCTS,
-            param = AdaptyGetPaywallProductsRequest(paywall = paywall.asAdaptyPaywallRequest()),
+            param = AdaptyGetPaywallProductsRequest(flow = paywall.asAdaptyFlowRequest()),
             expectedSuccessData = paywallProductList,
         )
     }
@@ -320,7 +319,7 @@ class AdaptyImplTest {
                 adaptyImpl.logShowPaywall(paywall = paywall)
             },
             method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
-            param = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest()),
+            param = AdaptyLogShowPaywallRequest(flow = paywall.asAdaptyFlowRequest()),
             expectedSuccessData = Unit
         )
     }
@@ -411,7 +410,7 @@ class AdaptyImplTest {
                 adaptyImpl.createWebPaywallUrl(paywall = paywall)
             },
             method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
-            param = AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest()),
+            param = AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyFlowPaywallRequest()),
             expectedSuccessData = expectedUrl,
         )
     }
@@ -428,7 +427,7 @@ class AdaptyImplTest {
             },
             method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
             param = AdaptyWebPaywallRequest.fromPaywall(
-                paywall = paywall.asAdaptyPaywallRequest(),
+                paywall = paywall.asAdaptyFlowPaywallRequest(),
                 webPresentationRequest = AdaptyWebPresentationRequest.IN_APP_BROWSER
             ),
             expectedSuccessData = Unit

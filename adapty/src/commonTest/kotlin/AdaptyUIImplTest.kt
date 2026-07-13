@@ -9,7 +9,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIShowDialogRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyOnboardingRequest
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -48,7 +48,7 @@ class AdaptyUIImplTest {
             },
             method = AdaptyPluginMethod.CREATE_PAYWALL_VIEW,
             param = AdaptyUICreatePaywallViewRequest(
-                paywall = paywall.asAdaptyPaywallRequest(),
+                flow = paywall.asAdaptyFlowRequest(),
                 loadTimeOutInSeconds = null,
                 preloadProducts = false
             ),

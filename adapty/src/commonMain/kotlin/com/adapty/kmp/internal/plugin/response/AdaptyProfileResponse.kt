@@ -33,7 +33,10 @@ internal data class AdaptyProfileResponse(
     val timestamp: Long,
 
     @SerialName("is_test_user")
-    val isTestUser: Boolean
+    val isTestUser: Boolean,
+
+    @SerialName("applied_attribution_sources")
+    val appliedAttributionSources: List<String>? = null,
 )
 
 internal fun AdaptyProfileResponse.asAdaptyProfile(): AdaptyProfile {
@@ -48,6 +51,7 @@ internal fun AdaptyProfileResponse.asAdaptyProfile(): AdaptyProfile {
         nonSubscriptions = nonSubscriptions?.entries?.associate { entry -> entry.key to entry.value.map { it.asAdaptyNonSubscription() } }
             ?: emptyMap(),
         customAttributes = customAttributes.toTypedMap(),
-        isTestUser = isTestUser
+        isTestUser = isTestUser,
+        appliedAttributionSources = appliedAttributionSources ?: emptyList(),
     )
 }

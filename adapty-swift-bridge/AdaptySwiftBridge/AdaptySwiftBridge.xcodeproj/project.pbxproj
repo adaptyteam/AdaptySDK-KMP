@@ -338,8 +338,10 @@
 			repositoryURL = "https://github.com/adaptyteam/AdaptySDK-iOS.git";
 			requirement = {
 				kind = exactVersion;
-				version = 3.17.0;
+				version = "4.0.0-beta.2";
 			};
+			traits = (
+			);
 		};
 /* End XCRemoteSwiftPackageReference section */
 

@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var isLoading = false
     @State private var showPaywall = false
     @State private var showOnboarding = false
-    @State private var paywall: AdaptyPaywall? = nil
+    @State private var flow: AdaptyFlow? = nil
     @State private var onboarding: AdaptyOnboarding? = nil
     @State private var errorMessage: String? = nil
 
@@ -54,8 +54,8 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .fullScreenCover(isPresented: $showPaywall) {
-            if let paywall = paywall {
-                PaywallView(paywall: paywall, isPresented: $showPaywall)
+            if let flow = flow {
+                PaywallView(flow: flow, isPresented: $showPaywall)
             }
         }
         .fullScreenCover(isPresented: $showOnboarding) {
@@ -71,11 +71,11 @@ struct ContentView: View {
         errorMessage = nil
 
         Task {
-            let result = try await AdaptyManager.shared.getPaywall(placementId: placementId)
+            let result = try await AdaptyManager.shared.getFlow(placementId: placementId)
             await MainActor.run {
                 isLoading = false
-                if let successResult = result as? AdaptyResultSuccess<AdaptyPaywall> {
-                    self.paywall = successResult.value
+                if let successResult = result as? AdaptyResultSuccess<AdaptyFlow> {
+                    self.flow = successResult.value
                     self.showPaywall = true
                 } else if let errorResult = result as? AdaptyResultError {
                     self.errorMessage = errorResult.error.message

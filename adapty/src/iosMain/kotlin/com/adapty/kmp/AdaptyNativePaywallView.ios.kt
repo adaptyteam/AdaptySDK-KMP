@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // deprecated paywall-view wrapper bridges deprecated APIs
+
 package com.adapty.kmp
 
 import platform.UIKit.UIViewController

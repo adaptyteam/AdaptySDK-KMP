@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class AdaptyPaywallProductReferenceRequestResponse(
+    @SerialName("flow_product_id")
+    val flowProductId: String? = null,
+
     @SerialName("vendor_product_id")
     val vendorProductId: String,
 
@@ -40,12 +43,14 @@ internal fun AdaptyPaywallProductReferenceRequestResponse.asAdaptyPaywallProduct
         promotionalOfferId = this.promotionalOfferId,
         winBackOfferId = this.winBackOfferId,
         basePlanId = this.basePlanId,
-        offerId = this.offerId
+        offerId = this.offerId,
+        flowProductId = this.flowProductId,
     )
 }
 
 internal fun AdaptyPaywallProductReference.asAdaptyPaywallProductReferenceRequest(): AdaptyPaywallProductReferenceRequestResponse {
     return AdaptyPaywallProductReferenceRequestResponse(
+        flowProductId = this.flowProductId,
         vendorProductId = this.vendorId,
         adaptyProductId = this.adaptyProductId,
         productType = this.productType,

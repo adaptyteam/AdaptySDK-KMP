@@ -1,5 +1,5 @@
 @file:OptIn(InternalAdaptyApi::class)
-@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "DEPRECATION")
 
 package com.adapty.kmp
 

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // deprecated onboarding observer bridges deprecated paywall/flow APIs
+
 package com.adapty.kmp
 
 import com.adapty.kmp.internal.logger

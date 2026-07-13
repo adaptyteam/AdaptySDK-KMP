@@ -23,4 +23,5 @@ public data class AdaptyPaywallProductReference(
     val winBackOfferId: String? = null, // iOS Only
     val basePlanId: String? = null, // Android Only
     val offerId: String? = null, // Android Only
+    val flowProductId: String? = null,
 )

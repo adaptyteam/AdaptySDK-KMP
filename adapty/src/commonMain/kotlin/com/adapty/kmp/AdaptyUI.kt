@@ -2,12 +2,14 @@ package com.adapty.kmp
 
 import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.models.AdaptyCustomAsset
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.AdaptyUIDialogActionType
+import com.adapty.kmp.models.AdaptyUIFlowView
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIPaywallView
@@ -64,12 +66,53 @@ internal interface AdaptyUIContract {
      */
     fun unregisterOnboardingEventsListener(viewId: String)
 
+    @Deprecated(
+        "Use registerFlowEventsListener(observer, viewId) as of 4.0.0.",
+        ReplaceWith("registerFlowEventsListener(observer, viewId)"),
+        DeprecationLevel.WARNING
+    )
     fun registerPaywallEventsListener(
         observer: AdaptyUIPaywallsEventsObserver,
         viewId: String
     )
 
+    @Deprecated(
+        "Use unregisterFlowEventsListener(viewId) as of 4.0.0.",
+        ReplaceWith("unregisterFlowEventsListener(viewId)"),
+        DeprecationLevel.WARNING
+    )
     fun unregisterPaywallEventsListener(viewId: String)
+
+    /**
+     * Registers an [AdaptyUIFlowsEventsObserver] for a specific flow view (cross_platform 4.0.0).
+     */
+    fun registerFlowEventsListener(
+        observer: AdaptyUIFlowsEventsObserver,
+        viewId: String
+    )
+
+    /** Unregisters the flow event observer for the specified view. */
+    fun unregisterFlowEventsListener(viewId: String)
+
+    /**
+     * Sets a global observer to receive events from flow views (cross_platform 4.0.0).
+     */
+    fun setFlowsEventsObserver(observer: AdaptyUIFlowsEventsObserver)
+
+    /**
+     * Requests an in-app review (cross_platform 4.0.0).
+     *
+     */
+    fun requestAppReview()
+
+    /**
+     * Opens a URL natively (cross_platform 4.0.0), honoring [openIn]
+     * (`EXTERNAL_BROWSER` → external browser, `IN_APP_BROWSER` → in-app browser).
+     *
+     * This backs the default `flowViewDidPerformAction` handling of
+     * [com.adapty.kmp.models.AdaptyUIAction.OpenUrlAction].
+     */
+    fun openWebUrl(url: String, openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER)
 
 
     /**
@@ -98,6 +141,11 @@ internal interface AdaptyUIContract {
      *
      * @see AdaptyUIPaywallsEventsObserver
      */
+    @Deprecated(
+        "Use setFlowsEventsObserver(observer) as of 4.0.0.",
+        ReplaceWith("setFlowsEventsObserver(observer)"),
+        DeprecationLevel.WARNING
+    )
     fun setPaywallsEventsObserver(observer: AdaptyUIPaywallsEventsObserver)
 
 
@@ -144,6 +192,11 @@ internal interface AdaptyUIContract {
      *
      * @see AdaptyUIPaywallView
      */
+    @Deprecated(
+        "Use createFlowView(flow, ...) as of 4.0.0.",
+        ReplaceWith("createFlowView(flow, loadTimeout, preloadProducts, customTags, customTimers, customAssets, productPurchaseParams)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun createPaywallView(
         paywall: AdaptyPaywall,
         loadTimeout: Duration? = null,
@@ -155,6 +208,31 @@ internal interface AdaptyUIContract {
     ): AdaptyResult<AdaptyUIPaywallView>
 
     /**
+     * Creates a flow view that can be presented to the user (cross_platform 4.0.0).
+     *
+     * @param flow The [AdaptyFlow] model used to build the view.
+     * @return [AdaptyResult] containing the created [AdaptyUIFlowView] or an error.
+     */
+    suspend fun createFlowView(
+        flow: AdaptyFlow,
+        loadTimeout: Duration? = null,
+        preloadProducts: Boolean = false,
+        customTags: Map<String, String>? = null,
+        customTimers: Map<String, LocalDateTime>? = null,
+        customAssets: Map<String, AdaptyCustomAsset>? = null,
+        productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null
+    ): AdaptyResult<AdaptyUIFlowView>
+
+    /** Presents the provided flow view (cross_platform 4.0.0). */
+    suspend fun presentFlowView(
+        view: AdaptyUIFlowView,
+        iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
+    ): AdaptyResult<Unit>
+
+    /** Dismisses the provided flow view (cross_platform 4.0.0). */
+    suspend fun dismissFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit>
+
+    /**
      * Creates an onboarding view from the provided [AdaptyOnboarding] model.
      *
      * @param onboarding The onboarding configuration object.
@@ -164,6 +242,10 @@ internal interface AdaptyUIContract {
      *
      * @see AdaptyUIOnboardingView
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun createOnboardingView(
         onboarding: AdaptyOnboarding,
         externalUrlsPresentation: AdaptyWebPresentation = AdaptyWebPresentation.IN_APP_BROWSER
@@ -175,6 +257,10 @@ internal interface AdaptyUIContract {
      * @param view The onboarding view to present.
      * @return [AdaptyResult] indicating success or error.
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun presentOnboardingView(
         view: AdaptyUIOnboardingView,
         iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
@@ -186,6 +272,11 @@ internal interface AdaptyUIContract {
      * @param view The paywall view to present.
      * @return [AdaptyResult] indicating success or error.
      */
+    @Deprecated(
+        "Use presentFlowView(view, ...) as of 4.0.0.",
+        ReplaceWith("presentFlowView(view, iosPresentationStyle)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun presentPaywallView(
         view: AdaptyUIPaywallView,
         iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
@@ -197,6 +288,11 @@ internal interface AdaptyUIContract {
      * @param view The paywall view to dismiss.
      * @return [AdaptyResult] indicating success or error.
      */
+    @Deprecated(
+        "Use dismissFlowView(view) as of 4.0.0.",
+        ReplaceWith("dismissFlowView(view)"),
+        DeprecationLevel.WARNING
+    )
     suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
 
     /**
@@ -205,6 +301,10 @@ internal interface AdaptyUIContract {
      * @param view The onboarding view to dismiss.
      * @return [AdaptyResult] indicating success or error.
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun dismissOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit>
 
     /**

@@ -8,9 +8,10 @@ import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateCollectingRefundDat
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
@@ -168,7 +169,6 @@ object AdaptyPluginRequestTemplate {
     private fun getPaywallRequestJsonString(adaptyGetPaywallRequest: AdaptyGetPaywallRequest): String {
         val jsonObject = buildJsonObject {
             put("placement_id", adaptyGetPaywallRequest.placementId)
-            put("locale", adaptyGetPaywallRequest.locale)
             put("load_timeout", adaptyGetPaywallRequest.loadTimeoutInSeconds)
             adaptyGetPaywallRequest.fetchPolicy?.let { fetchPolicy ->
                 put("fetch_policy", buildFetchPolicyJsonObject(fetchPolicy))
@@ -199,10 +199,10 @@ object AdaptyPluginRequestTemplate {
     private fun getPaywallProductsRequestJsonString(request: AdaptyGetPaywallProductsRequest): String {
         val jsonObject = buildJsonObject {
             put(
-                "paywall",
+                "flow",
                 jsonInstance.encodeToJsonElement(
-                    AdaptyPaywallRequestResponse.serializer(),
-                    request.paywall
+                    AdaptyFlowRequestResponse.serializer(),
+                    request.flow
                 )
             )
         }
@@ -256,10 +256,10 @@ object AdaptyPluginRequestTemplate {
     private fun getAdaptyLogShowPaywallRequest(request: AdaptyLogShowPaywallRequest): String {
         val jsonObject = buildJsonObject {
             put(
-                "paywall",
+                "flow",
                 jsonInstance.encodeToJsonElement(
-                    AdaptyPaywallRequestResponse.serializer(),
-                    request.paywall
+                    AdaptyFlowRequestResponse.serializer(),
+                    request.flow
                 )
             )
         }
@@ -269,7 +269,6 @@ object AdaptyPluginRequestTemplate {
     private fun getAdaptyGetPaywallForDefaultAudienceRequest(request: AdaptyGetPaywallForDefaultAudienceRequest): String {
         val jsonObject = buildJsonObject {
             put("placement_id", request.placementId)
-            put("locale", request.locale)
             request.fetchPolicy?.let {
                 put("fetch_policy", buildFetchPolicyJsonObject(it))
             }
@@ -313,7 +312,7 @@ object AdaptyPluginRequestTemplate {
                 put(
                     "paywall",
                     jsonInstance.encodeToJsonElement(
-                        AdaptyPaywallRequestResponse.serializer(),
+                        AdaptyFlowPaywallRequestResponse.serializer(),
                         it
                     )
                 )
@@ -339,10 +338,10 @@ object AdaptyPluginRequestTemplate {
     private fun getCreatePaywallViewRequestJsonString(request: AdaptyUICreatePaywallViewRequest): String {
         return buildJsonObject {
             put(
-                "paywall",
+                "flow",
                 jsonInstance.encodeToJsonElement(
-                    AdaptyPaywallRequestResponse.serializer(),
-                    request.paywall
+                    AdaptyFlowRequestResponse.serializer(),
+                    request.flow
                 )
             )
             request.loadTimeOutInSeconds?.let { put("load_timeout", it) }

@@ -4,6 +4,7 @@ import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.utils.asAdaptyValidDateTimeFormat
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyCustomAsset
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
@@ -13,7 +14,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class AdaptyUICreatePaywallViewRequest(
-    @SerialName("paywall") val paywall: AdaptyPaywallRequestResponse,
+    @SerialName("flow") val flow: AdaptyFlowRequestResponse,
     @SerialName("load_timeout") val loadTimeOutInSeconds: Double?,
     @SerialName("preload_products") val preloadProducts: Boolean = false,
     @SerialName("custom_tags") val customTags: Map<String, String>? = null,
@@ -29,10 +30,39 @@ public fun createPaywallViewRequestJsonString(
     customTimers: Map<String, LocalDateTime>?,
     customAssets: Map<String, AdaptyCustomAsset>?,
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
+): String = createFlowViewRequestJsonString(
+    flow = paywall.asAdaptyFlowRequest(),
+    customTags = customTags,
+    customTimers = customTimers,
+    customAssets = customAssets,
+    productPurchaseParams = productPurchaseParams
+)
+
+@AdaptyKMPInternal
+public fun createFlowViewRequestJsonString(
+    flow: AdaptyFlow,
+    customTags: Map<String, String>?,
+    customTimers: Map<String, LocalDateTime>?,
+    customAssets: Map<String, AdaptyCustomAsset>?,
+    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
+): String = createFlowViewRequestJsonString(
+    flow = flow.asAdaptyFlowRequest(),
+    customTags = customTags,
+    customTimers = customTimers,
+    customAssets = customAssets,
+    productPurchaseParams = productPurchaseParams
+)
+
+private fun createFlowViewRequestJsonString(
+    flow: AdaptyFlowRequestResponse,
+    customTags: Map<String, String>?,
+    customTimers: Map<String, LocalDateTime>?,
+    customAssets: Map<String, AdaptyCustomAsset>?,
+    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
 ): String {
 
     val request = AdaptyUICreatePaywallViewRequest(
-        paywall = paywall.asAdaptyPaywallRequest(),
+        flow = flow,
         loadTimeOutInSeconds = null,
         customTags = customTags,
         customTimers = customTimers?.asAdaptyValidDateTimeFormat(),

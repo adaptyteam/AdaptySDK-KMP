@@ -10,6 +10,9 @@ import com.adapty.kmp.internal.AdaptyKMPInternal
  * and optionally a view configuration if the paywall was created using the
  * Adapty Paywall Builder.
  *
+ * As of cross-platform contract 4.0.0 a paywall is backed by an `AdaptyFlow`. This class is
+ * kept for backward compatibility; prefer [AdaptyFlow] and the `getFlow` family of APIs.
+ *
  * @property placement [AdaptyPlacement] The placement information associated with this paywall.
  * @property instanceIdentity A unique identifier of the paywall instance, configured in Adapty Dashboard.
  * @property name The name of the paywall.
@@ -27,7 +30,7 @@ public data class AdaptyPaywall internal constructor(
     internal val payloadData: String? = null,
     internal val webPurchaseUrl: String?,
     internal val requestLocale: String?,
-    internal val responseCreatedAt: Long = 0L
+    internal val responseCreatedAt: Long = 0L,
 ) {
     internal companion object {
         const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_paywall_"

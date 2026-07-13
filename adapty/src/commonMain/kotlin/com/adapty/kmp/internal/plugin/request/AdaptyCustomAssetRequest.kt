@@ -60,7 +60,9 @@ internal sealed interface AdaptyCustomAssetRequest {
     data class LocalVideoRequest(
         @SerialName("id") val id: String,
         @SerialName("asset_id") val assetId: String? = null,
-        @SerialName("path") val path: String? = null
+        @SerialName("path") val path: String? = null,
+        @SerialName("h_res") val hRes: Double? = null,
+        @SerialName("v_res") val vRes: Double? = null,
     ) : AdaptyCustomAssetRequest
 }
 

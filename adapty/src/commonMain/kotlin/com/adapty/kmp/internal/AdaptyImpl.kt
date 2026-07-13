@@ -20,9 +20,12 @@ import com.adapty.kmp.internal.plugin.request.AdaptyIdentifyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateCollectingRefundDataRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlow
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowPaywallRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
-import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
@@ -38,7 +41,6 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyOnboarding
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywall
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyWebPresentationRequest
@@ -57,6 +59,8 @@ import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyCustomerIdentity
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyErrorCode
+import com.adapty.kmp.models.AdaptyFlow
+import com.adapty.kmp.models.AdaptyFlowPaywall
 import com.adapty.kmp.models.AdaptyInstallationStatus
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyLogLevel
@@ -80,6 +84,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 
+@Suppress("OVERRIDE_DEPRECATION")
 internal class AdaptyImpl(
     private val adaptyPlugin: AdaptyPlugin,
     private val appMainScope: CoroutineScope = MainScope()
@@ -145,11 +150,10 @@ internal class AdaptyImpl(
         fetchPolicy: AdaptyPaywallFetchPolicy,
         loadTimeout: Duration
     ): AdaptyResult<AdaptyPaywall> =
-        adaptyPlugin.awaitExecute<AdaptyGetPaywallRequest, AdaptyPaywallRequestResponse>(
+        adaptyPlugin.awaitExecute<AdaptyGetPaywallRequest, AdaptyFlowRequestResponse>(
             method = AdaptyPluginMethod.GET_PAYWALL,
             request = AdaptyGetPaywallRequest(
                 placementId = placementId,
-                locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
                 loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
             )
@@ -158,8 +162,46 @@ internal class AdaptyImpl(
     override suspend fun getPaywallProducts(paywall: AdaptyPaywall): AdaptyResult<List<AdaptyPaywallProduct>> =
         adaptyPlugin.awaitExecute<AdaptyGetPaywallProductsRequest, List<AdaptyPaywallProductResponse>>(
             method = AdaptyPluginMethod.GET_PAYWALL_PRODUCTS,
-            request = AdaptyGetPaywallProductsRequest(paywall = paywall.asAdaptyPaywallRequest())
+            request = AdaptyGetPaywallProductsRequest(flow = paywall.asAdaptyFlowRequest())
         ).asAdaptyResult { list -> list.map { it.asAdaptyPaywallProduct() } }
+
+    override suspend fun getFlow(
+        placementId: String,
+        fetchPolicy: AdaptyPaywallFetchPolicy,
+        loadTimeout: Duration
+    ): AdaptyResult<AdaptyFlow> =
+        adaptyPlugin.awaitExecute<AdaptyGetPaywallRequest, AdaptyFlowRequestResponse>(
+            method = AdaptyPluginMethod.GET_PAYWALL,
+            request = AdaptyGetPaywallRequest(
+                placementId = placementId,
+                fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
+            )
+        ).asAdaptyResult { it.asAdaptyFlow() }
+
+    override suspend fun getFlowForDefaultAudience(
+        placementId: String,
+        fetchPolicy: AdaptyPaywallFetchPolicy
+    ): AdaptyResult<AdaptyFlow> =
+        adaptyPlugin.awaitExecute<AdaptyGetPaywallForDefaultAudienceRequest, AdaptyFlowRequestResponse>(
+            method = AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE,
+            request = AdaptyGetPaywallForDefaultAudienceRequest(
+                placementId = placementId,
+                fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest()
+            )
+        ).asAdaptyResult { it.asAdaptyFlow() }
+
+    override suspend fun getPaywallProducts(flow: AdaptyFlow): AdaptyResult<List<AdaptyPaywallProduct>> =
+        adaptyPlugin.awaitExecute<AdaptyGetPaywallProductsRequest, List<AdaptyPaywallProductResponse>>(
+            method = AdaptyPluginMethod.GET_PAYWALL_PRODUCTS,
+            request = AdaptyGetPaywallProductsRequest(flow = flow.asAdaptyFlowRequest())
+        ).asAdaptyResult { list -> list.map { it.asAdaptyPaywallProduct() } }
+
+    override suspend fun logShowFlow(flow: AdaptyFlow): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyLogShowPaywallRequest, Boolean>(
+            method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
+            request = AdaptyLogShowPaywallRequest(flow = flow.asAdaptyFlowRequest())
+        ).asAdaptyResult { }
 
 
     override suspend fun makePurchase(
@@ -247,7 +289,7 @@ internal class AdaptyImpl(
     override suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit> =
         adaptyPlugin.awaitExecute<AdaptyLogShowPaywallRequest, Boolean>(
             method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
-            request = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest())
+            request = AdaptyLogShowPaywallRequest(flow = paywall.asAdaptyFlowRequest())
         ).asAdaptyResult { }
 
     override suspend fun getPaywallForDefaultAudience(
@@ -255,11 +297,11 @@ internal class AdaptyImpl(
         locale: String?,
         fetchPolicy: AdaptyPaywallFetchPolicy
     ): AdaptyResult<AdaptyPaywall> =
-        adaptyPlugin.awaitExecute<AdaptyGetPaywallForDefaultAudienceRequest, AdaptyPaywallRequestResponse>(
+        // Backed by `get_flow_for_default_audience` in 4.0.0. The legacy `locale` argument is ignored.
+        adaptyPlugin.awaitExecute<AdaptyGetPaywallForDefaultAudienceRequest, AdaptyFlowRequestResponse>(
             method = AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE,
             request = AdaptyGetPaywallForDefaultAudienceRequest(
                 placementId = placementId,
-                locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest()
             )
         ).asAdaptyResult { it.asAdaptyPaywall() }
@@ -283,7 +325,7 @@ internal class AdaptyImpl(
     ): AdaptyResult<String> {
 
         val request = when {
-            paywall != null -> AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest())
+            paywall != null -> AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyFlowPaywallRequest())
             product != null -> AdaptyWebPaywallRequest.fromPaywallProduct(product.asAdaptyPaywallProductRequest())
             else -> return AdaptyResult.Error(
                 AdaptyError(
@@ -308,7 +350,7 @@ internal class AdaptyImpl(
     ): AdaptyResult<Unit> {
         val request = when {
             paywall != null -> AdaptyWebPaywallRequest.fromPaywall(
-                paywall = paywall.asAdaptyPaywallRequest(),
+                paywall = paywall.asAdaptyFlowPaywallRequest(),
                 webPresentationRequest = openIn.asAdaptyWebPresentationRequest()
             )
 
@@ -331,6 +373,24 @@ internal class AdaptyImpl(
             request = request
         ).asAdaptyResult { }
     }
+
+    override suspend fun createWebPaywallUrl(flowPaywall: AdaptyFlowPaywall): AdaptyResult<String> =
+        adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, String>(
+            method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
+            request = AdaptyWebPaywallRequest.fromPaywall(flowPaywall.asAdaptyFlowPaywallRequest())
+        ).asAdaptyResult { it }
+
+    override suspend fun openWebPaywall(
+        flowPaywall: AdaptyFlowPaywall,
+        openIn: AdaptyWebPresentation
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, Boolean>(
+            method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
+            request = AdaptyWebPaywallRequest.fromPaywall(
+                paywall = flowPaywall.asAdaptyFlowPaywallRequest(),
+                webPresentationRequest = openIn.asAdaptyWebPresentationRequest()
+            )
+        ).asAdaptyResult { }
 
     override suspend fun presentCodeRedemptionSheet(): AdaptyResult<Unit> {
         if (isAndroidPlatform) return AdaptyResult.Error(

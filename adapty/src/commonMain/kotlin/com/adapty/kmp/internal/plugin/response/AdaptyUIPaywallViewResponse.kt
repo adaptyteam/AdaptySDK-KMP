@@ -1,5 +1,6 @@
 package com.adapty.kmp.internal.plugin.response
 
+import com.adapty.kmp.models.AdaptyUIFlowView
 import com.adapty.kmp.models.AdaptyUIPaywallView
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -18,6 +19,14 @@ internal data class AdaptyUIPaywallViewResponse(
 
 internal fun AdaptyUIPaywallViewResponse.asAdaptyUIView(): AdaptyUIPaywallView {
     return AdaptyUIPaywallView(
+        id = id,
+        placementId = placementId,
+        variationId = variationId
+    )
+}
+
+internal fun AdaptyUIPaywallViewResponse.asAdaptyUIFlowView(): AdaptyUIFlowView {
+    return AdaptyUIFlowView(
         id = id,
         placementId = placementId,
         variationId = variationId

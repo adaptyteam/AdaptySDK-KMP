@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adapty.internal.crossplatform.ui.Dependencies.safeInject
-import com.adapty.internal.crossplatform.ui.PaywallUiManager
+import com.adapty.internal.crossplatform.ui.FlowUiManager
 import com.adapty.internal.utils.InternalAdaptyApi
 import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.request.createPaywallViewRequestJsonString
@@ -20,7 +20,7 @@ import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
-import com.adapty.ui.AdaptyPaywallView
+import com.adapty.ui.AdaptyFlowView
 import kotlinx.datetime.LocalDateTime
 
 
@@ -37,12 +37,12 @@ internal actual fun AdaptyUIPaywallPlatformView(
 
     val viewModelStoreOwner = LocalActivity.current as? ViewModelStoreOwner ?: return
     val context = LocalContext.current
-    val paywallUiManager: PaywallUiManager? by safeInject<PaywallUiManager>()
+    val flowUiManager: FlowUiManager? by safeInject<FlowUiManager>()
 
-    val paywallView = remember {
-        AdaptyPaywallView(context).apply {
-            paywallUiManager?.setupPaywallView(
-                paywallView = this,
+    val flowView = remember {
+        AdaptyFlowView(context).apply {
+            flowUiManager?.setupFlowView(
+                flowView = this,
                 viewModelStoreOwner = viewModelStoreOwner,
                 args = createPaywallViewRequestJsonString(
                     paywall = paywall,
@@ -56,10 +56,10 @@ internal actual fun AdaptyUIPaywallPlatformView(
         }
     }
 
-    AndroidView(modifier = modifier, factory = { paywallView })
+    AndroidView(modifier = modifier, factory = { flowView })
     DisposableEffect(Unit) {
         onDispose {
-            paywallUiManager?.clearPaywallView(paywallView)
+            flowUiManager?.clearFlowView(flowView)
         }
     }
 }

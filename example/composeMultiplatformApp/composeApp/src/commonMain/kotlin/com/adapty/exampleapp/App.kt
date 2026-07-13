@@ -60,8 +60,8 @@ fun App() {
         val error: ErrorDialogState? = ErrorDialogState.from(error = uiState.error)
 
         LaunchedEffect(Unit) {
-            AdaptyUI.setPaywallsEventsObserver(
-                AdaptyUIPaywallsEventsObserverImpl(
+            AdaptyUI.setFlowsEventsObserver(
+                AdaptyUIFlowsEventsObserverImpl(
                     uiCoroutineScope = coroutineScope,
                     uriHandler = localUriHandler
                 )
@@ -137,11 +137,11 @@ fun App() {
             )
         }
 
-        uiState.nativePaywallView?.let { paywall ->
+        uiState.nativePaywallView?.let { flow ->
             PaywallNativeViewScreen(
                 modifier = Modifier.fillMaxSize().zIndex(2f),
                 showToastEvents = uiState.showOnboardingToastEvents,
-                paywall = paywall,
+                flow = flow,
                 onNavigateBack = {
                     appViewModel.onUiEvent(AppUiEvent.OnCloseNativePaywallView)
                 }

@@ -9,10 +9,10 @@ import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.OnInstallationDetailsListener
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyError
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyInstallationDetails
 import com.adapty.kmp.models.AdaptyInstallationStatusDetermined
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
@@ -156,9 +156,20 @@ class AppViewModel : ViewModel() {
             }
 
             is AppUiEvent.OnClickLogShowPaywall -> {
-                AppLogger.d("Invoking Log Show Paywall: ${event.paywall}")
-                Adapty.logShowPaywall(paywall = event.paywall).onError { error ->
-                    AppLogger.d("Log Show Paywall Error: $error")
+                AppLogger.d("Invoking Log Show Flow: ${event.flow}")
+                Adapty.logShowFlow(flow = event.flow).onError { error ->
+                    AppLogger.d("Log Show Flow Error: $error")
+                }
+            }
+
+            is AppUiEvent.OnClickOpenWebPaywall -> {
+                val flowPaywall = event.flow.variations.firstOrNull()
+                if (flowPaywall == null) {
+                    AppLogger.e("Open Web Paywall: flow has no variations")
+                } else {
+                    Adapty.openWebPaywall(flowPaywall = flowPaywall).onError { error ->
+                        AppLogger.e("Open Web Paywall error: $error")
+                    }
                 }
             }
 
@@ -189,11 +200,11 @@ class AppViewModel : ViewModel() {
             }
 
             is AppUiEvent.OnClickPresentPaywallView -> {
-                presentPaywallView(paywall = event.paywall)
+                presentPaywallView(flow = event.flow)
             }
 
             is AppUiEvent.CreateAndPresentPaywallView -> createAndPresentPaywallView(
-                paywall = event.paywall,
+                flow = event.flow,
                 loadProducts = event.loadProducts,
                 iosPresentationStyle = event.iosPresentationStyle
             )
@@ -218,7 +229,7 @@ class AppViewModel : ViewModel() {
             )
 
             is AppUiEvent.OnClickPresentOnboardingNativeView -> showOnboardingNativeView(event.onboarding)
-            is AppUiEvent.OnClickPresentPaywallNativeView -> showNativePaywallView(event.paywall)
+            is AppUiEvent.OnClickPresentPaywallNativeView -> showNativePaywallView(event.flow)
             AppUiEvent.OnToggleOnboardingShowToastEvents -> {
                 _uiState.update { currentState ->
                     currentState.copy(showOnboardingToastEvents = !currentState.showOnboardingToastEvents)
@@ -254,7 +265,7 @@ class AppViewModel : ViewModel() {
 
     private fun loadPaywallData(id: String) = viewModelScope.launch {
 
-        Adapty.getPaywall(placementId = id)
+        Adapty.getFlow(placementId = id)
             .onSuccess {
                 _uiState.update { currentUiState ->
                     val updatedPaywalls = currentUiState.savedPaywalls.toMutableMap()
@@ -269,6 +280,7 @@ class AppViewModel : ViewModel() {
 
     }
 
+    @Suppress("DEPRECATION") // onboarding deprecated; no flow replacement yet
     private fun loadOnboardingData(id: String) = viewModelScope.launch {
         Adapty.getOnboarding(
             placementId = id,
@@ -286,10 +298,10 @@ class AppViewModel : ViewModel() {
 
     }
 
-    private fun presentPaywallView(paywall: AdaptyPaywall) =
+    private fun presentPaywallView(flow: AdaptyFlow) =
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            AdaptyUI.createPaywallView(paywall = paywall)
+            AdaptyUI.createFlowView(flow = flow)
                 .onSuccess { view -> view.present() }
                 .onError { error -> _uiState.update { it.copy(error = error) } }
             _uiState.update { it.copy(isLoading = false) }
@@ -298,7 +310,7 @@ class AppViewModel : ViewModel() {
 
     @OptIn(ExperimentalResourceApi::class)
     private fun createAndPresentPaywallView(
-        paywall: AdaptyPaywall,
+        flow: AdaptyFlow,
         loadProducts: Boolean,
         iosPresentationStyle: AdaptyUIIOSPresentationStyle
     ) =
@@ -328,8 +340,8 @@ class AppViewModel : ViewModel() {
             )
 
 
-            AdaptyUI.createPaywallView(
-                paywall = paywall,
+            AdaptyUI.createFlowView(
+                flow = flow,
                 preloadProducts = loadProducts,
                 customTags = mapOf(
                     "CUSTOM_TAG_NAME" to "Walter White",
@@ -484,26 +496,25 @@ class AppViewModel : ViewModel() {
     }
 
     private fun loadExamplePaywallAndProducts() = viewModelScope.launch(exceptionHandler) {
-        AppLogger.d("Fetching example paywall...")
+        AppLogger.d("Fetching example flow...")
         _uiState.update { it.copy(isLoading = true) }
-        var examplePaywall: AdaptyPaywall? = null
-        Adapty.getPaywall(
+        var exampleFlow: AdaptyFlow? = null
+        Adapty.getFlow(
             placementId = Constants.EXAMPLE_PAYWALL_ID,
-            locale = "fr",
             fetchPolicy = _uiState.value.selectedPolicy.toAdaptyPaywallFetchPolicy()
 
-        ).onSuccess { adaptyPaywall ->
-            AppLogger.d("Example paywall is loaded: $adaptyPaywall")
-            examplePaywall = adaptyPaywall
-            _uiState.update { it.copy(examplePaywall = adaptyPaywall, isLoading = false) }
+        ).onSuccess { adaptyFlow ->
+            AppLogger.d("Example flow is loaded: $adaptyFlow")
+            exampleFlow = adaptyFlow
+            _uiState.update { it.copy(examplePaywall = adaptyFlow, isLoading = false) }
         }.onError { adaptyError ->
             _uiState.update { it.copy(error = adaptyError, isLoading = false) }
         }
 
-        examplePaywall?.let {
-            AppLogger.d("Fetching example paywall products...")
+        exampleFlow?.let {
+            AppLogger.d("Fetching example flow products...")
             _uiState.update { currentUiState -> currentUiState.copy(isLoading = true) }
-            Adapty.getPaywallProducts(paywall = it)
+            Adapty.getPaywallProducts(flow = it)
                 .onSuccess { products ->
                     AppLogger.d("Example paywall products are loaded: $products")
                     _uiState.update { currentUiState ->
@@ -522,26 +533,25 @@ class AppViewModel : ViewModel() {
         val customPaywallId = _uiState.value.customPaywallId
         if (customPaywallId.isEmpty()) return@launch
 
-        AppLogger.d("Fetching custom paywall...")
+        AppLogger.d("Fetching custom flow...")
         _uiState.update { it.copy(isLoading = true) }
-        var paywall: AdaptyPaywall? = null
-        Adapty.getPaywall(
+        var flow: AdaptyFlow? = null
+        Adapty.getFlow(
             placementId = customPaywallId,
-            locale = _uiState.value.customPaywallLocale,
             fetchPolicy = _uiState.value.selectedPolicy.toAdaptyPaywallFetchPolicy()
 
-        ).onSuccess { adaptyPaywall ->
-            AppLogger.d("Custom paywall is loaded: $adaptyPaywall")
-            paywall = adaptyPaywall
-            _uiState.update { it.copy(customPaywall = adaptyPaywall, isLoading = false) }
+        ).onSuccess { adaptyFlow ->
+            AppLogger.d("Custom flow is loaded: $adaptyFlow")
+            flow = adaptyFlow
+            _uiState.update { it.copy(customPaywall = adaptyFlow, isLoading = false) }
         }.onError { adaptyError ->
             _uiState.update { it.copy(error = adaptyError, isLoading = false) }
         }
 
-        paywall?.let {
-            AppLogger.d("Fetching custom paywall products...")
+        flow?.let {
+            AppLogger.d("Fetching custom flow products...")
             _uiState.update { currentUiState -> currentUiState.copy(isLoading = true) }
-            Adapty.getPaywallProducts(paywall = it)
+            Adapty.getPaywallProducts(flow = it)
                 .onSuccess { products ->
                     AppLogger.d("Custom paywall products are loaded: $products")
                     _uiState.update { currentUiState ->
@@ -561,6 +571,7 @@ class AppViewModel : ViewModel() {
         }
     }
 
+    @Suppress("DEPRECATION") // onboarding deprecated; no flow replacement yet
     private fun createAndPresentOnboarding(
         onboarding: AdaptyOnboarding,
         presentationStyle: AdaptyUIIOSPresentationStyle,
@@ -581,8 +592,8 @@ class AppViewModel : ViewModel() {
         _uiState.update { it.copy(nativeOnboardingView = onboarding) }
     }
 
-    private fun showNativePaywallView(paywall: AdaptyPaywall) = viewModelScope.launch {
-        _uiState.update { it.copy(nativePaywallView = paywall) }
+    private fun showNativePaywallView(flow: AdaptyFlow) = viewModelScope.launch {
+        _uiState.update { it.copy(nativePaywallView = flow) }
     }
 
 

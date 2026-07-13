@@ -11,5 +11,8 @@ public enum class AdaptySubscriptionOfferType {
     PROMOTIONAL,
 
     /** A win-back offer, used to re-engage lapsed subscribers. */
-    WINBACK
+    WINBACK,
+
+    /** An offer redeemed via an offer code (iOS only). */
+    CODE
 }

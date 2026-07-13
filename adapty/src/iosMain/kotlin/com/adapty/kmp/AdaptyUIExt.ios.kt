@@ -1,12 +1,15 @@
 @file:OptIn(AdaptyKMPInternal::class, ExperimentalForeignApi::class)
+@file:Suppress("DEPRECATION") // deprecated native paywall/onboarding ext bridge deprecated APIs
 
 package com.adapty.kmp
 
 import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
+import com.adapty.kmp.internal.plugin.request.createFlowViewRequestJsonString
 import com.adapty.kmp.internal.plugin.request.createOnboardingViewRequestJsonString
 import com.adapty.kmp.internal.plugin.request.createPaywallViewRequestJsonString
 import com.adapty.kmp.models.AdaptyCustomAsset
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
@@ -88,6 +91,54 @@ public fun AdaptyUI.createNativePaywallView(
 }
 
 /**
+ * Creates a native iOS [UIViewController] containing a flow view (cross_platform 4.0.0) that can
+ * be embedded directly in a UIKit or SwiftUI view hierarchy, without depending on the `adapty-ui`
+ * module.
+ *
+ * Call [AdaptyNativeFlowView.dispose] when the view is removed from the hierarchy.
+ *
+ * @param flow The [AdaptyFlow] to display.
+ * @param observer An [AdaptyUIFlowsEventsObserver] to receive flow lifecycle and interaction events.
+ *
+ * @return [AdaptyNativeFlowView] wrapping the native [UIViewController].
+ */
+public fun AdaptyUI.createNativeFlowView(
+    flow: AdaptyFlow,
+    observer: AdaptyUIFlowsEventsObserver,
+    customTags: Map<String, String>? = null,
+    customTimers: Map<String, LocalDateTime>? = null,
+    customAssets: Map<String, AdaptyCustomAsset>? = null,
+    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null,
+): AdaptyNativeFlowView {
+    val viewId = flow.idForNativePlatformView
+    val jsonString = createFlowViewRequestJsonString(
+        flow = flow,
+        customTags = customTags,
+        customTimers = customTimers,
+        customAssets = customAssets,
+        productPurchaseParams = productPurchaseParams
+    )
+
+    registerFlowEventsListener(observer = observer, viewId = viewId)
+
+    val viewController = AdaptySwiftBridge.createNativePaywallViewWithJsonString(
+        jsonString = jsonString,
+        id = viewId,
+        onEvent = { eventName, eventDataJsonString ->
+            AdaptyPluginEventHandler.onNewEvent(
+                eventName = eventName,
+                eventDataJsonString = eventDataJsonString ?: ""
+            )
+        }
+    ) as UIViewController
+
+    return AdaptyNativeFlowView(
+        viewController = viewController,
+        viewId = viewId
+    )
+}
+
+/**
  * Creates a native iOS [UIViewController] containing an onboarding view that can be
  * embedded directly in a UIKit or SwiftUI view hierarchy.
  *
@@ -118,6 +169,10 @@ public fun AdaptyUI.createNativePaywallView(
  * @see AdaptyNativeOnboardingView
  * @see AdaptyUIOnboardingsEventsObserver
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public fun AdaptyUI.createNativeOnboardingView(
     onboarding: AdaptyOnboarding,
     observer: AdaptyUIOnboardingsEventsObserver,

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // deprecated paywall composable bridges deprecated APIs
+
 package com.adapty.kmp.ui
 
 import androidx.compose.runtime.Composable
