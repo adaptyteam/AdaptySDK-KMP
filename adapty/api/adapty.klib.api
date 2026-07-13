@@ -1002,12 +1002,14 @@ final class com.adapty.kmp.models/AdaptyPaywallProduct { // com.adapty.kmp.model
 }
 
 final class com.adapty.kmp.models/AdaptyPaywallProductReference { // com.adapty.kmp.models/AdaptyPaywallProductReference|null[0]
-    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.adapty.kmp.models/AdaptyPaywallProductReference.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // com.adapty.kmp.models/AdaptyPaywallProductReference.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
 
     final val accessLevelId // com.adapty.kmp.models/AdaptyPaywallProductReference.accessLevelId|{}accessLevelId[0]
         final fun <get-accessLevelId>(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProductReference.accessLevelId.<get-accessLevelId>|<get-accessLevelId>(){}[0]
     final val basePlanId // com.adapty.kmp.models/AdaptyPaywallProductReference.basePlanId|{}basePlanId[0]
         final fun <get-basePlanId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.basePlanId.<get-basePlanId>|<get-basePlanId>(){}[0]
+    final val flowProductId // com.adapty.kmp.models/AdaptyPaywallProductReference.flowProductId|{}flowProductId[0]
+        final fun <get-flowProductId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.flowProductId.<get-flowProductId>|<get-flowProductId>(){}[0]
     final val offerId // com.adapty.kmp.models/AdaptyPaywallProductReference.offerId|{}offerId[0]
         final fun <get-offerId>(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.offerId.<get-offerId>|<get-offerId>(){}[0]
     final val productType // com.adapty.kmp.models/AdaptyPaywallProductReference.productType|{}productType[0]
@@ -1026,7 +1028,8 @@ final class com.adapty.kmp.models/AdaptyPaywallProductReference { // com.adapty.
     final fun component6(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component6|component6(){}[0]
     final fun component7(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component7|component7(){}[0]
     final fun component8(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component8|component8(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPaywallProductReference // com.adapty.kmp.models/AdaptyPaywallProductReference.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+    final fun component9(): kotlin/String? // com.adapty.kmp.models/AdaptyPaywallProductReference.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): com.adapty.kmp.models/AdaptyPaywallProductReference // com.adapty.kmp.models/AdaptyPaywallProductReference.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyPaywallProductReference.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyPaywallProductReference.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyPaywallProductReference.toString|toString(){}[0]
