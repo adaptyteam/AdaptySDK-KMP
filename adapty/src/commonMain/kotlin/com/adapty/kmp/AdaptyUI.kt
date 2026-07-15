@@ -49,6 +49,11 @@ internal interface AdaptyUIContract {
      *
      * @see AdaptyUIOnboardingsEventsObserver
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
+    @Suppress("DEPRECATION")
     fun registerOnboardingEventsListener(
         observer: AdaptyUIOnboardingsEventsObserver,
         viewId: String
@@ -62,6 +67,10 @@ internal interface AdaptyUIContract {
      *
      * @param viewId The unique identifier of the onboarding view.
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     fun unregisterOnboardingEventsListener(viewId: String)
 
     /**
@@ -140,6 +149,11 @@ internal interface AdaptyUIContract {
      *
      * @see AdaptyUIOnboardingsEventsObserver
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
+    @Suppress("DEPRECATION")
     fun setOnboardingsEventsObserver(observer: AdaptyUIOnboardingsEventsObserver)
 
 

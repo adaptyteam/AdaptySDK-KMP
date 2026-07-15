@@ -36,6 +36,10 @@ import kotlinx.coroutines.launch
  *
  * @see AdaptyUIOnboardingView
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public interface AdaptyUIOnboardingsEventsObserver {
 
     /** Main [CoroutineScope] used for onboarding UI actions. */

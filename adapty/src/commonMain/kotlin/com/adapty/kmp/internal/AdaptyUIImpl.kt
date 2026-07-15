@@ -1,4 +1,5 @@
 @file:OptIn(AdaptyKMPInternal::class)
+@file:Suppress("DEPRECATION") // internal impl of the deprecated onboarding API
 
 package com.adapty.kmp.internal
 

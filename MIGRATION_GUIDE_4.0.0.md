@@ -148,7 +148,6 @@ The flow observer's defaults differ from the old paywall observer's:
 | Close button | dismisses | dismisses |
 | Android system back | dismisses | **keeps open** — override and dismiss to restore |
 | Purchase completed | dismisses (unless cancelled) | **does not auto-dismiss** |
-| Restore completed | (none) | **does not auto-dismiss** |
 | Error | (none) | **dismisses** |
 | URL tapped | opened by the SDK | opened natively |
 
@@ -216,7 +215,7 @@ val nativeView = AdaptyUI.createNativeFlowView(flow = flow, observer = myFlowObs
 
 ## Deprecated onboarding
 
-Onboarding entities (`getOnboarding`, `getOnboardingForDefaultAudience`, `createOnboardingView`, `AdaptyOnboardingView`, `AdaptyUIOnboardingPlatformView`, …) are unchanged and fully supported this release, but marked `@Deprecated` — a future major migrates onboardings into the Flow Builder. Suppress the warnings for now; no code change is needed.
+Onboarding entities (`getOnboarding`, `getOnboardingForDefaultAudience`, `createOnboardingView`, `createNativeOnboardingView`, `AdaptyUIOnboardingsEventsObserver`, `setOnboardingsEventsObserver`, `AdaptyUIOnboardingPlatformView`, …) are unchanged and fully supported this release, but marked `@Deprecated` — a future major migrates onboardings into the Flow Builder. Suppress the warnings for now; no code change is needed.
 
 ---
 

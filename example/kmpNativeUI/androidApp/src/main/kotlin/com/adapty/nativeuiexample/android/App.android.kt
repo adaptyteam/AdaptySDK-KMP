@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // onboarding deprecated; no flow replacement yet
+
 package com.adapty.nativeuiexample.android
 
 import android.app.Application

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // this file *is* the deprecated onboarding surface
+
 package com.adapty.kmp.ui
 
 import androidx.compose.runtime.Composable
