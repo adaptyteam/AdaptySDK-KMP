@@ -5,7 +5,6 @@ import com.adapty.kmp.internal.utils.asAdaptyValidDateTimeFormat
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyFlow
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import kotlinx.datetime.LocalDateTime
@@ -13,7 +12,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyUICreatePaywallViewRequest(
+internal data class AdaptyUICreateFlowViewRequest(
     @SerialName("flow") val flow: AdaptyFlowRequestResponse,
     @SerialName("load_timeout") val loadTimeOutInSeconds: Double?,
     @SerialName("preload_products") val preloadProducts: Boolean = false,
@@ -21,21 +20,6 @@ internal data class AdaptyUICreatePaywallViewRequest(
     @SerialName("custom_timers") val customTimers: Map<String, String>? = null,
     @SerialName("custom_assets") val customAssets: List<AdaptyCustomAssetRequest>? = null,
     @SerialName("product_purchase_parameters") val productPurchaseParameters: Map<String, AdaptyPurchaseParametersRequest>? = null
-)
-
-@AdaptyKMPInternal
-public fun createPaywallViewRequestJsonString(
-    paywall: AdaptyPaywall,
-    customTags: Map<String, String>?,
-    customTimers: Map<String, LocalDateTime>?,
-    customAssets: Map<String, AdaptyCustomAsset>?,
-    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
-): String = createFlowViewRequestJsonString(
-    flow = paywall.asAdaptyFlowRequest(),
-    customTags = customTags,
-    customTimers = customTimers,
-    customAssets = customAssets,
-    productPurchaseParams = productPurchaseParams
 )
 
 @AdaptyKMPInternal
@@ -61,7 +45,7 @@ private fun createFlowViewRequestJsonString(
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
 ): String {
 
-    val request = AdaptyUICreatePaywallViewRequest(
+    val request = AdaptyUICreateFlowViewRequest(
         flow = flow,
         loadTimeOutInSeconds = null,
         customTags = customTags,

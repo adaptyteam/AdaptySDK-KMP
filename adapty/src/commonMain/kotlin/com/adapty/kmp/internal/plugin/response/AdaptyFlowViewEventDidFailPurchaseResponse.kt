@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyPaywallViewEventDidPurchaseResponse(
+internal data class AdaptyFlowViewEventDidFailPurchaseResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 
     @SerialName("product")
     val product: AdaptyPaywallProductResponse,
 
-    @SerialName("purchased_result")
-    val purchasedResult: AdaptyPurchaseResultResponse,
+    @SerialName("error")
+    val error: AdaptyPluginErrorResponse,
 )

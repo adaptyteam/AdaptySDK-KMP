@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyPaywallViewEventDidUserActionResponse(
+internal data class AdaptyFlowViewEventDidUserActionResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 
     @SerialName("action")
     val action: AdaptyUIActionResponse,

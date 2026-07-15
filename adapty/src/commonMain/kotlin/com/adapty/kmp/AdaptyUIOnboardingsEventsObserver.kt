@@ -118,11 +118,9 @@ public interface AdaptyUIOnboardingsEventsObserver {
     }
 
     private suspend fun presentPaywall(placementId: String) {
-        val paywallResult = Adapty.getPaywall(placementId)
-        paywallResult.onSuccess { paywall ->
-            val paywallViewResult = AdaptyUI.createPaywallView(paywall)
-            paywallViewResult
-                .onSuccess { paywallView -> paywallView.present() }
+        Adapty.getFlow(placementId).onSuccess { flow ->
+            AdaptyUI.createFlowView(flow)
+                .onSuccess { flowView -> flowView.present() }
                 .onError { logger.log("Error while presenting paywall: $it") }
         }.onError { error ->
             logger.log("Error while presenting paywall: $error")

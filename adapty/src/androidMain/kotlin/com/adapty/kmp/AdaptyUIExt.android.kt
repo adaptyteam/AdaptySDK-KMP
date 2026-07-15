@@ -12,91 +12,15 @@ import com.adapty.internal.utils.InternalAdaptyApi
 import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.plugin.request.createFlowViewRequestJsonString
 import com.adapty.kmp.internal.plugin.request.createOnboardingViewRequestJsonString
-import com.adapty.kmp.internal.plugin.request.createPaywallViewRequestJsonString
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.ui.AdaptyFlowView
 import com.adapty.ui.onboardings.AdaptyOnboardingView
 import kotlinx.datetime.LocalDateTime
-
-/**
- * Creates a native Android [AdaptyFlowView] that can be embedded directly in an
- * Android view hierarchy (XML layouts, Jetpack Compose via `AndroidView`, etc.)
- * without depending on the `adapty-ui` Compose Multiplatform module.
- *
- * **Important:**
- * - You must call [AdaptyNativePaywallView.dispose] when the view is removed from the
- *   hierarchy (e.g., in `onDestroyView`) to prevent memory leaks and release resources.
- *
- * Example:
- * ```
- * val nativeView = AdaptyUI.createNativePaywallView(
- *     context = requireContext(),
- *     viewModelStoreOwner = this,
- *     paywall = paywall,
- *     observer = myPaywallObserver,
- *     customTags = mapOf("username" to "John")
- * )
- * // Add to layout: container.addView(nativeView.view)
- * // When done (e.g., onDestroyView):
- * nativeView.dispose()
- * ```
- *
- * @param context The Android [Context] for creating the view.
- * @param viewModelStoreOwner A [ViewModelStoreOwner] (typically an Activity or Fragment).
- * @param paywall The [AdaptyPaywall] to display.
- * @param observer An [AdaptyUIPaywallsEventsObserver] to receive paywall lifecycle and interaction events.
- * @param customTags Optional custom tags to inject into the paywall.
- * @param customTimers Optional custom timers to pass for paywall rendering.
- * @param customAssets Optional map of asset identifiers to custom assets.
- * @param productPurchaseParams Optional parameters for product purchase flow.
- *
- * @return [AdaptyNativePaywallView] wrapping the native Android view.
- *
- * @see AdaptyNativePaywallView
- * @see AdaptyUIPaywallsEventsObserver
- */
-public fun AdaptyUI.createNativePaywallView(
-    context: Context,
-    viewModelStoreOwner: ViewModelStoreOwner?,
-    paywall: AdaptyPaywall,
-    observer: AdaptyUIPaywallsEventsObserver,
-    customTags: Map<String, String>? = null,
-    customTimers: Map<String, LocalDateTime>? = null,
-    customAssets: Map<String, AdaptyCustomAsset>? = null,
-    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null,
-): AdaptyNativePaywallView {
-    val viewId = paywall.idForNativePlatformView
-    val flowUiManager: FlowUiManager? by safeInject<FlowUiManager>()
-
-    registerPaywallEventsListener(observer = observer, viewId = viewId)
-
-    val flowView = AdaptyFlowView(context).apply {
-        flowUiManager?.setupFlowView(
-            flowView = this,
-            viewModelStoreOwner = viewModelStoreOwner,
-            args = createPaywallViewRequestJsonString(
-                paywall = paywall,
-                customTags = customTags,
-                customTimers = customTimers,
-                customAssets = customAssets,
-                productPurchaseParams = productPurchaseParams
-            ),
-            id = viewId,
-        )
-    }
-
-    return AdaptyNativePaywallView(
-        flowView = flowView,
-        viewId = viewId,
-        flowUiManager = flowUiManager
-    )
-}
 
 /**
  * Creates a native Android flow view (cross_platform 4.0.0) that can be embedded directly in an

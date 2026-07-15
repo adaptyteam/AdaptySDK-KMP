@@ -4,8 +4,6 @@ import com.adapty.kmp.internal.plugin.response.AdaptyRemoteConfigResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallRemoteConfig
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallRemoteConfigResponse
 import com.adapty.kmp.models.AdaptyFlow
-import com.adapty.kmp.models.AdaptyPaywall
-import com.adapty.kmp.models.AdaptyPaywallViewConfiguration
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,8 +11,8 @@ import kotlinx.serialization.Serializable
  * Wire representation of `AdaptyFlow` (cross_platform 4.0.0).
  *
  * A flow groups one or more paywall variations plus flow-level metadata. Converted to/from the
- * public [AdaptyFlow] and the legacy [AdaptyPaywall] via the `asAdapty*` / `asAdapty*Request`
- * mappers in this package, following the codebase's model <-> wire conversion convention.
+ * public [AdaptyFlow] via the `asAdapty*` / `asAdapty*Request` mappers in this package,
+ * following the codebase's model <-> wire conversion convention.
  */
 @Serializable
 internal data class AdaptyFlowRequestResponse(
@@ -46,13 +44,6 @@ internal data class AdaptyFlowRequestResponse(
     val responseCreatedAt: Long = 0L,
 )
 
-/**
- * Returns the flow variation matching the flow's active `variation_id`, falling back to the
- * first variation. Used to map a multi-variation flow onto the single legacy [AdaptyPaywall].
- */
-internal fun AdaptyFlowRequestResponse.selectedVariation(): AdaptyFlowPaywallRequestResponse? =
-    variations.firstOrNull { it.variationId == variationId } ?: variations.firstOrNull()
-
 /** Maps the flow wire DTO onto the public [AdaptyFlow]. */
 internal fun AdaptyFlowRequestResponse.asAdaptyFlow(): AdaptyFlow =
     AdaptyFlow(
@@ -62,7 +53,7 @@ internal fun AdaptyFlowRequestResponse.asAdaptyFlow(): AdaptyFlow =
         variationId = this.variationId,
         remoteConfigs = this.remoteConfigs?.map { it.asAdaptyPaywallRemoteConfig() } ?: emptyList(),
         flowVersionId = this.flowVersionId,
-        variations = this.variations.map { it.asAdaptyFlowPaywall() },
+        paywalls = this.variations.map { it.asAdaptyFlowPaywall() },
         payloadData = this.payloadData,
         responseCreatedAt = this.responseCreatedAt,
     )
@@ -76,64 +67,7 @@ internal fun AdaptyFlow.asAdaptyFlowRequest(): AdaptyFlowRequestResponse =
         variationId = this.variationId,
         remoteConfigs = this.remoteConfigs.map { it.asAdaptyPaywallRemoteConfigResponse() }.ifEmpty { null },
         flowVersionId = this.flowVersionId,
-        variations = this.variations.map { it.asAdaptyFlowPaywallRequest() },
+        variations = this.paywalls.map { it.asAdaptyFlowPaywallRequest() },
         payloadData = this.payloadData,
         responseCreatedAt = this.responseCreatedAt,
-    )
-
-/**
- * Maps a flow onto the legacy [AdaptyPaywall] (its active variation).
- */
-internal fun AdaptyFlowRequestResponse.asAdaptyPaywall(): AdaptyPaywall {
-    val variation = selectedVariation()
-    val lang = this.remoteConfigs?.firstOrNull()?.locale
-    return AdaptyPaywall(
-        placement = this.placement.asAdaptyPlacement(),
-        instanceIdentity = this.flowId,
-        name = this.flowName,
-        variationId = this.variationId,
-        remoteConfig = this.remoteConfigs?.firstOrNull()?.asAdaptyPaywallRemoteConfig(),
-        // Flows are always renderable; expose a view configuration so hasViewConfiguration stays true.
-        viewConfiguration = AdaptyPaywallViewConfiguration(
-            paywallBuilderId = this.flowId,
-            locale = lang ?: "",
-        ),
-        products = variation?.products?.map { it.asAdaptyPaywallProductReference() } ?: emptyList(),
-        payloadData = this.payloadData,
-        webPurchaseUrl = variation?.webPurchaseUrl,
-        requestLocale = lang,
-        responseCreatedAt = this.responseCreatedAt,
-    )
-}
-
-/**
- * Rebuilds a single-variation flow wire DTO from the legacy [AdaptyPaywall]. Used for the
- * deprecated paywall round-trip calls (`get_paywall_products`, `log_show_flow`,
- * `adapty_ui_create_flow_view`). The paywall represents the active variation, so the produced
- * flow contains exactly that one variation.
- */
-internal fun AdaptyPaywall.asAdaptyFlowRequest(): AdaptyFlowRequestResponse {
-    val placementDto = this.placement.asAdaptyPlacementRequestResponse()
-    return AdaptyFlowRequestResponse(
-        placement = placementDto,
-        flowId = this.instanceIdentity,
-        flowName = this.name,
-        variationId = this.variationId,
-        remoteConfigs = this.remoteConfig?.let { listOf(it.asAdaptyPaywallRemoteConfigResponse()) },
-        flowVersionId = null,
-        variations = listOf(this.asAdaptyFlowPaywallRequest()),
-        payloadData = this.payloadData,
-        responseCreatedAt = this.responseCreatedAt,
-    )
-}
-
-/** The single flow-paywall variation this legacy paywall represents (for web-paywall calls). */
-internal fun AdaptyPaywall.asAdaptyFlowPaywallRequest(): AdaptyFlowPaywallRequestResponse =
-    AdaptyFlowPaywallRequestResponse(
-        placement = this.placement.asAdaptyPlacementRequestResponse(),
-        paywallId = this.instanceIdentity,
-        paywallName = this.name,
-        variationId = this.variationId,
-        products = this.products.map { it.asAdaptyPaywallProductReferenceRequest() },
-        webPurchaseUrl = this.webPurchaseUrl,
     )

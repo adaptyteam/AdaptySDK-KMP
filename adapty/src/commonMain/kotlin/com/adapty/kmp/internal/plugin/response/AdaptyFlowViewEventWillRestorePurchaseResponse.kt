@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyPaywallViewEventDidAppearOrDisappearResponse(
+internal data class AdaptyFlowViewEventWillRestorePurchaseResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 )

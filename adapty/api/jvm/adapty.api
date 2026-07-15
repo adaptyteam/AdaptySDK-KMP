@@ -2,25 +2,21 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public static final field INSTANCE Lcom/adapty/kmp/Adapty;
 	public fun activate (Lcom/adapty/kmp/models/AdaptyConfig;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun createWebPaywallUrl (Lcom/adapty/kmp/models/AdaptyFlowPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun createWebPaywallUrl (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun createWebPaywallUrl (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getCurrentInstallationStatus (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getFlow-exY8QGI (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getFlowForDefaultAudience (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getOnboarding-zkXUZaI (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getOnboardingForDefaultAudience (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getPaywall-zkXUZaI (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getPaywallForDefaultAudience (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getPaywallProducts (Lcom/adapty/kmp/models/AdaptyFlow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun getPaywallProducts (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getProfile (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun identify (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun isActivated (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun logShowFlow (Lcom/adapty/kmp/models/AdaptyFlow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun logShowPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun logout (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun makePurchase (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyFlowPaywall;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun openWebPaywall (Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun presentCodeRedemptionSheet (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -39,25 +35,19 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public static final field INSTANCE Lcom/adapty/kmp/AdaptyUI;
 	public fun createFlowView-HOf25JM (Lcom/adapty/kmp/models/AdaptyFlow;Lkotlin/time/Duration;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun createOnboardingView (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun createPaywallView-HOf25JM (Lcom/adapty/kmp/models/AdaptyPaywall;Lkotlin/time/Duration;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun dismissFlowView (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun dismissOnboardingView (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun dismissPaywallView (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun openWebUrl (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyWebPresentation;)V
 	public fun presentFlowView (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun presentOnboardingView (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun presentPaywallView (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun registerFlowEventsListener (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Ljava/lang/String;)V
 	public fun registerOnboardingEventsListener (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Ljava/lang/String;)V
-	public fun registerPaywallEventsListener (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Ljava/lang/String;)V
 	public fun requestAppReview ()V
 	public fun setFlowsEventsObserver (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;)V
 	public fun setOnboardingsEventsObserver (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;)V
-	public fun setPaywallsEventsObserver (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;)V
 	public fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun unregisterFlowEventsListener (Ljava/lang/String;)V
 	public fun unregisterOnboardingEventsListener (Ljava/lang/String;)V
-	public fun unregisterPaywallEventsListener (Ljava/lang/String;)V
 }
 
 public abstract interface class com/adapty/kmp/AdaptyUIFlowsEventsObserver {
@@ -128,42 +118,6 @@ public final class com/adapty/kmp/AdaptyUIOnboardingsEventsObserver$DefaultImpls
 	public static fun onboardingViewOnStateUpdatedAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams;)V
 }
 
-public abstract interface class com/adapty/kmp/AdaptyUIPaywallsEventsObserver {
-	public fun getMainUiScope ()Lkotlinx/coroutines/CoroutineScope;
-	public fun paywallViewDidAppear (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
-	public fun paywallViewDidDisappear (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
-	public fun paywallViewDidFailLoadingProducts (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public fun paywallViewDidFailPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
-	public fun paywallViewDidFailRendering (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public fun paywallViewDidFailRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public fun paywallViewDidFinishPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseResult;)V
-	public fun paywallViewDidFinishRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
-	public fun paywallViewDidFinishWebPaymentNavigation (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static synthetic fun paywallViewDidFinishWebPaymentNavigation$default (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)V
-	public fun paywallViewDidPerformAction (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
-	public fun paywallViewDidSelectProduct (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;)V
-	public fun paywallViewDidStartPurchase (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;)V
-	public fun paywallViewDidStartRestore (Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
-}
-
-public final class com/adapty/kmp/AdaptyUIPaywallsEventsObserver$DefaultImpls {
-	public static fun getMainUiScope (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;)Lkotlinx/coroutines/CoroutineScope;
-	public static fun paywallViewDidAppear (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
-	public static fun paywallViewDidDisappear (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
-	public static fun paywallViewDidFailLoadingProducts (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static fun paywallViewDidFailPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static fun paywallViewDidFailRendering (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static fun paywallViewDidFailRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static fun paywallViewDidFinishPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyPurchaseResult;)V
-	public static fun paywallViewDidFinishRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyProfile;)V
-	public static fun paywallViewDidFinishWebPaymentNavigation (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static synthetic fun paywallViewDidFinishWebPaymentNavigation$default (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;ILjava/lang/Object;)V
-	public static fun paywallViewDidPerformAction (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
-	public static fun paywallViewDidSelectProduct (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;)V
-	public static fun paywallViewDidStartPurchase (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;)V
-	public static fun paywallViewDidStartRestore (Lcom/adapty/kmp/AdaptyUIPaywallsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIPaywallView;)V
-}
-
 public abstract interface class com/adapty/kmp/OnInstallationDetailsListener {
 	public abstract fun onInstallationDetailsFailure (Lcom/adapty/kmp/models/AdaptyError;)V
 	public abstract fun onInstallationDetailsSuccess (Lcom/adapty/kmp/models/AdaptyInstallationDetails;)V
@@ -191,13 +145,12 @@ public final class com/adapty/kmp/internal/plugin/request/AdaptyOnboardingReques
 	public static final fun asJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;)Ljava/lang/String;
 }
 
-public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateOnboardingViewRequestKt {
-	public static final fun createOnboardingViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Ljava/lang/String;
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateFlowViewRequestKt {
+	public static final fun createFlowViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/lang/String;
 }
 
-public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreatePaywallViewRequestKt {
-	public static final fun createFlowViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/lang/String;
-	public static final fun createPaywallViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyPaywall;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/lang/String;
+public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateOnboardingViewRequestKt {
+	public static final fun createOnboardingViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Ljava/lang/String;
 }
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyUIIOSPresentationStyleRequest : java/lang/Enum {
@@ -281,6 +234,7 @@ public final class com/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration {
 }
 
 public final class com/adapty/kmp/models/AdaptyConfig$ServerCluster : java/lang/Enum {
+	public static final field CN Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
 	public static final field DEFAULT Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
 	public static final field EU Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
@@ -480,10 +434,10 @@ public final class com/adapty/kmp/models/AdaptyFlow {
 	public final fun getIdForNativePlatformView ()Ljava/lang/String;
 	public final fun getInstanceIdentity ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
+	public final fun getPaywalls ()Ljava/util/List;
 	public final fun getPlacement ()Lcom/adapty/kmp/models/AdaptyPlacement;
 	public final fun getRemoteConfigs ()Ljava/util/List;
 	public final fun getVariationId ()Ljava/lang/String;
-	public final fun getVariations ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -774,28 +728,6 @@ public final class com/adapty/kmp/models/AdaptyOnboardingsTextInput : com/adapty
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adapty/kmp/models/AdaptyPaywall {
-	public static final field PREFIX_NATIVE_PLATFORM_VIEW Ljava/lang/String;
-	public final fun component1 ()Lcom/adapty/kmp/models/AdaptyPlacement;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Lcom/adapty/kmp/models/AdaptyRemoteConfig;
-	public final fun copy (Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyRemoteConfig;Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;J)Lcom/adapty/kmp/models/AdaptyPaywall;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywall;Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyRemoteConfig;Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywall;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getHasViewConfiguration ()Z
-	public final fun getIdForNativePlatformView ()Ljava/lang/String;
-	public final fun getInstanceIdentity ()Ljava/lang/String;
-	public final fun getName ()Ljava/lang/String;
-	public final fun getPlacement ()Lcom/adapty/kmp/models/AdaptyPlacement;
-	public final fun getProductIdentifiers ()Ljava/util/List;
-	public final fun getRemoteConfig ()Lcom/adapty/kmp/models/AdaptyRemoteConfig;
-	public final fun getVariationId ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public abstract interface class com/adapty/kmp/models/AdaptyPaywallFetchPolicy {
 	public static final field Companion Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy$Companion;
 }
@@ -907,18 +839,6 @@ public final class com/adapty/kmp/models/AdaptyPaywallProductSubscription {
 	public final fun getOffer ()Lcom/adapty/kmp/models/AdaptySubscriptionOffer;
 	public final fun getPeriod ()Lcom/adapty/kmp/models/AdaptySubscriptionPeriod;
 	public final fun getRenewalType ()Lcom/adapty/kmp/models/AdaptyRenewalType;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adapty/kmp/models/AdaptyPaywallViewConfiguration {
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyPaywallViewConfiguration;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getLocale ()Ljava/lang/String;
-	public final fun getPaywallBuilderId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1494,25 +1414,6 @@ public final class com/adapty/kmp/models/AdaptyUIOnboardingView {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adapty/kmp/models/AdaptyUIPaywallView {
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIPaywallView;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIPaywallView;
-	public final fun dismiss (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getId ()Ljava/lang/String;
-	public final fun getPlacementId ()Ljava/lang/String;
-	public final fun getVariationId ()Ljava/lang/String;
-	public fun hashCode ()I
-	public final fun present (Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun present$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public final fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun showDialog$default (Lcom/adapty/kmp/models/AdaptyUIPaywallView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adapty/kmp/models/AdaptyUIPermission : java/lang/Enum {
 	public static final field BLUETOOTH Lcom/adapty/kmp/models/AdaptyUIPermission;
 	public static final field CALENDAR Lcom/adapty/kmp/models/AdaptyUIPermission;
@@ -1546,6 +1447,7 @@ public final class com/adapty/kmp/models/AdaptyUIPermissionRequest {
 	public static synthetic fun answer$default (Lcom/adapty/kmp/models/AdaptyUIPermissionRequest;ZLjava/lang/String;ILjava/lang/Object;)V
 	public final fun getCustomArgs ()Ljava/util/Map;
 	public final fun getPermission ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getRawPermission ()Ljava/lang/String;
 }
 
 public final class com/adapty/kmp/models/AdaptyWebPresentation : java/lang/Enum {

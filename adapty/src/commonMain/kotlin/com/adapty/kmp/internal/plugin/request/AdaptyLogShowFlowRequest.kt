@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyLogShowPaywallRequest(
+internal data class AdaptyLogShowFlowRequest(
     @SerialName("flow") val flow: AdaptyFlowRequestResponse
 )

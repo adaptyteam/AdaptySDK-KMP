@@ -30,6 +30,11 @@ import kotlinx.datetime.LocalDateTime
  * The default runtime behavior follows the 4.0.0 contract (see [AdaptyUIFlowsEventsObserver]):
  * system back keeps the view open, and successful purchase/restore do not auto-dismiss. Override
  * the callbacks to customize.
+ *
+ * The contract defaults (close dismisses, an URL action opens the URL, an error dismisses, an app
+ * review request is forwarded to the OS) are applied by the global flow observer, which runs
+ * alongside these callbacks — so a callback here observes an event, it does not replace that
+ * default.
  */
 @OptIn(AdaptyKMPInternal::class)
 @Composable
@@ -54,7 +59,7 @@ public fun AdaptyUIFlowPlatformView(
     onDidFailLoadingProducts: (view: AdaptyUIFlowView, error: AdaptyError) -> Unit = { _, _ -> },
     onDidFinishWebPaymentNavigation: (view: AdaptyUIFlowView, product: AdaptyPaywallProduct?, error: AdaptyError?) -> Unit = { _, _, _ -> },
     onDidAskPermission: (view: AdaptyUIFlowView, request: AdaptyUIPermissionRequest) -> Unit = { _, _ -> },
-    onDidRequestAppReview: (view: AdaptyUIFlowView) -> Unit = { AdaptyUI.requestAppReview() },
+    onDidRequestAppReview: (view: AdaptyUIFlowView) -> Unit = {},
     onObserverDidInitiatePurchase: (view: AdaptyUIFlowView, product: AdaptyPaywallProduct, handle: AdaptyUIObserverPurchaseHandle) -> Unit = { _, _, _ -> },
     onObserverDidInitiateRestore: (view: AdaptyUIFlowView, handle: AdaptyUIObserverRestoreHandle) -> Unit = { _, _ -> },
     onDidReceiveAnalyticEvent: (view: AdaptyUIFlowView, name: String, paramsJsonString: String) -> Unit = { _, _, _ -> },

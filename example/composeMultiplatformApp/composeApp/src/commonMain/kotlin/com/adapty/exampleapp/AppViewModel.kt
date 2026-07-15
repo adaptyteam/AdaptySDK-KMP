@@ -163,9 +163,9 @@ class AppViewModel : ViewModel() {
             }
 
             is AppUiEvent.OnClickOpenWebPaywall -> {
-                val flowPaywall = event.flow.variations.firstOrNull()
+                val flowPaywall = event.flow.paywalls.firstOrNull()
                 if (flowPaywall == null) {
-                    AppLogger.e("Open Web Paywall: flow has no variations")
+                    AppLogger.e("Open Web Paywall: flow has no paywalls")
                 } else {
                     Adapty.openWebPaywall(flowPaywall = flowPaywall).onError { error ->
                         AppLogger.e("Open Web Paywall error: $error")

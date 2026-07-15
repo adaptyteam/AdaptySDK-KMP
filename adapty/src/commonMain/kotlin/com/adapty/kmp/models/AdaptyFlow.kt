@@ -15,7 +15,7 @@ import com.adapty.kmp.internal.AdaptyKMPInternal
  * @property variationId the active variation identifier for this flow.
  * @property remoteConfigs remote configurations, one per language.
  * @property flowVersionId optional flow version identifier.
- * @property variations the paywall variations contained in this flow.
+ * @property paywalls the paywall variations contained in this flow.
  */
 public data class AdaptyFlow internal constructor(
     public val placement: AdaptyPlacement,
@@ -24,7 +24,7 @@ public data class AdaptyFlow internal constructor(
     public val variationId: String,
     public val remoteConfigs: List<AdaptyRemoteConfig> = emptyList(),
     public val flowVersionId: String? = null,
-    public val variations: List<AdaptyFlowPaywall> = emptyList(),
+    public val paywalls: List<AdaptyFlowPaywall> = emptyList(),
     internal val payloadData: String? = null,
     internal val responseCreatedAt: Long = 0L,
 ) {

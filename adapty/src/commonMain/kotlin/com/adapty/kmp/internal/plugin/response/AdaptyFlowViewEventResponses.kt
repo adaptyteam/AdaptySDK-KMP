@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonObject
 @Serializable
 internal data class AdaptyFlowViewDidAskPermissionResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 
     @SerialName("event_id")
     val eventId: String,
@@ -24,7 +24,7 @@ internal data class AdaptyFlowViewDidAskPermissionResponse(
 @Serializable
 internal data class AdaptyFlowViewObserverDidInitiatePurchaseResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 
     @SerialName("event_id")
     val eventId: String,
@@ -37,7 +37,7 @@ internal data class AdaptyFlowViewObserverDidInitiatePurchaseResponse(
 @Serializable
 internal data class AdaptyFlowViewObserverDidInitiateRestoreResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 
     @SerialName("event_id")
     val eventId: String,
@@ -47,7 +47,7 @@ internal data class AdaptyFlowViewObserverDidInitiateRestoreResponse(
 @Serializable
 internal data class AdaptyFlowViewDidReceiveAnalyticEventResponse(
     @SerialName("view")
-    val view: AdaptyUIPaywallViewResponse,
+    val view: AdaptyUIFlowViewResponse,
 
     @SerialName("name")
     val name: String,

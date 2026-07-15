@@ -543,7 +543,7 @@ private fun PaywallContentSection(
         ListTextTile(title = "Locale", subtitle = flow.remoteConfigs.firstOrNull()?.locale.orEmpty())
 
         if (products == null) {
-            flow.variations.flatMap { it.productIdentifiers }.distinctBy { it.vendorProductId }
+            flow.paywalls.flatMap { it.productIdentifiers }.distinctBy { it.vendorProductId }
                 .forEach {
                     ListTextTile(title = it.vendorProductId)
                 }

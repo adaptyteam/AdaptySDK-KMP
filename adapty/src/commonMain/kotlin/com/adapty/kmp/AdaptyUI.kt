@@ -4,7 +4,6 @@ import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
@@ -12,25 +11,24 @@ import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIFlowView
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
 import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration
 
 /**
- * Singleton for managing Adapty UI components such as paywalls and onboardings.
+ * Singleton for managing Adapty UI components such as flows and onboardings.
  *
  * This interface is responsible for creating, presenting, and dismissing UI views,
  * as well as observing user interactions and lifecycle events for analytics and customization.
  *
  * Typical usage:
- * - Create and display paywall or onboarding views
+ * - Create and display flow or onboarding views
  * - Register observers for UI events
  * - Handle dialog interactions
  *
- * @see AdaptyUIPaywallsEventsObserver
+ * @see AdaptyUIFlowsEventsObserver
  * @see AdaptyUIOnboardingsEventsObserver
- * @see AdaptyUIPaywallView
+ * @see AdaptyUIFlowView
  * @see AdaptyUIOnboardingView
  */
 public object AdaptyUI : AdaptyUIContract by AdaptyUIImpl(adaptyPlugin = adaptyPlugin)
@@ -66,25 +64,13 @@ internal interface AdaptyUIContract {
      */
     fun unregisterOnboardingEventsListener(viewId: String)
 
-    @Deprecated(
-        "Use registerFlowEventsListener(observer, viewId) as of 4.0.0.",
-        ReplaceWith("registerFlowEventsListener(observer, viewId)"),
-        DeprecationLevel.WARNING
-    )
-    fun registerPaywallEventsListener(
-        observer: AdaptyUIPaywallsEventsObserver,
-        viewId: String
-    )
-
-    @Deprecated(
-        "Use unregisterFlowEventsListener(viewId) as of 4.0.0.",
-        ReplaceWith("unregisterFlowEventsListener(viewId)"),
-        DeprecationLevel.WARNING
-    )
-    fun unregisterPaywallEventsListener(viewId: String)
-
     /**
-     * Registers an [AdaptyUIFlowsEventsObserver] for a specific flow view (cross_platform 4.0.0).
+     * Registers an [AdaptyUIFlowsEventsObserver] for a specific flow view.
+     *
+     * Use this when working with **native flow views** to listen for lifecycle events,
+     * user interactions, and analytics for that particular view instance.
+     *
+     * Each view should have a unique [viewId] so multiple flows can be tracked independently.
      */
     fun registerFlowEventsListener(
         observer: AdaptyUIFlowsEventsObserver,
@@ -116,40 +102,6 @@ internal interface AdaptyUIContract {
 
 
     /**
-     * Sets an observer to receive events from paywalls displayed.
-     *
-     * Implement [AdaptyUIPaywallsEventsObserver] to handle lifecycle events and user interactions
-     * within paywalls — for example, when the view appears, disappears, starts or finishes a purchase,
-     * performs an action, or encounters an error.
-     *
-     * This method should be called before displaying a paywall to ensure all events are captured.
-     *
-     * Example:
-     * ```
-     * Adapty.setPaywallsEventsObserver(object : AdaptyUIPaywallsEventsObserver {
-     *     override fun paywallViewDidFinishPurchase(
-     *         view: AdaptyUIPaywallView,
-     *         product: AdaptyPaywallProduct,
-     *         purchaseResult: AdaptyPurchaseResult
-     *     ) {
-     *         // Handle successful purchase or dismissal here
-     *     }
-     * })
-     * ```
-     *
-     * @param observer an instance of [AdaptyUIPaywallsEventsObserver] used to receive paywall lifecycle and interaction events.
-     *
-     * @see AdaptyUIPaywallsEventsObserver
-     */
-    @Deprecated(
-        "Use setFlowsEventsObserver(observer) as of 4.0.0.",
-        ReplaceWith("setFlowsEventsObserver(observer)"),
-        DeprecationLevel.WARNING
-    )
-    fun setPaywallsEventsObserver(observer: AdaptyUIPaywallsEventsObserver)
-
-
-    /**
      * Sets an observer to receive events from AdaptyUI onboardings.
      *
      * Implement [AdaptyUIOnboardingsEventsObserver] to handle onboarding lifecycle events,
@@ -176,36 +128,6 @@ internal interface AdaptyUIContract {
      */
     fun setOnboardingsEventsObserver(observer: AdaptyUIOnboardingsEventsObserver)
 
-
-    /**
-     * Creates a paywall view that can be presented to the user.
-     *
-     * @param paywall The [AdaptyPaywall] model used to build the view.
-     * @param loadTimeout Optional timeout for loading the view.
-     * @param preloadProducts If true, paywall products are preloaded before presentation.
-     * @param customTags Optional custom tags to inject into the paywall.
-     * @param customTimers Optional custom timers to pass for paywall rendering.
-     * @param customAssets Optional map of asset identifiers to custom assets.
-     * @param productPurchaseParams Optional parameters for product purchase flow.
-     *
-     * @return [AdaptyResult] containing the created [AdaptyUIPaywallView] or an error.
-     *
-     * @see AdaptyUIPaywallView
-     */
-    @Deprecated(
-        "Use createFlowView(flow, ...) as of 4.0.0.",
-        ReplaceWith("createFlowView(flow, loadTimeout, preloadProducts, customTags, customTimers, customAssets, productPurchaseParams)"),
-        DeprecationLevel.WARNING
-    )
-    suspend fun createPaywallView(
-        paywall: AdaptyPaywall,
-        loadTimeout: Duration? = null,
-        preloadProducts: Boolean = false,
-        customTags: Map<String, String>? = null,
-        customTimers: Map<String, LocalDateTime>? = null,
-        customAssets: Map<String, AdaptyCustomAsset>? = null,
-        productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null
-    ): AdaptyResult<AdaptyUIPaywallView>
 
     /**
      * Creates a flow view that can be presented to the user (cross_platform 4.0.0).
@@ -265,35 +187,6 @@ internal interface AdaptyUIContract {
         view: AdaptyUIOnboardingView,
         iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
     ): AdaptyResult<Unit>
-
-    /**
-     * Presents the provided paywall view.
-     *
-     * @param view The paywall view to present.
-     * @return [AdaptyResult] indicating success or error.
-     */
-    @Deprecated(
-        "Use presentFlowView(view, ...) as of 4.0.0.",
-        ReplaceWith("presentFlowView(view, iosPresentationStyle)"),
-        DeprecationLevel.WARNING
-    )
-    suspend fun presentPaywallView(
-        view: AdaptyUIPaywallView,
-        iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
-    ): AdaptyResult<Unit>
-
-    /**
-     * Dismisses the currently displayed paywall view.
-     *
-     * @param view The paywall view to dismiss.
-     * @return [AdaptyResult] indicating success or error.
-     */
-    @Deprecated(
-        "Use dismissFlowView(view) as of 4.0.0.",
-        ReplaceWith("dismissFlowView(view)"),
-        DeprecationLevel.WARNING
-    )
-    suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit>
 
     /**
      * Dismisses the currently displayed onboarding view.
