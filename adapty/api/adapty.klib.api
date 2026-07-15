@@ -201,37 +201,6 @@ final enum class com.adapty.kmp.models/AdaptyUIIOSPresentationStyle : kotlin/Enu
     final fun values(): kotlin/Array<com.adapty.kmp.models/AdaptyUIIOSPresentationStyle> // com.adapty.kmp.models/AdaptyUIIOSPresentationStyle.values|values#static(){}[0]
 }
 
-final enum class com.adapty.kmp.models/AdaptyUIPermission : kotlin/Enum<com.adapty.kmp.models/AdaptyUIPermission> { // com.adapty.kmp.models/AdaptyUIPermission|null[0]
-    enum entry BLUETOOTH // com.adapty.kmp.models/AdaptyUIPermission.BLUETOOTH|null[0]
-    enum entry CALENDAR // com.adapty.kmp.models/AdaptyUIPermission.CALENDAR|null[0]
-    enum entry CAMERA // com.adapty.kmp.models/AdaptyUIPermission.CAMERA|null[0]
-    enum entry CONTACTS // com.adapty.kmp.models/AdaptyUIPermission.CONTACTS|null[0]
-    enum entry FOCUS_STATUS // com.adapty.kmp.models/AdaptyUIPermission.FOCUS_STATUS|null[0]
-    enum entry HEALTH // com.adapty.kmp.models/AdaptyUIPermission.HEALTH|null[0]
-    enum entry HOMEKIT // com.adapty.kmp.models/AdaptyUIPermission.HOMEKIT|null[0]
-    enum entry LOCAL_NETWORK // com.adapty.kmp.models/AdaptyUIPermission.LOCAL_NETWORK|null[0]
-    enum entry LOCATION_ALWAYS // com.adapty.kmp.models/AdaptyUIPermission.LOCATION_ALWAYS|null[0]
-    enum entry LOCATION_FULL_ACCURACY // com.adapty.kmp.models/AdaptyUIPermission.LOCATION_FULL_ACCURACY|null[0]
-    enum entry LOCATION_WHEN_USE // com.adapty.kmp.models/AdaptyUIPermission.LOCATION_WHEN_USE|null[0]
-    enum entry MEDIA_LIBRARY // com.adapty.kmp.models/AdaptyUIPermission.MEDIA_LIBRARY|null[0]
-    enum entry MICROPHONE // com.adapty.kmp.models/AdaptyUIPermission.MICROPHONE|null[0]
-    enum entry MOTION // com.adapty.kmp.models/AdaptyUIPermission.MOTION|null[0]
-    enum entry MUSIC // com.adapty.kmp.models/AdaptyUIPermission.MUSIC|null[0]
-    enum entry PHOTOS // com.adapty.kmp.models/AdaptyUIPermission.PHOTOS|null[0]
-    enum entry PUSH // com.adapty.kmp.models/AdaptyUIPermission.PUSH|null[0]
-    enum entry REMINDERS // com.adapty.kmp.models/AdaptyUIPermission.REMINDERS|null[0]
-    enum entry SIRI // com.adapty.kmp.models/AdaptyUIPermission.SIRI|null[0]
-    enum entry SPEECH // com.adapty.kmp.models/AdaptyUIPermission.SPEECH|null[0]
-    enum entry TRACKING // com.adapty.kmp.models/AdaptyUIPermission.TRACKING|null[0]
-    enum entry UNKNOWN // com.adapty.kmp.models/AdaptyUIPermission.UNKNOWN|null[0]
-
-    final val entries // com.adapty.kmp.models/AdaptyUIPermission.entries|#static{}entries[0]
-        final fun <get-entries>(): kotlin.enums/EnumEntries<com.adapty.kmp.models/AdaptyUIPermission> // com.adapty.kmp.models/AdaptyUIPermission.entries.<get-entries>|<get-entries>#static(){}[0]
-
-    final fun valueOf(kotlin/String): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.valueOf|valueOf#static(kotlin.String){}[0]
-    final fun values(): kotlin/Array<com.adapty.kmp.models/AdaptyUIPermission> // com.adapty.kmp.models/AdaptyUIPermission.values|values#static(){}[0]
-}
-
 final enum class com.adapty.kmp.models/AdaptyWebPresentation : kotlin/Enum<com.adapty.kmp.models/AdaptyWebPresentation> { // com.adapty.kmp.models/AdaptyWebPresentation|null[0]
     enum entry EXTERNAL_BROWSER // com.adapty.kmp.models/AdaptyWebPresentation.EXTERNAL_BROWSER|null[0]
     enum entry IN_APP_BROWSER // com.adapty.kmp.models/AdaptyWebPresentation.IN_APP_BROWSER|null[0]
@@ -252,7 +221,6 @@ abstract interface com.adapty.kmp/AdaptyUIFlowsEventsObserver { // com.adapty.km
         open fun <get-mainUiScope>(): kotlinx.coroutines/CoroutineScope // com.adapty.kmp/AdaptyUIFlowsEventsObserver.mainUiScope.<get-mainUiScope>|<get-mainUiScope>(){}[0]
 
     open fun flowViewDidAppear(com.adapty.kmp.models/AdaptyUIFlowView) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidAppear|flowViewDidAppear(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
-    open fun flowViewDidAskPermission(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyUIPermissionRequest) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidAskPermission|flowViewDidAskPermission(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyUIPermissionRequest){}[0]
     open fun flowViewDidDisappear(com.adapty.kmp.models/AdaptyUIFlowView) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidDisappear|flowViewDidDisappear(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
     open fun flowViewDidFailLoadingProducts(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyError) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidFailLoadingProducts|flowViewDidFailLoadingProducts(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyError){}[0]
     open fun flowViewDidFailPurchase(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyPaywallProduct, com.adapty.kmp.models/AdaptyError) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidFailPurchase|flowViewDidFailPurchase(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyPaywallProduct;com.adapty.kmp.models.AdaptyError){}[0]
@@ -263,12 +231,14 @@ abstract interface com.adapty.kmp/AdaptyUIFlowsEventsObserver { // com.adapty.km
     open fun flowViewDidPerformAction(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyUIAction) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidPerformAction|flowViewDidPerformAction(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyUIAction){}[0]
     open fun flowViewDidReceiveAnalyticEvent(com.adapty.kmp.models/AdaptyUIFlowView, kotlin/String, kotlin/String) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidReceiveAnalyticEvent|flowViewDidReceiveAnalyticEvent(com.adapty.kmp.models.AdaptyUIFlowView;kotlin.String;kotlin.String){}[0]
     open fun flowViewDidReceiveError(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyError) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidReceiveError|flowViewDidReceiveError(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyError){}[0]
-    open fun flowViewDidRequestAppReview(com.adapty.kmp.models/AdaptyUIFlowView) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidRequestAppReview|flowViewDidRequestAppReview(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
     open fun flowViewDidSelectProduct(com.adapty.kmp.models/AdaptyUIFlowView, kotlin/String) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidSelectProduct|flowViewDidSelectProduct(com.adapty.kmp.models.AdaptyUIFlowView;kotlin.String){}[0]
     open fun flowViewDidStartPurchase(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyPaywallProduct) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidStartPurchase|flowViewDidStartPurchase(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyPaywallProduct){}[0]
     open fun flowViewDidStartRestore(com.adapty.kmp.models/AdaptyUIFlowView) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewDidStartRestore|flowViewDidStartRestore(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
-    open fun flowViewObserverDidInitiatePurchase(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyPaywallProduct, com.adapty.kmp.models/AdaptyUIObserverPurchaseHandle) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewObserverDidInitiatePurchase|flowViewObserverDidInitiatePurchase(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyPaywallProduct;com.adapty.kmp.models.AdaptyUIObserverPurchaseHandle){}[0]
-    open fun flowViewObserverDidInitiateRestore(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyUIObserverRestoreHandle) // com.adapty.kmp/AdaptyUIFlowsEventsObserver.flowViewObserverDidInitiateRestore|flowViewObserverDidInitiateRestore(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyUIObserverRestoreHandle){}[0]
+}
+
+abstract interface com.adapty.kmp/AdaptyUIObserverModeResolver { // com.adapty.kmp/AdaptyUIObserverModeResolver|null[0]
+    abstract fun observerModeDidInitiatePurchase(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyPaywallProduct, kotlin/Function0<kotlin/Unit>, kotlin/Function0<kotlin/Unit>) // com.adapty.kmp/AdaptyUIObserverModeResolver.observerModeDidInitiatePurchase|observerModeDidInitiatePurchase(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyPaywallProduct;kotlin.Function0<kotlin.Unit>;kotlin.Function0<kotlin.Unit>){}[0]
+    abstract fun observerModeDidInitiateRestore(com.adapty.kmp.models/AdaptyUIFlowView, kotlin/Function0<kotlin/Unit>, kotlin/Function0<kotlin/Unit>) // com.adapty.kmp/AdaptyUIObserverModeResolver.observerModeDidInitiateRestore|observerModeDidInitiateRestore(com.adapty.kmp.models.AdaptyUIFlowView;kotlin.Function0<kotlin.Unit>;kotlin.Function0<kotlin.Unit>){}[0]
 }
 
 abstract interface com.adapty.kmp/AdaptyUIOnboardingsEventsObserver { // com.adapty.kmp/AdaptyUIOnboardingsEventsObserver|null[0]
@@ -282,6 +252,11 @@ abstract interface com.adapty.kmp/AdaptyUIOnboardingsEventsObserver { // com.ada
     open fun onboardingViewOnCustomAction(com.adapty.kmp.models/AdaptyUIOnboardingView, com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String) // com.adapty.kmp/AdaptyUIOnboardingsEventsObserver.onboardingViewOnCustomAction|onboardingViewOnCustomAction(com.adapty.kmp.models.AdaptyUIOnboardingView;com.adapty.kmp.models.AdaptyUIOnboardingMeta;kotlin.String){}[0]
     open fun onboardingViewOnPaywallAction(com.adapty.kmp.models/AdaptyUIOnboardingView, com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String) // com.adapty.kmp/AdaptyUIOnboardingsEventsObserver.onboardingViewOnPaywallAction|onboardingViewOnPaywallAction(com.adapty.kmp.models.AdaptyUIOnboardingView;com.adapty.kmp.models.AdaptyUIOnboardingMeta;kotlin.String){}[0]
     open fun onboardingViewOnStateUpdatedAction(com.adapty.kmp.models/AdaptyUIOnboardingView, com.adapty.kmp.models/AdaptyUIOnboardingMeta, kotlin/String, com.adapty.kmp.models/AdaptyOnboardingsStateUpdatedParams) // com.adapty.kmp/AdaptyUIOnboardingsEventsObserver.onboardingViewOnStateUpdatedAction|onboardingViewOnStateUpdatedAction(com.adapty.kmp.models.AdaptyUIOnboardingView;com.adapty.kmp.models.AdaptyUIOnboardingMeta;kotlin.String;com.adapty.kmp.models.AdaptyOnboardingsStateUpdatedParams){}[0]
+}
+
+abstract interface com.adapty.kmp/AdaptyUISystemRequestsHandler { // com.adapty.kmp/AdaptyUISystemRequestsHandler|null[0]
+    abstract suspend fun handlePermission(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyUIPermission, kotlin.collections/Map<kotlin/String, kotlin/String>?): com.adapty.kmp.models/AdaptyUIPermissionResult // com.adapty.kmp/AdaptyUISystemRequestsHandler.handlePermission|handlePermission(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyUIPermission;kotlin.collections.Map<kotlin.String,kotlin.String>?){}[0]
+    open suspend fun handleAppReviewRequest(com.adapty.kmp.models/AdaptyUIFlowView) // com.adapty.kmp/AdaptyUISystemRequestsHandler.handleAppReviewRequest|handleAppReviewRequest(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
 }
 
 abstract interface com.adapty.kmp/OnInstallationDetailsListener { // com.adapty.kmp/OnInstallationDetailsListener|null[0]
@@ -1481,16 +1456,6 @@ final class com.adapty.kmp.models/AdaptyUIFlowView { // com.adapty.kmp.models/Ad
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIFlowView.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
 
-final class com.adapty.kmp.models/AdaptyUIObserverPurchaseHandle { // com.adapty.kmp.models/AdaptyUIObserverPurchaseHandle|null[0]
-    final fun reportFinished() // com.adapty.kmp.models/AdaptyUIObserverPurchaseHandle.reportFinished|reportFinished(){}[0]
-    final fun reportStarted() // com.adapty.kmp.models/AdaptyUIObserverPurchaseHandle.reportStarted|reportStarted(){}[0]
-}
-
-final class com.adapty.kmp.models/AdaptyUIObserverRestoreHandle { // com.adapty.kmp.models/AdaptyUIObserverRestoreHandle|null[0]
-    final fun reportFinished() // com.adapty.kmp.models/AdaptyUIObserverRestoreHandle.reportFinished|reportFinished(){}[0]
-    final fun reportStarted() // com.adapty.kmp.models/AdaptyUIObserverRestoreHandle.reportStarted|reportStarted(){}[0]
-}
-
 final class com.adapty.kmp.models/AdaptyUIOnboardingMeta { // com.adapty.kmp.models/AdaptyUIOnboardingMeta|null[0]
     constructor <init>(kotlin/String, kotlin/String, kotlin/Int, kotlin/Int) // com.adapty.kmp.models/AdaptyUIOnboardingMeta.<init>|<init>(kotlin.String;kotlin.String;kotlin.Int;kotlin.Int){}[0]
 
@@ -1535,15 +1500,74 @@ final class com.adapty.kmp.models/AdaptyUIOnboardingView { // com.adapty.kmp.mod
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIOnboardingView.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
 
-final class com.adapty.kmp.models/AdaptyUIPermissionRequest { // com.adapty.kmp.models/AdaptyUIPermissionRequest|null[0]
-    final val customArgs // com.adapty.kmp.models/AdaptyUIPermissionRequest.customArgs|{}customArgs[0]
-        final fun <get-customArgs>(): kotlin.collections/Map<kotlin/String, kotlin/String>? // com.adapty.kmp.models/AdaptyUIPermissionRequest.customArgs.<get-customArgs>|<get-customArgs>(){}[0]
-    final val permission // com.adapty.kmp.models/AdaptyUIPermissionRequest.permission|{}permission[0]
-        final fun <get-permission>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermissionRequest.permission.<get-permission>|<get-permission>(){}[0]
-    final val rawPermission // com.adapty.kmp.models/AdaptyUIPermissionRequest.rawPermission|{}rawPermission[0]
-        final fun <get-rawPermission>(): kotlin/String // com.adapty.kmp.models/AdaptyUIPermissionRequest.rawPermission.<get-rawPermission>|<get-rawPermission>(){}[0]
+final class com.adapty.kmp.models/AdaptyUIPermission { // com.adapty.kmp.models/AdaptyUIPermission|null[0]
+    constructor <init>(kotlin/String) // com.adapty.kmp.models/AdaptyUIPermission.<init>|<init>(kotlin.String){}[0]
 
-    final fun answer(kotlin/Boolean, kotlin/String? = ...) // com.adapty.kmp.models/AdaptyUIPermissionRequest.answer|answer(kotlin.Boolean;kotlin.String?){}[0]
+    final val value // com.adapty.kmp.models/AdaptyUIPermission.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.adapty.kmp.models/AdaptyUIPermission.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyUIPermission.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyUIPermission.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIPermission.toString|toString(){}[0]
+
+    final object Companion { // com.adapty.kmp.models/AdaptyUIPermission.Companion|null[0]
+        final val BLUETOOTH // com.adapty.kmp.models/AdaptyUIPermission.Companion.BLUETOOTH|{}BLUETOOTH[0]
+            final fun <get-BLUETOOTH>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.BLUETOOTH.<get-BLUETOOTH>|<get-BLUETOOTH>(){}[0]
+        final val CALENDAR // com.adapty.kmp.models/AdaptyUIPermission.Companion.CALENDAR|{}CALENDAR[0]
+            final fun <get-CALENDAR>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.CALENDAR.<get-CALENDAR>|<get-CALENDAR>(){}[0]
+        final val CAMERA // com.adapty.kmp.models/AdaptyUIPermission.Companion.CAMERA|{}CAMERA[0]
+            final fun <get-CAMERA>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.CAMERA.<get-CAMERA>|<get-CAMERA>(){}[0]
+        final val CONTACTS // com.adapty.kmp.models/AdaptyUIPermission.Companion.CONTACTS|{}CONTACTS[0]
+            final fun <get-CONTACTS>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.CONTACTS.<get-CONTACTS>|<get-CONTACTS>(){}[0]
+        final val FOCUS_STATUS // com.adapty.kmp.models/AdaptyUIPermission.Companion.FOCUS_STATUS|{}FOCUS_STATUS[0]
+            final fun <get-FOCUS_STATUS>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.FOCUS_STATUS.<get-FOCUS_STATUS>|<get-FOCUS_STATUS>(){}[0]
+        final val HEALTH // com.adapty.kmp.models/AdaptyUIPermission.Companion.HEALTH|{}HEALTH[0]
+            final fun <get-HEALTH>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.HEALTH.<get-HEALTH>|<get-HEALTH>(){}[0]
+        final val HOMEKIT // com.adapty.kmp.models/AdaptyUIPermission.Companion.HOMEKIT|{}HOMEKIT[0]
+            final fun <get-HOMEKIT>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.HOMEKIT.<get-HOMEKIT>|<get-HOMEKIT>(){}[0]
+        final val LOCAL_NETWORK // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCAL_NETWORK|{}LOCAL_NETWORK[0]
+            final fun <get-LOCAL_NETWORK>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCAL_NETWORK.<get-LOCAL_NETWORK>|<get-LOCAL_NETWORK>(){}[0]
+        final val LOCATION_ALWAYS // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCATION_ALWAYS|{}LOCATION_ALWAYS[0]
+            final fun <get-LOCATION_ALWAYS>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCATION_ALWAYS.<get-LOCATION_ALWAYS>|<get-LOCATION_ALWAYS>(){}[0]
+        final val LOCATION_FULL_ACCURACY // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCATION_FULL_ACCURACY|{}LOCATION_FULL_ACCURACY[0]
+            final fun <get-LOCATION_FULL_ACCURACY>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCATION_FULL_ACCURACY.<get-LOCATION_FULL_ACCURACY>|<get-LOCATION_FULL_ACCURACY>(){}[0]
+        final val LOCATION_WHEN_USE // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCATION_WHEN_USE|{}LOCATION_WHEN_USE[0]
+            final fun <get-LOCATION_WHEN_USE>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.LOCATION_WHEN_USE.<get-LOCATION_WHEN_USE>|<get-LOCATION_WHEN_USE>(){}[0]
+        final val MEDIA_LIBRARY // com.adapty.kmp.models/AdaptyUIPermission.Companion.MEDIA_LIBRARY|{}MEDIA_LIBRARY[0]
+            final fun <get-MEDIA_LIBRARY>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.MEDIA_LIBRARY.<get-MEDIA_LIBRARY>|<get-MEDIA_LIBRARY>(){}[0]
+        final val MICROPHONE // com.adapty.kmp.models/AdaptyUIPermission.Companion.MICROPHONE|{}MICROPHONE[0]
+            final fun <get-MICROPHONE>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.MICROPHONE.<get-MICROPHONE>|<get-MICROPHONE>(){}[0]
+        final val MOTION // com.adapty.kmp.models/AdaptyUIPermission.Companion.MOTION|{}MOTION[0]
+            final fun <get-MOTION>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.MOTION.<get-MOTION>|<get-MOTION>(){}[0]
+        final val MUSIC // com.adapty.kmp.models/AdaptyUIPermission.Companion.MUSIC|{}MUSIC[0]
+            final fun <get-MUSIC>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.MUSIC.<get-MUSIC>|<get-MUSIC>(){}[0]
+        final val PHOTOS // com.adapty.kmp.models/AdaptyUIPermission.Companion.PHOTOS|{}PHOTOS[0]
+            final fun <get-PHOTOS>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.PHOTOS.<get-PHOTOS>|<get-PHOTOS>(){}[0]
+        final val PUSH // com.adapty.kmp.models/AdaptyUIPermission.Companion.PUSH|{}PUSH[0]
+            final fun <get-PUSH>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.PUSH.<get-PUSH>|<get-PUSH>(){}[0]
+        final val REMINDERS // com.adapty.kmp.models/AdaptyUIPermission.Companion.REMINDERS|{}REMINDERS[0]
+            final fun <get-REMINDERS>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.REMINDERS.<get-REMINDERS>|<get-REMINDERS>(){}[0]
+        final val SIRI // com.adapty.kmp.models/AdaptyUIPermission.Companion.SIRI|{}SIRI[0]
+            final fun <get-SIRI>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.SIRI.<get-SIRI>|<get-SIRI>(){}[0]
+        final val SPEECH // com.adapty.kmp.models/AdaptyUIPermission.Companion.SPEECH|{}SPEECH[0]
+            final fun <get-SPEECH>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.SPEECH.<get-SPEECH>|<get-SPEECH>(){}[0]
+        final val TRACKING // com.adapty.kmp.models/AdaptyUIPermission.Companion.TRACKING|{}TRACKING[0]
+            final fun <get-TRACKING>(): com.adapty.kmp.models/AdaptyUIPermission // com.adapty.kmp.models/AdaptyUIPermission.Companion.TRACKING.<get-TRACKING>|<get-TRACKING>(){}[0]
+    }
+}
+
+final class com.adapty.kmp.models/AdaptyUIPermissionResult { // com.adapty.kmp.models/AdaptyUIPermissionResult|null[0]
+    final val detail // com.adapty.kmp.models/AdaptyUIPermissionResult.detail|{}detail[0]
+        final fun <get-detail>(): kotlin/String? // com.adapty.kmp.models/AdaptyUIPermissionResult.detail.<get-detail>|<get-detail>(){}[0]
+    final val isGranted // com.adapty.kmp.models/AdaptyUIPermissionResult.isGranted|{}isGranted[0]
+        final fun <get-isGranted>(): kotlin/Boolean // com.adapty.kmp.models/AdaptyUIPermissionResult.isGranted.<get-isGranted>|<get-isGranted>(){}[0]
+
+    final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIPermissionResult.toString|toString(){}[0]
+
+    final object Companion { // com.adapty.kmp.models/AdaptyUIPermissionResult.Companion|null[0]
+        final fun denied(kotlin/String? = ...): com.adapty.kmp.models/AdaptyUIPermissionResult // com.adapty.kmp.models/AdaptyUIPermissionResult.Companion.denied|denied(kotlin.String?){}[0]
+        final fun granted(kotlin/String? = ...): com.adapty.kmp.models/AdaptyUIPermissionResult // com.adapty.kmp.models/AdaptyUIPermissionResult.Companion.granted|granted(kotlin.String?){}[0]
+    }
 }
 
 final object com.adapty.kmp.internal.plugin/AdaptyPluginEventHandler { // com.adapty.kmp.internal.plugin/AdaptyPluginEventHandler|null[0]
@@ -1642,7 +1666,9 @@ final object com.adapty.kmp/AdaptyUI : com.adapty.kmp/AdaptyUIContract { // com.
     final fun registerOnboardingEventsListener(com.adapty.kmp/AdaptyUIOnboardingsEventsObserver, kotlin/String) // com.adapty.kmp/AdaptyUI.registerOnboardingEventsListener|registerOnboardingEventsListener(com.adapty.kmp.AdaptyUIOnboardingsEventsObserver;kotlin.String){}[0]
     final fun requestAppReview() // com.adapty.kmp/AdaptyUI.requestAppReview|requestAppReview(){}[0]
     final fun setFlowsEventsObserver(com.adapty.kmp/AdaptyUIFlowsEventsObserver) // com.adapty.kmp/AdaptyUI.setFlowsEventsObserver|setFlowsEventsObserver(com.adapty.kmp.AdaptyUIFlowsEventsObserver){}[0]
+    final fun setObserverModeResolver(com.adapty.kmp/AdaptyUIObserverModeResolver) // com.adapty.kmp/AdaptyUI.setObserverModeResolver|setObserverModeResolver(com.adapty.kmp.AdaptyUIObserverModeResolver){}[0]
     final fun setOnboardingsEventsObserver(com.adapty.kmp/AdaptyUIOnboardingsEventsObserver) // com.adapty.kmp/AdaptyUI.setOnboardingsEventsObserver|setOnboardingsEventsObserver(com.adapty.kmp.AdaptyUIOnboardingsEventsObserver){}[0]
+    final fun setSystemRequestsHandler(com.adapty.kmp/AdaptyUISystemRequestsHandler) // com.adapty.kmp/AdaptyUI.setSystemRequestsHandler|setSystemRequestsHandler(com.adapty.kmp.AdaptyUISystemRequestsHandler){}[0]
     final fun unregisterFlowEventsListener(kotlin/String) // com.adapty.kmp/AdaptyUI.unregisterFlowEventsListener|unregisterFlowEventsListener(kotlin.String){}[0]
     final fun unregisterOnboardingEventsListener(kotlin/String) // com.adapty.kmp/AdaptyUI.unregisterOnboardingEventsListener|unregisterOnboardingEventsListener(kotlin.String){}[0]
     final suspend fun createFlowView(com.adapty.kmp.models/AdaptyFlow, kotlin.time/Duration?, kotlin/Boolean, kotlin.collections/Map<kotlin/String, kotlin/String>?, kotlin.collections/Map<kotlin/String, kotlinx.datetime/LocalDateTime>?, kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyCustomAsset>?, kotlin.collections/Map<com.adapty.kmp.models/AdaptyProductIdentifier, com.adapty.kmp.models/AdaptyPurchaseParameters>?): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIFlowView> // com.adapty.kmp/AdaptyUI.createFlowView|createFlowView(com.adapty.kmp.models.AdaptyFlow;kotlin.time.Duration?;kotlin.Boolean;kotlin.collections.Map<kotlin.String,kotlin.String>?;kotlin.collections.Map<kotlin.String,kotlinx.datetime.LocalDateTime>?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyCustomAsset>?;kotlin.collections.Map<com.adapty.kmp.models.AdaptyProductIdentifier,com.adapty.kmp.models.AdaptyPurchaseParameters>?){}[0]

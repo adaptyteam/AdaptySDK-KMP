@@ -5,7 +5,8 @@ package com.adapty.kmp.internal
 import com.adapty.kmp.AdaptyUIContract
 import com.adapty.kmp.AdaptyUIFlowsEventsObserver
 import com.adapty.kmp.AdaptyUIOnboardingsEventsObserver
-import com.adapty.kmp.AdaptyUIPaywallsEventsObserver
+import com.adapty.kmp.AdaptyUIObserverModeResolver
+import com.adapty.kmp.AdaptyUISystemRequestsHandler
 import com.adapty.kmp.internal.plugin.AdaptyPlugin
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
 import com.adapty.kmp.internal.plugin.asAdaptyResult
@@ -17,7 +18,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyFlowAnswerPermissionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyObserverEventRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIOpenUrlRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUICreatePaywallViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDialogRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
@@ -39,19 +40,21 @@ import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewDidAskPermissionRes
 import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewDidReceiveAnalyticEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewObserverDidInitiatePurchaseResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewObserverDidInitiateRestoreResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidAppearOrDisappearResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailLoadingProductsResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailPurchaseResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailRenderingResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFailRestorePurchaseResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidFinishWebPaymentNavigationResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidPurchaseResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidSelectProductResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidUserActionResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventWillRestorePurchaseResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidAppearOrDisappearResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidFailLoadingProductsResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidFailPurchaseResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidReceiveErrorResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidFailRestorePurchaseResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidFinishWebPaymentNavigationResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidPurchaseResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidSelectProductResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidRestorePurchaseResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventWillPurchaseResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventDidUserActionResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyFlowViewEventWillRestorePurchaseResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyUIDialogActionTypeResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyUIOnboardingViewResponse
-import com.adapty.kmp.internal.plugin.response.AdaptyUIPaywallViewResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyUIFlowViewResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyError
 import com.adapty.kmp.internal.plugin.response.asAdaptyOnboardingEvent
 import com.adapty.kmp.internal.plugin.response.asAdaptyOnboardingsStateUpdatedParams
@@ -64,13 +67,11 @@ import com.adapty.kmp.internal.plugin.response.asAdaptyUIOnboardingMeta
 import com.adapty.kmp.internal.plugin.response.asAdaptyUIFlowView
 import com.adapty.kmp.internal.plugin.response.asAdaptyUIOnboardingView
 import com.adapty.kmp.internal.plugin.response.asAdaptyUIPermission
-import com.adapty.kmp.internal.plugin.response.asAdaptyUIView
 import com.adapty.kmp.internal.utils.asAdaptyValidDateTimeFormat
 import com.adapty.kmp.internal.utils.decodeJsonString
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyProductIdentifier
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyResult
@@ -78,11 +79,8 @@ import com.adapty.kmp.models.AdaptyUIAction
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIFlowView
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
-import com.adapty.kmp.models.AdaptyUIObserverPurchaseHandle
-import com.adapty.kmp.models.AdaptyUIObserverRestoreHandle
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
-import com.adapty.kmp.models.AdaptyUIPermissionRequest
+import com.adapty.kmp.models.AdaptyUIPermissionResult
 import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -104,19 +102,21 @@ internal class AdaptyUIImpl(
     private val mainDispatcher: CoroutineContext = Dispatchers.Main,
 ) : AdaptyUIContract {
 
-    // The paywall observer is active by default so a view "just works" out of the box (close
-    // dismisses, url opens, etc.) — preserving pre-4.0.0 behavior. The two observer worlds are
-    // mutually exclusive: setting one clears the other, so their (conflicting) defaults never both
-    // run on the same event.
-    private var paywallsEventObserver: AdaptyUIPaywallsEventsObserver? =
-        object : AdaptyUIPaywallsEventsObserver {}
-    private var flowsEventObserver: AdaptyUIFlowsEventsObserver? = null
+    // Active default observers so a view "just works" out of the box (close dismisses, url opens,
+    // etc.) even when the app sets no listener.
+    private var flowsEventObserver: AdaptyUIFlowsEventsObserver =
+        object : AdaptyUIFlowsEventsObserver {}
     private var onboardingsEventObserver: AdaptyUIOnboardingsEventsObserver =
         object : AdaptyUIOnboardingsEventsObserver {}
     private var nativeOnboardingViewsEventObserver: MutableMap<String, AdaptyUIOnboardingsEventsObserver> =
         mutableMapOf()
-    private var nativePaywallViewsEventObserver: MutableMap<String, AdaptyUIPaywallsEventsObserver> =
-        mutableMapOf()
+    // No default: permissions can only be requested by the app itself, and an unregistered
+    // handler is answered by native at teardown (see AdaptyUISystemRequestsHandler).
+    private var systemRequestsHandler: AdaptyUISystemRequestsHandler? = null
+
+    // No default: in observer mode the app owns the purchase, so with no resolver there is nothing
+    // to hand the purchase to (see AdaptyUIObserverModeResolver).
+    private var observerModeResolver: AdaptyUIObserverModeResolver? = null
     private var nativeFlowViewsEventObserver: MutableMap<String, AdaptyUIFlowsEventsObserver> =
         mutableMapOf()
     private var eventsListenerJob: Job? = null
@@ -148,72 +148,17 @@ internal class AdaptyUIImpl(
         nativeOnboardingViewsEventObserver.remove(viewId)
     }
 
-    override fun registerPaywallEventsListener(
-        observer: AdaptyUIPaywallsEventsObserver,
-        viewId: String
-    ) {
-        nativePaywallViewsEventObserver[viewId] = observer
-    }
-
-    override fun unregisterPaywallEventsListener(viewId: String) {
-        nativePaywallViewsEventObserver.remove(viewId)
-    }
-
-    override fun setPaywallsEventsObserver(observer: AdaptyUIPaywallsEventsObserver) {
-        this.paywallsEventObserver = observer
-        this.flowsEventObserver = null
-    }
-
 
     override fun setOnboardingsEventsObserver(observer: AdaptyUIOnboardingsEventsObserver) {
         this.onboardingsEventObserver = observer
     }
 
-    override suspend fun createPaywallView(
-        paywall: AdaptyPaywall,
-        loadTimeout: Duration?,
-        preloadProducts: Boolean,
-        customTags: Map<String, String>?,
-        customTimers: Map<String, LocalDateTime>?,
-        customAssets: Map<String, AdaptyCustomAsset>?,
-        productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
-    ): AdaptyResult<AdaptyUIPaywallView> {
-        return adaptyPlugin.awaitExecute<AdaptyUICreatePaywallViewRequest, AdaptyUIPaywallViewResponse>(
-            method = AdaptyPluginMethod.CREATE_PAYWALL_VIEW,
-            request = AdaptyUICreatePaywallViewRequest(
-                flow = paywall.asAdaptyFlowRequest(),
-                loadTimeOutInSeconds = loadTimeout?.inWholeMilliseconds?.toDouble()?.div(1000.0),
-                preloadProducts = preloadProducts,
-                customTags = customTags,
-                customTimers = customTimers?.asAdaptyValidDateTimeFormat(),
-                productPurchaseParameters = productPurchaseParams?.map { (key, value) ->
-                    key.adaptyProductId to value.asAdaptyPurchaseParametersRequest()
-                }?.toMap(),
-                customAssets = customAssets?.map { (key, value) ->
-                    value.asAdaptyCustomAssetRequest(key)
-                }
-            )
-        ).asAdaptyResult { it.asAdaptyUIView() }
+    override fun setSystemRequestsHandler(handler: AdaptyUISystemRequestsHandler) {
+        this.systemRequestsHandler = handler
     }
 
-    override suspend fun presentPaywallView(
-        view: AdaptyUIPaywallView,
-        iosPresentationStyle: AdaptyUIIOSPresentationStyle
-    ): AdaptyResult<Unit> {
-        return adaptyPlugin.awaitExecute<AdaptyUIPresentViewRequest, Boolean>(
-            method = AdaptyPluginMethod.PRESENT_PAYWALL_VIEW,
-            request = AdaptyUIPresentViewRequest(
-                id = view.id,
-                iosPresentationStyle = iosPresentationStyle.asAdaptyUIIOSPresentationStyleRequest()
-            )
-        ).asAdaptyResult { }
-    }
-
-    override suspend fun dismissPaywallView(view: AdaptyUIPaywallView): AdaptyResult<Unit> {
-        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Unit>(
-            method = AdaptyPluginMethod.DISMISS_PAYWALL_VIEW,
-            request = AdaptyUIDismissViewRequest(id = view.id),
-        ).asAdaptyResult { }
+    override fun setObserverModeResolver(resolver: AdaptyUIObserverModeResolver) {
+        this.observerModeResolver = resolver
     }
 
     override fun registerFlowEventsListener(
@@ -229,7 +174,6 @@ internal class AdaptyUIImpl(
 
     override fun setFlowsEventsObserver(observer: AdaptyUIFlowsEventsObserver) {
         this.flowsEventObserver = observer
-        this.paywallsEventObserver = null
     }
 
     override fun requestAppReview() {
@@ -260,9 +204,9 @@ internal class AdaptyUIImpl(
         customAssets: Map<String, AdaptyCustomAsset>?,
         productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
     ): AdaptyResult<AdaptyUIFlowView> {
-        return adaptyPlugin.awaitExecute<AdaptyUICreatePaywallViewRequest, AdaptyUIPaywallViewResponse>(
-            method = AdaptyPluginMethod.CREATE_PAYWALL_VIEW,
-            request = AdaptyUICreatePaywallViewRequest(
+        return adaptyPlugin.awaitExecute<AdaptyUICreateFlowViewRequest, AdaptyUIFlowViewResponse>(
+            method = AdaptyPluginMethod.CREATE_FLOW_VIEW,
+            request = AdaptyUICreateFlowViewRequest(
                 flow = flow.asAdaptyFlowRequest(),
                 loadTimeOutInSeconds = loadTimeout?.inWholeMilliseconds?.toDouble()?.div(1000.0),
                 preloadProducts = preloadProducts,
@@ -283,7 +227,7 @@ internal class AdaptyUIImpl(
         iosPresentationStyle: AdaptyUIIOSPresentationStyle
     ): AdaptyResult<Unit> {
         return adaptyPlugin.awaitExecute<AdaptyUIPresentViewRequest, Boolean>(
-            method = AdaptyPluginMethod.PRESENT_PAYWALL_VIEW,
+            method = AdaptyPluginMethod.PRESENT_FLOW_VIEW,
             request = AdaptyUIPresentViewRequest(
                 id = view.id,
                 iosPresentationStyle = iosPresentationStyle.asAdaptyUIIOSPresentationStyleRequest()
@@ -293,7 +237,7 @@ internal class AdaptyUIImpl(
 
     override suspend fun dismissFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit> {
         return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Unit>(
-            method = AdaptyPluginMethod.DISMISS_PAYWALL_VIEW,
+            method = AdaptyPluginMethod.DISMISS_FLOW_VIEW,
             request = AdaptyUIDismissViewRequest(id = view.id),
         ).asAdaptyResult { }
     }
@@ -375,10 +319,6 @@ internal class AdaptyUIImpl(
         ).asAdaptyResult { }
     }
 
-    /** Global paywall observer plus any per-view native paywall observer registered for [viewId]. */
-    private fun paywallObservers(viewId: String): List<AdaptyUIPaywallsEventsObserver> =
-        listOfNotNull(paywallsEventObserver, nativePaywallViewsEventObserver[viewId])
-
     /** Global flow observer plus any per-view native flow observer registered for [viewId]. */
     private fun flowObservers(viewId: String): List<AdaptyUIFlowsEventsObserver> =
         listOfNotNull(flowsEventObserver, nativeFlowViewsEventObserver[viewId])
@@ -388,71 +328,44 @@ internal class AdaptyUIImpl(
         dataJsonString: String
     ) {
         when (event) {
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidUserActionResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidPerformAction(it.view.asAdaptyUIView(), it.action.asAdaptyUIAction())
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidUserActionResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidPerformAction(it.view.asAdaptyUIFlowView(), it.action.asAdaptyUIAction())
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_APPEAR -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
-                    paywallObservers(it.view.id).forEach { obs -> obs.paywallViewDidAppear(it.view.asAdaptyUIView()) }
+            AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidAppearOrDisappearResponse> {
                     flowObservers(it.view.id).forEach { obs -> obs.flowViewDidAppear(it.view.asAdaptyUIFlowView()) }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
-                    paywallObservers(it.view.id).forEach { obs -> obs.paywallViewDidDisappear(it.view.asAdaptyUIView()) }
+            AdaptyPluginEvent.FLOW_VIEW_DID_DISAPPEAR -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidAppearOrDisappearResponse> {
                     flowObservers(it.view.id).forEach { obs -> obs.flowViewDidDisappear(it.view.asAdaptyUIFlowView()) }
                 }
             }
 
-            // Legacy: native no longer emits this in 4.0.0 (system back arrives via did_perform_action).
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_SYSTEM_BACK_ACTION -> {
-                dataJsonString.decodeJsonSafely<AdaptyUIPaywallViewResponse> {
-                    paywallObservers(it.id).forEach { obs ->
-                        obs.paywallViewDidPerformAction(it.asAdaptyUIView(), AdaptyUIAction.AndroidSystemBackAction)
-                    }
-                }
-            }
-
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_SELECT_PRODUCT -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidSelectProductResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidSelectProduct(it.view.asAdaptyUIView(), it.productId)
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_SELECT_PRODUCT -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidSelectProductResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidSelectProduct(it.view.asAdaptyUIFlowView(), it.productId)
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_START_PURCHASE -> {
-                dataJsonString.decodeJsonSafely<com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventWillPurchaseResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidStartPurchase(it.view.asAdaptyUIView(), it.product.asAdaptyPaywallProduct())
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_START_PURCHASE -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventWillPurchaseResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidStartPurchase(it.view.asAdaptyUIFlowView(), it.product.asAdaptyPaywallProduct())
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidPurchaseResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFinishPurchase(
-                            it.view.asAdaptyUIView(),
-                            it.product.asAdaptyPaywallProduct(),
-                            it.purchasedResult.asAdaptyPurchaseResult()
-                        )
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_PURCHASE -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidPurchaseResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidFinishPurchase(
                             it.view.asAdaptyUIFlowView(),
@@ -463,15 +376,8 @@ internal class AdaptyUIImpl(
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_PURCHASE -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailPurchaseResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFailPurchase(
-                            it.view.asAdaptyUIView(),
-                            it.product.asAdaptyPaywallProduct(),
-                            it.error.asAdaptyError()
-                        )
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_PURCHASE -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidFailPurchaseResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidFailPurchase(
                             it.view.asAdaptyUIFlowView(),
@@ -482,66 +388,46 @@ internal class AdaptyUIImpl(
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_START_RESTORE -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventWillRestorePurchaseResponse> {
-                    paywallObservers(it.view.id).forEach { obs -> obs.paywallViewDidStartRestore(it.view.asAdaptyUIView()) }
+            AdaptyPluginEvent.FLOW_VIEW_DID_START_RESTORE -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventWillRestorePurchaseResponse> {
                     flowObservers(it.view.id).forEach { obs -> obs.flowViewDidStartRestore(it.view.asAdaptyUIFlowView()) }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_RESTORE -> {
-                dataJsonString.decodeJsonSafely<com.adapty.kmp.internal.plugin.response.AdaptyPaywallViewEventDidRestorePurchaseResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFinishRestore(it.view.asAdaptyUIView(), it.profile.asAdaptyProfile())
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_RESTORE -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidRestorePurchaseResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidFinishRestore(it.view.asAdaptyUIFlowView(), it.profile.asAdaptyProfile())
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RESTORE -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailRestorePurchaseResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFailRestore(it.view.asAdaptyUIView(), it.error.asAdaptyError())
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_RESTORE -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidFailRestorePurchaseResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidFailRestore(it.view.asAdaptyUIFlowView(), it.error.asAdaptyError())
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RENDERING -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailRenderingResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFailRendering(it.view.asAdaptyUIView(), it.error.asAdaptyError())
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ERROR -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidReceiveErrorResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidReceiveError(it.view.asAdaptyUIFlowView(), it.error.asAdaptyError())
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_LOADING_PRODUCTS -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFailLoadingProductsResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFailLoadingProducts(it.view.asAdaptyUIView(), it.error.asAdaptyError())
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_LOADING_PRODUCTS -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidFailLoadingProductsResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidFailLoadingProducts(it.view.asAdaptyUIFlowView(), it.error.asAdaptyError())
                     }
                 }
             }
 
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidFinishWebPaymentNavigationResponse> {
-                    paywallObservers(it.view.id).forEach { obs ->
-                        obs.paywallViewDidFinishWebPaymentNavigation(
-                            it.view.asAdaptyUIView(),
-                            it.product?.asAdaptyPaywallProduct(),
-                            it.error?.asAdaptyError()
-                        )
-                    }
+            AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION -> {
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidFinishWebPaymentNavigationResponse> {
                     flowObservers(it.view.id).forEach { obs ->
                         obs.flowViewDidFinishWebPaymentNavigation(
                             it.view.asAdaptyUIFlowView(),
@@ -554,53 +440,65 @@ internal class AdaptyUIImpl(
 
             AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION -> {
                 dataJsonString.decodeJsonSafely<AdaptyFlowViewDidAskPermissionResponse> {
-                    val request = AdaptyUIPermissionRequest(
+                    val handler = systemRequestsHandler ?: return@decodeJsonSafely
+                    val result: AdaptyUIPermissionResult = handler.handlePermission(
+                        view = it.view.asAdaptyUIFlowView(),
                         permission = it.permission.asAdaptyUIPermission(),
                         customArgs = it.customArgs,
-                        onAnswer = { granted, detail -> answerPermission(it.eventId, granted, detail) }
                     )
-                    flowObservers(it.view.id).forEach { obs ->
-                        obs.flowViewDidAskPermission(view = it.view.asAdaptyUIFlowView(), request = request)
-                    }
+                    answerPermission(it.eventId, result.isGranted, result.detail)
                 }
             }
 
             AdaptyPluginEvent.FLOW_VIEW_DID_REQUEST_APP_REVIEW -> {
-                dataJsonString.decodeJsonSafely<AdaptyPaywallViewEventDidAppearOrDisappearResponse> {
-                    flowObservers(it.view.id).forEach { obs ->
-                        obs.flowViewDidRequestAppReview(view = it.view.asAdaptyUIFlowView())
+                dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidAppearOrDisappearResponse> {
+                    val handler = systemRequestsHandler
+                    if (handler != null) {
+                        handler.handleAppReviewRequest(view = it.view.asAdaptyUIFlowView())
+                    } else {
+                        requestAppReview()
                     }
                 }
             }
 
             AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE -> {
                 dataJsonString.decodeJsonSafely<AdaptyFlowViewObserverDidInitiatePurchaseResponse> {
-                    val handle = AdaptyUIObserverPurchaseHandle(
-                        onStart = { reportObserverEvent(AdaptyPluginMethod.OBSERVER_PURCHASE_DID_START, it.eventId) },
-                        onFinish = { reportObserverEvent(AdaptyPluginMethod.OBSERVER_PURCHASE_DID_FINISH, it.eventId) }
+                    observerModeResolver?.observerModeDidInitiatePurchase(
+                        view = it.view.asAdaptyUIFlowView(),
+                        product = it.product.asAdaptyPaywallProduct(),
+                        onStartPurchase = {
+                            reportObserverEvent(
+                                AdaptyPluginMethod.OBSERVER_PURCHASE_DID_START,
+                                it.eventId
+                            )
+                        },
+                        onFinishPurchase = {
+                            reportObserverEvent(
+                                AdaptyPluginMethod.OBSERVER_PURCHASE_DID_FINISH,
+                                it.eventId
+                            )
+                        }
                     )
-                    flowObservers(it.view.id).forEach { obs ->
-                        obs.flowViewObserverDidInitiatePurchase(
-                            view = it.view.asAdaptyUIFlowView(),
-                            product = it.product.asAdaptyPaywallProduct(),
-                            handle = handle
-                        )
-                    }
                 }
             }
 
             AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_RESTORE -> {
                 dataJsonString.decodeJsonSafely<AdaptyFlowViewObserverDidInitiateRestoreResponse> {
-                    val handle = AdaptyUIObserverRestoreHandle(
-                        onStart = { reportObserverEvent(AdaptyPluginMethod.OBSERVER_RESTORE_DID_START, it.eventId) },
-                        onFinish = { reportObserverEvent(AdaptyPluginMethod.OBSERVER_RESTORE_DID_FINISH, it.eventId) }
+                    observerModeResolver?.observerModeDidInitiateRestore(
+                        view = it.view.asAdaptyUIFlowView(),
+                        onStartRestore = {
+                            reportObserverEvent(
+                                AdaptyPluginMethod.OBSERVER_RESTORE_DID_START,
+                                it.eventId
+                            )
+                        },
+                        onFinishRestore = {
+                            reportObserverEvent(
+                                AdaptyPluginMethod.OBSERVER_RESTORE_DID_FINISH,
+                                it.eventId
+                            )
+                        }
                     )
-                    flowObservers(it.view.id).forEach { obs ->
-                        obs.flowViewObserverDidInitiateRestore(
-                            view = it.view.asAdaptyUIFlowView(),
-                            handle = handle
-                        )
-                    }
                 }
             }
 
@@ -726,7 +624,9 @@ internal class AdaptyUIImpl(
     }
 
 
-    private suspend inline fun <reified Response> String?.decodeJsonSafely(crossinline onResult: (Response) -> Unit) =
+    private suspend inline fun <reified Response> String?.decodeJsonSafely(
+        crossinline onResult: suspend (Response) -> Unit
+    ) =
         withContext(defaultDispatcher) {
             try {
                 if (this@decodeJsonSafely == null) return@withContext

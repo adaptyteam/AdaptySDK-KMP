@@ -2,15 +2,13 @@ import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductReferenceRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPlacementRequestResponse
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywall
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlow
 import com.adapty.kmp.internal.plugin.response.AdaptyRemoteConfigResponse
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductReference
 import com.adapty.kmp.models.AdaptyPaywallProductSubscription
-import com.adapty.kmp.internal.plugin.request.asAdaptyFlow
 import com.adapty.kmp.models.AdaptyPeriodUnit
 import com.adapty.kmp.models.AdaptyPlacement
 import com.adapty.kmp.models.AdaptyPrice
@@ -26,7 +24,7 @@ import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
+import com.adapty.kmp.models.AdaptyUIFlowView
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -157,8 +155,6 @@ internal object AdaptyFakeTestData {
         )
     }
 
-    fun getPaywall(): AdaptyPaywall = getFlowRequestResponse().asAdaptyPaywall()
-
     fun getFlow(): AdaptyFlow = getFlowRequestResponse().asAdaptyFlow()
 
 
@@ -249,8 +245,8 @@ internal object AdaptyFakeTestData {
         )
     }
 
-    fun getUIPaywallView(): AdaptyUIPaywallView {
-        return AdaptyUIPaywallView(
+    fun getUIFlowView(): AdaptyUIFlowView {
+        return AdaptyUIFlowView(
             id = VIEW_ID,
             placementId = PLACEMENT_ID,
             variationId = VARIATION_ID

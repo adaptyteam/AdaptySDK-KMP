@@ -1,7 +1,7 @@
 import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUICreatePaywallViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDialogRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
@@ -38,17 +38,17 @@ class AdaptyUIImplTest {
 
 
     @Test
-    fun `createPaywallView method - verify request and response`() = runTest {
-        val paywall = AdaptyFakeTestData.getPaywall()
-        val expectedView = AdaptyFakeTestData.getUIPaywallView()
+    fun `createFlowView method - verify request and response`() = runTest {
+        val flow = AdaptyFakeTestData.getFlow()
+        val expectedView = AdaptyFakeTestData.getUIFlowView()
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyUIImpl.createPaywallView(paywall = paywall)
+                adaptyUIImpl.createFlowView(flow = flow)
             },
-            method = AdaptyPluginMethod.CREATE_PAYWALL_VIEW,
-            param = AdaptyUICreatePaywallViewRequest(
-                flow = paywall.asAdaptyFlowRequest(),
+            method = AdaptyPluginMethod.CREATE_FLOW_VIEW,
+            param = AdaptyUICreateFlowViewRequest(
+                flow = flow.asAdaptyFlowRequest(),
                 loadTimeOutInSeconds = null,
                 preloadProducts = false
             ),
@@ -57,17 +57,17 @@ class AdaptyUIImplTest {
     }
 
     @Test
-    fun `presentPaywallView method - verify request and response`() = runTest {
-        val view = AdaptyFakeTestData.getUIPaywallView()
+    fun `presentFlowView method - verify request and response`() = runTest {
+        val view = AdaptyFakeTestData.getUIFlowView()
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyUIImpl.presentPaywallView(
+                adaptyUIImpl.presentFlowView(
                     view = view,
                     iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
                 )
             },
-            method = AdaptyPluginMethod.PRESENT_PAYWALL_VIEW,
+            method = AdaptyPluginMethod.PRESENT_FLOW_VIEW,
             param = AdaptyUIPresentViewRequest(
                 id = view.id,
                 iosPresentationStyle = AdaptyUIIOSPresentationStyleRequest.FULLSCREEN
@@ -77,14 +77,14 @@ class AdaptyUIImplTest {
     }
 
     @Test
-    fun `dismissPaywallView method - verify request and response`() = runTest {
-        val view = AdaptyFakeTestData.getUIPaywallView()
+    fun `dismissFlowView method - verify request and response`() = runTest {
+        val view = AdaptyFakeTestData.getUIFlowView()
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyUIImpl.dismissPaywallView(view = view)
+                adaptyUIImpl.dismissFlowView(view = view)
             },
-            method = AdaptyPluginMethod.DISMISS_PAYWALL_VIEW,
+            method = AdaptyPluginMethod.DISMISS_FLOW_VIEW,
             param = AdaptyUIDismissViewRequest(id = view.id),
             expectedSuccessData = Unit
         )

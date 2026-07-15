@@ -86,6 +86,20 @@ internal interface AdaptyUIContract {
     fun setFlowsEventsObserver(observer: AdaptyUIFlowsEventsObserver)
 
     /**
+     * Sets the handler for requests a flow makes of the host app — OS permissions and in-app
+     * review. Register one only if your flows use those features; see
+     * [AdaptyUISystemRequestsHandler] for what happens when none is set.
+     */
+    fun setSystemRequestsHandler(handler: AdaptyUISystemRequestsHandler)
+
+    /**
+     * Sets the resolver that drives purchases and restores started from flow views in **observer
+     * mode**. Register one only if you use observer mode; see
+     * [AdaptyUIObserverModeResolver].
+     */
+    fun setObserverModeResolver(resolver: AdaptyUIObserverModeResolver)
+
+    /**
      * Requests an in-app review (cross_platform 4.0.0).
      *
      */

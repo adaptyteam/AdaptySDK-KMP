@@ -6,9 +6,6 @@ import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyUIAction
 import com.adapty.kmp.models.AdaptyUIFlowView
-import com.adapty.kmp.models.AdaptyUIObserverPurchaseHandle
-import com.adapty.kmp.models.AdaptyUIObserverRestoreHandle
-import com.adapty.kmp.models.AdaptyUIPermissionRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -116,42 +113,6 @@ public interface AdaptyUIFlowsEventsObserver {
         view: AdaptyUIFlowView,
         product: AdaptyPaywallProduct? = null,
         error: AdaptyError? = null
-    ) {
-    }
-
-    /**
-     * Called when the flow asks the user for a permission. Respond via
-     * [AdaptyUIPermissionRequest.answer] so the flow can continue.
-     */
-    public fun flowViewDidAskPermission(view: AdaptyUIFlowView, request: AdaptyUIPermissionRequest) {}
-
-    /**
-     * Called when the flow requests an in-app review.
-     *
-     * By default this triggers the native app-review flow (no-op on Android until native support
-     * is available).
-     */
-    public fun flowViewDidRequestAppReview(view: AdaptyUIFlowView) {
-        AdaptyUI.requestAppReview()
-    }
-
-    /**
-     * Called in observer mode when the user initiates a purchase from the flow. Perform the
-     * purchase yourself and report progress via [handle].
-     */
-    public fun flowViewObserverDidInitiatePurchase(
-        view: AdaptyUIFlowView,
-        product: AdaptyPaywallProduct,
-        handle: AdaptyUIObserverPurchaseHandle
-    ) {
-    }
-
-    /**
-     * Called in observer mode when the user initiates a restore from the flow.
-     */
-    public fun flowViewObserverDidInitiateRestore(
-        view: AdaptyUIFlowView,
-        handle: AdaptyUIObserverRestoreHandle
     ) {
     }
 

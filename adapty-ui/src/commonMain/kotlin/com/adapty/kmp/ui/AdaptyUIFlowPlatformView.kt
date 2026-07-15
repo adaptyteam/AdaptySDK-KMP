@@ -18,9 +18,6 @@ import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyUIAction
 import com.adapty.kmp.models.AdaptyUIFlowView
-import com.adapty.kmp.models.AdaptyUIObserverPurchaseHandle
-import com.adapty.kmp.models.AdaptyUIObserverRestoreHandle
-import com.adapty.kmp.models.AdaptyUIPermissionRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.datetime.LocalDateTime
 
@@ -31,10 +28,14 @@ import kotlinx.datetime.LocalDateTime
  * system back keeps the view open, and successful purchase/restore do not auto-dismiss. Override
  * the callbacks to customize.
  *
- * The contract defaults (close dismisses, an URL action opens the URL, an error dismisses, an app
- * review request is forwarded to the OS) are applied by the global flow observer, which runs
- * alongside these callbacks — so a callback here observes an event, it does not replace that
- * default.
+ * The contract defaults (close dismisses, an URL action opens the URL, an error dismisses) are
+ * applied by the global flow observer, which runs alongside these callbacks — so a callback here
+ * observes an event, it does not replace that default.
+ *
+ * Requests that await an answer are not events and are not handled here: register an
+ * [com.adapty.kmp.AdaptyUISystemRequestsHandler] via `AdaptyUI.setSystemRequestsHandler` for
+ * permissions and in-app review, and an [com.adapty.kmp.AdaptyUIObserverModeResolver] via
+ * `AdaptyUI.setObserverModeResolver` for observer-mode purchases and restores.
  */
 @OptIn(AdaptyKMPInternal::class)
 @Composable
@@ -58,10 +59,6 @@ public fun AdaptyUIFlowPlatformView(
     onDidReceiveError: (view: AdaptyUIFlowView, error: AdaptyError) -> Unit = { _, _ -> },
     onDidFailLoadingProducts: (view: AdaptyUIFlowView, error: AdaptyError) -> Unit = { _, _ -> },
     onDidFinishWebPaymentNavigation: (view: AdaptyUIFlowView, product: AdaptyPaywallProduct?, error: AdaptyError?) -> Unit = { _, _, _ -> },
-    onDidAskPermission: (view: AdaptyUIFlowView, request: AdaptyUIPermissionRequest) -> Unit = { _, _ -> },
-    onDidRequestAppReview: (view: AdaptyUIFlowView) -> Unit = {},
-    onObserverDidInitiatePurchase: (view: AdaptyUIFlowView, product: AdaptyPaywallProduct, handle: AdaptyUIObserverPurchaseHandle) -> Unit = { _, _, _ -> },
-    onObserverDidInitiateRestore: (view: AdaptyUIFlowView, handle: AdaptyUIObserverRestoreHandle) -> Unit = { _, _ -> },
     onDidReceiveAnalyticEvent: (view: AdaptyUIFlowView, name: String, paramsJsonString: String) -> Unit = { _, _, _ -> },
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -111,23 +108,6 @@ public fun AdaptyUIFlowPlatformView(
                     product: AdaptyPaywallProduct?,
                     error: AdaptyError?
                 ) = onDidFinishWebPaymentNavigation(view, product, error)
-
-                override fun flowViewDidAskPermission(view: AdaptyUIFlowView, request: AdaptyUIPermissionRequest) =
-                    onDidAskPermission(view, request)
-
-                override fun flowViewDidRequestAppReview(view: AdaptyUIFlowView) =
-                    onDidRequestAppReview(view)
-
-                override fun flowViewObserverDidInitiatePurchase(
-                    view: AdaptyUIFlowView,
-                    product: AdaptyPaywallProduct,
-                    handle: AdaptyUIObserverPurchaseHandle
-                ) = onObserverDidInitiatePurchase(view, product, handle)
-
-                override fun flowViewObserverDidInitiateRestore(
-                    view: AdaptyUIFlowView,
-                    handle: AdaptyUIObserverRestoreHandle
-                ) = onObserverDidInitiateRestore(view, handle)
 
                 override fun flowViewDidReceiveAnalyticEvent(
                     view: AdaptyUIFlowView,

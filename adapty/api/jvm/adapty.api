@@ -44,7 +44,9 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public fun registerOnboardingEventsListener (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Ljava/lang/String;)V
 	public fun requestAppReview ()V
 	public fun setFlowsEventsObserver (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;)V
+	public fun setObserverModeResolver (Lcom/adapty/kmp/AdaptyUIObserverModeResolver;)V
 	public fun setOnboardingsEventsObserver (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;)V
+	public fun setSystemRequestsHandler (Lcom/adapty/kmp/AdaptyUISystemRequestsHandler;)V
 	public fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun unregisterFlowEventsListener (Ljava/lang/String;)V
 	public fun unregisterOnboardingEventsListener (Ljava/lang/String;)V
@@ -52,7 +54,6 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 
 public abstract interface class com/adapty/kmp/AdaptyUIFlowsEventsObserver {
 	public fun flowViewDidAppear (Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
-	public fun flowViewDidAskPermission (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIPermissionRequest;)V
 	public fun flowViewDidDisappear (Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
 	public fun flowViewDidFailLoadingProducts (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public fun flowViewDidFailPurchase (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
@@ -64,18 +65,14 @@ public abstract interface class com/adapty/kmp/AdaptyUIFlowsEventsObserver {
 	public fun flowViewDidPerformAction (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
 	public fun flowViewDidReceiveAnalyticEvent (Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/lang/String;Ljava/lang/String;)V
 	public fun flowViewDidReceiveError (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public fun flowViewDidRequestAppReview (Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
 	public fun flowViewDidSelectProduct (Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/lang/String;)V
 	public fun flowViewDidStartPurchase (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;)V
 	public fun flowViewDidStartRestore (Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
-	public fun flowViewObserverDidInitiatePurchase (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyUIObserverPurchaseHandle;)V
-	public fun flowViewObserverDidInitiateRestore (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIObserverRestoreHandle;)V
 	public fun getMainUiScope ()Lkotlinx/coroutines/CoroutineScope;
 }
 
 public final class com/adapty/kmp/AdaptyUIFlowsEventsObserver$DefaultImpls {
 	public static fun flowViewDidAppear (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
-	public static fun flowViewDidAskPermission (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIPermissionRequest;)V
 	public static fun flowViewDidDisappear (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
 	public static fun flowViewDidFailLoadingProducts (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyError;)V
 	public static fun flowViewDidFailPurchase (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyError;)V
@@ -87,13 +84,15 @@ public final class com/adapty/kmp/AdaptyUIFlowsEventsObserver$DefaultImpls {
 	public static fun flowViewDidPerformAction (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIAction;)V
 	public static fun flowViewDidReceiveAnalyticEvent (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/lang/String;Ljava/lang/String;)V
 	public static fun flowViewDidReceiveError (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyError;)V
-	public static fun flowViewDidRequestAppReview (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
 	public static fun flowViewDidSelectProduct (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/lang/String;)V
 	public static fun flowViewDidStartPurchase (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;)V
 	public static fun flowViewDidStartRestore (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;)V
-	public static fun flowViewObserverDidInitiatePurchase (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lcom/adapty/kmp/models/AdaptyUIObserverPurchaseHandle;)V
-	public static fun flowViewObserverDidInitiateRestore (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIObserverRestoreHandle;)V
 	public static fun getMainUiScope (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;)Lkotlinx/coroutines/CoroutineScope;
+}
+
+public abstract interface class com/adapty/kmp/AdaptyUIObserverModeResolver {
+	public abstract fun observerModeDidInitiatePurchase (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyPaywallProduct;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
+	public abstract fun observerModeDidInitiateRestore (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)V
 }
 
 public abstract interface class com/adapty/kmp/AdaptyUIOnboardingsEventsObserver {
@@ -116,6 +115,15 @@ public final class com/adapty/kmp/AdaptyUIOnboardingsEventsObserver$DefaultImpls
 	public static fun onboardingViewOnCustomAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
 	public static fun onboardingViewOnPaywallAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;)V
 	public static fun onboardingViewOnStateUpdatedAction (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lcom/adapty/kmp/models/AdaptyUIOnboardingMeta;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyOnboardingsStateUpdatedParams;)V
+}
+
+public abstract interface class com/adapty/kmp/AdaptyUISystemRequestsHandler {
+	public fun handleAppReviewRequest (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun handlePermission (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIPermission;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/adapty/kmp/AdaptyUISystemRequestsHandler$DefaultImpls {
+	public static fun handleAppReviewRequest (Lcom/adapty/kmp/AdaptyUISystemRequestsHandler;Lcom/adapty/kmp/models/AdaptyUIFlowView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adapty/kmp/OnInstallationDetailsListener {
@@ -1367,16 +1375,6 @@ public final class com/adapty/kmp/models/AdaptyUIIOSPresentationStyle : java/lan
 	public static fun values ()[Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;
 }
 
-public final class com/adapty/kmp/models/AdaptyUIObserverPurchaseHandle {
-	public final fun reportFinished ()V
-	public final fun reportStarted ()V
-}
-
-public final class com/adapty/kmp/models/AdaptyUIObserverRestoreHandle {
-	public final fun reportFinished ()V
-	public final fun reportStarted ()V
-}
-
 public final class com/adapty/kmp/models/AdaptyUIOnboardingMeta {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;II)V
 	public final fun component1 ()Ljava/lang/String;
@@ -1414,40 +1412,52 @@ public final class com/adapty/kmp/models/AdaptyUIOnboardingView {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adapty/kmp/models/AdaptyUIPermission : java/lang/Enum {
-	public static final field BLUETOOTH Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field CALENDAR Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field CAMERA Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field CONTACTS Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field FOCUS_STATUS Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field HEALTH Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field HOMEKIT Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field LOCAL_NETWORK Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field LOCATION_ALWAYS Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field LOCATION_FULL_ACCURACY Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field LOCATION_WHEN_USE Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field MEDIA_LIBRARY Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field MICROPHONE Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field MOTION Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field MUSIC Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field PHOTOS Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field PUSH Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field REMINDERS Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field SIRI Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field SPEECH Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field TRACKING Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static final field UNKNOWN Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public static fun values ()[Lcom/adapty/kmp/models/AdaptyUIPermission;
+public final class com/adapty/kmp/models/AdaptyUIPermission {
+	public static final field Companion Lcom/adapty/kmp/models/AdaptyUIPermission$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adapty/kmp/models/AdaptyUIPermissionRequest {
-	public final fun answer (ZLjava/lang/String;)V
-	public static synthetic fun answer$default (Lcom/adapty/kmp/models/AdaptyUIPermissionRequest;ZLjava/lang/String;ILjava/lang/Object;)V
-	public final fun getCustomArgs ()Ljava/util/Map;
-	public final fun getPermission ()Lcom/adapty/kmp/models/AdaptyUIPermission;
-	public final fun getRawPermission ()Ljava/lang/String;
+public final class com/adapty/kmp/models/AdaptyUIPermission$Companion {
+	public final fun getBLUETOOTH ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getCALENDAR ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getCAMERA ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getCONTACTS ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getFOCUS_STATUS ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getHEALTH ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getHOMEKIT ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getLOCAL_NETWORK ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getLOCATION_ALWAYS ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getLOCATION_FULL_ACCURACY ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getLOCATION_WHEN_USE ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getMEDIA_LIBRARY ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getMICROPHONE ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getMOTION ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getMUSIC ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getPHOTOS ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getPUSH ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getREMINDERS ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getSIRI ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getSPEECH ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+	public final fun getTRACKING ()Lcom/adapty/kmp/models/AdaptyUIPermission;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIPermissionResult {
+	public static final field Companion Lcom/adapty/kmp/models/AdaptyUIPermissionResult$Companion;
+	public synthetic fun <init> (ZLjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getDetail ()Ljava/lang/String;
+	public final fun isGranted ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyUIPermissionResult$Companion {
+	public final fun denied (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIPermissionResult;
+	public static synthetic fun denied$default (Lcom/adapty/kmp/models/AdaptyUIPermissionResult$Companion;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIPermissionResult;
+	public final fun granted (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIPermissionResult;
+	public static synthetic fun granted$default (Lcom/adapty/kmp/models/AdaptyUIPermissionResult$Companion;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIPermissionResult;
 }
 
 public final class com/adapty/kmp/models/AdaptyWebPresentation : java/lang/Enum {
