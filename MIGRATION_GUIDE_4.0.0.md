@@ -1,23 +1,22 @@
 # Migration Guide: KMPAdapty 4.0.0 (Paywall → Flow)
 
-Version 4.0.0 adopts the cross-platform contract 4.0.0, which reorganizes the SDK around **flows** instead of paywalls, and bumps the underlying native SDKs to 4.0.0.
+4.0.0 reorganizes the SDK around **flows** instead of paywalls.
 
-**This release is not backward compatible.** The paywall API is **deleted**, not deprecated — the same break the React Native and Flutter v4 SDKs made. Every paywall call site has a direct flow equivalent; this guide maps them one to one.
+**The paywall API is deleted, not deprecated** — your code won't compile until you port it. The substitutions are mechanical, and this guide lists them all.
 
 ---
 
 ## TL;DR
 
-- `getPaywall` → `getFlow`, `AdaptyPaywall` → `AdaptyFlow`, `AdaptyUIPaywallView` → `AdaptyUIFlowView` — mechanical renames for most code.
-- **Flow callbacks are now split across three interfaces**, by whether Adapty is waiting on an answer from you. This is the one change that isn't a rename.
-- Onboarding APIs are unchanged and still work, but are now `@Deprecated`.
-- iOS deployment target stays **15.0** — unchanged by this release.
+- `getPaywall` → `getFlow`, `AdaptyPaywall` → `AdaptyFlow`, `AdaptyUIPaywallView` → `AdaptyUIFlowView`, `paywallView*` callbacks → `flowView*`.
+- Some defaults changed — see [Default behavior changes](#default-behavior-changes).
+- Onboarding APIs still work, but are now `@Deprecated`.
 
 ---
 
 ## What is a flow?
 
-A **flow** groups one or more paywall variations together with flow-level metadata and per-language remote configs. Where `getPaywall()` returned a single paywall, `getFlow()` returns an `AdaptyFlow` whose `paywalls` are `AdaptyFlowPaywall`s.
+A flow groups one or more paywall variations with flow-level metadata and per-language remote configs. Where `getPaywall()` returned one paywall, `getFlow()` returns an `AdaptyFlow` whose `paywalls` are `AdaptyFlowPaywall`s.
 
 ```kotlin
 val flow = (Adapty.getFlow("placement_id") as? AdaptyResult.Success)?.value ?: return
@@ -28,7 +27,7 @@ val paywall: AdaptyFlowPaywall? = flow.paywalls.firstOrNull()
 
 ## Installation
 
-4.0.0 is a pre-release, so pin the exact version — Gradle does not resolve pre-release versions through dynamic ranges (`+`, `latest.release`):
+4.0.0 is a pre-release, so pin the exact version — Gradle does not resolve pre-releases through dynamic ranges (`+`, `latest.release`):
 
 ```toml title="libs.versions.toml"
 [versions]
@@ -52,9 +51,9 @@ adapty-kmp-ui = { module = "io.adapty:adapty-kmp-ui", version.ref = "adapty-kmp"
 | `createWebPaywallUrl(paywall)` | `createWebPaywallUrl(flowPaywall)` or `createWebPaywallUrl(product)` |
 | `openWebPaywall(paywall, openIn)` | `openWebPaywall(flowPaywall, openIn)` or `openWebPaywall(product, openIn)` |
 
-**`locale` is gone** from flow fetching — the wire no longer carries it, and the locale is resolved at render time. Delete the argument.
+**`locale` is gone** from flow fetching — it's resolved at render time. Delete the argument.
 
-`getPaywallProducts`, `createWebPaywallUrl` and `openWebPaywall` keep their paywall names on purpose: those are the v4 wire names, shared across all platform SDKs.
+`getPaywallProducts`, `createWebPaywallUrl` and `openWebPaywall` keep their paywall names: those are the v4 wire names.
 
 ```kotlin
 // Before
@@ -67,6 +66,8 @@ val flow = (Adapty.getFlow("placement_id") as? AdaptyResult.Success)?.value ?: r
 val products = Adapty.getPaywallProducts(flow)
 Adapty.logShowFlow(flow)
 ```
+
+Purchases, profile, and fallbacks (`makePurchase`, `restorePurchases`, `getProfile`, `identify`, `updateProfile`, `setFallback`) are unchanged.
 
 ---
 
@@ -84,30 +85,63 @@ Adapty.logShowFlow(flow)
 
 ---
 
-## Events vs requests: the three interfaces
+## Porting your observer
 
-This is the change that needs real thought, not a rename. In 3.x every flow callback lived on one observer. In 4.0.0 they are split by whether Adapty is **waiting on an answer**:
-
-| Interface | Register with | Holds | If you don't register it |
-|---|---|---|---|
-| `AdaptyUIFlowsEventsObserver` | `setFlowsEventsObserver` | Things that already happened: appear, purchase finished, error, analytics… | Views still work — a default observer dismisses on close/error and opens URLs |
-| `AdaptyUISystemRequestsHandler` | `setSystemRequestsHandler` | `handlePermission`, `handleAppReviewRequest` | Permission requests get **no answer**, and the flow resolves them as denied at teardown. App review still triggers the native prompt |
-| `AdaptyUIObserverModeResolver` | `setObserverModeResolver` | `observerModeDidInitiatePurchase`, `observerModeDidInitiateRestore` | **Nothing happens when the user taps buy** — observer mode needs this |
-
-### Renamed observer callbacks
-
-`AdaptyUIPaywallsEventsObserver` → `AdaptyUIFlowsEventsObserver`. Callbacks go `paywallView*` → `flowView*` and take `AdaptyUIFlowView`. One is renamed further:
+`AdaptyUIPaywallsEventsObserver` is deleted; implement `AdaptyUIFlowsEventsObserver` instead. Each callback has a direct equivalent: `paywallView*` becomes `flowView*` and takes `AdaptyUIFlowView`. One is named differently:
 
 - `paywallViewDidFailRendering` → **`flowViewDidReceiveError`** (widened to any flow error, not just rendering)
 
-Plus a new event: `flowViewDidReceiveAnalyticEvent(view, name, paramsJsonString)`.
+One event is new: `flowViewDidReceiveAnalyticEvent(view, name, paramsJsonString)`. It defaults to a no-op.
 
-### Moved off the observer
-
-If you implemented these on your observer, or passed them to the platform view, they now live elsewhere:
+Same for `AdaptyUIFlowPlatformView`: your `onDid…` params carry over, `onDidFailRendering` becomes `onDidReceiveError`, and `onDidReceiveAnalyticEvent` is added.
 
 ```kotlin
-// Permissions + app review
+// Before
+val paywall = (Adapty.getPaywall("placement_id") as? AdaptyResult.Success)?.value ?: return
+AdaptyUIPaywallPlatformView(paywall = paywall, onDidFinishPurchase = { _, _, _ -> })
+
+// After
+val flow = (Adapty.getFlow("placement_id") as? AdaptyResult.Success)?.value ?: return
+AdaptyUIFlowPlatformView(flow = flow, onDidFinishPurchase = { _, _, _ -> })
+```
+
+---
+
+## Default behavior changes
+
+These don't cause compile errors, so check them at runtime:
+
+| Event | v3 | 4.0.0 |
+|---|---|---|
+| Close button | dismisses | dismisses |
+| Android system back | dismisses | **keeps open** — dismiss yourself in `flowViewDidPerformAction` to restore |
+| Purchase completed | dismisses (unless cancelled) | **does not auto-dismiss** |
+| Error | (none) | **dismisses** |
+| URL tapped | opened by the SDK | opened natively |
+
+To keep the old close-on-purchase behavior:
+
+```kotlin
+override fun flowViewDidFinishPurchase(
+    view: AdaptyUIFlowView,
+    product: AdaptyPaywallProduct,
+    purchaseResult: AdaptyPurchaseResult
+) {
+    if (purchaseResult !is AdaptyPurchaseResult.UserCanceled) {
+        mainUiScope.launch { view.dismiss() }
+    }
+}
+```
+
+Per-view observers (from `registerFlowEventsListener` or `AdaptyUIFlowPlatformView`) run **in addition to** the global observer, not instead of it — your callback observes an event, it doesn't replace the default.
+
+---
+
+## Optional: system requests and observer mode
+
+New in 4.0.0, with no v3 equivalent — **skip unless you need them.** Flows can ask your app for an OS permission or an in-app review, and observer mode can hand purchases to your app from inside a flow view. Both are registered globally, because each is a request the flow waits on an answer for.
+
+```kotlin
 AdaptyUI.setSystemRequestsHandler(object : AdaptyUISystemRequestsHandler {
     override suspend fun handlePermission(
         view: AdaptyUIFlowView,
@@ -127,7 +161,6 @@ AdaptyUI.setSystemRequestsHandler(object : AdaptyUISystemRequestsHandler {
     }
 })
 
-// Observer mode
 AdaptyUI.setObserverModeResolver(object : AdaptyUIObserverModeResolver {
     override fun observerModeDidInitiatePurchase(
         view: AdaptyUIFlowView,
@@ -150,62 +183,16 @@ AdaptyUI.setObserverModeResolver(object : AdaptyUIObserverModeResolver {
 })
 ```
 
-`handlePermission` and both resolver methods are **abstract on purpose**: if you opt in, you must answer. `onStartPurchase` / `onFinishPurchase` only drive the flow view's loading indicator — report the transaction to Adapty yourself.
-
----
-
-## Default behavior changes
-
-The flow observer's defaults differ from the old paywall observer's:
-
-| Event | 3.x paywall observer | 4.0.0 flow observer |
-|---|---|---|
-| Close button | dismisses | dismisses |
-| Android system back | dismisses | **keeps open** — override and dismiss to restore |
-| Purchase completed | dismisses (unless cancelled) | **does not auto-dismiss** |
-| Error | (none) | **dismisses** |
-| URL tapped | opened by the SDK | opened natively |
-
-To keep the old close-on-purchase behavior, dismiss the view yourself:
-
-```kotlin
-override fun flowViewDidFinishPurchase(
-    view: AdaptyUIFlowView,
-    product: AdaptyPaywallProduct,
-    purchaseResult: AdaptyPurchaseResult
-) {
-    if (purchaseResult !is AdaptyPurchaseResult.UserCanceled) {
-        mainUiScope.launch { view.dismiss() }
-    }
-}
-```
-
-Per-view observers (registered via `registerFlowEventsListener`, or created for you by `AdaptyUIFlowPlatformView`) run **in addition to** the global observer, not instead of it. Your callback observes an event; it does not replace the global default.
+If you register a handler you must answer: `handlePermission` and both resolver methods are abstract. With no handler registered, a permission request resolves as denied when the flow tears down, and observer mode does nothing when the user taps buy. `onStartPurchase` / `onFinishPurchase` only drive the loading indicator — report the transaction to Adapty yourself.
 
 ---
 
 ## Models
 
-- **`AdaptyFlow.paywalls`** — the list of `AdaptyFlowPaywall` variations. (Named `paywalls`, matching RN; the wire field stays `variations`.)
-- **`AdaptyUIPermission`** is a class wrapping the raw id, with the 21 known ids as constants — not an enum. Unknown, platform-specific (Android `phone` / `sms`) and future ids arrive **verbatim** via `permission.value` instead of collapsing to `UNKNOWN`. Compare against `AdaptyUIPermission.PUSH` and friends, and use an `else` branch for the rest.
-- **`AdaptyUIPermissionResult.granted(detail)` / `.denied(detail)`** — what you return from `handlePermission`.
+- **`AdaptyFlow.paywalls`** — the flow's `AdaptyFlowPaywall` variations.
+- **`AdaptyUIPermission`** wraps the raw permission id, with the known ids as constants (`AdaptyUIPermission.PUSH`). Unknown, platform-specific (Android `phone` / `sms`) and future ids arrive verbatim via `permission.value`, so match with an `else` branch.
+- **`AdaptyUIPermissionResult.granted(detail)` / `.denied(detail)`** — what `handlePermission` returns.
 - **`AdaptyConfig.ServerCluster.CN`** — new, alongside `DEFAULT` and `EU`.
-
----
-
-## Compose Multiplatform
-
-```kotlin
-// Before
-val paywall = (Adapty.getPaywall("placement_id") as? AdaptyResult.Success)?.value ?: return
-AdaptyUIPaywallPlatformView(paywall = paywall, onDidFinishPurchase = { _, _, _ -> })
-
-// After
-val flow = (Adapty.getFlow("placement_id") as? AdaptyResult.Success)?.value ?: return
-AdaptyUIFlowPlatformView(flow = flow, onDidFinishPurchase = { _, _, _ -> })
-```
-
-`AdaptyUIFlowPlatformView` takes the 14 event callbacks only. The `onDidAskPermission`, `onDidRequestAppReview`, `onObserverDidInitiatePurchase` and `onObserverDidInitiateRestore` params are gone — register the handler and resolver above instead.
 
 ---
 
@@ -230,11 +217,8 @@ val nativeView = AdaptyUI.createNativeFlowView(flow = flow, observer = myFlowObs
 
 ## Deprecated onboarding
 
-The whole onboarding surface is deprecated: the methods (`getOnboarding`, `getOnboardingForDefaultAudience`, `createOnboardingView`, `presentOnboardingView`, `dismissOnboardingView`, `createNativeOnboardingView`, `setOnboardingsEventsObserver`, `register`/`unregisterOnboardingEventsListener`), the observer (`AdaptyUIOnboardingsEventsObserver`), the composable (`AdaptyUIOnboardingPlatformView`), and the models (`AdaptyOnboarding`, `AdaptyUIOnboardingView`, `AdaptyUIOnboardingMeta`, `AdaptyOnboardingsAnalyticsEvent`, `AdaptyOnboardingsInput`, `AdaptyOnboardingsStateUpdatedParams`, `AdaptyNativeOnboardingView`). They are unchanged and fully supported this release, but marked `@Deprecated` — a future major migrates onboardings into the Flow Builder. Suppress the warnings for now; no code change is needed.
+The whole onboarding surface is now `@Deprecated` — methods (`getOnboarding`, `getOnboardingForDefaultAudience`, `createOnboardingView`, `presentOnboardingView`, `dismissOnboardingView`, `createNativeOnboardingView`, `setOnboardingsEventsObserver`, `register`/`unregisterOnboardingEventsListener`), the observer (`AdaptyUIOnboardingsEventsObserver`), the composable (`AdaptyUIOnboardingPlatformView`), and the models (`AdaptyOnboarding`, `AdaptyUIOnboardingView`, `AdaptyUIOnboardingMeta`, `AdaptyOnboardingsAnalyticsEvent`, `AdaptyOnboardingsInput`, `AdaptyOnboardingsStateUpdatedParams`, `AdaptyNativeOnboardingView`).
+
+Everything still works unchanged this release; a future major migrates onboardings into the Flow Builder. Suppress the warnings for now — no code change needed.
 
 ---
-
-## Native SDK / build requirements
-
-- Android: native Adapty BOM 4.0.0 (auto-resolved).
-- iOS: native Adapty iOS SDK 4.0.1 via SPM; deployment target 15.0 (unchanged).
