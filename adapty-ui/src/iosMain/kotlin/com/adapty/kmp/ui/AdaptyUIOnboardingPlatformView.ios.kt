@@ -17,6 +17,7 @@ import kotlinx.cinterop.ExperimentalForeignApi
 @Composable
 internal actual fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
+    viewId: String,
     externalUrlsPresentation: AdaptyWebPresentation,
     modifier: Modifier,
 ) {
@@ -27,7 +28,7 @@ internal actual fun AdaptyUIOnboardingPlatformView(
                 onboarding = onboarding,
                 externalUrlsPresentation = externalUrlsPresentation
             ),
-            id = onboarding.idForNativePlatformView,
+            id = viewId,
             onEvent = { eventName, eventDataJsonString ->
                 AdaptyPluginEventHandler.onNewEvent(
                     eventName = eventName,

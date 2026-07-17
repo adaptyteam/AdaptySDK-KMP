@@ -19,6 +19,7 @@ import kotlinx.datetime.LocalDateTime
 @Composable
 internal actual fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
+    viewId: String,
     modifier: Modifier,
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
@@ -39,7 +40,7 @@ internal actual fun AdaptyUIFlowPlatformView(
 
         factory.createNativePaywallView(
             jsonString = jsonString,
-            id = flow.idForNativePlatformView,
+            id = viewId,
             onEvent = { eventName, eventDataJsonString ->
                 AdaptyPluginEventHandler.onNewEvent(
                     eventName = eventName,

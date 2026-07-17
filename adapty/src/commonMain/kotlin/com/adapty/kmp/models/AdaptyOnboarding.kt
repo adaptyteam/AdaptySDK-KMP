@@ -1,6 +1,8 @@
 package com.adapty.kmp.models
 
 import com.adapty.kmp.internal.AdaptyKMPInternal
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Represents an onboarding experience configured in the Adapty Dashboard.
@@ -34,6 +36,16 @@ public data class AdaptyOnboarding internal constructor(
         const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_onboarding_"
     }
 
+    /**
+     * Returns a fresh, unique id for one native/embedded view of this onboarding.
+     *
+     * Call it once per view instance and keep the result for that view's lifetime: the id keys both
+     * the per-view events observer and the native view manager, so two views sharing an id would
+     * overwrite each other's observer and misroute events. Deriving it from [id] alone is not
+     * enough — the same onboarding can be embedded more than once.
+     */
     @AdaptyKMPInternal
-    public val idForNativePlatformView: String = "$PREFIX_NATIVE_PLATFORM_VIEW$id"
+    @OptIn(ExperimentalUuidApi::class)
+    public fun createNativePlatformViewId(): String =
+        "$PREFIX_NATIVE_PLATFORM_VIEW${id}_${Uuid.random()}"
 }

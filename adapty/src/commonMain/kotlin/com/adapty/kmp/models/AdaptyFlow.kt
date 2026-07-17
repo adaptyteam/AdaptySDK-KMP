@@ -1,6 +1,8 @@
 package com.adapty.kmp.models
 
 import com.adapty.kmp.internal.AdaptyKMPInternal
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Represents a flow retrieved from Adapty (cross_platform 4.0.0).
@@ -31,6 +33,16 @@ public data class AdaptyFlow internal constructor(
         const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_flow_"
     }
 
+    /**
+     * Returns a fresh, unique id for one native/embedded view of this flow.
+     *
+     * Call it once per view instance and keep the result for that view's lifetime: the id keys both
+     * the per-view events observer and the native view manager, so two views sharing an id would
+     * overwrite each other's observer and misroute events. Deriving it from [instanceIdentity] alone is not
+     * enough — the same flow can be embedded more than once.
+     */
     @AdaptyKMPInternal
-    public val idForNativePlatformView: String = "$PREFIX_NATIVE_PLATFORM_VIEW$instanceIdentity"
+    @OptIn(ExperimentalUuidApi::class)
+    public fun createNativePlatformViewId(): String =
+        "$PREFIX_NATIVE_PLATFORM_VIEW${instanceIdentity}_${Uuid.random()}"
 }

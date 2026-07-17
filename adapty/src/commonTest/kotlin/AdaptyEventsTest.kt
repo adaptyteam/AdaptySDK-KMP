@@ -57,6 +57,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -899,6 +900,54 @@ class AdaptyEventsTest {
         assertEquals("flow_shown", capturedAnalyticName)
         assertNotNull(capturedAnalyticParams)
     }
+
+    @Test
+    fun `each native view of the same flow gets its own id`() {
+        val flow = AdaptyFakeTestData.getFlow()
+
+        val first = flow.createNativePlatformViewId()
+        val second = flow.createNativePlatformViewId()
+
+        // Two embeds of one flow must not share an id: the id keys the per-view observer map, so a
+        // shared id would make the second view evict the first one's observer.
+        assertNotEquals(first, second)
+        assertTrue(first.startsWith("compose_native_flow_${flow.instanceIdentity}"))
+        assertTrue(second.startsWith("compose_native_flow_${flow.instanceIdentity}"))
+    }
+
+    @Test
+    fun `per-view observers for the same flow both receive their own events`() =
+        runTest(testDispatcher) {
+            val flow = AdaptyFakeTestData.getFlow()
+            val firstViewId = flow.createNativePlatformViewId()
+            val secondViewId = flow.createNativePlatformViewId()
+            val firstEvents = mutableListOf<String>()
+            val secondEvents = mutableListOf<String>()
+
+            fun observer(sink: MutableList<String>) = object : AdaptyUIFlowsEventsObserver {
+                override val mainUiScope: CoroutineScope get() = TestScope()
+                override fun flowViewDidAppear(view: AdaptyUIFlowView) {
+                    sink.add(view.id)
+                }
+            }
+            adaptyUIImpl.registerFlowEventsListener(observer(firstEvents), firstViewId)
+            adaptyUIImpl.registerFlowEventsListener(observer(secondEvents), secondViewId)
+
+            sendEventAndWait(
+                AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+                AdaptyPluginResponseTemplate.getEventJsonString(
+                    AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+                    mapOf("view_id" to secondViewId)
+                )
+            )
+
+            // The event targets the second view only; registering it must not have evicted the first.
+            assertEquals(listOf(secondViewId), secondEvents)
+            assertTrue(firstEvents.isEmpty(), "first view's observer must not receive another view's event")
+
+            adaptyUIImpl.unregisterFlowEventsListener(firstViewId)
+            adaptyUIImpl.unregisterFlowEventsListener(secondViewId)
+        }
 
     // =========================================================================
     // ONBOARDING VIEW EVENT TESTS

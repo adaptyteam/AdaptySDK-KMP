@@ -5,7 +5,10 @@ package com.adapty.kmp.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.AdaptyUIOnboardingsEventsObserver
@@ -57,8 +60,19 @@ public fun AdaptyUIOnboardingPlatformView(
     onAnalyticsEvent: (meta: AdaptyUIOnboardingMeta, event: AdaptyOnboardingsAnalyticsEvent) -> Unit = { _, _ -> },
 ) {
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
 
+    // One id per view instance, not per onboarding — see AdaptyUIFlowPlatformView.
+    val viewId = rememberSaveable(onboarding.id) { onboarding.createNativePlatformViewId() }
+
+    val currentOnDidFinishLoading by rememberUpdatedState(onDidFinishLoading)
+    val currentOnDidFailWithError by rememberUpdatedState(onDidFailWithError)
+    val currentOnCloseAction by rememberUpdatedState(onCloseAction)
+    val currentOnPaywallAction by rememberUpdatedState(onPaywallAction)
+    val currentOnCustomAction by rememberUpdatedState(onCustomAction)
+    val currentOnStateUpdatedAction by rememberUpdatedState(onStateUpdatedAction)
+    val currentOnAnalyticsEvent by rememberUpdatedState(onAnalyticsEvent)
+
+    LaunchedEffect(viewId) {
         AdaptyUI.registerOnboardingEventsListener(
             object : AdaptyUIOnboardingsEventsObserver {
                 override val mainUiScope: CoroutineScope = coroutineScope
@@ -66,14 +80,14 @@ public fun AdaptyUIOnboardingPlatformView(
                     view: AdaptyUIOnboardingView,
                     meta: AdaptyUIOnboardingMeta
                 ) {
-                    onDidFinishLoading(meta)
+                    currentOnDidFinishLoading(meta)
                 }
 
                 override fun onboardingViewDidFailWithError(
                     view: AdaptyUIOnboardingView,
                     error: AdaptyError
                 ) {
-                    onDidFailWithError(error)
+                    currentOnDidFailWithError(error)
                 }
 
                 override fun onboardingViewOnCloseAction(
@@ -81,7 +95,7 @@ public fun AdaptyUIOnboardingPlatformView(
                     meta: AdaptyUIOnboardingMeta,
                     actionId: String
                 ) {
-                    onCloseAction(meta, actionId)
+                    currentOnCloseAction(meta, actionId)
                 }
 
                 override fun onboardingViewOnPaywallAction(
@@ -89,7 +103,7 @@ public fun AdaptyUIOnboardingPlatformView(
                     meta: AdaptyUIOnboardingMeta,
                     actionId: String
                 ) {
-                    onPaywallAction(meta, actionId)
+                    currentOnPaywallAction(meta, actionId)
                 }
 
                 override fun onboardingViewOnCustomAction(
@@ -97,7 +111,7 @@ public fun AdaptyUIOnboardingPlatformView(
                     meta: AdaptyUIOnboardingMeta,
                     actionId: String
                 ) {
-                    onCustomAction(meta, actionId)
+                    currentOnCustomAction(meta, actionId)
                 }
 
                 override fun onboardingViewOnStateUpdatedAction(
@@ -106,7 +120,7 @@ public fun AdaptyUIOnboardingPlatformView(
                     elementId: String,
                     params: AdaptyOnboardingsStateUpdatedParams
                 ) {
-                    onStateUpdatedAction(meta, elementId, params)
+                    currentOnStateUpdatedAction(meta, elementId, params)
                 }
 
                 override fun onboardingViewOnAnalyticsEvent(
@@ -114,21 +128,22 @@ public fun AdaptyUIOnboardingPlatformView(
                     meta: AdaptyUIOnboardingMeta,
                     event: AdaptyOnboardingsAnalyticsEvent
                 ) {
-                    onAnalyticsEvent(meta, event)
+                    currentOnAnalyticsEvent(meta, event)
                 }
             },
-            viewId = onboarding.idForNativePlatformView
+            viewId = viewId
 
         )
     }
-    DisposableEffect(Unit) {
+    DisposableEffect(viewId) {
         onDispose {
-            AdaptyUI.unregisterOnboardingEventsListener(onboarding.idForNativePlatformView)
+            AdaptyUI.unregisterOnboardingEventsListener(viewId)
         }
     }
 
     AdaptyUIOnboardingPlatformView(
         onboarding = onboarding,
+        viewId = viewId,
         externalUrlsPresentation = externalUrlsPresentation,
         modifier = modifier,
     )
@@ -137,6 +152,7 @@ public fun AdaptyUIOnboardingPlatformView(
 @Composable
 internal expect fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
+    viewId: String,
     externalUrlsPresentation: AdaptyWebPresentation,
     modifier: Modifier = Modifier
 )

@@ -3,7 +3,10 @@ package com.adapty.kmp.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.AdaptyUIFlowsEventsObserver
@@ -62,68 +65,92 @@ public fun AdaptyUIFlowPlatformView(
     onDidReceiveAnalyticEvent: (view: AdaptyUIFlowView, name: String, paramsJsonString: String) -> Unit = { _, _, _ -> },
 ) {
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
+
+    // One id per view instance, not per flow: the id keys both the per-view observer and the native
+    // view manager, so embedding the same flow twice with a shared id would make the second view
+    // evict the first one's observer. Survives recomposition; a new flow gets a new id.
+    val viewId = rememberSaveable(flow.instanceIdentity) { flow.createNativePlatformViewId() }
+
+    // The observer is registered once per viewId, so it must not capture the callback lambdas of
+    // the composition that registered it — read them through state instead.
+    val currentOnDidAppear by rememberUpdatedState(onDidAppear)
+    val currentOnDidDisappear by rememberUpdatedState(onDidDisappear)
+    val currentOnDidPerformAction by rememberUpdatedState(onDidPerformAction)
+    val currentOnDidSelectProduct by rememberUpdatedState(onDidSelectProduct)
+    val currentOnDidStartPurchase by rememberUpdatedState(onDidStartPurchase)
+    val currentOnDidFinishPurchase by rememberUpdatedState(onDidFinishPurchase)
+    val currentOnDidFailPurchase by rememberUpdatedState(onDidFailPurchase)
+    val currentOnDidStartRestore by rememberUpdatedState(onDidStartRestore)
+    val currentOnDidFinishRestore by rememberUpdatedState(onDidFinishRestore)
+    val currentOnDidFailRestore by rememberUpdatedState(onDidFailRestore)
+    val currentOnDidReceiveError by rememberUpdatedState(onDidReceiveError)
+    val currentOnDidFailLoadingProducts by rememberUpdatedState(onDidFailLoadingProducts)
+    val currentOnDidFinishWebPaymentNavigation by rememberUpdatedState(onDidFinishWebPaymentNavigation)
+    val currentOnDidReceiveAnalyticEvent by rememberUpdatedState(onDidReceiveAnalyticEvent)
+
+    LaunchedEffect(viewId) {
         AdaptyUI.registerFlowEventsListener(
-            viewId = flow.idForNativePlatformView,
+            viewId = viewId,
             observer = object : AdaptyUIFlowsEventsObserver {
                 override val mainUiScope: CoroutineScope = coroutineScope
-                override fun flowViewDidAppear(view: AdaptyUIFlowView) = onDidAppear(view)
-                override fun flowViewDidDisappear(view: AdaptyUIFlowView) = onDidDisappear(view)
+                override fun flowViewDidAppear(view: AdaptyUIFlowView) = currentOnDidAppear(view)
+                override fun flowViewDidDisappear(view: AdaptyUIFlowView) = currentOnDidDisappear(view)
                 override fun flowViewDidPerformAction(view: AdaptyUIFlowView, action: AdaptyUIAction) =
-                    onDidPerformAction(view, action)
+                    currentOnDidPerformAction(view, action)
 
                 override fun flowViewDidSelectProduct(view: AdaptyUIFlowView, productId: String) =
-                    onDidSelectProduct(view, productId)
+                    currentOnDidSelectProduct(view, productId)
 
                 override fun flowViewDidStartPurchase(view: AdaptyUIFlowView, product: AdaptyPaywallProduct) =
-                    onDidStartPurchase(view, product)
+                    currentOnDidStartPurchase(view, product)
 
                 override fun flowViewDidFinishPurchase(
                     view: AdaptyUIFlowView,
                     product: AdaptyPaywallProduct,
                     purchaseResult: AdaptyPurchaseResult
-                ) = onDidFinishPurchase(view, product, purchaseResult)
+                ) = currentOnDidFinishPurchase(view, product, purchaseResult)
 
                 override fun flowViewDidFailPurchase(
                     view: AdaptyUIFlowView,
                     product: AdaptyPaywallProduct,
                     error: AdaptyError
-                ) = onDidFailPurchase(view, product, error)
+                ) = currentOnDidFailPurchase(view, product, error)
 
-                override fun flowViewDidStartRestore(view: AdaptyUIFlowView) = onDidStartRestore(view)
+                override fun flowViewDidStartRestore(view: AdaptyUIFlowView) = currentOnDidStartRestore(view)
                 override fun flowViewDidFinishRestore(view: AdaptyUIFlowView, profile: AdaptyProfile) =
-                    onDidFinishRestore(view, profile)
+                    currentOnDidFinishRestore(view, profile)
 
                 override fun flowViewDidFailRestore(view: AdaptyUIFlowView, error: AdaptyError) =
-                    onDidFailRestore(view, error)
+                    currentOnDidFailRestore(view, error)
 
                 override fun flowViewDidReceiveError(view: AdaptyUIFlowView, error: AdaptyError) =
-                    onDidReceiveError(view, error)
+                    currentOnDidReceiveError(view, error)
 
                 override fun flowViewDidFailLoadingProducts(view: AdaptyUIFlowView, error: AdaptyError) =
-                    onDidFailLoadingProducts(view, error)
+                    currentOnDidFailLoadingProducts(view, error)
 
                 override fun flowViewDidFinishWebPaymentNavigation(
                     view: AdaptyUIFlowView,
                     product: AdaptyPaywallProduct?,
                     error: AdaptyError?
-                ) = onDidFinishWebPaymentNavigation(view, product, error)
+                ) = currentOnDidFinishWebPaymentNavigation(view, product, error)
 
                 override fun flowViewDidReceiveAnalyticEvent(
                     view: AdaptyUIFlowView,
                     name: String,
                     paramsJsonString: String
-                ) = onDidReceiveAnalyticEvent(view, name, paramsJsonString)
+                ) = currentOnDidReceiveAnalyticEvent(view, name, paramsJsonString)
             })
     }
-    DisposableEffect(Unit) {
+    DisposableEffect(viewId) {
         onDispose {
-            AdaptyUI.unregisterFlowEventsListener(flow.idForNativePlatformView)
+            AdaptyUI.unregisterFlowEventsListener(viewId)
         }
     }
 
     AdaptyUIFlowPlatformView(
         flow = flow,
+        viewId = viewId,
         modifier = modifier,
         customTags = customTags,
         customTimers = customTimers,
@@ -135,6 +162,7 @@ public fun AdaptyUIFlowPlatformView(
 @Composable
 internal expect fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
+    viewId: String,
     modifier: Modifier = Modifier,
     customTags: Map<String, String>? = null,
     customTimers: Map<String, LocalDateTime>? = null,

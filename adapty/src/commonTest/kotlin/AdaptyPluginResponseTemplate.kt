@@ -429,7 +429,8 @@ object AdaptyPluginResponseTemplate {
     ): String = when (event) {
         // Flow view events
         AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION -> buildFlowViewActionEvent(params)
-        AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR -> buildFlowViewOnlyEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR ->
+            buildFlowViewOnlyEvent(params["view_id"] as? String ?: AdaptyFakeTestData.EVENT_VIEW_ID)
         AdaptyPluginEvent.FLOW_VIEW_DID_DISAPPEAR -> buildFlowViewOnlyEvent()
         AdaptyPluginEvent.FLOW_VIEW_DID_SELECT_PRODUCT -> buildFlowViewSelectProductEvent()
         AdaptyPluginEvent.FLOW_VIEW_DID_START_PURCHASE -> buildFlowViewWithProductEvent()
@@ -555,9 +556,10 @@ object AdaptyPluginResponseTemplate {
 
     private fun buildEventProfileJson(): JsonObject = buildProfileJson(AdaptyFakeTestData.getProfile())
 
-    private fun buildFlowViewOnlyEvent(): String = buildJsonObject {
-        put("view", buildEventViewJson())
-    }.toString()
+    private fun buildFlowViewOnlyEvent(viewId: String = AdaptyFakeTestData.EVENT_VIEW_ID): String =
+        buildJsonObject {
+            put("view", buildEventViewJson(viewId = viewId))
+        }.toString()
 
     private fun buildFlowViewActionEvent(params: Map<String, Any?>): String {
         val actionType = params["action_type"] as? String ?: "close"

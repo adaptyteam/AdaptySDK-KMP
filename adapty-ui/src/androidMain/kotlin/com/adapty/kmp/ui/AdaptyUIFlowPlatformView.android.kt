@@ -27,6 +27,7 @@ import kotlinx.datetime.LocalDateTime
 @Composable
 internal actual fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
+    viewId: String,
     modifier: Modifier,
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
@@ -50,7 +51,7 @@ internal actual fun AdaptyUIFlowPlatformView(
                     customAssets = customAssets,
                     productPurchaseParams = productPurchaseParams
                 ),
-                id = flow.idForNativePlatformView,
+                id = viewId,
             )
         }
     }

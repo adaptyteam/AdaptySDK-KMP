@@ -37,7 +37,7 @@ public fun AdaptyUI.createNativeFlowView(
     customAssets: Map<String, AdaptyCustomAsset>? = null,
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null,
 ): AdaptyNativeFlowView {
-    val viewId = flow.idForNativePlatformView
+    val viewId = flow.createNativePlatformViewId()
     val jsonString = createFlowViewRequestJsonString(
         flow = flow,
         customTags = customTags,
@@ -105,7 +105,7 @@ public fun AdaptyUI.createNativeOnboardingView(
     observer: AdaptyUIOnboardingsEventsObserver,
     externalUrlsPresentation: AdaptyWebPresentation = AdaptyWebPresentation.IN_APP_BROWSER,
 ): AdaptyNativeOnboardingView {
-    val viewId = onboarding.idForNativePlatformView
+    val viewId = onboarding.createNativePlatformViewId()
     val jsonString = createOnboardingViewRequestJsonString(
         onboarding = onboarding,
         externalUrlsPresentation = externalUrlsPresentation
