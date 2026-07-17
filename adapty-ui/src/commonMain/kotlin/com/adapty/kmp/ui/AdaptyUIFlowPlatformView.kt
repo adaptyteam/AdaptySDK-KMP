@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.AdaptyUIFlowsEventsObserver
 import com.adapty.kmp.internal.AdaptyKMPInternal
+import com.adapty.kmp.internal.plugin.request.createFlowViewRequestJsonString
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyFlow
@@ -66,10 +68,18 @@ public fun AdaptyUIFlowPlatformView(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    // One id per view instance, not per flow: the id keys both the per-view observer and the native
-    // view manager, so embedding the same flow twice with a shared id would make the second view
-    // evict the first one's observer. Survives recomposition; a new flow gets a new id.
-    val viewId = rememberSaveable(flow.instanceIdentity) { flow.createNativePlatformViewId() }
+    val setupArgs = remember(flow, customTags, customTimers, customAssets, productPurchaseParams) {
+        createFlowViewRequestJsonString(
+            flow = flow,
+            customTags = customTags,
+            customTimers = customTimers,
+            customAssets = customAssets,
+            productPurchaseParams = productPurchaseParams
+        )
+    }
+
+
+    val viewId = rememberSaveable(setupArgs) { flow.createNativePlatformViewId() }
 
     // The observer is registered once per viewId, so it must not capture the callback lambdas of
     // the composition that registered it — read them through state instead.

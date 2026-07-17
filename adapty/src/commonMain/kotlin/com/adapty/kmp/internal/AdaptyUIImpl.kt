@@ -442,12 +442,14 @@ internal class AdaptyUIImpl(
             AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION -> {
                 dataJsonString.decodeJsonSafely<AdaptyFlowViewDidAskPermissionResponse> {
                     val handler = systemRequestsHandler ?: return@decodeJsonSafely
-                    val result: AdaptyUIPermissionResult = handler.handlePermission(
-                        view = it.view.asAdaptyUIFlowView(),
-                        permission = it.permission.asAdaptyUIPermission(),
-                        customArgs = it.customArgs,
-                    )
-                    answerPermission(it.eventId, result.isGranted, result.detail)
+                    appMainScope.launch {
+                        val result: AdaptyUIPermissionResult = handler.handlePermission(
+                            view = it.view.asAdaptyUIFlowView(),
+                            permission = it.permission.asAdaptyUIPermission(),
+                            customArgs = it.customArgs,
+                        )
+                        answerPermission(it.eventId, result.isGranted, result.detail)
+                    }
                 }
             }
 
@@ -455,8 +457,11 @@ internal class AdaptyUIImpl(
                 dataJsonString.decodeJsonSafely<AdaptyFlowViewEventDidAppearOrDisappearResponse> {
                     val handler = systemRequestsHandler
                     if (handler != null) {
-                        handler.handleAppReviewRequest(view = it.view.asAdaptyUIFlowView())
+                        appMainScope.launch {
+                            handler.handleAppReviewRequest(view = it.view.asAdaptyUIFlowView())
+                        }
                     } else {
+                        // No registered handler -> trigger the native review prompt by default.
                         requestAppReview()
                     }
                 }

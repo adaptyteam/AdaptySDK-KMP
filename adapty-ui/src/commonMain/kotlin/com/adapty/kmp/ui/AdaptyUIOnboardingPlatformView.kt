@@ -61,8 +61,9 @@ public fun AdaptyUIOnboardingPlatformView(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    // One id per view instance, not per onboarding — see AdaptyUIFlowPlatformView.
-    val viewId = rememberSaveable(onboarding.id) { onboarding.createNativePlatformViewId() }
+    val viewId = rememberSaveable(onboarding, externalUrlsPresentation) {
+        onboarding.createNativePlatformViewId()
+    }
 
     val currentOnDidFinishLoading by rememberUpdatedState(onDidFinishLoading)
     val currentOnDidFailWithError by rememberUpdatedState(onDidFailWithError)

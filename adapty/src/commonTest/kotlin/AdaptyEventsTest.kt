@@ -41,6 +41,7 @@ import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIFlowView
 import com.adapty.kmp.models.AdaptyUIPermission
 import com.adapty.kmp.models.AdaptyUIPermissionResult
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -790,6 +791,46 @@ class AdaptyEventsTest {
         // Native keeps the request pending and resolves it as denied at teardown; the SDK must not
         // fabricate an answer.
         assertNull(fakeAdaptyPlugin.capturedRequestMethodName)
+    }
+
+    @Test
+    fun `suspended permission handler does not stall other events`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        val permissionGate = CompletableDeferred<AdaptyUIPermissionResult>()
+        adaptyUIImpl.setSystemRequestsHandler(object : AdaptyUISystemRequestsHandler {
+            override suspend fun handlePermission(
+                view: AdaptyUIFlowView,
+                permission: AdaptyUIPermission,
+                customArgs: Map<String, String>?
+            ): AdaptyUIPermissionResult = permissionGate.await()
+        })
+
+        // Leaves the handler awaiting, as an OS prompt would.
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                mapOf("permission" to "push")
+            )
+        )
+
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+            AdaptyPluginResponseTemplate.getEventJsonString(AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR)
+        )
+
+        // One loop dispatches every view's events; it must not be blocked by a pending request.
+        assertTrue(
+            capturedFlowEvents.contains("didAppear"),
+            "events must not queue behind a pending permission request"
+        )
+
+        permissionGate.complete(AdaptyUIPermissionResult.granted())
+        delay(200)
+        assertEquals(
+            AdaptyPluginMethod.FLOW_VIEW_DID_ANSWER_PERMISSION.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
     }
 
     @Test
