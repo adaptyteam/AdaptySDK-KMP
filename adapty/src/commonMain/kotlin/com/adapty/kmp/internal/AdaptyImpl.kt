@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 package com.adapty.kmp.internal
 
 import com.adapty.kmp.AdaptyContract

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 import com.adapty.kmp.AdaptyUIOnboardingsEventsObserver
 import com.adapty.kmp.AdaptyUIFlowsEventsObserver
 import com.adapty.kmp.AdaptyUIObserverModeResolver

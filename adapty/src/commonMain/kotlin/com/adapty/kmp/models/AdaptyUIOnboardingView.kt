@@ -19,6 +19,10 @@ import com.adapty.kmp.models.AdaptyOnboarding.Companion.PREFIX_NATIVE_PLATFORM_V
  * @property placementId The identifier of the placement where this onboarding is assigned.
  * @property variationId The variation identifier of the onboarding.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyUIOnboardingView internal constructor(
     val id: String,
     val placementId: String,

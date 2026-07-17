@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductReferenceRequestResponse

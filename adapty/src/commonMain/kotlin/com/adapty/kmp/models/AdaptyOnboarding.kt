@@ -15,6 +15,10 @@ import com.adapty.kmp.internal.AdaptyKMPInternal
  * @property remoteConfig [AdaptyRemoteConfig] Optional remote configuration for customizing behavior or appearance.
  *
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyOnboarding internal constructor(
     public val placement: AdaptyPlacement,
     public val id: String,

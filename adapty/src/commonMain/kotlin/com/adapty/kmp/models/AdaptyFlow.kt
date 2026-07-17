@@ -5,9 +5,8 @@ import com.adapty.kmp.internal.AdaptyKMPInternal
 /**
  * Represents a flow retrieved from Adapty (cross_platform 4.0.0).
  *
- * A flow groups one or more paywall [variations] together with flow-level metadata and
- * per-language remote configs. It replaces the legacy [AdaptyPaywall] as the primary entity
- * returned by `getFlow` / `getFlowForDefaultAudience`.
+ * A flow groups one or more [paywalls] together with flow-level metadata and per-language remote
+ * configs. It is the primary entity returned by `getFlow` / `getFlowForDefaultAudience`.
  *
  * @property placement [AdaptyPlacement] the placement associated with this flow.
  * @property instanceIdentity a unique identifier of the flow, configured in Adapty Dashboard.

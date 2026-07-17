@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 package com.adapty.kmp.models
 
 /**
@@ -5,6 +7,10 @@ package com.adapty.kmp.models
  *
  * This is a sealed interface; specific input types are represented by the subclasses.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public sealed interface AdaptyOnboardingsInput
 
 /**
@@ -12,6 +18,10 @@ public sealed interface AdaptyOnboardingsInput
  *
  * @property value The string entered by the user.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyOnboardingsTextInput(val value: String) : AdaptyOnboardingsInput
 
 /**
@@ -19,6 +29,10 @@ public data class AdaptyOnboardingsTextInput(val value: String) : AdaptyOnboardi
  *
  * @property value The email entered by the user.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyOnboardingsEmailInput(val value: String) : AdaptyOnboardingsInput
 
 /**
@@ -26,4 +40,8 @@ public data class AdaptyOnboardingsEmailInput(val value: String) : AdaptyOnboard
  *
  * @property value The number entered by the user.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyOnboardingsNumberInput(val value: Double) : AdaptyOnboardingsInput

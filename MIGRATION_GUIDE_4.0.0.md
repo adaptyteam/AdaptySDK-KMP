@@ -26,6 +26,21 @@ val paywall: AdaptyFlowPaywall? = flow.paywalls.firstOrNull()
 
 ---
 
+## Installation
+
+4.0.0 is a pre-release, so pin the exact version — Gradle does not resolve pre-release versions through dynamic ranges (`+`, `latest.release`):
+
+```toml title="libs.versions.toml"
+[versions]
+adapty-kmp = "4.0.0-beta.1"
+
+[libraries]
+adapty-kmp = { module = "io.adapty:adapty-kmp", version.ref = "adapty-kmp" }
+adapty-kmp-ui = { module = "io.adapty:adapty-kmp-ui", version.ref = "adapty-kmp" }
+```
+
+---
+
 ## Core API (`Adapty`)
 
 | Removed | Replacement |
@@ -151,7 +166,7 @@ The flow observer's defaults differ from the old paywall observer's:
 | Error | (none) | **dismisses** |
 | URL tapped | opened by the SDK | opened natively |
 
-Restore close-on-purchase:
+To keep the old close-on-purchase behavior, dismiss the view yourself:
 
 ```kotlin
 override fun flowViewDidFinishPurchase(
@@ -215,11 +230,11 @@ val nativeView = AdaptyUI.createNativeFlowView(flow = flow, observer = myFlowObs
 
 ## Deprecated onboarding
 
-Onboarding entities (`getOnboarding`, `getOnboardingForDefaultAudience`, `createOnboardingView`, `createNativeOnboardingView`, `AdaptyUIOnboardingsEventsObserver`, `setOnboardingsEventsObserver`, `AdaptyUIOnboardingPlatformView`, …) are unchanged and fully supported this release, but marked `@Deprecated` — a future major migrates onboardings into the Flow Builder. Suppress the warnings for now; no code change is needed.
+The whole onboarding surface is deprecated: the methods (`getOnboarding`, `getOnboardingForDefaultAudience`, `createOnboardingView`, `presentOnboardingView`, `dismissOnboardingView`, `createNativeOnboardingView`, `setOnboardingsEventsObserver`, `register`/`unregisterOnboardingEventsListener`), the observer (`AdaptyUIOnboardingsEventsObserver`), the composable (`AdaptyUIOnboardingPlatformView`), and the models (`AdaptyOnboarding`, `AdaptyUIOnboardingView`, `AdaptyUIOnboardingMeta`, `AdaptyOnboardingsAnalyticsEvent`, `AdaptyOnboardingsInput`, `AdaptyOnboardingsStateUpdatedParams`, `AdaptyNativeOnboardingView`). They are unchanged and fully supported this release, but marked `@Deprecated` — a future major migrates onboardings into the Flow Builder. Suppress the warnings for now; no code change is needed.
 
 ---
 
 ## Native SDK / build requirements
 
-- Android: native Adapty BOM 4.0.0 (auto-resolved). The `androidx.browser` dependency is gone — the SDK no longer opens URLs itself.
-- iOS: native Adapty iOS SDK 4.0.0 via SPM; deployment target 15.0 (unchanged).
+- Android: native Adapty BOM 4.0.0 (auto-resolved).
+- iOS: native Adapty iOS SDK 4.0.1 via SPM; deployment target 15.0 (unchanged).

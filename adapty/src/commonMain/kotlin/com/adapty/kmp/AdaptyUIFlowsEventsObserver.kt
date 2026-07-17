@@ -13,12 +13,11 @@ import kotlinx.coroutines.launch
 /**
  * Observes lifecycle events and user interactions within an [AdaptyUIFlowView]
  *
- * Compared to the legacy [AdaptyUIPaywallsEventsObserver], the default behavior follows the
- * cross-platform 4.0.0 contract:
+ * The default behavior follows the cross-platform 4.0.0 contract:
  * - The close button dismisses the view, but the Android **system back** does **not** — override
- *   [flowViewDidPerformAction] and dismiss explicitly to restore the old behavior.
- * - A **successful purchase** no longer auto-dismisses the view.
- * - A **successful restore** no longer auto-dismisses the view.
+ *   [flowViewDidPerformAction] and dismiss explicitly if you want back to close the flow.
+ * - A **successful purchase** does not auto-dismiss the view.
+ * - An error dismisses the view — see [flowViewDidReceiveError].
  * - [AdaptyUIAction.OpenUrlAction] opens the URL natively.
  *
  * Override individual methods to customize behavior.
