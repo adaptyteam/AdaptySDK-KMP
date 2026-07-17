@@ -6,6 +6,7 @@ package com.adapty.kmp.ui
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,27 +40,29 @@ internal actual fun AdaptyUIFlowPlatformView(
     val context = LocalContext.current
     val flowUiManager: FlowUiManager? by safeInject<FlowUiManager>()
 
-    val flowView = remember {
-        AdaptyFlowView(context).apply {
-            flowUiManager?.setupFlowView(
-                flowView = this,
-                viewModelStoreOwner = viewModelStoreOwner,
-                args = createFlowViewRequestJsonString(
-                    flow = flow,
-                    customTags = customTags,
-                    customTimers = customTimers,
-                    customAssets = customAssets,
-                    productPurchaseParams = productPurchaseParams
-                ),
-                id = viewId,
-            )
+    key(viewId) {
+        val flowView = remember {
+            AdaptyFlowView(context).apply {
+                flowUiManager?.setupFlowView(
+                    flowView = this,
+                    viewModelStoreOwner = viewModelStoreOwner,
+                    args = createFlowViewRequestJsonString(
+                        flow = flow,
+                        customTags = customTags,
+                        customTimers = customTimers,
+                        customAssets = customAssets,
+                        productPurchaseParams = productPurchaseParams
+                    ),
+                    id = viewId,
+                )
+            }
         }
-    }
 
-    AndroidView(modifier = modifier, factory = { flowView })
-    DisposableEffect(Unit) {
-        onDispose {
-            flowUiManager?.clearFlowView(flowView)
+        AndroidView(modifier = modifier, factory = { flowView })
+        DisposableEffect(Unit) {
+            onDispose {
+                flowUiManager?.clearFlowView(flowView)
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.adapty.kmp.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.UIKitInteropProperties
@@ -27,35 +28,37 @@ internal actual fun AdaptyUIFlowPlatformView(
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
 ) {
 
-    val factory = remember { IosNativeViewFactory() }
-    val view = remember(factory) {
+    key(viewId) {
+        val factory = remember { IosNativeViewFactory() }
+        val view = remember(factory) {
 
-        val jsonString = createFlowViewRequestJsonString(
-            flow = flow,
-            customTags = customTags,
-            customTimers = customTimers,
-            customAssets = customAssets,
-            productPurchaseParams = productPurchaseParams
-        )
+            val jsonString = createFlowViewRequestJsonString(
+                flow = flow,
+                customTags = customTags,
+                customTimers = customTimers,
+                customAssets = customAssets,
+                productPurchaseParams = productPurchaseParams
+            )
 
-        factory.createNativePaywallView(
-            jsonString = jsonString,
-            id = viewId,
-            onEvent = { eventName, eventDataJsonString ->
-                AdaptyPluginEventHandler.onNewEvent(
-                    eventName = eventName,
-                    eventDataJsonString = eventDataJsonString ?: ""
-                )
-            }
+            factory.createNativePaywallView(
+                jsonString = jsonString,
+                id = viewId,
+                onEvent = { eventName, eventDataJsonString ->
+                    AdaptyPluginEventHandler.onNewEvent(
+                        eventName = eventName,
+                        eventDataJsonString = eventDataJsonString ?: ""
+                    )
+                }
+            )
+        }
+        UIKitViewController(
+            modifier = modifier,
+            update = {},
+            factory = { view },
+            properties = UIKitInteropProperties(
+                isInteractive = true,
+                isNativeAccessibilityEnabled = true
+            )
         )
     }
-    UIKitViewController(
-        modifier = modifier,
-        update = {},
-        factory = { view },
-        properties = UIKitInteropProperties(
-            isInteractive = true,
-            isNativeAccessibilityEnabled = true
-        )
-    )
 }

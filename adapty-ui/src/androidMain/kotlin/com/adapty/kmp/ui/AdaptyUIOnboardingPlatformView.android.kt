@@ -6,6 +6,7 @@ package com.adapty.kmp.ui
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,24 +33,26 @@ internal actual fun AdaptyUIOnboardingPlatformView(
     val context = LocalContext.current
     val onboardingUiManager: OnboardingUiManager? by safeInject<OnboardingUiManager>()
 
-    val onboardingView = remember {
-        AdaptyOnboardingView(context).apply {
-            onboardingUiManager?.setupOnboardingView(
-                onboardingView = this,
-                viewModelStoreOwner = viewModelStoreOwner,
-                args = createOnboardingViewRequestJsonString(
-                    onboarding = onboarding,
-                    externalUrlsPresentation = externalUrlsPresentation
-                ),
-                id = viewId
-            )
+    key(viewId) {
+        val onboardingView = remember {
+            AdaptyOnboardingView(context).apply {
+                onboardingUiManager?.setupOnboardingView(
+                    onboardingView = this,
+                    viewModelStoreOwner = viewModelStoreOwner,
+                    args = createOnboardingViewRequestJsonString(
+                        onboarding = onboarding,
+                        externalUrlsPresentation = externalUrlsPresentation
+                    ),
+                    id = viewId
+                )
+            }
         }
-    }
 
-    AndroidView(modifier = modifier, factory = { onboardingView })
-    DisposableEffect(Unit) {
-        onDispose {
-            onboardingUiManager?.clearOnboardingView(onboardingView)
+        AndroidView(modifier = modifier, factory = { onboardingView })
+        DisposableEffect(Unit) {
+            onDispose {
+                onboardingUiManager?.clearOnboardingView(onboardingView)
+            }
         }
     }
 }
