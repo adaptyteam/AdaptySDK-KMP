@@ -356,6 +356,7 @@ object AdaptyPluginRequestTemplate {
                     it.forEach { (key, value) -> put(key, value) }
                 }
             }
+            put("enable_safe_area_paddings", request.enableSafeAreaPaddings)
         }.toString()
     }
 
