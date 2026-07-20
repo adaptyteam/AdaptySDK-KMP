@@ -154,7 +154,8 @@ public final class com/adapty/kmp/internal/plugin/request/AdaptyOnboardingReques
 }
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateFlowViewRequestKt {
-	public static final fun createFlowViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/lang/String;
+	public static final fun createFlowViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Z)Ljava/lang/String;
+	public static synthetic fun createFlowViewRequestJsonString$default (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ZILjava/lang/Object;)Ljava/lang/String;
 }
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateOnboardingViewRequestKt {

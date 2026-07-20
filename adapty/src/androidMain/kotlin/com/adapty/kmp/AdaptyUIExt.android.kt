@@ -44,6 +44,7 @@ public fun AdaptyUI.createNativeFlowView(
     customTimers: Map<String, LocalDateTime>? = null,
     customAssets: Map<String, AdaptyCustomAsset>? = null,
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null,
+    androidEnableSafeArea: Boolean = false,
 ): AdaptyNativeFlowView {
     val viewId = flow.createNativePlatformViewId()
     val flowUiManager: FlowUiManager? by safeInject<FlowUiManager>()
@@ -59,7 +60,8 @@ public fun AdaptyUI.createNativeFlowView(
                 customTags = customTags,
                 customTimers = customTimers,
                 customAssets = customAssets,
-                productPurchaseParams = productPurchaseParams
+                productPurchaseParams = productPurchaseParams,
+                enableSafeAreaPaddings = androidEnableSafeArea
             ),
             id = viewId,
         )

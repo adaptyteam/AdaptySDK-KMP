@@ -68,8 +68,8 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 }
 
 public final class com/adapty/kmp/AdaptyUIExt_androidKt {
-	public static final fun createNativeFlowView (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyFlow;Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Lcom/adapty/kmp/AdaptyNativeFlowView;
-	public static synthetic fun createNativeFlowView$default (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyFlow;Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILjava/lang/Object;)Lcom/adapty/kmp/AdaptyNativeFlowView;
+	public static final fun createNativeFlowView (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyFlow;Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Z)Lcom/adapty/kmp/AdaptyNativeFlowView;
+	public static synthetic fun createNativeFlowView$default (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyFlow;Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ZILjava/lang/Object;)Lcom/adapty/kmp/AdaptyNativeFlowView;
 	public static final fun createNativeOnboardingView (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyWebPresentation;)Lcom/adapty/kmp/AdaptyNativeOnboardingView;
 	public static synthetic fun createNativeOnboardingView$default (Lcom/adapty/kmp/AdaptyUI;Landroid/content/Context;Landroidx/lifecycle/ViewModelStoreOwner;Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Lcom/adapty/kmp/models/AdaptyWebPresentation;ILjava/lang/Object;)Lcom/adapty/kmp/AdaptyNativeOnboardingView;
 }
@@ -176,7 +176,8 @@ public final class com/adapty/kmp/internal/plugin/request/AdaptyOnboardingReques
 }
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateFlowViewRequestKt {
-	public static final fun createFlowViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Ljava/lang/String;
+	public static final fun createFlowViewRequestJsonString (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Z)Ljava/lang/String;
+	public static synthetic fun createFlowViewRequestJsonString$default (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ZILjava/lang/Object;)Ljava/lang/String;
 }
 
 public final class com/adapty/kmp/internal/plugin/request/AdaptyUICreateOnboardingViewRequestKt {

@@ -19,7 +19,8 @@ internal data class AdaptyUICreateFlowViewRequest(
     @SerialName("custom_tags") val customTags: Map<String, String>? = null,
     @SerialName("custom_timers") val customTimers: Map<String, String>? = null,
     @SerialName("custom_assets") val customAssets: List<AdaptyCustomAssetRequest>? = null,
-    @SerialName("product_purchase_parameters") val productPurchaseParameters: Map<String, AdaptyPurchaseParametersRequest>? = null
+    @SerialName("product_purchase_parameters") val productPurchaseParameters: Map<String, AdaptyPurchaseParametersRequest>? = null,
+    @SerialName("enable_safe_area_paddings") val enableSafeAreaPaddings: Boolean = true
 )
 
 @AdaptyKMPInternal
@@ -28,13 +29,15 @@ public fun createFlowViewRequestJsonString(
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
     customAssets: Map<String, AdaptyCustomAsset>?,
-    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
+    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?,
+    enableSafeAreaPaddings: Boolean = true
 ): String = createFlowViewRequestJsonString(
     flow = flow.asAdaptyFlowRequest(),
     customTags = customTags,
     customTimers = customTimers,
     customAssets = customAssets,
-    productPurchaseParams = productPurchaseParams
+    productPurchaseParams = productPurchaseParams,
+    enableSafeAreaPaddings = enableSafeAreaPaddings
 )
 
 private fun createFlowViewRequestJsonString(
@@ -42,7 +45,8 @@ private fun createFlowViewRequestJsonString(
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
     customAssets: Map<String, AdaptyCustomAsset>?,
-    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
+    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?,
+    enableSafeAreaPaddings: Boolean = true
 ): String {
 
     val request = AdaptyUICreateFlowViewRequest(
@@ -55,7 +59,8 @@ private fun createFlowViewRequestJsonString(
         }?.toMap(),
         customAssets = customAssets?.map { (key, value) ->
             value.asAdaptyCustomAssetRequest(key)
-        }
+        },
+        enableSafeAreaPaddings = enableSafeAreaPaddings
     )
 
     return jsonInstance.encodeToString(request)

@@ -51,6 +51,7 @@ public fun AdaptyUIFlowPlatformView(
     customTimers: Map<String, LocalDateTime>? = null,
     customAssets: Map<String, AdaptyCustomAsset>? = null,
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null,
+    androidEnableSafeArea: Boolean = false,
     onDidAppear: (view: AdaptyUIFlowView) -> Unit = {},
     onDidDisappear: (view: AdaptyUIFlowView) -> Unit = {},
     onDidPerformAction: (view: AdaptyUIFlowView, action: AdaptyUIAction) -> Unit = { _, _ -> },
@@ -68,13 +69,14 @@ public fun AdaptyUIFlowPlatformView(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val setupArgs = remember(flow, customTags, customTimers, customAssets, productPurchaseParams) {
+    val setupArgs = remember(flow, customTags, customTimers, customAssets, productPurchaseParams, androidEnableSafeArea) {
         createFlowViewRequestJsonString(
             flow = flow,
             customTags = customTags,
             customTimers = customTimers,
             customAssets = customAssets,
-            productPurchaseParams = productPurchaseParams
+            productPurchaseParams = productPurchaseParams,
+            enableSafeAreaPaddings = androidEnableSafeArea
         )
     }
 
@@ -165,7 +167,8 @@ public fun AdaptyUIFlowPlatformView(
         customTags = customTags,
         customTimers = customTimers,
         customAssets = customAssets,
-        productPurchaseParams = productPurchaseParams
+        productPurchaseParams = productPurchaseParams,
+        androidEnableSafeArea = androidEnableSafeArea
     )
 }
 
@@ -178,4 +181,5 @@ internal expect fun AdaptyUIFlowPlatformView(
     customTimers: Map<String, LocalDateTime>? = null,
     customAssets: Map<String, AdaptyCustomAsset>? = null,
     productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>? = null,
+    androidEnableSafeArea: Boolean = false,
 )

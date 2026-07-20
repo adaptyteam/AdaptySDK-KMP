@@ -25,7 +25,8 @@ internal actual fun AdaptyUIFlowPlatformView(
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
     customAssets: Map<String, AdaptyCustomAsset>?,
-    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?
+    productPurchaseParams: Map<AdaptyProductIdentifier, AdaptyPurchaseParameters>?,
+    androidEnableSafeArea: Boolean
 ) {
 
     key(viewId) {
@@ -37,7 +38,8 @@ internal actual fun AdaptyUIFlowPlatformView(
                 customTags = customTags,
                 customTimers = customTimers,
                 customAssets = customAssets,
-                productPurchaseParams = productPurchaseParams
+                productPurchaseParams = productPurchaseParams,
+                enableSafeAreaPaddings = androidEnableSafeArea
             )
 
             factory.createNativePaywallView(
