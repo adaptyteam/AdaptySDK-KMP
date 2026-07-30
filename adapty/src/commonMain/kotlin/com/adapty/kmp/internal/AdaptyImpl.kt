@@ -101,6 +101,7 @@ internal class AdaptyImpl(
 
 
     override suspend fun activate(configuration: AdaptyConfig): AdaptyResult<Unit> {
+        configuration.logLevel?.let { applyLogLevel(it) }
         adaptyPlugin.initialize()
         return adaptyPlugin.awaitExecute<AdaptyConfigurationRequest, Boolean>(
             method = AdaptyPluginMethod.ACTIVATE,
@@ -246,10 +247,7 @@ internal class AdaptyImpl(
     }
 
     override fun setLogLevel(logLevel: AdaptyLogLevel) {
-        logger = when (logLevel) {
-            AdaptyLogLevel.DEBUG, AdaptyLogLevel.VERBOSE, AdaptyLogLevel.INFO -> ConsoleLogger
-            else -> EmptyLogger
-        }
+        applyLogLevel(logLevel)
 
         adaptyPlugin.execute<AdaptySetLogLevelRequest, Unit>(
             method = AdaptyPluginMethod.SET_LOG_LEVEL,
