@@ -49,7 +49,7 @@ kotlin {
             else -> error("Unsupported target ${iosTarget.konanTarget}")
         }
         val derivedDataBuildDir = "$rootDir/adapty-swift-bridge/build/Build/Products"
-        val dedupTaskName = "dedup${platform.capitalize()}"
+        val dedupTaskName = "stripDebugInfo${platform.replaceFirstChar { it.uppercase() }}"
 
         iosTarget.compilations {
             val main by getting {
@@ -104,8 +104,9 @@ kotlin {
 val shouldForceIosRebuild: Boolean =
     project.findProperty("shouldForceIosRebuild")?.toString()?.toBooleanStrictOrNull() ?: false
 listOf("iphoneos", "iphonesimulator").forEach { sdk ->
-    tasks.create<Exec>("build${sdk.capitalize()}") {
+    tasks.register<Exec>("build${sdk.replaceFirstChar { it.uppercase() }}") {
         group = "build"
+        description = "Builds libAdaptySwiftBridge.a for $sdk via xcodebuild (Release)."
 
         commandLine(
             "xcodebuild",
@@ -140,13 +141,21 @@ listOf("iphoneos", "iphonesimulator").forEach { sdk ->
 // Dedup duplicate .o members in static libraries (GitHub issue #19)
 val dedupScript = "$rootDir/scripts/dedup_static_lib.sh"
 listOf("iphoneos", "iphonesimulator").forEach { sdk ->
-    tasks.register<Exec>("dedup${sdk.capitalize()}") {
+    val lib = "$rootDir/adapty-swift-bridge/build/Build/Products/Release-$sdk/libAdaptySwiftBridge.a"
+    tasks.register<Exec>("dedup${sdk.replaceFirstChar { it.uppercase() }}") {
         group = "build"
-        dependsOn("build${sdk.capitalize()}")
-        commandLine(
-            "bash", dedupScript,
-            "$rootDir/adapty-swift-bridge/build/Build/Products/Release-$sdk/libAdaptySwiftBridge.a"
-        )
+        description = "Removes duplicate .o members from the $sdk libAdaptySwiftBridge.a (issue #19)."
+        dependsOn("build${sdk.replaceFirstChar { it.uppercase() }}")
+        commandLine("bash", dedupScript, lib)
+        workingDir(rootDir)
+    }
+    // Runs after dedup and gates the cinterop step below, so the .a packaged into the klib is the
+    // stripped one (Github issue #34).
+    tasks.register<Exec>("stripDebugInfo${sdk.replaceFirstChar { it.uppercase() }}") {
+        group = "build"
+        description = "Strips debug info from the $sdk libAdaptySwiftBridge.a (issue #34)."
+        dependsOn("dedup${sdk.replaceFirstChar { it.uppercase() }}")
+        commandLine("strip", "-S", lib)
         workingDir(rootDir)
     }
 }
