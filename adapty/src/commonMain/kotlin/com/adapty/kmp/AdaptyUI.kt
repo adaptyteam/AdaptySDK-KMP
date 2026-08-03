@@ -167,6 +167,7 @@ internal interface AdaptyUIContract {
      */
     suspend fun createFlowView(
         flow: AdaptyFlow,
+        locale: String? = null,
         loadTimeout: Duration? = null,
         preloadProducts: Boolean = false,
         customTags: Map<String, String>? = null,

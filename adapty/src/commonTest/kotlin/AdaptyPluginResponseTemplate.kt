@@ -391,6 +391,7 @@ object AdaptyPluginResponseTemplate {
             put("id", view.id)
             put("placement_id", view.placementId)
             put("variation_id", view.variationId)
+            view.locale?.let { put("locale", it) }
         }
         return buildSuccessJsonString(viewJson)
     }

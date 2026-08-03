@@ -77,7 +77,7 @@ internal fun AdaptyCustomAsset.asAdaptyCustomAssetRequest(id: String): AdaptyCus
         is AdaptyCustomAsset.LinearGradientAsset -> AdaptyCustomAssetRequest.LinearGradientRequest(
             id = id,
             values = this.colors.mapIndexed { index, color ->
-                val p = this.stops?.get(index)
+                val p = this.stops?.getOrNull(index)
                     ?: if (this.colors.size == 1) 0f else (index.toFloat() / (this.colors.size - 1))
                 AdaptyCustomAssetRequest.LinearGradientRequest.ColorStop(color = color, p = p)
             },

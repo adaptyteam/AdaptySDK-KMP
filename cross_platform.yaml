@@ -30,6 +30,11 @@ $requests:
     properties:
       method: { const: "adapty_ui_create_flow_view" }
       flow: { $ref: "#/$defs/AdaptyFlow" }
+      locale:
+        {
+          type: string,
+          description: "localization to build the view with; defaults to en, falls back to the flow default",
+        }
       load_timeout: { type: number, description: "seconds" }
       preload_products: { type: boolean, default: false }
       custom_tags: { $ref: "#/$defs/AdaptyUI.CustomTagsValues" }
@@ -1614,6 +1619,11 @@ $defs:
       id: { type: string }
       placement_id: { type: string }
       variation_id: { type: string }
+      locale:
+        {
+          type: string,
+          description: "localization the view was actually built with",
+        }
 
   AdaptyUI.OnboardingView: #response #event
     type: object

@@ -8,11 +8,15 @@ import com.adapty.kmp.AdaptyUI
  * @property id The unique identifier of this flow view instance.
  * @property placementId The identifier of the placement.
  * @property variationId The identifier of the flow variation.
+ * @property locale The localization the view was actually built with: the locale passed to
+ *   `createFlowView` when the flow has that localization, `en` when no locale was passed and the
+ *   flow has `en`, and the flow's default localization in every other case.
  */
 public data class AdaptyUIFlowView internal constructor(
     val id: String,
     val placementId: String,
-    val variationId: String
+    val variationId: String,
+    val locale: String? = null
 ) {
 
     /**

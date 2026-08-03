@@ -14,6 +14,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class AdaptyUICreateFlowViewRequest(
     @SerialName("flow") val flow: AdaptyFlowRequestResponse,
+    @SerialName("locale") val locale: String? = null,
     @SerialName("load_timeout") val loadTimeOutInSeconds: Double?,
     @SerialName("preload_products") val preloadProducts: Boolean = false,
     @SerialName("custom_tags") val customTags: Map<String, String>? = null,
@@ -26,6 +27,7 @@ internal data class AdaptyUICreateFlowViewRequest(
 @AdaptyKMPInternal
 public fun createFlowViewRequestJsonString(
     flow: AdaptyFlow,
+    locale: String? = null,
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
     customAssets: Map<String, AdaptyCustomAsset>?,
@@ -33,6 +35,7 @@ public fun createFlowViewRequestJsonString(
     enableSafeAreaPaddings: Boolean = true
 ): String = createFlowViewRequestJsonString(
     flow = flow.asAdaptyFlowRequest(),
+    locale = locale,
     customTags = customTags,
     customTimers = customTimers,
     customAssets = customAssets,
@@ -42,6 +45,7 @@ public fun createFlowViewRequestJsonString(
 
 private fun createFlowViewRequestJsonString(
     flow: AdaptyFlowRequestResponse,
+    locale: String? = null,
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
     customAssets: Map<String, AdaptyCustomAsset>?,
@@ -51,6 +55,7 @@ private fun createFlowViewRequestJsonString(
 
     val request = AdaptyUICreateFlowViewRequest(
         flow = flow,
+        locale = locale,
         loadTimeOutInSeconds = null,
         customTags = customTags,
         customTimers = customTimers?.asAdaptyValidDateTimeFormat(),

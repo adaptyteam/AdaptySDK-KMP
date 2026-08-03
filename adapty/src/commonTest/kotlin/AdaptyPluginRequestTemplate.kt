@@ -344,6 +344,7 @@ object AdaptyPluginRequestTemplate {
                     request.flow
                 )
             )
+            request.locale?.let { put("locale", it) }
             request.loadTimeOutInSeconds?.let { put("load_timeout", it) }
             put("preload_products", request.preloadProducts)
             request.customTags?.let {

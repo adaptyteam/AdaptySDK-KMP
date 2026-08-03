@@ -44,11 +44,12 @@ class AdaptyUIImplTest {
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyUIImpl.createFlowView(flow = flow)
+                adaptyUIImpl.createFlowView(flow = flow, locale = AdaptyFakeTestData.LOCALE)
             },
             method = AdaptyPluginMethod.CREATE_FLOW_VIEW,
             param = AdaptyUICreateFlowViewRequest(
                 flow = flow.asAdaptyFlowRequest(),
+                locale = AdaptyFakeTestData.LOCALE,
                 loadTimeOutInSeconds = null,
                 preloadProducts = false
             ),

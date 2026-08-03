@@ -251,7 +251,8 @@ internal object AdaptyFakeTestData {
         return AdaptyUIFlowView(
             id = VIEW_ID,
             placementId = PLACEMENT_ID,
-            variationId = VARIATION_ID
+            variationId = VARIATION_ID,
+            locale = LOCALE
         )
     }
 
