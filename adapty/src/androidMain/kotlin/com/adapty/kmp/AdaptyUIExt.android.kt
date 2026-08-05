@@ -40,6 +40,7 @@ public fun AdaptyUI.createNativeFlowView(
     viewModelStoreOwner: ViewModelStoreOwner?,
     flow: AdaptyFlow,
     observer: AdaptyUIFlowsEventsObserver,
+    locale: String? = null,
     customTags: Map<String, String>? = null,
     customTimers: Map<String, LocalDateTime>? = null,
     customAssets: Map<String, AdaptyCustomAsset>? = null,
@@ -57,6 +58,7 @@ public fun AdaptyUI.createNativeFlowView(
             viewModelStoreOwner = viewModelStoreOwner,
             args = createFlowViewRequestJsonString(
                 flow = flow,
+                locale = locale,
                 customTags = customTags,
                 customTimers = customTimers,
                 customAssets = customAssets,

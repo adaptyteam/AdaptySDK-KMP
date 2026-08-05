@@ -29,6 +29,7 @@ import kotlinx.datetime.LocalDateTime
 internal actual fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
     viewId: String,
+    locale: String?,
     modifier: Modifier,
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
@@ -49,6 +50,7 @@ internal actual fun AdaptyUIFlowPlatformView(
                     viewModelStoreOwner = viewModelStoreOwner,
                     args = createFlowViewRequestJsonString(
                         flow = flow,
+                        locale = locale,
                         customTags = customTags,
                         customTimers = customTimers,
                         customAssets = customAssets,

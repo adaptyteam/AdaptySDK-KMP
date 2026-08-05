@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/adaptyteam/AdaptySDK-iOS.git",
       "state" : {
-        "revision" : "1a70ba127ebd335646fe6883e6729fbb46cdd0e3",
-        "version" : "4.0.1"
+        "revision" : "51492837e01b6b2db58521477a8ce91f1cbd4c74",
+        "version" : "4.0.2"
       }
     }
   ],

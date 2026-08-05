@@ -13,13 +13,17 @@ internal data class AdaptyUIFlowViewResponse(
     val placementId: String,
 
     @SerialName("variation_id")
-    val variationId: String
+    val variationId: String,
+
+    @SerialName("locale")
+    val locale: String? = null
 )
 
 internal fun AdaptyUIFlowViewResponse.asAdaptyUIFlowView(): AdaptyUIFlowView {
     return AdaptyUIFlowView(
         id = id,
         placementId = placementId,
-        variationId = variationId
+        variationId = variationId,
+        locale = locale
     )
 }
