@@ -332,7 +332,7 @@ class AppViewModel : ViewModel() {
                     path = localVideoResourcePath
                 ),
 //                "custom_color_orange" to AdaptyCustomAsset.color(
-//                    colorHex = "#FFFFA500"
+//                    colorHex = "#FFA500FF"
 //                ),
 //                "custom_bright_gradient" to AdaptyCustomAsset.linearGradient(
 //                    colors = listOf(""),
