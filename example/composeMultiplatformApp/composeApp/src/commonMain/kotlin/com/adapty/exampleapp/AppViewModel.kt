@@ -146,11 +146,11 @@ class AppViewModel : ViewModel() {
                 _uiState.update { it.copy(isLoading = false) }
             }
 
-            is AppUiEvent.OnClickUpdateAttribution -> {
+            is AppUiEvent.OnClickUpdateExternalAttribution -> {
                 _uiState.update { it.copy(isLoading = true) }
-                Adapty.updateAttribution(
+                Adapty.updateExternalAttribution(
                     attribution = mapOf("test_key" to "test_value"),
-                    source = "custom"
+                    provider = "custom"
                 )
                 _uiState.update { it.copy(isLoading = false) }
             }

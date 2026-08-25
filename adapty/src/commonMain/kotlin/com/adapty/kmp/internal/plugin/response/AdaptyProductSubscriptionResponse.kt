@@ -1,11 +1,11 @@
 package com.adapty.kmp.internal.plugin.response
 
-import com.adapty.kmp.models.AdaptyPaywallProductSubscription
+import com.adapty.kmp.models.AdaptyProductSubscription
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyPaywallProductSubscriptionResponse(
+internal data class AdaptyProductSubscriptionResponse(
     @SerialName("group_identifier")
     val groupIdentifier: String? = null,
 
@@ -25,9 +25,9 @@ internal data class AdaptyPaywallProductSubscriptionResponse(
     val basePlanId: String? = null
 )
 
-internal fun AdaptyPaywallProductSubscriptionResponse.asAdaptyPaywallProductSubscription(): AdaptyPaywallProductSubscription {
+internal fun AdaptyProductSubscriptionResponse.asAdaptyProductSubscription(): AdaptyProductSubscription {
 
-    return AdaptyPaywallProductSubscription(
+    return AdaptyProductSubscription(
         groupIdentifier = groupIdentifier,
         period = period.asAdaptySubscriptionPeriod(),
         localizedPeriod = localizedPeriod,

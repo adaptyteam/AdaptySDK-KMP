@@ -12,6 +12,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
@@ -22,7 +23,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIShowDialogRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.utils.getEmptyJsonObjectString
@@ -50,7 +52,8 @@ object AdaptyPluginRequestTemplate {
         AdaptyPluginMethod.GET_FLOW -> getFlowRequestJsonString(param as AdaptyGetFlowRequest)
         AdaptyPluginMethod.GET_PAYWALL_PRODUCTS -> getPaywallProductsRequestJsonString(param as AdaptyGetPaywallProductsRequest)
         AdaptyPluginMethod.MAKE_PURCHASE -> getMakePurchaseRequestJsonString(param as AdaptyMakePurchaseRequest)
-        AdaptyPluginMethod.UPDATE_ATTRIBUTION -> getUpdateAttributionRequestJsonString(param as AdaptyUpdateAttributionRequest)
+        AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION -> getUpdateExternalAttributionRequestJsonString(param as AdaptyUpdateExternalAttributionRequest)
+        AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE -> getMakePromotedPurchaseRequestJsonString(param as AdaptyMakePromotedPurchaseRequest)
         AdaptyPluginMethod.REPORT_TRANSACTION -> getReportTransactionRequestJsonString(param as AdaptyReportTransactionRequest)
         AdaptyPluginMethod.SET_FALLBACK -> getSetFallbackPaywallsRequestJsonString(param as String)
         AdaptyPluginMethod.LOG_SHOW_FLOW -> getAdaptyLogShowFlowRequest(param as AdaptyLogShowFlowRequest)
@@ -112,6 +115,7 @@ object AdaptyPluginRequestTemplate {
                 put("google_enable_pending_prepaid_plans", configuration.googleEnablePendingPrepaidPlans)
                 put("google_local_access_level_allowed", configuration.googleLocalAccessLevelAllowed)
                 put("ip_address_collection_disabled", configuration.ipAddressCollectionDisabled)
+                put("adapty_attribution_enabled", configuration.adaptyAttributionEnabled)
                 put("clear_data_on_backup", configuration.appleClearDataOnBackup)
                 put("server_cluster", configuration.serverCluster)
                 put("log_level", "debug")
@@ -231,10 +235,22 @@ object AdaptyPluginRequestTemplate {
         return jsonObject.toString()
     }
 
-    private fun getUpdateAttributionRequestJsonString(adaptyUpdateAttributionRequest: AdaptyUpdateAttributionRequest): String {
+    private fun getUpdateExternalAttributionRequestJsonString(adaptyUpdateExternalAttributionRequest: AdaptyUpdateExternalAttributionRequest): String {
         val jsonObject = buildJsonObject {
-            put("attribution", adaptyUpdateAttributionRequest.attribution)
-            put("source", adaptyUpdateAttributionRequest.source)
+            put("attribution", adaptyUpdateExternalAttributionRequest.attribution)
+            put("provider", adaptyUpdateExternalAttributionRequest.provider)
+        }
+        return jsonObject.toString()
+    }
+
+    private fun getMakePromotedPurchaseRequestJsonString(adaptyMakePromotedPurchaseRequest: AdaptyMakePromotedPurchaseRequest): String {
+        val jsonObject = buildJsonObject {
+            put(
+                "product", jsonInstance.encodeToJsonElement(
+                    AdaptyPromotedProductRequest.serializer(),
+                    adaptyMakePromotedPurchaseRequest.product
+                )
+            )
         }
         return jsonObject.toString()
     }

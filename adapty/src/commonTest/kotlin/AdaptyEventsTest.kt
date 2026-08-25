@@ -12,10 +12,12 @@ import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsFailEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsSuccessEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventOnStateUpdatedActionResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyDidReceivePromotedPurchaseResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyProfileUpdatedResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyError
 import com.adapty.kmp.internal.plugin.response.asAdaptyInstallationDetails
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
+import com.adapty.kmp.internal.plugin.response.asAdaptyPromotedProduct
 import com.adapty.kmp.internal.utils.decodeJsonString
 import com.adapty.kmp.internal.utils.jsonInstance
 import kotlinx.serialization.json.jsonObject
@@ -1239,6 +1241,21 @@ class AdaptyEventsTest {
         assertEquals("google", accessLevel.store)
 
         assertEquals("test_value", profile.customAttributes["test_attribute"])
+    }
+
+    @Test
+    fun `did receive promoted purchase event - product is parsed correctly`() {
+        val response = AdaptyPluginResponseTemplate.getEventJsonString(
+            AdaptyPluginEvent.DID_RECEIVE_PROMOTED_PURCHASE
+        ).decodeJsonString<AdaptyDidReceivePromotedPurchaseResponse>()
+        assertNotNull(response, "Failed to parse promoted purchase event JSON")
+
+        val product = response.product.asAdaptyPromotedProduct()
+        assertEquals(AdaptyFakeTestData.PRODUCT_ID, product.vendorProductId)
+        assertEquals("Premium Monthly", product.localizedTitle)
+        assertEquals(true, product.isFamilyShareable)
+        assertEquals(9.99, product.price.amount)
+        assertEquals("intro_offer", product.subscription?.offer?.offerIdentifier?.id)
     }
 
     @Test

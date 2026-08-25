@@ -5,6 +5,7 @@ package com.adapty.kmp.internal
 import com.adapty.kmp.AdaptyContract
 import com.adapty.kmp.OnInstallationDetailsListener
 import com.adapty.kmp.OnProfileUpdatedListener
+import com.adapty.kmp.OnPromotedPurchaseListener
 import com.adapty.kmp.internal.plugin.AdaptyPlugin
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
 import com.adapty.kmp.internal.plugin.asAdaptyResult
@@ -26,13 +27,14 @@ import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.asAdaptyFlow
 import com.adapty.kmp.internal.plugin.request.asAdaptyFlowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetLogLevelRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyConfigurationRequest
@@ -42,6 +44,7 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyLogLevelRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyOnboarding
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyWebPresentationRequest
@@ -70,6 +73,7 @@ import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
@@ -93,6 +97,7 @@ internal class AdaptyImpl(
     private var eventsListenerJob: Job? = null
     private var profileUpdateEventObserver: OnProfileUpdatedListener? = null
     private var installationDetailsEventObserver: OnInstallationDetailsListener? = null
+    private var promotedPurchaseEventObserver: OnPromotedPurchaseListener? = null
 
 
     init {
@@ -196,20 +201,30 @@ internal class AdaptyImpl(
             )
         ).asAdaptyResult { it.asAdaptyPurchaseResult() }
 
+    override suspend fun makePromotedPurchase(
+        product: AdaptyPromotedProduct,
+    ): AdaptyResult<AdaptyPurchaseResult> =
+        adaptyPlugin.awaitExecute<AdaptyMakePromotedPurchaseRequest, AdaptyPurchaseResultResponse>(
+            method = AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE,
+            request = AdaptyMakePromotedPurchaseRequest(
+                product = product.asAdaptyPromotedProductRequest(),
+            )
+        ).asAdaptyResult { it.asAdaptyPurchaseResult() }
+
     override suspend fun restorePurchases(): AdaptyResult<AdaptyProfile> =
         adaptyPlugin.awaitExecute<Unit, AdaptyProfileResponse>(
             method = AdaptyPluginMethod.RESTORE_PURCHASES,
             request = Unit
         ).asAdaptyResult { it.asAdaptyProfile() }
 
-    override suspend fun updateAttribution(
+    override suspend fun updateExternalAttribution(
         attribution: Map<String, Any>,
-        source: String
-    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyUpdateAttributionRequest, Boolean>(
-        method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
-        request = AdaptyUpdateAttributionRequest(
+        provider: String
+    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyUpdateExternalAttributionRequest, Boolean>(
+        method = AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION,
+        request = AdaptyUpdateExternalAttributionRequest(
             attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
-            source = source
+            provider = provider
         )
     ).asAdaptyResult { }
 
@@ -244,6 +259,10 @@ internal class AdaptyImpl(
 
     override fun setOnInstallationDetailsListener(onInstallationDetailsListener: OnInstallationDetailsListener?) {
         this.installationDetailsEventObserver = onInstallationDetailsListener
+    }
+
+    override fun setOnPromotedPurchaseListener(onPromotedPurchaseListener: OnPromotedPurchaseListener?) {
+        this.promotedPurchaseEventObserver = onPromotedPurchaseListener
     }
 
     override fun setLogLevel(logLevel: AdaptyLogLevel) {
@@ -392,6 +411,7 @@ internal class AdaptyImpl(
             supervisorScope {
                 launch { listenForProfileUpdateEvent() }
                 launch { listenForInstallationEvent() }
+                launch { listenForPromotedPurchaseEvent() }
             }
         }
     }
@@ -404,6 +424,17 @@ internal class AdaptyImpl(
             }
             .collect { profile ->
                 profileUpdateEventObserver?.onProfileReceived(profile)
+            }
+    }
+
+    @OptIn(AdaptyKMPInternal::class)
+    private suspend fun listenForPromotedPurchaseEvent() {
+        AdaptyPluginEventHandler.promotedPurchaseFlow
+            .catch {
+                logger.log("AdaptyImpl, onPromotedPurchaseListener, error: $it")
+            }
+            .collect { product ->
+                promotedPurchaseEventObserver?.onPromotedPurchaseReceived(product)
             }
     }
 

@@ -1,6 +1,7 @@
 package com.adapty.kmp.models
 
 import com.adapty.kmp.internal.AdaptyKMPInternal
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowLayoutsConfigurationRequestResponse
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -17,6 +18,7 @@ import kotlin.uuid.Uuid
  * @property remoteConfigs remote configurations, one per language.
  * @property flowVersionId optional flow version identifier.
  * @property paywalls the paywall variations contained in this flow.
+ * @property hasViewConfiguration whether this flow ships a layout that AdaptyUI can render.
  */
 public data class AdaptyFlow internal constructor(
     public val placement: AdaptyPlacement,
@@ -26,9 +28,18 @@ public data class AdaptyFlow internal constructor(
     public val remoteConfigs: List<AdaptyRemoteConfig> = emptyList(),
     public val flowVersionId: String? = null,
     public val paywalls: List<AdaptyFlowPaywall> = emptyList(),
+    internal val layoutsConfiguration: AdaptyFlowLayoutsConfigurationRequestResponse? = null,
     internal val payloadData: String? = null,
     internal val responseCreatedAt: Long = 0L,
 ) {
+    /**
+     * Whether this flow ships a layout that AdaptyUI can render.
+     *
+     * `false` means the flow carries no `ui_schema`, so `createFlowView` has nothing to build a
+     * view from — treat it as remote-config only.
+     */
+    public val hasViewConfiguration: Boolean get() = layoutsConfiguration != null
+
     internal companion object {
         const val PREFIX_NATIVE_PLATFORM_VIEW = "compose_native_flow_"
     }

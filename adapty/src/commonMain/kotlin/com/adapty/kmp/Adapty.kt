@@ -15,6 +15,7 @@ import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
@@ -176,6 +177,17 @@ internal interface AdaptyContract {
     ): AdaptyResult<AdaptyPurchaseResult>
 
     /**
+     * Completes a purchase that was initiated from the App Store (StoreKit 2 promoted purchase).
+     *
+     * Call this with the product delivered to [OnPromotedPurchaseListener] once your app is ready
+     * to complete the purchase. iOS only — on other platforms the call fails with an error.
+     *
+     * @param product The promoted product to purchase.
+     * @return [AdaptyResult] containing [AdaptyPurchaseResult].
+     */
+    suspend fun makePromotedPurchase(product: AdaptyPromotedProduct): AdaptyResult<AdaptyPurchaseResult>
+
+    /**
      * Restores previous purchases for the current user.
      *
      * @return [AdaptyResult] containing [AdaptyProfile] with updated access levels.
@@ -184,14 +196,19 @@ internal interface AdaptyContract {
     suspend fun restorePurchases(): AdaptyResult<AdaptyProfile>
 
     /**
-     * Updates attribution (conversion) data for the current profile.
+     * Updates external attribution (conversion) data for the current profile.
      * Read more on the [Adapty Documentation](https://docs.adapty.io/docs/attribution-integration)
      *
+     * Renamed from `updateAttribution` in 4.1.0 — `source` is now `provider`.
+     *
      * @param attribution Map of key-value attribution data.
-     * @param source Source of attribution (e.g., "Facebook", "AppsFlyer").
+     * @param provider Attribution provider (e.g., "facebook", "appsflyer", "custom").
      * @return [AdaptyResult] indicating success or failure.
      */
-    suspend fun updateAttribution(attribution: Map<String, Any>, source: String): AdaptyResult<Unit>
+    suspend fun updateExternalAttribution(
+        attribution: Map<String, Any>,
+        provider: String
+    ): AdaptyResult<Unit>
 
     /**
      * Sets an integration identifier for the profile.
@@ -250,6 +267,23 @@ internal interface AdaptyContract {
      * @see OnProfileUpdatedListener
      */
     fun setOnProfileUpdatedListener(onProfileUpdatedListener: OnProfileUpdatedListener?)
+
+    /**
+     * Sets a listener that receives StoreKit 2 promoted purchases (iOS only).
+     *
+     * Called when the user starts a purchase directly from the App Store product page.
+     * Registering a listener defers completion to you — call [makePromotedPurchase] with the
+     * received product when your app is ready. Without a listener the native SDK completes the
+     * purchase itself.
+     *
+     * Passing `null` removes the existing listener.
+     *
+     * @param onPromotedPurchaseListener the listener that receives promoted products,
+     * or `null` to remove the current listener.
+     *
+     * @see OnPromotedPurchaseListener
+     */
+    fun setOnPromotedPurchaseListener(onPromotedPurchaseListener: OnPromotedPurchaseListener?)
 
     /**
      * Sets a listener to receive installation details related to

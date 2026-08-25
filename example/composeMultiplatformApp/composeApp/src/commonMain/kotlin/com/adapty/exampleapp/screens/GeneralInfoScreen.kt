@@ -510,7 +510,7 @@ private fun OtherActionsSection(
         ListActionTile(
             title = "Update Attribution",
             onClick = {
-                onUiEvent(AppUiEvent.OnClickUpdateAttribution)
+                onUiEvent(AppUiEvent.OnClickUpdateExternalAttribution)
             }
         )
 

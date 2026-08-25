@@ -11,7 +11,9 @@ import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
@@ -252,7 +254,21 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `updateAttribution method - verify request and response`() = runTest {
+    fun `makePromotedPurchase method - verify request and response`() = runTest {
+        val product = AdaptyFakeTestData.getPromotedProduct()
+
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.makePromotedPurchase(product = product) },
+            method = AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE,
+            param = AdaptyMakePromotedPurchaseRequest(
+                product = product.asAdaptyPromotedProductRequest()
+            ),
+            expectedSuccessData = AdaptyFakeTestData.getSuccessPurchaseResult(),
+        )
+    }
+
+    @Test
+    fun `updateExternalAttribution method - verify request and response`() = runTest {
 
         val attribution = mapOf(
             "status" to "non_organic|organic|unknown",
@@ -263,16 +279,16 @@ class AdaptyImplTest {
             "creative" to "creative id"
         )
 
-        val source = "custom"
+        val provider = "custom"
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.updateAttribution(attribution = attribution, source = source)
+                adaptyImpl.updateExternalAttribution(attribution = attribution, provider = provider)
             },
-            method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
-            param = AdaptyUpdateAttributionRequest(
+            method = AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION,
+            param = AdaptyUpdateExternalAttributionRequest(
                 attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
-                source = source
+                provider = provider
             ),
             expectedSuccessData = Unit
         )
