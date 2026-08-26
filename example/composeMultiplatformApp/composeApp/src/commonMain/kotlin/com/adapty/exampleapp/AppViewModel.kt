@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.adapty.kmp.Adapty
 import com.adapty.kmp.AdaptyUI
 import com.adapty.kmp.OnInstallationDetailsListener
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyFlow
@@ -150,7 +151,7 @@ class AppViewModel : ViewModel() {
                 _uiState.update { it.copy(isLoading = true) }
                 Adapty.updateExternalAttribution(
                     attribution = mapOf("test_key" to "test_value"),
-                    provider = "custom"
+                    provider = AdaptyExternalAttributionProvider.CUSTOM
                 )
                 _uiState.update { it.copy(isLoading = false) }
             }

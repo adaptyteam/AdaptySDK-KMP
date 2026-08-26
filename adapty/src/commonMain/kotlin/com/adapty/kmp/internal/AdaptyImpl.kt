@@ -63,6 +63,7 @@ import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyCustomerIdentity
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyErrorCode
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyFlowPaywall
 import com.adapty.kmp.models.AdaptyInstallationStatus
@@ -203,13 +204,20 @@ internal class AdaptyImpl(
 
     override suspend fun makePromotedPurchase(
         product: AdaptyPromotedProduct,
-    ): AdaptyResult<AdaptyPurchaseResult> =
-        adaptyPlugin.awaitExecute<AdaptyMakePromotedPurchaseRequest, AdaptyPurchaseResultResponse>(
+    ): AdaptyResult<AdaptyPurchaseResult> {
+        if (isAndroidPlatform) return AdaptyResult.Error(
+            AdaptyError(
+                code = AdaptyErrorCode.DEVELOPER_ERROR,
+                message = "This method is only available for iOS"
+            )
+        )
+        return adaptyPlugin.awaitExecute<AdaptyMakePromotedPurchaseRequest, AdaptyPurchaseResultResponse>(
             method = AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE,
             request = AdaptyMakePromotedPurchaseRequest(
                 product = product.asAdaptyPromotedProductRequest(),
             )
         ).asAdaptyResult { it.asAdaptyPurchaseResult() }
+    }
 
     override suspend fun restorePurchases(): AdaptyResult<AdaptyProfile> =
         adaptyPlugin.awaitExecute<Unit, AdaptyProfileResponse>(
@@ -219,12 +227,12 @@ internal class AdaptyImpl(
 
     override suspend fun updateExternalAttribution(
         attribution: Map<String, Any>,
-        provider: String
+        provider: AdaptyExternalAttributionProvider
     ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyUpdateExternalAttributionRequest, Boolean>(
         method = AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION,
         request = AdaptyUpdateExternalAttributionRequest(
             attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
-            provider = provider
+            provider = provider.value
         )
     ).asAdaptyResult { }
 
@@ -434,7 +442,17 @@ internal class AdaptyImpl(
                 logger.log("AdaptyImpl, onPromotedPurchaseListener, error: $it")
             }
             .collect { product ->
-                promotedPurchaseEventObserver?.onPromotedPurchaseReceived(product)
+                val observer = promotedPurchaseEventObserver
+                if (observer == null) {
+                    logger.log(
+                        "AdaptyImpl, received a promoted purchase for ${product.vendorProductId} " +
+                            "but no OnPromotedPurchaseListener is registered, so it was ignored. " +
+                            "Call Adapty.setOnPromotedPurchaseListener() and complete it with " +
+                            "Adapty.makePromotedPurchase()."
+                    )
+                } else {
+                    observer.onPromotedPurchaseReceived(product)
+                }
             }
     }
 

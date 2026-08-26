@@ -25,6 +25,7 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateReplacementMode
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyErrorCode
 import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
 import com.adapty.kmp.models.AdaptyIosRefundPreference
@@ -255,6 +256,7 @@ class AdaptyImplTest {
 
     @Test
     fun `makePromotedPurchase method - verify request and response`() = runTest {
+        if (isAndroidPlatform) return@runTest
         val product = AdaptyFakeTestData.getPromotedProduct()
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
@@ -264,6 +266,21 @@ class AdaptyImplTest {
                 product = product.asAdaptyPromotedProductRequest()
             ),
             expectedSuccessData = AdaptyFakeTestData.getSuccessPurchaseResult(),
+        )
+    }
+
+    @Test
+    fun `makePromotedPurchase method - returns error on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
+        // makePromotedPurchase is iOS-only; on Android it returns an error immediately
+        val result = adaptyImpl.makePromotedPurchase(
+            product = AdaptyFakeTestData.getPromotedProduct()
+        )
+        result.fold(
+            onSuccess = { fail("Expected error on Android but got success") },
+            onError = { error ->
+                assertEquals(AdaptyErrorCode.DEVELOPER_ERROR, error.code)
+            }
         )
     }
 
@@ -279,7 +296,7 @@ class AdaptyImplTest {
             "creative" to "creative id"
         )
 
-        val provider = "custom"
+        val provider = AdaptyExternalAttributionProvider.CUSTOM
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
@@ -288,7 +305,7 @@ class AdaptyImplTest {
             method = AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION,
             param = AdaptyUpdateExternalAttributionRequest(
                 attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
-                provider = provider
+                provider = provider.value
             ),
             expectedSuccessData = Unit
         )

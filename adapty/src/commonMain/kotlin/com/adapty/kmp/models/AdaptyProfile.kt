@@ -19,7 +19,9 @@ package com.adapty.kmp.models
  * @property customAttributes User-defined key-value attributes previously set via `.updateProfile()`.
  * @property isTestUser Indicates whether the profile belongs to a test device. Read more about
  * test devices in [Adapty documentation](https://adapty.io/docs/test-devices).
- * @property appliedAttributionSources The attribution sources that have been applied to this profile
+ * @property appliedExternalAttributionProviders The external attribution providers that have been
+ * applied to this profile. Unknown or future provider ids arrive unchanged — see
+ * [AdaptyExternalAttributionProvider].
  */
 public data class AdaptyProfile internal constructor(
     public val profileId: String,
@@ -30,7 +32,7 @@ public data class AdaptyProfile internal constructor(
     public val nonSubscriptions: Map<String, List<NonSubscription>>,
     public val customAttributes: Map<String, Any>,
     public val isTestUser: Boolean,
-    public val appliedAttributionSources: List<String> = emptyList(),
+    public val appliedExternalAttributionProviders: List<AdaptyExternalAttributionProvider> = emptyList(),
 ) {
 
     /**

@@ -5,13 +5,13 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 /**
  * A listener interface for receiving StoreKit 2 promoted purchases (iOS only).
  *
- * Triggered when the user starts a purchase directly from the App Store product page.
- * Register it to take control of *when* the purchase completes — call
- * [Adapty.makePromotedPurchase] with the received product once your app is ready
- * (for example, after onboarding has finished).
+ * Triggered when the user starts a purchase directly from the App Store product page. The
+ * purchase is **not** completed for you — call [Adapty.makePromotedPurchase] with the received
+ * product once your app is ready (for example, after onboarding has finished).
  *
- * If no listener is registered, the native SDK completes the purchase itself as soon as the
- * intent arrives.
+ * Registering a listener is effectively required to support promoted purchases. With no listener registered
+ * the promoted purchase is dropped (a warning is logged) and the user sees nothing happen after
+ * tapping Buy on the App Store page.
  */
 public fun interface OnPromotedPurchaseListener {
     /**

@@ -623,6 +623,34 @@ final class com.adapty.kmp.models/AdaptyError : kotlin/Exception { // com.adapty
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyError.toString|toString(){}[0]
 }
 
+final class com.adapty.kmp.models/AdaptyExternalAttributionProvider { // com.adapty.kmp.models/AdaptyExternalAttributionProvider|null[0]
+    constructor <init>(kotlin/String) // com.adapty.kmp.models/AdaptyExternalAttributionProvider.<init>|<init>(kotlin.String){}[0]
+
+    final val value // com.adapty.kmp.models/AdaptyExternalAttributionProvider.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.adapty.kmp.models/AdaptyExternalAttributionProvider.value.<get-value>|<get-value>(){}[0]
+
+    final fun component1(): kotlin/String // com.adapty.kmp.models/AdaptyExternalAttributionProvider.component1|component1(){}[0]
+    final fun copy(kotlin/String = ...): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.copy|copy(kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyExternalAttributionProvider.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyExternalAttributionProvider.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyExternalAttributionProvider.toString|toString(){}[0]
+
+    final object Companion { // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion|null[0]
+        final val ADJUST // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.ADJUST|{}ADJUST[0]
+            final fun <get-ADJUST>(): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.ADJUST.<get-ADJUST>|<get-ADJUST>(){}[0]
+        final val APPLE_ADS // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.APPLE_ADS|{}APPLE_ADS[0]
+            final fun <get-APPLE_ADS>(): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.APPLE_ADS.<get-APPLE_ADS>|<get-APPLE_ADS>(){}[0]
+        final val APPSFLYER // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.APPSFLYER|{}APPSFLYER[0]
+            final fun <get-APPSFLYER>(): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.APPSFLYER.<get-APPSFLYER>|<get-APPSFLYER>(){}[0]
+        final val BRANCH // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.BRANCH|{}BRANCH[0]
+            final fun <get-BRANCH>(): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.BRANCH.<get-BRANCH>|<get-BRANCH>(){}[0]
+        final val CUSTOM // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.CUSTOM|{}CUSTOM[0]
+            final fun <get-CUSTOM>(): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.CUSTOM.<get-CUSTOM>|<get-CUSTOM>(){}[0]
+        final val TENJIN // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.TENJIN|{}TENJIN[0]
+            final fun <get-TENJIN>(): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.Companion.TENJIN.<get-TENJIN>|<get-TENJIN>(){}[0]
+    }
+}
+
 final class com.adapty.kmp.models/AdaptyFlow { // com.adapty.kmp.models/AdaptyFlow|null[0]
     final val flowVersionId // com.adapty.kmp.models/AdaptyFlow.flowVersionId|{}flowVersionId[0]
         final fun <get-flowVersionId>(): kotlin/String? // com.adapty.kmp.models/AdaptyFlow.flowVersionId.<get-flowVersionId>|<get-flowVersionId>(){}[0]
@@ -1057,8 +1085,8 @@ final class com.adapty.kmp.models/AdaptyProductSubscription { // com.adapty.kmp.
 final class com.adapty.kmp.models/AdaptyProfile { // com.adapty.kmp.models/AdaptyProfile|null[0]
     final val accessLevels // com.adapty.kmp.models/AdaptyProfile.accessLevels|{}accessLevels[0]
         final fun <get-accessLevels>(): kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyProfile.AccessLevel> // com.adapty.kmp.models/AdaptyProfile.accessLevels.<get-accessLevels>|<get-accessLevels>(){}[0]
-    final val appliedAttributionSources // com.adapty.kmp.models/AdaptyProfile.appliedAttributionSources|{}appliedAttributionSources[0]
-        final fun <get-appliedAttributionSources>(): kotlin.collections/List<kotlin/String> // com.adapty.kmp.models/AdaptyProfile.appliedAttributionSources.<get-appliedAttributionSources>|<get-appliedAttributionSources>(){}[0]
+    final val appliedExternalAttributionProviders // com.adapty.kmp.models/AdaptyProfile.appliedExternalAttributionProviders|{}appliedExternalAttributionProviders[0]
+        final fun <get-appliedExternalAttributionProviders>(): kotlin.collections/List<com.adapty.kmp.models/AdaptyExternalAttributionProvider> // com.adapty.kmp.models/AdaptyProfile.appliedExternalAttributionProviders.<get-appliedExternalAttributionProviders>|<get-appliedExternalAttributionProviders>(){}[0]
     final val customAttributes // com.adapty.kmp.models/AdaptyProfile.customAttributes|{}customAttributes[0]
         final fun <get-customAttributes>(): kotlin.collections/Map<kotlin/String, kotlin/Any> // com.adapty.kmp.models/AdaptyProfile.customAttributes.<get-customAttributes>|<get-customAttributes>(){}[0]
     final val customerUserId // com.adapty.kmp.models/AdaptyProfile.customerUserId|{}customerUserId[0]
@@ -1079,8 +1107,8 @@ final class com.adapty.kmp.models/AdaptyProfile { // com.adapty.kmp.models/Adapt
     final fun component6(): kotlin.collections/Map<kotlin/String, kotlin.collections/List<com.adapty.kmp.models/AdaptyProfile.NonSubscription>> // com.adapty.kmp.models/AdaptyProfile.component6|component6(){}[0]
     final fun component7(): kotlin.collections/Map<kotlin/String, kotlin/Any> // com.adapty.kmp.models/AdaptyProfile.component7|component7(){}[0]
     final fun component8(): kotlin/Boolean // com.adapty.kmp.models/AdaptyProfile.component8|component8(){}[0]
-    final fun component9(): kotlin.collections/List<kotlin/String> // com.adapty.kmp.models/AdaptyProfile.component9|component9(){}[0]
-    final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyProfile.AccessLevel> = ..., kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyProfile.Subscription> = ..., kotlin.collections/Map<kotlin/String, kotlin.collections/List<com.adapty.kmp.models/AdaptyProfile.NonSubscription>> = ..., kotlin.collections/Map<kotlin/String, kotlin/Any> = ..., kotlin/Boolean = ..., kotlin.collections/List<kotlin/String> = ...): com.adapty.kmp.models/AdaptyProfile // com.adapty.kmp.models/AdaptyProfile.copy|copy(kotlin.String;kotlin.String?;kotlin.String?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyProfile.AccessLevel>;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyProfile.Subscription>;kotlin.collections.Map<kotlin.String,kotlin.collections.List<com.adapty.kmp.models.AdaptyProfile.NonSubscription>>;kotlin.collections.Map<kotlin.String,kotlin.Any>;kotlin.Boolean;kotlin.collections.List<kotlin.String>){}[0]
+    final fun component9(): kotlin.collections/List<com.adapty.kmp.models/AdaptyExternalAttributionProvider> // com.adapty.kmp.models/AdaptyProfile.component9|component9(){}[0]
+    final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyProfile.AccessLevel> = ..., kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyProfile.Subscription> = ..., kotlin.collections/Map<kotlin/String, kotlin.collections/List<com.adapty.kmp.models/AdaptyProfile.NonSubscription>> = ..., kotlin.collections/Map<kotlin/String, kotlin/Any> = ..., kotlin/Boolean = ..., kotlin.collections/List<com.adapty.kmp.models/AdaptyExternalAttributionProvider> = ...): com.adapty.kmp.models/AdaptyProfile // com.adapty.kmp.models/AdaptyProfile.copy|copy(kotlin.String;kotlin.String?;kotlin.String?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyProfile.AccessLevel>;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyProfile.Subscription>;kotlin.collections.Map<kotlin.String,kotlin.collections.List<com.adapty.kmp.models.AdaptyProfile.NonSubscription>>;kotlin.collections.Map<kotlin.String,kotlin.Any>;kotlin.Boolean;kotlin.collections.List<com.adapty.kmp.models.AdaptyExternalAttributionProvider>){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyProfile.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyProfile.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyProfile.toString|toString(){}[0]
@@ -1694,7 +1722,7 @@ final object com.adapty.kmp/Adapty : com.adapty.kmp/AdaptyContract { // com.adap
     final suspend fun setFallback(kotlin/String): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.setFallback|setFallback(kotlin.String){}[0]
     final suspend fun setIntegrationIdentifier(kotlin/String, kotlin/String): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.setIntegrationIdentifier|setIntegrationIdentifier(kotlin.String;kotlin.String){}[0]
     final suspend fun updateCollectingRefundDataConsent(kotlin/Boolean): com.adapty.kmp.models/AdaptyResult<kotlin/Boolean> // com.adapty.kmp/Adapty.updateCollectingRefundDataConsent|updateCollectingRefundDataConsent(kotlin.Boolean){}[0]
-    final suspend fun updateExternalAttribution(kotlin.collections/Map<kotlin/String, kotlin/Any>, kotlin/String): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.updateExternalAttribution|updateExternalAttribution(kotlin.collections.Map<kotlin.String,kotlin.Any>;kotlin.String){}[0]
+    final suspend fun updateExternalAttribution(kotlin.collections/Map<kotlin/String, kotlin/Any>, com.adapty.kmp.models/AdaptyExternalAttributionProvider): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.updateExternalAttribution|updateExternalAttribution(kotlin.collections.Map<kotlin.String,kotlin.Any>;com.adapty.kmp.models.AdaptyExternalAttributionProvider){}[0]
     final suspend fun updateProfile(com.adapty.kmp.models/AdaptyProfileParameters): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.updateProfile|updateProfile(com.adapty.kmp.models.AdaptyProfileParameters){}[0]
     final suspend fun updateRefundPreference(com.adapty.kmp.models/AdaptyIosRefundPreference): com.adapty.kmp.models/AdaptyResult<kotlin/Boolean> // com.adapty.kmp/Adapty.updateRefundPreference|updateRefundPreference(com.adapty.kmp.models.AdaptyIosRefundPreference){}[0]
 }

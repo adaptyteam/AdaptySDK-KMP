@@ -5,6 +5,7 @@ package com.adapty.kmp
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.internal.plugin.constants.Constants.DEFAULT_LOAD_TIMEOUT
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyFlowPaywall
 import com.adapty.kmp.models.AdaptyInstallationStatus
@@ -202,12 +203,13 @@ internal interface AdaptyContract {
      * Renamed from `updateAttribution` in 4.1.0 — `source` is now `provider`.
      *
      * @param attribution Map of key-value attribution data.
-     * @param provider Attribution provider (e.g., "facebook", "appsflyer", "custom").
+     * @param provider [AdaptyExternalAttributionProvider] the attribution provider. Use one of its
+     * constants, or construct it with a raw id for providers added after this SDK release.
      * @return [AdaptyResult] indicating success or failure.
      */
     suspend fun updateExternalAttribution(
         attribution: Map<String, Any>,
-        provider: String
+        provider: AdaptyExternalAttributionProvider
     ): AdaptyResult<Unit>
 
     /**
@@ -271,10 +273,11 @@ internal interface AdaptyContract {
     /**
      * Sets a listener that receives StoreKit 2 promoted purchases (iOS only).
      *
-     * Called when the user starts a purchase directly from the App Store product page.
-     * Registering a listener defers completion to you — call [makePromotedPurchase] with the
-     * received product when your app is ready. Without a listener the native SDK completes the
-     * purchase itself.
+     * Called when the user starts a purchase directly from the App Store product page. Complete
+     * it by calling [makePromotedPurchase] with the received product when your app is ready.
+     *
+     * Register this to support promoted purchases at all: without a listener the purchase is
+     * dropped and nothing happens for the user.
      *
      * Passing `null` removes the existing listener.
      *

@@ -28,7 +28,7 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun setOnProfileUpdatedListener (Lcom/adapty/kmp/OnProfileUpdatedListener;)V
 	public fun setOnPromotedPurchaseListener (Lcom/adapty/kmp/OnPromotedPurchaseListener;)V
 	public fun updateCollectingRefundDataConsent (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun updateExternalAttribution (Ljava/util/Map;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun updateExternalAttribution (Ljava/util/Map;Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateProfile (Lcom/adapty/kmp/models/AdaptyProfileParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateRefundPreference (Lcom/adapty/kmp/models/AdaptyIosRefundPreference;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -432,6 +432,27 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static fun values ()[Lcom/adapty/kmp/models/AdaptyErrorCode;
+}
+
+public final class com/adapty/kmp/models/AdaptyExternalAttributionProvider {
+	public static final field Companion Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyExternalAttributionProvider$Companion {
+	public final fun getADJUST ()Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public final fun getAPPLE_ADS ()Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public final fun getAPPSFLYER ()Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public final fun getBRANCH ()Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public final fun getCUSTOM ()Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
+	public final fun getTENJIN ()Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
 }
 
 public final class com/adapty/kmp/models/AdaptyFlow {
@@ -932,7 +953,7 @@ public final class com/adapty/kmp/models/AdaptyProfile {
 	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyProfile;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ZLjava/util/List;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyProfile;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAccessLevels ()Ljava/util/Map;
-	public final fun getAppliedAttributionSources ()Ljava/util/List;
+	public final fun getAppliedExternalAttributionProviders ()Ljava/util/List;
 	public final fun getCustomAttributes ()Ljava/util/Map;
 	public final fun getCustomerUserId ()Ljava/lang/String;
 	public final fun getNonSubscriptions ()Ljava/util/Map;
