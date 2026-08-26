@@ -276,8 +276,8 @@ internal interface AdaptyContract {
      * Called when the user starts a purchase directly from the App Store product page. Complete
      * it by calling [makePromotedPurchase] with the received product when your app is ready.
      *
-     * Register this to support promoted purchases at all: without a listener the purchase is
-     * dropped and nothing happens for the user.
+     * Register this to support promoted purchases at all. A purchase that arrives before you
+     * register is held and delivered on registration — see [OnPromotedPurchaseListener].
      *
      * Passing `null` removes the existing listener.
      *

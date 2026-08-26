@@ -20,6 +20,7 @@ import kotlin.uuid.Uuid
  * @property paywalls the paywall variations contained in this flow.
  * @property hasViewConfiguration whether this flow ships a layout that AdaptyUI can render.
  */
+@ConsistentCopyVisibility
 public data class AdaptyFlow internal constructor(
     public val placement: AdaptyPlacement,
     public val instanceIdentity: String,

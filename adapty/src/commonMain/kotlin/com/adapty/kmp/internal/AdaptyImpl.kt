@@ -100,6 +100,16 @@ internal class AdaptyImpl(
     private var installationDetailsEventObserver: OnInstallationDetailsListener? = null
     private var promotedPurchaseEventObserver: OnPromotedPurchaseListener? = null
 
+    /**
+     * A promoted purchase that arrived before [setOnPromotedPurchaseListener] was called.
+     *
+     * The event collector starts in `init`, so a purchase intent delivered between `activate` and
+     * listener registration would otherwise be dropped — the common case, since a promoted
+     * purchase cold-launches the app. Held here and replayed on registration. Only the latest is
+     * kept: a newer intent supersedes an unhandled older one.
+     */
+    private var pendingPromotedPurchase: AdaptyPromotedProduct? = null
+
 
     init {
         listerForEvents()
@@ -271,6 +281,14 @@ internal class AdaptyImpl(
 
     override fun setOnPromotedPurchaseListener(onPromotedPurchaseListener: OnPromotedPurchaseListener?) {
         this.promotedPurchaseEventObserver = onPromotedPurchaseListener
+        if (onPromotedPurchaseListener == null) return
+        val pending = pendingPromotedPurchase ?: return
+        pendingPromotedPurchase = null
+        // Deliver on the main scope so a replayed purchase reaches the listener on the same
+        // dispatcher as one arriving through the collector.
+        appMainScope.launch {
+            onPromotedPurchaseListener.onPromotedPurchaseReceived(pending)
+        }
     }
 
     override fun setLogLevel(logLevel: AdaptyLogLevel) {
@@ -444,11 +462,13 @@ internal class AdaptyImpl(
             .collect { product ->
                 val observer = promotedPurchaseEventObserver
                 if (observer == null) {
-                    logger.log(
+                    pendingPromotedPurchase = product
+                    // This misconfiguration costs the user a purchase, so it stays visible at any log level.
+                    ConsoleLogger.log(
                         "AdaptyImpl, received a promoted purchase for ${product.vendorProductId} " +
-                            "but no OnPromotedPurchaseListener is registered, so it was ignored. " +
-                            "Call Adapty.setOnPromotedPurchaseListener() and complete it with " +
-                            "Adapty.makePromotedPurchase()."
+                            "but no OnPromotedPurchaseListener is registered. It is held and will " +
+                            "be delivered once you call Adapty.setOnPromotedPurchaseListener(); " +
+                            "complete it with Adapty.makePromotedPurchase()."
                     )
                 } else {
                     observer.onPromotedPurchaseReceived(product)

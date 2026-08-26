@@ -9,9 +9,12 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
  * purchase is **not** completed for you — call [Adapty.makePromotedPurchase] with the received
  * product once your app is ready (for example, after onboarding has finished).
  *
- * Registering a listener is effectively required to support promoted purchases. With no listener registered
- * the promoted purchase is dropped (a warning is logged) and the user sees nothing happen after
- * tapping Buy on the App Store page.
+ * Registering a listener is effectively required to support promoted purchases.
+ *
+ * A promoted purchase typically cold-launches the app, so the intent can arrive before you get a
+ * chance to register. One such purchase is held and delivered as soon as you register, rather
+ * than being dropped; only the most recent is kept. Register as early as you can — a warning is
+ * logged whenever a purchase has to be held.
  */
 public fun interface OnPromotedPurchaseListener {
     /**

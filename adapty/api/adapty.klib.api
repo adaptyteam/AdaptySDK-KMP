@@ -629,8 +629,6 @@ final class com.adapty.kmp.models/AdaptyExternalAttributionProvider { // com.ada
     final val value // com.adapty.kmp.models/AdaptyExternalAttributionProvider.value|{}value[0]
         final fun <get-value>(): kotlin/String // com.adapty.kmp.models/AdaptyExternalAttributionProvider.value.<get-value>|<get-value>(){}[0]
 
-    final fun component1(): kotlin/String // com.adapty.kmp.models/AdaptyExternalAttributionProvider.component1|component1(){}[0]
-    final fun copy(kotlin/String = ...): com.adapty.kmp.models/AdaptyExternalAttributionProvider // com.adapty.kmp.models/AdaptyExternalAttributionProvider.copy|copy(kotlin.String){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyExternalAttributionProvider.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyExternalAttributionProvider.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyExternalAttributionProvider.toString|toString(){}[0]
@@ -676,7 +674,6 @@ final class com.adapty.kmp.models/AdaptyFlow { // com.adapty.kmp.models/AdaptyFl
     final fun component5(): kotlin.collections/List<com.adapty.kmp.models/AdaptyRemoteConfig> // com.adapty.kmp.models/AdaptyFlow.component5|component5(){}[0]
     final fun component6(): kotlin/String? // com.adapty.kmp.models/AdaptyFlow.component6|component6(){}[0]
     final fun component7(): kotlin.collections/List<com.adapty.kmp.models/AdaptyFlowPaywall> // com.adapty.kmp.models/AdaptyFlow.component7|component7(){}[0]
-    final fun copy(com.adapty.kmp.models/AdaptyPlacement = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin.collections/List<com.adapty.kmp.models/AdaptyRemoteConfig> = ..., kotlin/String? = ..., kotlin.collections/List<com.adapty.kmp.models/AdaptyFlowPaywall> = ..., com.adapty.kmp.internal.plugin.request/AdaptyFlowLayoutsConfigurationRequestResponse? = ..., kotlin/String? = ..., kotlin/Long = ...): com.adapty.kmp.models/AdaptyFlow // com.adapty.kmp.models/AdaptyFlow.copy|copy(com.adapty.kmp.models.AdaptyPlacement;kotlin.String;kotlin.String;kotlin.String;kotlin.collections.List<com.adapty.kmp.models.AdaptyRemoteConfig>;kotlin.String?;kotlin.collections.List<com.adapty.kmp.models.AdaptyFlowPaywall>;com.adapty.kmp.internal.plugin.request.AdaptyFlowLayoutsConfigurationRequestResponse?;kotlin.String?;kotlin.Long){}[0]
     final fun createNativePlatformViewId(): kotlin/String // com.adapty.kmp.models/AdaptyFlow.createNativePlatformViewId|createNativePlatformViewId(){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyFlow.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyFlow.hashCode|hashCode(){}[0]

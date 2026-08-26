@@ -459,9 +459,6 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 public final class com/adapty/kmp/models/AdaptyExternalAttributionProvider {
 	public static final field Companion Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider$Companion;
 	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getValue ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -486,8 +483,6 @@ public final class com/adapty/kmp/models/AdaptyFlow {
 	public final fun component5 ()Ljava/util/List;
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Ljava/util/List;
-	public final fun copy (Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;Lcom/adapty/kmp/internal/plugin/request/AdaptyFlowLayoutsConfigurationRequestResponse;Ljava/lang/String;J)Lcom/adapty/kmp/models/AdaptyFlow;
-	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyFlow;Lcom/adapty/kmp/models/AdaptyPlacement;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/util/List;Lcom/adapty/kmp/internal/plugin/request/AdaptyFlowLayoutsConfigurationRequestResponse;Ljava/lang/String;JILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyFlow;
 	public final fun createNativePlatformViewId ()Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFlowVersionId ()Ljava/lang/String;

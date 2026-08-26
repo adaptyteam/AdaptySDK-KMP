@@ -15,9 +15,13 @@ package com.adapty.kmp.models
  * )
  * ```
  *
- * @property value the raw provider identifier as sent over the wire.
+ * Surrounding whitespace is trimmed
+ *
+ * @property value the provider identifier as sent over the wire, trimmed.
  */
-public data class AdaptyExternalAttributionProvider(public val value: String) {
+public class AdaptyExternalAttributionProvider(value: String) {
+
+    public val value: String = value.trim()
 
     public companion object {
         public val APPLE_ADS: AdaptyExternalAttributionProvider =
@@ -33,4 +37,11 @@ public data class AdaptyExternalAttributionProvider(public val value: String) {
         public val CUSTOM: AdaptyExternalAttributionProvider =
             AdaptyExternalAttributionProvider("custom")
     }
+
+    override fun equals(other: Any?): Boolean =
+        this === other || (other is AdaptyExternalAttributionProvider && other.value == value)
+
+    override fun hashCode(): Int = value.hashCode()
+
+    override fun toString(): String = "AdaptyExternalAttributionProvider($value)"
 }
