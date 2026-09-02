@@ -301,7 +301,10 @@ class AppViewModel : ViewModel() {
     private fun presentPaywallView(flow: AdaptyFlow) =
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            AdaptyUI.createFlowView(flow = flow)
+            AdaptyUI.createFlowView(
+                flow = flow,
+                locale = _uiState.value.customPaywallLocale.takeIf { it.isNotBlank() }
+            )
                 .onSuccess { view -> view.present() }
                 .onError { error -> _uiState.update { it.copy(error = error) } }
             _uiState.update { it.copy(isLoading = false) }
@@ -317,28 +320,11 @@ class AppViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            val localImageResourcePath = Res.getUri("files/images/Walter_White.png")
-            val localVideoResourcePath = Res.getUri("files/videos/demo_video.mp4")
-            val imageByteData = Res.readBytes("files/images/Walter_White.png")
-
+            val demoVideoPath = Res.getUri("files/videos/demo_video.mp4")
             val customAssets: Map<String, AdaptyCustomAsset> = mapOf(
-//                "hero_image" to AdaptyCustomAsset.localImageResource(
-//                    path = localImageResourcePath
-//                ),
-//                "hero_image" to AdaptyCustomAsset.localImageData(
-//                    data = imageByteData
-//                ),
-                "hero_video" to AdaptyCustomAsset.localVideoFile(
-                    path = localVideoResourcePath
-                ),
-//                "custom_color_orange" to AdaptyCustomAsset.color(
-//                    colorHex = "#FFFFA500"
-//                ),
-//                "custom_bright_gradient" to AdaptyCustomAsset.linearGradient(
-//                    colors = listOf(""),
-//                )
+                "custom_video_mp4" to AdaptyCustomAsset.localVideoFile(path = demoVideoPath),
+                "hero_video" to AdaptyCustomAsset.localVideoFile(path = demoVideoPath),
             )
-
 
             AdaptyUI.createFlowView(
                 flow = flow,

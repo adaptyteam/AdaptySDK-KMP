@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -39,17 +40,19 @@ import com.adapty.exampleapp.screens.OnboardingNativeViewScreen
 import com.adapty.exampleapp.screens.PaywallNativeViewScreen
 import com.adapty.exampleapp.screens.PaywallsScreen
 import com.adapty.kmp.AdaptyUI
+import com.adapty.kmp.models.AdaptyCustomAsset
 import com.adapty.kmp.models.AdaptyError
 import kmpadapty.example.composeapp.generated.resources.Res
 import kmpadapty.example.composeapp.generated.resources.ic_home
 import kmpadapty.example.composeapp.generated.resources.ic_info
 import kmpadapty.example.composeapp.generated.resources.ic_shopping_cart
 import kmpadapty.example.composeapp.generated.resources.ic_star
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 @Preview
 fun App() {
@@ -144,6 +147,13 @@ fun App() {
                 modifier = Modifier.fillMaxSize().zIndex(2f),
                 showToastEvents = uiState.showOnboardingToastEvents,
                 flow = flow,
+                customAssets = remember {
+                    val demoVideoPath = Res.getUri("files/videos/demo_video.mp4")
+                    mapOf(
+                        "custom_video_mp4" to AdaptyCustomAsset.localVideoFile(path = demoVideoPath),
+                        "hero_video" to AdaptyCustomAsset.localVideoFile(path = demoVideoPath),
+                    )
+                },
                 onNavigateBack = {
                     appViewModel.onUiEvent(AppUiEvent.OnCloseNativePaywallView)
                 }
