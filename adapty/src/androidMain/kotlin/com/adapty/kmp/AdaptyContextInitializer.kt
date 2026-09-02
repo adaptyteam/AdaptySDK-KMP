@@ -5,7 +5,9 @@ package com.adapty.kmp
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import androidx.core.net.toUri
 import androidx.startup.Initializer
 import com.adapty.internal.crossplatform.CrossplatformHelper
 import com.adapty.kmp.internal.AdaptyKMPInternal
@@ -33,13 +35,15 @@ internal class AdaptyContextInitializer : Initializer<Unit>,
                 )
             },
             transformFileLocation = { fullPath ->
-                val prefix = "file:///android_asset/"
-                val relativePath = if (fullPath.startsWith(prefix)) {
-                    fullPath.substring(prefix.length)
-                } else {
-                    fullPath
+                val assetPrefix = "file:///android_asset/"
+                when {
+                    fullPath.startsWith(assetPrefix) ->
+                        FileLocation.fromAsset(fullPath.substring(assetPrefix.length))
+                    fullPath.startsWith("file://") -> FileLocation.fromFileUri(fullPath.toUri())
+                    fullPath.startsWith("/") ->
+                        FileLocation.fromFileUri(Uri.fromFile(java.io.File(fullPath)))
+                    else -> FileLocation.fromAsset(fullPath)
                 }
-                FileLocation.fromAsset(relativePath)
             }
         )
         crossplatformHelper.setActivity { currentActivity }
