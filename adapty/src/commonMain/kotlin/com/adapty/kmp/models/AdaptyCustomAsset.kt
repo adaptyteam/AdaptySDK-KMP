@@ -101,12 +101,17 @@ public sealed interface AdaptyCustomAsset {
     /**
      * Defines a color asset using a HEX color string.
      *
+     * The alpha channel comes **last**: use `#RRGGBB` or `#RRGGBBAA`, not `#AARRGGBB`.
+     * The value is sent to the native SDK verbatim, so an alpha-first string is not rejected —
+     * it is silently read as `RRGGBBAA` and renders the wrong color.
+     *
      * Example:
      * ```
-     * AdaptyCustomAsset.ColorAsset("#FFAA00")
+     * AdaptyCustomAsset.ColorAsset("#FFAA00")     // opaque orange
+     * AdaptyCustomAsset.ColorAsset("#FFAA0080")   // same orange at 50% alpha
      * ```
      *
-     * @param colorHex HEX color code (e.g., "#RRGGBB" or "#AARRGGBB").
+     * @param colorHex HEX color code, `#RRGGBB` or `#RRGGBBAA` (alpha last).
      */
     public data class ColorAsset(val colorHex: String) : AdaptyCustomAsset
 
@@ -122,7 +127,7 @@ public sealed interface AdaptyCustomAsset {
      * )
      * ```
      *
-     * @param colors list of HEX color strings (e.g., "#FF0000").
+     * @param colors list of HEX color strings, `#RRGGBB` or `#RRGGBBAA` (alpha last, e.g. "#FF0000").
      * @param stops optional list of color stops in the range 0.0–1.0.
      * @param startX gradient start X coordinate.
      * @param startY gradient start Y coordinate.
@@ -130,7 +135,7 @@ public sealed interface AdaptyCustomAsset {
      * @param endY gradient end Y coordinate.
      */
     public data class LinearGradientAsset(
-        val colors: List<String>,         // List of hex color strings, e.g., "#FF0000"
+        val colors: List<String>,         // Hex color strings, #RRGGBB or #RRGGBBAA (alpha last)
         val stops: List<Float>? = null, // optional stops (0.0 - 1.0)
         val startX: Float = 0f,
         val startY: Float = 0f,

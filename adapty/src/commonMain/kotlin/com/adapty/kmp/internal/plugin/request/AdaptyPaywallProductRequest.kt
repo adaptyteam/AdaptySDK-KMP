@@ -21,8 +21,8 @@ internal data class AdaptyPaywallProductRequest(
     @SerialName("paywall_product_index")
     val paywallProductIndex: Int,
 
-    @SerialName("subscription_offer_identifier")
-    val subscriptionOfferIdentifier: AdaptySubscriptionOfferIdentifierRequestResponse? = null,
+    @SerialName("subscription")
+    val subscription: AdaptyProductSubscriptionRequest? = null,
 
     @SerialName("paywall_variation_id")
     val paywallVariationId: String,
@@ -46,7 +46,7 @@ internal fun AdaptyPaywallProduct.asAdaptyPaywallProductRequest(): AdaptyPaywall
         vendorProductId = vendorProductId,
         adaptyProductId = adaptyProductId,
         paywallProductIndex = paywallProductIndex,
-        subscriptionOfferIdentifier = subscription?.offer?.offerIdentifier?.asAdaptySubscriptionOfferIdentifierRequest(),
+        subscription = subscription?.offer?.offerIdentifier?.asAdaptyProductSubscriptionRequest(),
         paywallVariationId = paywallVariationId,
         paywallABTestName = paywallABTestName,
         paywallName = paywallName,

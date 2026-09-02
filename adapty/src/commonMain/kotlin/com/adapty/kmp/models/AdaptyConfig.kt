@@ -23,6 +23,9 @@ import KMPAdapty.adapty.BuildConfig
  * outside Adapty (e.g., via your own billing logic). Default value is false
  * @property customerUserId Optional unique identifier for the current user in your system.
  * @property ipAddressCollectionDisabled Disables IP address collection if `true`. Default value is false.
+ * @property adaptyAttributionEnabled Enables Adapty Attribution (User Acquisition). Opt-in since 4.1.0 —
+ * installation details are not collected and [OnInstallationDetailsListener] does not fire unless
+ * this is `true`. Default value is false.
  * @property googleAdvertisingIdCollection Enables Google Advertising ID collection when `true`. Default value is false.
  * @property appleIdfaCollectionDisabled Disables IDFA collection (iOS only) if `true`. Default value is false.
  * @property backendProxyHost Custom proxy host (for internal use).
@@ -39,6 +42,7 @@ public class AdaptyConfig private constructor(
     internal val observerMode: Boolean,
     internal val customerUserId: String?,
     internal val ipAddressCollectionDisabled: Boolean,
+    internal val adaptyAttributionEnabled: Boolean,
     internal val googleAdvertisingIdCollection: Boolean,
     internal val googleEnablePendingPrepaidPlans: Boolean,
     internal val appleClearDataOnBackup: Boolean,
@@ -78,6 +82,7 @@ public class AdaptyConfig private constructor(
         private var customerUserId: String? = null
         private var observerMode = false
         private var ipAddressCollectionDisabled = false
+        private var adaptyAttributionEnabled = false
         private var googleAdvertisingIdCollection = false
         private var googleEnablePendingPrepaidPlans = false
         private var appleClearDataOnBackup = false
@@ -114,6 +119,15 @@ public class AdaptyConfig private constructor(
         /** Disables/Enables IP address collection. Default value is false. */
         public fun withIpAddressCollectionDisabled(disabled: Boolean): Builder =
             apply { this.ipAddressCollectionDisabled = disabled }
+
+        /**
+         * Enables Adapty Attribution (User Acquisition). Default value is false.
+         *
+         * Since 4.1.0 installation details are only collected when this is enabled, so
+         * [OnInstallationDetailsListener] will not fire until you turn it on.
+         */
+        public fun withAdaptyAttributionEnabled(enabled: Boolean): Builder =
+            apply { this.adaptyAttributionEnabled = enabled }
 
         /** Disables/Enables Google Advertising ID collection. Default value is false. */
         public fun withGoogleAdvertisingIdCollectionDisabled(disabled: Boolean): Builder =
@@ -176,6 +190,7 @@ public class AdaptyConfig private constructor(
                 appleClearDataOnBackup = appleClearDataOnBackup,
                 googleLocalAccessLevelAllowed = googleLocalAccessLevelAllowed,
                 ipAddressCollectionDisabled = ipAddressCollectionDisabled,
+                adaptyAttributionEnabled = adaptyAttributionEnabled,
                 backendProxyHost = backendProxyHost,
                 backendProxyPort = backendProxyPort,
                 serverCluster = serverCluster,

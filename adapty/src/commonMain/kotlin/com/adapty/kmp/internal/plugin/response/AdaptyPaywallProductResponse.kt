@@ -49,7 +49,7 @@ internal data class AdaptyPaywallProductResponse(
     val price: AdaptyPriceResponse,
 
     @SerialName("subscription")
-    val subscription: AdaptyPaywallProductSubscriptionResponse? = null,
+    val subscription: AdaptyProductSubscriptionResponse? = null,
 
     @SerialName("web_purchase_url")
     val webPurchaseUrl: String? = null,
@@ -73,7 +73,7 @@ internal fun AdaptyPaywallProductResponse.asAdaptyPaywallProduct(): AdaptyPaywal
         isFamilyShareable = isFamilyShareable ?: false,
         regionCode = regionCode,
         price = price.asAdaptyPrice(),
-        subscription = subscription?.asAdaptyPaywallProductSubscription(),
+        subscription = subscription?.asAdaptyProductSubscription(),
         webPurchaseUrl = webPurchaseUrl,
         payloadData = payloadData,
     )

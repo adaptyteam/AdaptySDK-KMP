@@ -30,6 +30,7 @@ internal actual fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
     viewId: String,
     locale: String?,
+    customLayoutId: String?,
     modifier: Modifier,
     customTags: Map<String, String>?,
     customTimers: Map<String, LocalDateTime>?,
@@ -51,6 +52,7 @@ internal actual fun AdaptyUIFlowPlatformView(
                     args = createFlowViewRequestJsonString(
                         flow = flow,
                         locale = locale,
+                        customLayoutId = customLayoutId,
                         customTags = customTags,
                         customTimers = customTimers,
                         customAssets = customAssets,

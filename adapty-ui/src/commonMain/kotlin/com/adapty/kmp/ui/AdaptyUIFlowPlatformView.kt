@@ -47,6 +47,7 @@ import kotlinx.datetime.LocalDateTime
 public fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
     locale: String? = null,
+    customLayoutId: String? = null,
     modifier: Modifier = Modifier,
     customTags: Map<String, String>? = null,
     customTimers: Map<String, LocalDateTime>? = null,
@@ -70,10 +71,11 @@ public fun AdaptyUIFlowPlatformView(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val setupArgs = remember(flow, locale, customTags, customTimers, customAssets, productPurchaseParams, androidEnableSafeArea) {
+    val setupArgs = remember(flow, locale, customLayoutId, customTags, customTimers, customAssets, productPurchaseParams, androidEnableSafeArea) {
         createFlowViewRequestJsonString(
             flow = flow,
             locale = locale,
+            customLayoutId = customLayoutId,
             customTags = customTags,
             customTimers = customTimers,
             customAssets = customAssets,
@@ -166,6 +168,7 @@ public fun AdaptyUIFlowPlatformView(
         flow = flow,
         viewId = viewId,
         locale = locale,
+        customLayoutId = customLayoutId,
         modifier = modifier,
         customTags = customTags,
         customTimers = customTimers,
@@ -180,6 +183,7 @@ internal expect fun AdaptyUIFlowPlatformView(
     flow: AdaptyFlow,
     viewId: String,
     locale: String? = null,
+    customLayoutId: String? = null,
     modifier: Modifier = Modifier,
     customTags: Map<String, String>? = null,
     customTimers: Map<String, LocalDateTime>? = null,

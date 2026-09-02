@@ -5,13 +5,16 @@ import com.adapty.kmp.internal.logger
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginEvent
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsFailEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsSuccessEventResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyDidReceivePromotedPurchaseResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyProfileUpdatedResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyError
 import com.adapty.kmp.internal.plugin.response.asAdaptyInstallationDetails
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
+import com.adapty.kmp.internal.plugin.response.asAdaptyPromotedProduct
 import com.adapty.kmp.internal.utils.decodeJsonString
 import com.adapty.kmp.models.AdaptyInstallationDetails
 import com.adapty.kmp.models.AdaptyProfile
+import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -35,6 +38,9 @@ public object AdaptyPluginEventHandler {
         Channel<AdaptyResult<AdaptyInstallationDetails>>(Channel.BUFFERED)
     internal val installationEventResultFlow = _installationEventResultFlow.receiveAsFlow()
 
+    private val promotedPurchaseChannelFlow = Channel<AdaptyPromotedProduct>(Channel.BUFFERED)
+    internal val promotedPurchaseFlow = promotedPurchaseChannelFlow.receiveAsFlow()
+
     private val viewEventChannelFlow = Channel<Pair<AdaptyPluginEvent, String>>(Channel.BUFFERED)
     internal val viewEventFlow = viewEventChannelFlow.receiveAsFlow()
 
@@ -46,6 +52,10 @@ public object AdaptyPluginEventHandler {
                 when (event) {
                     null -> logger.log("Event with name $eventName is not found in AdaptyPluginEvent enums")
                     AdaptyPluginEvent.DID_LOAD_LATEST_PROFILE -> onLoadLatestProfile(
+                        eventDataJsonString
+                    )
+
+                    AdaptyPluginEvent.DID_RECEIVE_PROMOTED_PURCHASE -> onDidReceivePromotedPurchase(
                         eventDataJsonString
                     )
 
@@ -73,6 +83,15 @@ public object AdaptyPluginEventHandler {
                 eventDataJsonString.decodeJsonString<AdaptyProfileUpdatedResponse>()?.profile?.asAdaptyProfile()
             profile?.let {
                 profileChannelFlow.send(profile)
+            }
+        }
+
+    private suspend fun onDidReceivePromotedPurchase(eventDataJsonString: String) =
+        withContext(defaultDispatcher) {
+            val product =
+                eventDataJsonString.decodeJsonString<AdaptyDidReceivePromotedPurchaseResponse>()?.product?.asAdaptyPromotedProduct()
+            product?.let {
+                promotedPurchaseChannelFlow.send(it)
             }
         }
 

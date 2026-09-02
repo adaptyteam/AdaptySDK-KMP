@@ -12,12 +12,17 @@ import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsFailEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsSuccessEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventOnStateUpdatedActionResponse
+import com.adapty.kmp.internal.plugin.response.AdaptyDidReceivePromotedPurchaseResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyProfileUpdatedResponse
 import com.adapty.kmp.internal.plugin.response.asAdaptyError
 import com.adapty.kmp.internal.plugin.response.asAdaptyInstallationDetails
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
+import com.adapty.kmp.internal.plugin.response.asAdaptyPromotedProduct
 import com.adapty.kmp.internal.utils.decodeJsonString
 import com.adapty.kmp.internal.utils.jsonInstance
+import com.adapty.kmp.internal.AdaptyImpl
+import com.adapty.kmp.models.AdaptyPromotedProduct
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import com.adapty.kmp.models.AdaptyError
@@ -1239,6 +1244,56 @@ class AdaptyEventsTest {
         assertEquals("google", accessLevel.store)
 
         assertEquals("test_value", profile.customAttributes["test_attribute"])
+    }
+
+    @Test
+    fun `promoted purchase arriving before registration is replayed on registration`() = runTest {
+        val adaptyImpl = AdaptyImpl(
+            adaptyPlugin = fakeAdaptyPlugin,
+            appMainScope = appMainScope
+        )
+        val received = mutableListOf<AdaptyPromotedProduct>()
+
+        // Event arrives while no listener is registered: it must be held, not dropped.
+        sendEventAndWait(
+            AdaptyPluginEvent.DID_RECEIVE_PROMOTED_PURCHASE,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.DID_RECEIVE_PROMOTED_PURCHASE
+            )
+        )
+        // AdaptyPluginEventHandler decodes on Dispatchers.Default, i.e. real background work that
+        // virtual time cannot drain. Wait for it for real, then let the collector (on the test
+        // dispatcher) run, so the event is genuinely processed while no listener exists.
+        testScheduler.advanceUntilIdle()
+        withContext(Dispatchers.Default) { kotlinx.coroutines.delay(500) }
+        testScheduler.advanceUntilIdle()
+        assertTrue(received.isEmpty(), "Nothing should be delivered before registration")
+
+        adaptyImpl.setOnPromotedPurchaseListener { product -> received.add(product) }
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(1, received.size, "Held promoted purchase should be replayed on registration")
+        assertEquals(AdaptyFakeTestData.PRODUCT_ID, received.single().vendorProductId)
+
+        // Replayed once only: registering again must not re-deliver it.
+        adaptyImpl.setOnPromotedPurchaseListener { product -> received.add(product) }
+        testScheduler.advanceUntilIdle()
+        assertEquals(1, received.size, "Held purchase should be delivered exactly once")
+    }
+
+    @Test
+    fun `did receive promoted purchase event - product is parsed correctly`() {
+        val response = AdaptyPluginResponseTemplate.getEventJsonString(
+            AdaptyPluginEvent.DID_RECEIVE_PROMOTED_PURCHASE
+        ).decodeJsonString<AdaptyDidReceivePromotedPurchaseResponse>()
+        assertNotNull(response, "Failed to parse promoted purchase event JSON")
+
+        val product = response.product.asAdaptyPromotedProduct()
+        assertEquals(AdaptyFakeTestData.PRODUCT_ID, product.vendorProductId)
+        assertEquals("Premium Monthly", product.localizedTitle)
+        assertEquals(true, product.isFamilyShareable)
+        assertEquals(9.99, product.price.amount)
+        assertEquals("intro_offer", product.subscription?.offer?.offerIdentifier?.id)
     }
 
     @Test

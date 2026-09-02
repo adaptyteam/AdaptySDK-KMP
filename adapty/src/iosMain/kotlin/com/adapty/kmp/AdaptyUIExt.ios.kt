@@ -33,6 +33,7 @@ public fun AdaptyUI.createNativeFlowView(
     flow: AdaptyFlow,
     observer: AdaptyUIFlowsEventsObserver,
     locale: String? = null,
+    customLayoutId: String? = null,
     customTags: Map<String, String>? = null,
     customTimers: Map<String, LocalDateTime>? = null,
     customAssets: Map<String, AdaptyCustomAsset>? = null,
@@ -42,6 +43,7 @@ public fun AdaptyUI.createNativeFlowView(
     val jsonString = createFlowViewRequestJsonString(
         flow = flow,
         locale = locale,
+        customLayoutId = customLayoutId,
         customTags = customTags,
         customTimers = customTimers,
         customAssets = customAssets,
