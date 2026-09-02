@@ -3,10 +3,10 @@ import com.adapty.kmp.isAndroidPlatform
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyLogShowFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
@@ -15,7 +15,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.toAdaptyCustomAttributesRequest
 import com.adapty.kmp.internal.utils.jsonInstance
@@ -169,58 +170,54 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `getPaywall method - verify request and response`() = runTest {
+    fun `getFlow method - verify request and response`() = runTest {
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.getPaywall(
+                adaptyImpl.getFlow(
                     placementId = AdaptyFakeTestData.PLACEMENT_ID,
-                    locale = AdaptyFakeTestData.LOCALE,
                     loadTimeout = 30.seconds,
                     fetchPolicy = AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad
                 )
             },
-            method = AdaptyPluginMethod.GET_PAYWALL,
-            param = AdaptyGetPaywallRequest(
+            method = AdaptyPluginMethod.GET_FLOW,
+            param = AdaptyGetFlowRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
-                locale = AdaptyFakeTestData.LOCALE,
                 loadTimeoutInSeconds = 30.0,
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
-            expectedSuccessData = AdaptyFakeTestData.getPaywall()
+            expectedSuccessData = AdaptyFakeTestData.getFlow()
         )
     }
 
     @Test
-    fun `getPaywallForDefaultAudience method - verify request and response`() = runTest {
+    fun `getFlowForDefaultAudience method - verify request and response`() = runTest {
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.getPaywallForDefaultAudience(
+                adaptyImpl.getFlowForDefaultAudience(
                     placementId = AdaptyFakeTestData.PLACEMENT_ID,
-                    locale = AdaptyFakeTestData.LOCALE,
                     fetchPolicy = AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad
                 )
             },
-            method = AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE,
-            param = AdaptyGetPaywallForDefaultAudienceRequest(
+            method = AdaptyPluginMethod.GET_FLOW_FOR_DEFAULT_AUDIENCE,
+            param = AdaptyGetFlowForDefaultAudienceRequest(
                 placementId = AdaptyFakeTestData.PLACEMENT_ID,
-                locale = AdaptyFakeTestData.LOCALE,
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
-            expectedSuccessData = AdaptyFakeTestData.getPaywall()
+            expectedSuccessData = AdaptyFakeTestData.getFlow()
         )
     }
 
     @Test
     fun `getPaywallProducts method - verify request and response`() = runTest {
-        val paywall = AdaptyFakeTestData.getPaywall()
+        val flow = AdaptyFakeTestData.getFlow()
         val paywallProductList = AdaptyFakeTestData.getPaywallProductList()
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.getPaywallProducts(paywall = paywall)
+                adaptyImpl.getPaywallProducts(flow = flow)
             },
             method = AdaptyPluginMethod.GET_PAYWALL_PRODUCTS,
-            param = AdaptyGetPaywallProductsRequest(paywall = paywall.asAdaptyPaywallRequest()),
+            param = AdaptyGetPaywallProductsRequest(flow = flow.asAdaptyFlowRequest()),
             expectedSuccessData = paywallProductList,
         )
     }
@@ -313,14 +310,14 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `logShowPaywall method - verify request and response`() = runTest {
-        val paywall = AdaptyFakeTestData.getPaywall()
+    fun `logShowFlow method - verify request and response`() = runTest {
+        val flow = AdaptyFakeTestData.getFlow()
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.logShowPaywall(paywall = paywall)
+                adaptyImpl.logShowFlow(flow = flow)
             },
-            method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
-            param = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest()),
+            method = AdaptyPluginMethod.LOG_SHOW_FLOW,
+            param = AdaptyLogShowFlowRequest(flow = flow.asAdaptyFlowRequest()),
             expectedSuccessData = Unit
         )
     }
@@ -404,31 +401,31 @@ class AdaptyImplTest {
 
     @Test
     fun `createWebPaywallUrl method - verify request and response`() = runTest {
-        val paywall = AdaptyFakeTestData.getPaywall()
+        val flowPaywall = AdaptyFakeTestData.getFlow().paywalls.first()
         val expectedUrl = "https://pay.adapty.io/test"
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.createWebPaywallUrl(paywall = paywall)
+                adaptyImpl.createWebPaywallUrl(flowPaywall = flowPaywall)
             },
             method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
-            param = AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest()),
+            param = AdaptyWebPaywallRequest.fromPaywall(flowPaywall.asAdaptyFlowPaywallRequest()),
             expectedSuccessData = expectedUrl,
         )
     }
 
     @Test
     fun `openWebPaywall method - verify request and response`() = runTest {
-        val paywall = AdaptyFakeTestData.getPaywall()
+        val flowPaywall = AdaptyFakeTestData.getFlow().paywalls.first()
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
                 adaptyImpl.openWebPaywall(
-                    paywall = paywall,
+                    flowPaywall = flowPaywall,
                     openIn = AdaptyWebPresentation.IN_APP_BROWSER
                 )
             },
             method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
             param = AdaptyWebPaywallRequest.fromPaywall(
-                paywall = paywall.asAdaptyPaywallRequest(),
+                paywall = flowPaywall.asAdaptyFlowPaywallRequest(),
                 webPresentationRequest = AdaptyWebPresentationRequest.IN_APP_BROWSER
             ),
             expectedSuccessData = Unit

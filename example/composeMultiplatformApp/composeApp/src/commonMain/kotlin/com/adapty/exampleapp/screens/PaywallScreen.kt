@@ -103,11 +103,11 @@ private fun PaywallsListScreen(
     LazyColumn(modifier = modifier) {
 
         items(uiState.savedPaywallIds.toList()) { id ->
-            val paywall = uiState.savedPaywalls[id]
+            val flow = uiState.savedPaywalls[id]
 
             ListSection(headerText = "Paywall Id: $id") {
                 when {
-                    paywall == null -> {
+                    flow == null -> {
                         ListTextTile(
                             title = "Status",
                             subtitle = "Error",
@@ -123,12 +123,12 @@ private fun PaywallsListScreen(
                         )
                         ListTextTile(
                             title = "Variation Id",
-                            subtitle = paywall.variationId
+                            subtitle = flow.variationId
                         )
                         ListTextTile(
                             title = "Has View",
-                            subtitle = paywall.hasViewConfiguration.toString(),
-                            subtitleColor = if (paywall.hasViewConfiguration) Color(0xFF32CD32) else Color.Red
+                            subtitle = "true",
+                            subtitleColor = Color(0xFF32CD32)
                         )
 
                         // Present Native View action
@@ -137,45 +137,43 @@ private fun PaywallsListScreen(
                             showProgress = uiState.isLoading,
                             onClick = {
                                 onUiEvent(
-                                    AppUiEvent.OnClickPresentPaywallNativeView(paywall = paywall)
+                                    AppUiEvent.OnClickPresentPaywallNativeView(flow = flow)
                                 )
                             }
                         )
 
-                        if (paywall.hasViewConfiguration) {
-                            ListActionTile(
-                                title = "Present Full Screen",
-                                onClick = {
-                                    onUiEvent(
-                                        AppUiEvent.CreateAndPresentPaywallView(
-                                            paywall = paywall,
-                                            loadProducts = false,
-                                            iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
-                                        )
+                        ListActionTile(
+                            title = "Present Full Screen",
+                            onClick = {
+                                onUiEvent(
+                                    AppUiEvent.CreateAndPresentPaywallView(
+                                        flow = flow,
+                                        loadProducts = false,
+                                        iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
                                     )
-                                }
-                            )
-                            ListActionTile(
-                                title = "Load Products and Present (FullScreen)",
-                                onClick = {
-                                    onUiEvent(
-                                        AppUiEvent.CreateAndPresentPaywallView(
-                                            paywall = paywall,
-                                            loadProducts = true,
-                                            iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
-                                        )
+                                )
+                            }
+                        )
+                        ListActionTile(
+                            title = "Load Products and Present (FullScreen)",
+                            onClick = {
+                                onUiEvent(
+                                    AppUiEvent.CreateAndPresentPaywallView(
+                                        flow = flow,
+                                        loadProducts = true,
+                                        iosPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
                                     )
-                                }
-                            )
-                        }
+                                )
+                            }
+                        )
 
-                        if (paywall.hasViewConfiguration && getPlatform() == Platform.Ios) {
+                        if (getPlatform() == Platform.Ios) {
                             ListActionTile(
                                 title = "Present Sheet",
                                 onClick = {
                                     onUiEvent(
                                         AppUiEvent.CreateAndPresentPaywallView(
-                                            paywall = paywall,
+                                            flow = flow,
                                             loadProducts = false,
                                             iosPresentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET
                                         )
@@ -187,7 +185,7 @@ private fun PaywallsListScreen(
                                 onClick = {
                                     onUiEvent(
                                         AppUiEvent.CreateAndPresentPaywallView(
-                                            paywall = paywall,
+                                            flow = flow,
                                             loadProducts = true,
                                             iosPresentationStyle = AdaptyUIIOSPresentationStyle.PAGESHEET
                                         )

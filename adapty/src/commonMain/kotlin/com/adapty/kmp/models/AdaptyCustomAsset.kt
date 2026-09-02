@@ -23,7 +23,7 @@ package com.adapty.kmp.models
  * - Display a local fallback image while a remote image is downloading.
  * - Show a preview image before playing a video.
  *
- * @see com.adapty.kmp.AdaptyUI.createPaywallView for passing custom assets
+ * @see com.adapty.kmp.AdaptyUI.createFlowView for passing custom assets
  */
 public sealed interface AdaptyCustomAsset {
 

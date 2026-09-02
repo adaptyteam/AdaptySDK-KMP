@@ -1,9 +1,14 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 import com.adapty.kmp.AdaptyUIOnboardingsEventsObserver
-import com.adapty.kmp.AdaptyUIPaywallsEventsObserver
+import com.adapty.kmp.AdaptyUIFlowsEventsObserver
+import com.adapty.kmp.AdaptyUIObserverModeResolver
+import com.adapty.kmp.AdaptyUISystemRequestsHandler
 import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginEvent
+import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsFailEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnInstallationDetailsSuccessEventResponse
 import com.adapty.kmp.internal.plugin.response.AdaptyOnboardingViewEventOnStateUpdatedActionResponse
@@ -13,6 +18,8 @@ import com.adapty.kmp.internal.plugin.response.asAdaptyInstallationDetails
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
 import com.adapty.kmp.internal.utils.decodeJsonString
 import com.adapty.kmp.internal.utils.jsonInstance
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyOnboardingsAnalyticsEvent
 import com.adapty.kmp.models.AdaptyOnboardingsAnalyticsEventOnboardingStarted
@@ -31,7 +38,10 @@ import com.adapty.kmp.models.AdaptyUIAction
 import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.AdaptyUIOnboardingMeta
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
+import com.adapty.kmp.models.AdaptyUIFlowView
+import com.adapty.kmp.models.AdaptyUIPermission
+import com.adapty.kmp.models.AdaptyUIPermissionResult
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,6 +58,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -61,14 +72,23 @@ class AdaptyEventsTest {
     private lateinit var appMainScope: CoroutineScope
 
     // Paywall captured state
-    private lateinit var capturedPaywallEvents: MutableList<String>
-    private var capturedPaywallView: AdaptyUIPaywallView? = null
+    private lateinit var capturedFlowEvents: MutableList<String>
+    private var capturedFlowView: AdaptyUIFlowView? = null
     private var capturedAction: AdaptyUIAction? = null
     private var capturedProduct: AdaptyPaywallProduct? = null
     private var capturedProfile: AdaptyProfile? = null
     private var capturedError: AdaptyError? = null
     private var capturedPurchaseResult: AdaptyPurchaseResult? = null
     private var capturedProductId: String? = null
+    private var capturedPermission: AdaptyUIPermission? = null
+    private var capturedPermissionView: AdaptyUIFlowView? = null
+    private var capturedAppReviewView: AdaptyUIFlowView? = null
+    private var capturedStartPurchase: (() -> Unit)? = null
+    private var capturedFinishPurchase: (() -> Unit)? = null
+    private var capturedStartRestore: (() -> Unit)? = null
+    private var capturedFinishRestore: (() -> Unit)? = null
+    private var capturedAnalyticName: String? = null
+    private var capturedAnalyticParams: String? = null
 
     // Onboarding captured state
     private lateinit var capturedOnboardingEvents: MutableList<String>
@@ -80,110 +100,121 @@ class AdaptyEventsTest {
     private var capturedStateParams: AdaptyOnboardingsStateUpdatedParams? = null
     private var capturedElementId: String? = null
 
-    private val paywallObserver = object : AdaptyUIPaywallsEventsObserver {
+    private val flowObserver = object : AdaptyUIFlowsEventsObserver {
 
         override val mainUiScope: CoroutineScope get() = TestScope()
 
-        override fun paywallViewDidPerformAction(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidPerformAction(
+            view: AdaptyUIFlowView,
             action: AdaptyUIAction
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedAction = action
-            capturedPaywallEvents.add("didPerformAction")
+            capturedFlowEvents.add("didPerformAction")
         }
 
-        override fun paywallViewDidAppear(view: AdaptyUIPaywallView) {
-            capturedPaywallView = view
-            capturedPaywallEvents.add("didAppear")
+        override fun flowViewDidAppear(view: AdaptyUIFlowView) {
+            capturedFlowView = view
+            capturedFlowEvents.add("didAppear")
         }
 
-        override fun paywallViewDidDisappear(view: AdaptyUIPaywallView) {
-            capturedPaywallView = view
-            capturedPaywallEvents.add("didDisappear")
+        override fun flowViewDidDisappear(view: AdaptyUIFlowView) {
+            capturedFlowView = view
+            capturedFlowEvents.add("didDisappear")
         }
 
-        override fun paywallViewDidSelectProduct(view: AdaptyUIPaywallView, productId: String) {
-            capturedPaywallView = view
+        override fun flowViewDidSelectProduct(view: AdaptyUIFlowView, productId: String) {
+            capturedFlowView = view
             capturedProductId = productId
-            capturedPaywallEvents.add("didSelectProduct")
+            capturedFlowEvents.add("didSelectProduct")
         }
 
-        override fun paywallViewDidStartPurchase(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidStartPurchase(
+            view: AdaptyUIFlowView,
             product: AdaptyPaywallProduct
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedProduct = product
-            capturedPaywallEvents.add("didStartPurchase")
+            capturedFlowEvents.add("didStartPurchase")
         }
 
-        override fun paywallViewDidFinishPurchase(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidFinishPurchase(
+            view: AdaptyUIFlowView,
             product: AdaptyPaywallProduct,
             purchaseResult: AdaptyPurchaseResult
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedProduct = product
             capturedPurchaseResult = purchaseResult
-            capturedPaywallEvents.add("didFinishPurchase")
+            capturedFlowEvents.add("didFinishPurchase")
         }
 
-        override fun paywallViewDidFailPurchase(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidFailPurchase(
+            view: AdaptyUIFlowView,
             product: AdaptyPaywallProduct,
             error: AdaptyError
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedProduct = product
             capturedError = error
-            capturedPaywallEvents.add("didFailPurchase")
+            capturedFlowEvents.add("didFailPurchase")
         }
 
-        override fun paywallViewDidStartRestore(view: AdaptyUIPaywallView) {
-            capturedPaywallView = view
-            capturedPaywallEvents.add("didStartRestore")
+        override fun flowViewDidStartRestore(view: AdaptyUIFlowView) {
+            capturedFlowView = view
+            capturedFlowEvents.add("didStartRestore")
         }
 
-        override fun paywallViewDidFinishRestore(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidFinishRestore(
+            view: AdaptyUIFlowView,
             profile: AdaptyProfile
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedProfile = profile
-            capturedPaywallEvents.add("didFinishRestore")
+            capturedFlowEvents.add("didFinishRestore")
         }
 
-        override fun paywallViewDidFailRestore(view: AdaptyUIPaywallView, error: AdaptyError) {
-            capturedPaywallView = view
+        override fun flowViewDidFailRestore(view: AdaptyUIFlowView, error: AdaptyError) {
+            capturedFlowView = view
             capturedError = error
-            capturedPaywallEvents.add("didFailRestore")
+            capturedFlowEvents.add("didFailRestore")
         }
 
-        override fun paywallViewDidFailRendering(view: AdaptyUIPaywallView, error: AdaptyError) {
-            capturedPaywallView = view
+        override fun flowViewDidReceiveError(view: AdaptyUIFlowView, error: AdaptyError) {
+            capturedFlowView = view
             capturedError = error
-            capturedPaywallEvents.add("didFailRendering")
+            capturedFlowEvents.add("didFailRendering")
         }
 
-        override fun paywallViewDidFailLoadingProducts(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidFailLoadingProducts(
+            view: AdaptyUIFlowView,
             error: AdaptyError
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedError = error
-            capturedPaywallEvents.add("didFailLoadingProducts")
+            capturedFlowEvents.add("didFailLoadingProducts")
         }
 
-        override fun paywallViewDidFinishWebPaymentNavigation(
-            view: AdaptyUIPaywallView,
+        override fun flowViewDidFinishWebPaymentNavigation(
+            view: AdaptyUIFlowView,
             product: AdaptyPaywallProduct?,
             error: AdaptyError?
         ) {
-            capturedPaywallView = view
+            capturedFlowView = view
             capturedProduct = product
             capturedError = error
-            capturedPaywallEvents.add("didFinishWebPaymentNavigation")
+            capturedFlowEvents.add("didFinishWebPaymentNavigation")
+        }
+
+        override fun flowViewDidReceiveAnalyticEvent(
+            view: AdaptyUIFlowView,
+            name: String,
+            paramsJsonString: String
+        ) {
+            capturedFlowView = view
+            capturedAnalyticName = name
+            capturedAnalyticParams = paramsJsonString
+            capturedFlowEvents.add("didReceiveAnalyticEvent")
         }
     }
 
@@ -272,8 +303,8 @@ class AdaptyEventsTest {
         Dispatchers.setMain(testDispatcher)
         fakeAdaptyPlugin = FakeAdaptyPlugin()
 
-        capturedPaywallEvents = mutableListOf()
-        capturedPaywallView = null
+        capturedFlowEvents = mutableListOf()
+        capturedFlowView = null
         capturedAction = null
         capturedProduct = null
         capturedProfile = null
@@ -289,6 +320,15 @@ class AdaptyEventsTest {
         capturedEvent = null
         capturedStateParams = null
         capturedElementId = null
+        capturedPermission = null
+        capturedPermissionView = null
+        capturedAppReviewView = null
+        capturedStartPurchase = null
+        capturedFinishPurchase = null
+        capturedStartRestore = null
+        capturedFinishRestore = null
+        capturedAnalyticName = null
+        capturedAnalyticParams = null
 
         appMainScope = CoroutineScope(testDispatcher + SupervisorJob())
         adaptyUIImpl = AdaptyUIImpl(
@@ -297,7 +337,7 @@ class AdaptyEventsTest {
             defaultDispatcher = testDispatcher,
             mainDispatcher = testDispatcher
         )
-        adaptyUIImpl.setPaywallsEventsObserver(paywallObserver)
+        adaptyUIImpl.setFlowsEventsObserver(flowObserver)
         adaptyUIImpl.setOnboardingsEventsObserver(onboardingObserver)
     }
 
@@ -308,14 +348,57 @@ class AdaptyEventsTest {
         Dispatchers.resetMain()
     }
 
+    private val observerModeResolver = object : AdaptyUIObserverModeResolver {
+        override fun observerModeDidInitiatePurchase(
+            view: AdaptyUIFlowView,
+            product: AdaptyPaywallProduct,
+            onStartPurchase: () -> Unit,
+            onFinishPurchase: () -> Unit
+        ) {
+            capturedFlowView = view
+            capturedProduct = product
+            capturedStartPurchase = onStartPurchase
+            capturedFinishPurchase = onFinishPurchase
+            capturedFlowEvents.add("observerDidInitiatePurchase")
+        }
+
+        override fun observerModeDidInitiateRestore(
+            view: AdaptyUIFlowView,
+            onStartRestore: () -> Unit,
+            onFinishRestore: () -> Unit
+        ) {
+            capturedFlowView = view
+            capturedStartRestore = onStartRestore
+            capturedFinishRestore = onFinishRestore
+            capturedFlowEvents.add("observerDidInitiateRestore")
+        }
+    }
+
+    private fun fakeSystemRequestsHandler(result: AdaptyUIPermissionResult) =
+        object : AdaptyUISystemRequestsHandler {
+            override suspend fun handlePermission(
+                view: AdaptyUIFlowView,
+                permission: AdaptyUIPermission,
+                customArgs: Map<String, String>?
+            ): AdaptyUIPermissionResult {
+                capturedPermissionView = view
+                capturedPermission = permission
+                return result
+            }
+
+            override suspend fun handleAppReviewRequest(view: AdaptyUIFlowView) {
+                capturedAppReviewView = view
+            }
+        }
+
     private suspend fun sendEventAndWait(event: AdaptyPluginEvent, json: String) {
         AdaptyPluginEventHandler.onNewEvent(event.eventName, json)
         delay(200)
     }
 
-    private fun assertPaywallViewId(expectedViewId: String = AdaptyFakeTestData.EVENT_VIEW_ID) {
-        assertNotNull(capturedPaywallView)
-        assertEquals(expectedViewId, capturedPaywallView!!.id)
+    private fun assertFlowViewId(expectedViewId: String = AdaptyFakeTestData.EVENT_VIEW_ID) {
+        assertNotNull(capturedFlowView)
+        assertEquals(expectedViewId, capturedFlowView!!.id)
     }
 
     private fun assertOnboardingViewId(expectedViewId: String = AdaptyFakeTestData.EVENT_VIEW_ID) {
@@ -336,32 +419,32 @@ class AdaptyEventsTest {
     // =========================================================================
 
     @Test
-    fun `paywall view did perform action - close`() = runTest(testDispatcher) {
+    fun `flow view did perform action - close`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
                 mapOf("action_type" to "close")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didPerformAction"))
+        assertFlowViewId()
         assertIs<AdaptyUIAction.CloseAction>(capturedAction)
     }
 
     @Test
-    fun `paywall view did perform action - open url`() = runTest(testDispatcher) {
+    fun `flow view did perform action - open url`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
                 mapOf("action_type" to "open_url", "action_value" to "https://example.com", "action_open_in" to "browser_out_app")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didPerformAction"))
+        assertFlowViewId()
         val action = capturedAction
         assertIs<AdaptyUIAction.OpenUrlAction>(action)
         assertEquals("https://example.com", action.url)
@@ -369,17 +452,17 @@ class AdaptyEventsTest {
     }
 
     @Test
-    fun `paywall view did perform action - open url in app browser`() = runTest(testDispatcher) {
+    fun `flow view did perform action - open url in app browser`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
                 mapOf("action_type" to "open_url", "action_value" to "https://example.com", "action_open_in" to "browser_in_app")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didPerformAction"))
+        assertFlowViewId()
         val action = capturedAction
         assertIs<AdaptyUIAction.OpenUrlAction>(action)
         assertEquals("https://example.com", action.url)
@@ -387,17 +470,17 @@ class AdaptyEventsTest {
     }
 
     @Test
-    fun `paywall view did perform action - open url without open_in defaults to external browser`() = runTest(testDispatcher) {
+    fun `flow view did perform action - open url without open_in defaults to external browser`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
                 mapOf("action_type" to "open_url", "action_value" to "https://example.com")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didPerformAction"))
+        assertFlowViewId()
         val action = capturedAction
         assertIs<AdaptyUIAction.OpenUrlAction>(action)
         assertEquals("https://example.com", action.url)
@@ -405,237 +488,506 @@ class AdaptyEventsTest {
     }
 
     @Test
-    fun `paywall view did perform action - custom`() = runTest(testDispatcher) {
+    fun `flow view did perform action - custom`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
                 mapOf("action_type" to "custom", "action_value" to "my_custom_action")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didPerformAction"))
+        assertFlowViewId()
         val action = capturedAction
         assertIs<AdaptyUIAction.CustomAction>(action)
         assertEquals("my_custom_action", action.action)
     }
 
     @Test
-    fun `paywall view did appear`() = runTest(testDispatcher) {
+    fun `flow view did appear`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_APPEAR,
-            AdaptyPluginResponseTemplate.getEventJsonString(AdaptyPluginEvent.PAYWALL_VIEW_DID_APPEAR)
+            AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+            AdaptyPluginResponseTemplate.getEventJsonString(AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR)
         )
 
-        assertTrue(capturedPaywallEvents.contains("didAppear"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didAppear"))
+        assertFlowViewId()
     }
 
     @Test
-    fun `paywall view did disappear`() = runTest(testDispatcher) {
+    fun `flow view did disappear`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR,
-            AdaptyPluginResponseTemplate.getEventJsonString(AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR)
+            AdaptyPluginEvent.FLOW_VIEW_DID_DISAPPEAR,
+            AdaptyPluginResponseTemplate.getEventJsonString(AdaptyPluginEvent.FLOW_VIEW_DID_DISAPPEAR)
         )
 
-        assertTrue(capturedPaywallEvents.contains("didDisappear"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didDisappear"))
+        assertFlowViewId()
     }
 
     @Test
-    fun `paywall view did perform system back action`() = runTest(testDispatcher) {
+    fun `flow view did select product`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_SYSTEM_BACK_ACTION,
+            AdaptyPluginEvent.FLOW_VIEW_DID_SELECT_PRODUCT,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_SYSTEM_BACK_ACTION
+                AdaptyPluginEvent.FLOW_VIEW_DID_SELECT_PRODUCT
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didPerformAction"))
-        assertPaywallViewId()
-        assertIs<AdaptyUIAction.AndroidSystemBackAction>(capturedAction)
-    }
-
-    @Test
-    fun `paywall view did select product`() = runTest(testDispatcher) {
-        sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_SELECT_PRODUCT,
-            AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_SELECT_PRODUCT
-            )
-        )
-
-        assertTrue(capturedPaywallEvents.contains("didSelectProduct"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didSelectProduct"))
+        assertFlowViewId()
         assertEquals(AdaptyFakeTestData.PRODUCT_ID, capturedProductId)
     }
 
     @Test
-    fun `paywall view did start purchase`() = runTest(testDispatcher) {
+    fun `flow view did start purchase`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_START_PURCHASE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_START_PURCHASE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_START_PURCHASE
+                AdaptyPluginEvent.FLOW_VIEW_DID_START_PURCHASE
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didStartPurchase"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didStartPurchase"))
+        assertFlowViewId()
         assertNotNull(capturedProduct)
         assertEquals(AdaptyFakeTestData.PRODUCT_ID, capturedProduct!!.vendorProductId)
     }
 
     @Test
-    fun `paywall view did finish purchase - success`() = runTest(testDispatcher) {
+    fun `flow view did finish purchase - success`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_PURCHASE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE,
+                AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_PURCHASE,
                 mapOf("purchase_type" to "success")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFinishPurchase"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFinishPurchase"))
+        assertFlowViewId()
         assertNotNull(capturedProduct)
         assertIs<AdaptyPurchaseResult.Success>(capturedPurchaseResult)
     }
 
     @Test
-    fun `paywall view did finish purchase - cancelled`() = runTest(testDispatcher) {
+    fun `flow view did finish purchase - cancelled`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_PURCHASE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE,
+                AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_PURCHASE,
                 mapOf("purchase_type" to "user_cancelled")
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFinishPurchase"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFinishPurchase"))
+        assertFlowViewId()
         assertIs<AdaptyPurchaseResult.UserCanceled>(capturedPurchaseResult)
     }
 
     @Test
-    fun `paywall view did fail purchase`() = runTest(testDispatcher) {
+    fun `flow view did fail purchase`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_PURCHASE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_PURCHASE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_PURCHASE
+                AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_PURCHASE
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFailPurchase"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFailPurchase"))
+        assertFlowViewId()
         assertNotNull(capturedProduct)
         assertNotNull(capturedError)
         assertEquals("Test error message", capturedError!!.message)
     }
 
     @Test
-    fun `paywall view did start restore`() = runTest(testDispatcher) {
+    fun `flow view did start restore`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_START_RESTORE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_START_RESTORE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_START_RESTORE
+                AdaptyPluginEvent.FLOW_VIEW_DID_START_RESTORE
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didStartRestore"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didStartRestore"))
+        assertFlowViewId()
     }
 
     @Test
-    fun `paywall view did finish restore`() = runTest(testDispatcher) {
+    fun `flow view did finish restore`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_RESTORE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_RESTORE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_RESTORE
+                AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_RESTORE
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFinishRestore"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFinishRestore"))
+        assertFlowViewId()
         assertNotNull(capturedProfile)
         assertEquals("1", capturedProfile!!.profileId)
     }
 
     @Test
-    fun `paywall view did fail restore`() = runTest(testDispatcher) {
+    fun `flow view did fail restore`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RESTORE,
+            AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_RESTORE,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RESTORE
+                AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_RESTORE
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFailRestore"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFailRestore"))
+        assertFlowViewId()
         assertNotNull(capturedError)
         assertEquals("Test error message", capturedError!!.message)
     }
 
     @Test
-    fun `paywall view did fail rendering`() = runTest(testDispatcher) {
+    fun `flow view did fail rendering`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RENDERING,
+            AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ERROR,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RENDERING
+                AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ERROR
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFailRendering"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFailRendering"))
+        assertFlowViewId()
         assertNotNull(capturedError)
     }
 
     @Test
-    fun `paywall view did fail loading products`() = runTest(testDispatcher) {
+    fun `flow view did fail loading products`() = runTest(testDispatcher) {
         sendEventAndWait(
-            AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_LOADING_PRODUCTS,
+            AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_LOADING_PRODUCTS,
             AdaptyPluginResponseTemplate.getEventJsonString(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_LOADING_PRODUCTS
+                AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_LOADING_PRODUCTS
             )
         )
 
-        assertTrue(capturedPaywallEvents.contains("didFailLoadingProducts"))
-        assertPaywallViewId()
+        assertTrue(capturedFlowEvents.contains("didFailLoadingProducts"))
+        assertFlowViewId()
         assertNotNull(capturedError)
     }
 
     @Test
-    fun `paywall view did finish web payment navigation - with product and error`() =
+    fun `flow view did finish web payment navigation - with product and error`() =
         runTest(testDispatcher) {
             sendEventAndWait(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
                 AdaptyPluginResponseTemplate.getEventJsonString(
-                    AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
+                    AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
                     mapOf("include_product" to true, "include_error" to true)
                 )
             )
 
-            assertTrue(capturedPaywallEvents.contains("didFinishWebPaymentNavigation"))
-            assertPaywallViewId()
+            assertTrue(capturedFlowEvents.contains("didFinishWebPaymentNavigation"))
+            assertFlowViewId()
             assertNotNull(capturedProduct)
             assertNotNull(capturedError)
         }
 
     @Test
-    fun `paywall view did finish web payment navigation - no product no error`() =
+    fun `flow view did finish web payment navigation - no product no error`() =
         runTest(testDispatcher) {
             sendEventAndWait(
-                AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
+                AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
                 AdaptyPluginResponseTemplate.getEventJsonString(
-                    AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
+                    AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION,
                     mapOf("include_product" to false, "include_error" to false)
                 )
             )
 
-            assertTrue(capturedPaywallEvents.contains("didFinishWebPaymentNavigation"))
-            assertPaywallViewId()
+            assertTrue(capturedFlowEvents.contains("didFinishWebPaymentNavigation"))
+            assertFlowViewId()
             assertNull(capturedProduct)
             assertNull(capturedError)
+        }
+
+    @Test
+    fun `system requests handler receives permission and answers the plugin`() =
+        runTest(testDispatcher) {
+            fakeAdaptyPlugin.simulateSuccessResponse()
+            adaptyUIImpl.setSystemRequestsHandler(
+                fakeSystemRequestsHandler(AdaptyUIPermissionResult.granted("authorized"))
+            )
+
+            sendEventAndWait(
+                AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                AdaptyPluginResponseTemplate.getEventJsonString(
+                    AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                    mapOf("permission" to "camera", "event_id" to "perm_event_42")
+                )
+            )
+
+            assertEquals(AdaptyUIPermission.CAMERA, capturedPermission)
+            assertEquals(AdaptyFakeTestData.EVENT_VIEW_ID, capturedPermissionView?.id)
+            assertEquals(
+                AdaptyPluginMethod.FLOW_VIEW_DID_ANSWER_PERMISSION.methodName,
+                fakeAdaptyPlugin.capturedRequestMethodName
+            )
+            val request =
+                jsonInstance.parseToJsonElement(fakeAdaptyPlugin.capturedRequestJsonString!!).jsonObject
+            assertEquals("perm_event_42", request["event_id"]!!.jsonPrimitive.content)
+            assertEquals("granted", request["status"]!!.jsonPrimitive.content)
+            assertEquals("authorized", request["detail"]!!.jsonPrimitive.content)
+        }
+
+    @Test
+    fun `system requests handler denial is sent to the plugin`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        adaptyUIImpl.setSystemRequestsHandler(
+            fakeSystemRequestsHandler(AdaptyUIPermissionResult.denied("user declined"))
+        )
+
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                mapOf("permission" to "push")
+            )
+        )
+
+        val request =
+            jsonInstance.parseToJsonElement(fakeAdaptyPlugin.capturedRequestJsonString!!).jsonObject
+        assertEquals("denied", request["status"]!!.jsonPrimitive.content)
+        assertEquals("user declined", request["detail"]!!.jsonPrimitive.content)
+    }
+
+    @Test
+    fun `unknown permission id reaches the handler verbatim`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        adaptyUIImpl.setSystemRequestsHandler(
+            fakeSystemRequestsHandler(AdaptyUIPermissionResult.granted())
+        )
+
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                mapOf("permission" to "sms")
+            )
+        )
+
+        assertEquals(AdaptyUIPermission("sms"), capturedPermission)
+        assertEquals("sms", capturedPermission?.value)
+    }
+
+    @Test
+    fun `permission with no registered handler sends no answer`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                mapOf("permission" to "push")
+            )
+        )
+
+        // Native keeps the request pending and resolves it as denied at teardown; the SDK must not
+        // fabricate an answer.
+        assertNull(fakeAdaptyPlugin.capturedRequestMethodName)
+    }
+
+    @Test
+    fun `suspended permission handler does not stall other events`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        val permissionGate = CompletableDeferred<AdaptyUIPermissionResult>()
+        adaptyUIImpl.setSystemRequestsHandler(object : AdaptyUISystemRequestsHandler {
+            override suspend fun handlePermission(
+                view: AdaptyUIFlowView,
+                permission: AdaptyUIPermission,
+                customArgs: Map<String, String>?
+            ): AdaptyUIPermissionResult = permissionGate.await()
+        })
+
+        // Leaves the handler awaiting, as an OS prompt would.
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION,
+                mapOf("permission" to "push")
+            )
+        )
+
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+            AdaptyPluginResponseTemplate.getEventJsonString(AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR)
+        )
+
+        // One loop dispatches every view's events; it must not be blocked by a pending request.
+        assertTrue(
+            capturedFlowEvents.contains("didAppear"),
+            "events must not queue behind a pending permission request"
+        )
+
+        permissionGate.complete(AdaptyUIPermissionResult.granted())
+        delay(200)
+        assertEquals(
+            AdaptyPluginMethod.FLOW_VIEW_DID_ANSWER_PERMISSION.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
+    }
+
+    @Test
+    fun `system requests handler receives app review request`() = runTest(testDispatcher) {
+        adaptyUIImpl.setSystemRequestsHandler(
+            fakeSystemRequestsHandler(AdaptyUIPermissionResult.denied())
+        )
+
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_REQUEST_APP_REVIEW,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_REQUEST_APP_REVIEW
+            )
+        )
+
+        assertEquals(AdaptyFakeTestData.EVENT_VIEW_ID, capturedAppReviewView?.id)
+    }
+
+    @Test
+    fun `flow view observer did initiate purchase`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        adaptyUIImpl.setObserverModeResolver(observerModeResolver)
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE
+            )
+        )
+
+        assertTrue(capturedFlowEvents.contains("observerDidInitiatePurchase"))
+        assertFlowViewId()
+        assertNotNull(capturedProduct)
+        assertNotNull(capturedStartPurchase)
+
+        capturedStartPurchase!!()
+        delay(200)
+        assertEquals(
+            AdaptyPluginMethod.OBSERVER_PURCHASE_DID_START.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
+
+        capturedFinishPurchase!!()
+        delay(200)
+        assertEquals(
+            AdaptyPluginMethod.OBSERVER_PURCHASE_DID_FINISH.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
+    }
+
+    @Test
+    fun `flow view observer did initiate restore`() = runTest(testDispatcher) {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        adaptyUIImpl.setObserverModeResolver(observerModeResolver)
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_RESTORE,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_RESTORE
+            )
+        )
+
+        assertTrue(capturedFlowEvents.contains("observerDidInitiateRestore"))
+        assertFlowViewId()
+        assertNotNull(capturedStartRestore)
+
+        capturedStartRestore!!()
+        delay(200)
+        assertEquals(
+            AdaptyPluginMethod.OBSERVER_RESTORE_DID_START.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
+
+        capturedFinishRestore!!()
+        delay(200)
+        assertEquals(
+            AdaptyPluginMethod.OBSERVER_RESTORE_DID_FINISH.methodName,
+            fakeAdaptyPlugin.capturedRequestMethodName
+        )
+    }
+
+    @Test
+    fun `observer-mode purchase with no registered resolver does nothing`() =
+        runTest(testDispatcher) {
+            fakeAdaptyPlugin.simulateSuccessResponse()
+
+            sendEventAndWait(
+                AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE,
+                AdaptyPluginResponseTemplate.getEventJsonString(
+                    AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE
+                )
+            )
+
+            assertTrue(capturedFlowEvents.isEmpty())
+            assertNull(fakeAdaptyPlugin.capturedRequestMethodName)
+        }
+
+    @Test
+    fun `flow view did receive analytic event`() = runTest(testDispatcher) {
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ANALYTIC_EVENT,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ANALYTIC_EVENT,
+                mapOf("name" to "flow_shown")
+            )
+        )
+
+        assertTrue(capturedFlowEvents.contains("didReceiveAnalyticEvent"))
+        assertFlowViewId()
+        assertEquals("flow_shown", capturedAnalyticName)
+        assertNotNull(capturedAnalyticParams)
+    }
+
+    @Test
+    fun `each native view of the same flow gets its own id`() {
+        val flow = AdaptyFakeTestData.getFlow()
+
+        val first = flow.createNativePlatformViewId()
+        val second = flow.createNativePlatformViewId()
+
+        // Two embeds of one flow must not share an id: the id keys the per-view observer map, so a
+        // shared id would make the second view evict the first one's observer.
+        assertNotEquals(first, second)
+        assertTrue(first.startsWith("compose_native_flow_${flow.instanceIdentity}"))
+        assertTrue(second.startsWith("compose_native_flow_${flow.instanceIdentity}"))
+    }
+
+    @Test
+    fun `per-view observers for the same flow both receive their own events`() =
+        runTest(testDispatcher) {
+            val flow = AdaptyFakeTestData.getFlow()
+            val firstViewId = flow.createNativePlatformViewId()
+            val secondViewId = flow.createNativePlatformViewId()
+            val firstEvents = mutableListOf<String>()
+            val secondEvents = mutableListOf<String>()
+
+            fun observer(sink: MutableList<String>) = object : AdaptyUIFlowsEventsObserver {
+                override val mainUiScope: CoroutineScope get() = TestScope()
+                override fun flowViewDidAppear(view: AdaptyUIFlowView) {
+                    sink.add(view.id)
+                }
+            }
+            adaptyUIImpl.registerFlowEventsListener(observer(firstEvents), firstViewId)
+            adaptyUIImpl.registerFlowEventsListener(observer(secondEvents), secondViewId)
+
+            sendEventAndWait(
+                AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+                AdaptyPluginResponseTemplate.getEventJsonString(
+                    AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR,
+                    mapOf("view_id" to secondViewId)
+                )
+            )
+
+            // The event targets the second view only; registering it must not have evicted the first.
+            assertEquals(listOf(secondViewId), secondEvents)
+            assertTrue(firstEvents.isEmpty(), "first view's observer must not receive another view's event")
+
+            adaptyUIImpl.unregisterFlowEventsListener(firstViewId)
+            adaptyUIImpl.unregisterFlowEventsListener(secondViewId)
         }
 
     // =========================================================================

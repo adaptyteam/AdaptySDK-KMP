@@ -1,11 +1,12 @@
 @file:OptIn(InternalAdaptyApi::class)
-@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "DEPRECATION")
 
 package com.adapty.kmp.ui
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +25,7 @@ import com.adapty.ui.onboardings.AdaptyOnboardingView
 @Composable
 internal actual fun AdaptyUIOnboardingPlatformView(
     onboarding: AdaptyOnboarding,
+    viewId: String,
     externalUrlsPresentation: AdaptyWebPresentation,
     modifier: Modifier,
 ) {
@@ -31,24 +33,26 @@ internal actual fun AdaptyUIOnboardingPlatformView(
     val context = LocalContext.current
     val onboardingUiManager: OnboardingUiManager? by safeInject<OnboardingUiManager>()
 
-    val onboardingView = remember {
-        AdaptyOnboardingView(context).apply {
-            onboardingUiManager?.setupOnboardingView(
-                onboardingView = this,
-                viewModelStoreOwner = viewModelStoreOwner,
-                args = createOnboardingViewRequestJsonString(
-                    onboarding = onboarding,
-                    externalUrlsPresentation = externalUrlsPresentation
-                ),
-                id = onboarding.idForNativePlatformView
-            )
+    key(viewId) {
+        val onboardingView = remember {
+            AdaptyOnboardingView(context).apply {
+                onboardingUiManager?.setupOnboardingView(
+                    onboardingView = this,
+                    viewModelStoreOwner = viewModelStoreOwner,
+                    args = createOnboardingViewRequestJsonString(
+                        onboarding = onboarding,
+                        externalUrlsPresentation = externalUrlsPresentation
+                    ),
+                    id = viewId
+                )
+            }
         }
-    }
 
-    AndroidView(modifier = modifier, factory = { onboardingView })
-    DisposableEffect(Unit) {
-        onDispose {
-            onboardingUiManager?.clearOnboardingView(onboardingView)
+        AndroidView(modifier = modifier, factory = { onboardingView })
+        DisposableEffect(Unit) {
+            onDispose {
+                onboardingUiManager?.clearOnboardingView(onboardingView)
+            }
         }
     }
 }

@@ -1,5 +1,13 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductReferenceRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyPlacementRequestResponse
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlow
+import com.adapty.kmp.internal.plugin.response.AdaptyRemoteConfigResponse
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductReference
 import com.adapty.kmp.models.AdaptyPaywallProductSubscription
@@ -18,7 +26,7 @@ import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
+import com.adapty.kmp.models.AdaptyUIFlowView
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -97,56 +105,59 @@ internal object AdaptyFakeTestData {
         )
     }
 
-    fun getPaywall(): AdaptyPaywall {
-        return AdaptyPaywall(
-            placement = AdaptyPlacement(
-                id = "123",
-                audienceName = "testAudience",
-                abTestName = "test",
-                revision = 1,
-                placementAudienceVersionId = "test"
-            ),
-            instanceIdentity = "456",
-            name = "testPaywall",
+    internal fun getFlowRequestResponse(): AdaptyFlowRequestResponse {
+        val placement = AdaptyPlacementRequestResponse(
+            developerId = "123",
+            audienceName = "testAudience",
+            revision = 1,
+            abTestName = "test",
+            placementAudienceVersionId = "test",
+            isTrackingPurchases = false,
+        )
+        val remoteConfigJson = buildJsonObject {
+            put("stringKey", "testString")
+            put("intKey", 123)
+            put("doubleKey", 123.0)
+            put("booleanKey", true)
+            put("objectKey", buildJsonObject {
+                put("stringKey", "testString")
+            })
+        }.toString()
+        val productRef = AdaptyPaywallProductReferenceRequestResponse(
+            vendorProductId = "1",
+            adaptyProductId = "1",
+            productType = "productType",
+            accessLevelId = "accessLevelId",
+            promotionalOfferId = "promotionalOfferId - #3",
+            winBackOfferId = "winBackOfferId -#2",
+            basePlanId = "basePlanId - #4",
+            offerId = "offerId - #5",
+        )
+        return AdaptyFlowRequestResponse(
+            placement = placement,
+            flowId = "456",
+            flowName = "testPaywall",
             variationId = "1",
-            products = listOf(
-                AdaptyPaywallProductReference(
-                    vendorId = "1",
-                    adaptyProductId = "1",
-                    promotionalOfferId = "promotionalOfferId - #3",
-                    winBackOfferId = "winBackOfferId -#2",
-                    basePlanId = "basePlanId - #4",
-                    offerId = "offerId - #5",
-                    productType = "productType",
-                    accessLevelId = "accessLevelId"
-                )
+            remoteConfigs = listOf(
+                AdaptyRemoteConfigResponse(locale = "en", jsonString = remoteConfigJson)
             ),
-            remoteConfig = AdaptyRemoteConfig(
-                dataJsonString = buildJsonObject {
-                    put("stringKey", "testString")
-                    put("intKey", 123)
-                    put("doubleKey", 123.0)
-                    put("booleanKey", true)
-                    put("objectKey", buildJsonObject {
-                        put("stringKey", "testString")
-                    })
-                }.toString(),
-                locale = "en",
-                dataMap = mapOf(
-                    "stringKey" to "testString",
-                    "intKey" to 123,
-                    "doubleKey" to 123.0,
-                    "booleanKey" to true,
-                    "objectKey" to mapOf(
-                        "stringKey" to "testString"
-                    )
+            flowVersionId = null,
+            variations = listOf(
+                AdaptyFlowPaywallRequestResponse(
+                    placement = placement,
+                    paywallId = "456",
+                    paywallName = "testPaywall",
+                    variationId = "1",
+                    products = listOf(productRef),
+                    webPurchaseUrl = null,
                 )
             ),
             payloadData = "testPayloadData",
-            requestLocale = "en",
-            webPurchaseUrl = null
+            responseCreatedAt = 0L,
         )
     }
+
+    fun getFlow(): AdaptyFlow = getFlowRequestResponse().asAdaptyFlow()
 
 
     fun getPaywallProductList(): List<AdaptyPaywallProduct> {
@@ -236,11 +247,12 @@ internal object AdaptyFakeTestData {
         )
     }
 
-    fun getUIPaywallView(): AdaptyUIPaywallView {
-        return AdaptyUIPaywallView(
+    fun getUIFlowView(): AdaptyUIFlowView {
+        return AdaptyUIFlowView(
             id = VIEW_ID,
             placementId = PLACEMENT_ID,
-            variationId = VARIATION_ID
+            variationId = VARIATION_ID,
+            locale = LOCALE
         )
     }
 

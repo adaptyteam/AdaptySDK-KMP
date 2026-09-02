@@ -1,9 +1,14 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginEvent
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
 import com.adapty.kmp.models.AdaptyError
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductSubscription
 import com.adapty.kmp.models.AdaptyPeriodUnit
@@ -19,7 +24,7 @@ import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
+import com.adapty.kmp.models.AdaptyUIFlowView
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -40,7 +45,7 @@ object AdaptyPluginResponseTemplate {
             AdaptyPluginMethod.RESTORE_PURCHASES -> getSuccessProfileResponse(successData as AdaptyProfile)
             AdaptyPluginMethod.LOGOUT -> genericSuccessResponse()
             AdaptyPluginMethod.SET_INTEGRATION_IDENTIFIER -> genericSuccessResponse()
-            AdaptyPluginMethod.GET_PAYWALL -> getSuccessPaywallResponse(successData as AdaptyPaywall)
+            AdaptyPluginMethod.GET_FLOW -> getSuccessFlowResponse(successData as AdaptyFlow)
             AdaptyPluginMethod.GET_PAYWALL_PRODUCTS -> {
                 @Suppress("UNCHECKED_CAST")
                 getSuccessPaywallProductsResponse(successData as List<AdaptyPaywallProduct>)
@@ -49,9 +54,9 @@ object AdaptyPluginResponseTemplate {
             AdaptyPluginMethod.MAKE_PURCHASE -> getSuccessPurchaseResultResponse(successData as AdaptyPurchaseResult)
             AdaptyPluginMethod.REPORT_TRANSACTION -> genericSuccessResponse()
             AdaptyPluginMethod.SET_FALLBACK -> genericSuccessResponse()
-            AdaptyPluginMethod.LOG_SHOW_PAYWALL -> genericSuccessResponse()
-            AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getSuccessPaywallResponse(
-                successData as AdaptyPaywall
+            AdaptyPluginMethod.LOG_SHOW_FLOW -> genericSuccessResponse()
+            AdaptyPluginMethod.GET_FLOW_FOR_DEFAULT_AUDIENCE -> getSuccessFlowResponse(
+                successData as AdaptyFlow
             )
 
             AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getSuccessInstallationStatusResponse()
@@ -68,9 +73,9 @@ object AdaptyPluginResponseTemplate {
             AdaptyPluginMethod.OPEN_WEB_PAYWALL -> genericSuccessResponse()
 
             // UI methods
-            AdaptyPluginMethod.CREATE_PAYWALL_VIEW -> getSuccessPaywallViewResponse(successData as AdaptyUIPaywallView)
-            AdaptyPluginMethod.PRESENT_PAYWALL_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_PAYWALL_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.CREATE_FLOW_VIEW -> getSuccessFlowViewResponse(successData as AdaptyUIFlowView)
+            AdaptyPluginMethod.PRESENT_FLOW_VIEW -> genericSuccessResponse()
+            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessUnitResponse()
             AdaptyPluginMethod.SHOW_DIALOG -> getSuccessDialogActionTypeResponse(successData as AdaptyUIDialogActionType)
             AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getSuccessOnboardingViewResponse(successData as AdaptyUIOnboardingView)
             AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW -> genericSuccessResponse()
@@ -201,56 +206,12 @@ object AdaptyPluginResponseTemplate {
         put("is_test_user", adaptyProfile.isTestUser)
     }
 
-    private fun getSuccessPaywallResponse(adaptyPaywall: AdaptyPaywall): String {
-
-        val productsJsonArray = buildJsonArray {
-            adaptyPaywall.products.forEach { product ->
-                add(buildJsonObject {
-                    put("vendor_product_id", product.vendorId)
-                    put("adapty_product_id", product.adaptyProductId)
-                    put("promotional_offer_id", product.promotionalOfferId)
-                    put("win_back_offer_id", product.winBackOfferId)
-                    put("base_plan_id", product.basePlanId)
-                    put("offer_id", product.offerId)
-                    put("product_type", product.productType)
-                    put("access_level_id", product.accessLevelId)
-                })
-            }
-        }
-
-        val paywallResponseJson = buildJsonObject {
-            put("placement", buildJsonObject {
-                put("developer_id", adaptyPaywall.placement.id)
-                put("audience_name", adaptyPaywall.placement.audienceName)
-                put("revision", adaptyPaywall.placement.revision)
-                put("ab_test_name", adaptyPaywall.placement.abTestName)
-                put("placement_audience_version_id", adaptyPaywall.placement.placementAudienceVersionId)
-
-            })
-            put("developer_id", adaptyPaywall.placement.id)
-            put("paywall_id", adaptyPaywall.instanceIdentity)
-            put("paywall_name", adaptyPaywall.name)
-            put("variation_id", adaptyPaywall.variationId)
-            put("request_locale", adaptyPaywall.requestLocale)
-            put("response_created_at", adaptyPaywall.responseCreatedAt)
-            adaptyPaywall.remoteConfig?.let { remoteConfig ->
-                put("remote_config", buildJsonObject {
-                    put("lang", remoteConfig.locale)
-                    put("data", remoteConfig.dataJsonString)
-                })
-            }
-            adaptyPaywall.viewConfiguration?.let { viewConfiguration ->
-                put("paywall_builder", buildJsonObject {
-                    put("paywall_builder_id", viewConfiguration.paywallBuilderId)
-                    put("lang", viewConfiguration.locale)
-                })
-            }
-
-            put("products", productsJsonArray)
-            put("payload_data", "testPayloadData")
-
-        }
-        return buildSuccessJsonString(paywallResponseJson)
+    private fun getSuccessFlowResponse(adaptyFlow: AdaptyFlow): String {
+        val flowJson = jsonInstance.encodeToJsonElement(
+            AdaptyFlowRequestResponse.serializer(),
+            adaptyFlow.asAdaptyFlowRequest()
+        )
+        return buildSuccessJsonString(flowJson)
     }
 
 
@@ -333,6 +294,7 @@ object AdaptyPluginResponseTemplate {
                             AdaptySubscriptionOfferType.INTRODUCTORY -> "introductory"
                             AdaptySubscriptionOfferType.PROMOTIONAL -> "promotional"
                             AdaptySubscriptionOfferType.WINBACK -> "win_back"
+                            AdaptySubscriptionOfferType.CODE -> "code"
                         }
                     )
                 })
@@ -424,11 +386,12 @@ object AdaptyPluginResponseTemplate {
         return buildSuccessJsonString(JsonPrimitive(value))
     }
 
-    private fun getSuccessPaywallViewResponse(view: AdaptyUIPaywallView): String {
+    private fun getSuccessFlowViewResponse(view: AdaptyUIFlowView): String {
         val viewJson = buildJsonObject {
             put("id", view.id)
             put("placement_id", view.placementId)
             put("variation_id", view.variationId)
+            view.locale?.let { put("locale", it) }
         }
         return buildSuccessJsonString(viewJson)
     }
@@ -465,22 +428,28 @@ object AdaptyPluginResponseTemplate {
         event: AdaptyPluginEvent,
         params: Map<String, Any?> = emptyMap()
     ): String = when (event) {
-        // Paywall view events
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_ACTION -> buildPaywallViewActionEvent(params)
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_APPEAR -> buildPaywallViewOnlyEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_DISAPPEAR -> buildPaywallViewOnlyEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_PERFORM_SYSTEM_BACK_ACTION -> buildEventViewJson().toString()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_SELECT_PRODUCT -> buildPaywallViewSelectProductEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_START_PURCHASE -> buildPaywallViewWithProductEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_PURCHASE -> buildPaywallViewFinishPurchaseEvent(params)
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_PURCHASE -> buildPaywallViewFailPurchaseEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_START_RESTORE -> buildPaywallViewOnlyEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_RESTORE -> buildPaywallViewFinishRestoreEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RESTORE -> buildPaywallViewWithErrorEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_RENDERING -> buildPaywallViewWithErrorEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FAIL_LOADING_PRODUCTS -> buildPaywallViewWithErrorEvent()
-        AdaptyPluginEvent.PAYWALL_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION ->
-            buildPaywallViewWebPaymentEvent(params)
+        // Flow view events
+        AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION -> buildFlowViewActionEvent(params)
+        AdaptyPluginEvent.FLOW_VIEW_DID_APPEAR ->
+            buildFlowViewOnlyEvent(params["view_id"] as? String ?: AdaptyFakeTestData.EVENT_VIEW_ID)
+        AdaptyPluginEvent.FLOW_VIEW_DID_DISAPPEAR -> buildFlowViewOnlyEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_SELECT_PRODUCT -> buildFlowViewSelectProductEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_START_PURCHASE -> buildFlowViewWithProductEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_PURCHASE -> buildFlowViewFinishPurchaseEvent(params)
+        AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_PURCHASE -> buildFlowViewFailPurchaseEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_START_RESTORE -> buildFlowViewOnlyEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_RESTORE -> buildFlowViewFinishRestoreEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_RESTORE -> buildFlowViewWithErrorEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ERROR -> buildFlowViewWithErrorEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_FAIL_LOADING_PRODUCTS -> buildFlowViewWithErrorEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_FINISH_WEB_PAYMENT_NAVIGATION ->
+            buildFlowViewWebPaymentEvent(params)
+
+        AdaptyPluginEvent.FLOW_VIEW_DID_ASK_PERMISSION -> buildFlowViewAskPermissionEvent(params)
+        AdaptyPluginEvent.FLOW_VIEW_DID_REQUEST_APP_REVIEW -> buildFlowViewOnlyEvent()
+        AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_PURCHASE -> buildFlowViewObserverPurchaseEvent()
+        AdaptyPluginEvent.FLOW_VIEW_OBSERVER_DID_INITIATE_RESTORE -> buildFlowViewObserverRestoreEvent()
+        AdaptyPluginEvent.FLOW_VIEW_DID_RECEIVE_ANALYTIC_EVENT -> buildFlowViewAnalyticEvent(params)
 
         // Onboarding view events
         AdaptyPluginEvent.ONBOARDING_DID_FINISH_LOADING -> buildOnboardingViewWithMetaEvent()
@@ -588,11 +557,12 @@ object AdaptyPluginResponseTemplate {
 
     private fun buildEventProfileJson(): JsonObject = buildProfileJson(AdaptyFakeTestData.getProfile())
 
-    private fun buildPaywallViewOnlyEvent(): String = buildJsonObject {
-        put("view", buildEventViewJson())
-    }.toString()
+    private fun buildFlowViewOnlyEvent(viewId: String = AdaptyFakeTestData.EVENT_VIEW_ID): String =
+        buildJsonObject {
+            put("view", buildEventViewJson(viewId = viewId))
+        }.toString()
 
-    private fun buildPaywallViewActionEvent(params: Map<String, Any?>): String {
+    private fun buildFlowViewActionEvent(params: Map<String, Any?>): String {
         val actionType = params["action_type"] as? String ?: "close"
         val actionValue = params["action_value"] as? String
         val actionOpenIn = params["action_open_in"] as? String
@@ -606,17 +576,17 @@ object AdaptyPluginResponseTemplate {
         }.toString()
     }
 
-    private fun buildPaywallViewSelectProductEvent(): String = buildJsonObject {
+    private fun buildFlowViewSelectProductEvent(): String = buildJsonObject {
         put("view", buildEventViewJson())
         put("product_id", AdaptyFakeTestData.PRODUCT_ID)
     }.toString()
 
-    private fun buildPaywallViewWithProductEvent(): String = buildJsonObject {
+    private fun buildFlowViewWithProductEvent(): String = buildJsonObject {
         put("view", buildEventViewJson())
         put("product", buildEventProductJson())
     }.toString()
 
-    private fun buildPaywallViewFinishPurchaseEvent(params: Map<String, Any?>): String {
+    private fun buildFlowViewFinishPurchaseEvent(params: Map<String, Any?>): String {
         val purchaseType = params["purchase_type"] as? String ?: "success"
         return buildJsonObject {
             put("view", buildEventViewJson())
@@ -630,29 +600,64 @@ object AdaptyPluginResponseTemplate {
         }.toString()
     }
 
-    private fun buildPaywallViewFailPurchaseEvent(): String = buildJsonObject {
+    private fun buildFlowViewFailPurchaseEvent(): String = buildJsonObject {
         put("view", buildEventViewJson())
         put("product", buildEventProductJson())
         put("error", buildEventErrorJson())
     }.toString()
 
-    private fun buildPaywallViewFinishRestoreEvent(): String = buildJsonObject {
+    private fun buildFlowViewFinishRestoreEvent(): String = buildJsonObject {
         put("view", buildEventViewJson())
         put("profile", buildEventProfileJson())
     }.toString()
 
-    private fun buildPaywallViewWithErrorEvent(): String = buildJsonObject {
+    private fun buildFlowViewWithErrorEvent(): String = buildJsonObject {
         put("view", buildEventViewJson())
         put("error", buildEventErrorJson())
     }.toString()
 
-    private fun buildPaywallViewWebPaymentEvent(params: Map<String, Any?>): String {
+    private fun buildFlowViewWebPaymentEvent(params: Map<String, Any?>): String {
         val includeProduct = params["include_product"] as? Boolean ?: true
         val includeError = params["include_error"] as? Boolean ?: true
         return buildJsonObject {
             put("view", buildEventViewJson())
             if (includeProduct) put("product", buildEventProductJson())
             if (includeError) put("error", buildEventErrorJson())
+        }.toString()
+    }
+
+
+    private fun buildFlowViewAskPermissionEvent(params: Map<String, Any?>): String {
+        val permission = params["permission"] as? String ?: "push"
+        val eventId = params["event_id"] as? String ?: "perm_event_1"
+        return buildJsonObject {
+            put("view", buildEventViewJson())
+            put("event_id", eventId)
+            put("permission", permission)
+        }.toString()
+    }
+
+    private fun buildFlowViewObserverPurchaseEvent(
+        eventId: String = "observer_event_1"
+    ): String = buildJsonObject {
+        put("view", buildEventViewJson())
+        put("event_id", eventId)
+        put("product", buildEventProductJson())
+    }.toString()
+
+    private fun buildFlowViewObserverRestoreEvent(
+        eventId: String = "observer_event_2"
+    ): String = buildJsonObject {
+        put("view", buildEventViewJson())
+        put("event_id", eventId)
+    }.toString()
+
+    private fun buildFlowViewAnalyticEvent(params: Map<String, Any?>): String {
+        val name = params["name"] as? String ?: "analytic_event"
+        return buildJsonObject {
+            put("view", buildEventViewJson())
+            put("name", name)
+            put("params", buildJsonObject { })
         }.toString()
     }
 

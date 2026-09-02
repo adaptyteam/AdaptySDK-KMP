@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 package com.adapty.kmp.models
 
 /**
@@ -7,6 +9,10 @@ package com.adapty.kmp.models
  * @see com.adapty.kmp.AdaptyUIOnboardingsEventsObserver
  * to track user progress, interactions, and completion of onboarding screens.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public sealed interface AdaptyOnboardingsAnalyticsEvent
 
 /** Triggered when the onboarding flow is first loaded. */
@@ -21,6 +27,10 @@ public data object AdaptyOnboardingsAnalyticsEventScreenPresented : AdaptyOnboar
  * @property elementId Optional identifier of the completed element.
  * @property reply Optional user response associated with the element.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyOnboardingsAnalyticsEventScreenCompleted(
     val elementId: String? = null,
     val reply: String? = null,
@@ -48,5 +58,9 @@ public data object AdaptyOnboardingsAnalyticsEventOnboardingCompleted : AdaptyOn
  *
  * @property name The name of the unknown event.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyOnboardingsAnalyticsEventUnknown(val name: String) :
     AdaptyOnboardingsAnalyticsEvent

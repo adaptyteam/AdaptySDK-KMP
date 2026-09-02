@@ -1,13 +1,13 @@
 import SwiftUI
 import Shared
 
-/// Wraps the native Adapty paywall UIViewController in SwiftUI.
+/// Wraps the native Adapty flow UIViewController in SwiftUI.
 ///
-/// Uses `AdaptyUI.shared.createNativePaywallView(paywall:observer:)` from the
-/// core `adapty` KMP module to create a native paywall view, then wraps its
+/// Uses `AdaptyUI.shared.createNativeFlowView(flow:observer:)` from the
+/// core `adapty` KMP module to create a native flow view, then wraps its
 /// `viewController` property with `UIViewControllerRepresentable`.
 struct PaywallView: View {
-    let paywall: AdaptyPaywall
+    let flow: AdaptyFlow
     @Binding var isPresented: Bool
 
     var body: some View {
@@ -31,7 +31,7 @@ struct PaywallView: View {
 
             // The native Adapty paywall rendered as an embedded platform view
             PaywallViewControllerRepresentable(
-                paywall: paywall,
+                flow: flow,
                 onDismiss: { isPresented = false }
             )
         }
@@ -39,15 +39,15 @@ struct PaywallView: View {
 }
 
 private struct PaywallViewControllerRepresentable: UIViewControllerRepresentable {
-    let paywall: AdaptyPaywall
+    let flow: AdaptyFlow
     let onDismiss: () -> Void
 
     func makeUIViewController(context: Context) -> UIViewController {
         let observer = PaywallObserver(onDismiss: onDismiss)
         context.coordinator.observer = observer
 
-        let nativeView = AdaptyUI.shared.createNativePaywallView(
-            paywall: paywall,
+        let nativeView = AdaptyUI.shared.createNativeFlowView(
+            flow: flow,
             observer: observer,
             customTags: nil,
             customTimers: nil,
@@ -69,15 +69,15 @@ private struct PaywallViewControllerRepresentable: UIViewControllerRepresentable
     }
 
     class Coordinator {
-        var nativeView: AdaptyNativePaywallView?
+        var nativeView: AdaptyNativeFlowView?
         var observer: PaywallObserver?
     }
 }
 
-/// Subclasses the Kotlin `AdaptyUIPaywallsEventsObserverAdapter` which implements
-/// `AdaptyUIPaywallsEventsObserver` with all defaults (including `mainUiScope`).
+/// Subclasses the Kotlin `AdaptyUIFlowsEventsObserverAdapter` which implements
+/// `AdaptyUIFlowsEventsObserver` with all defaults (including `mainUiScope`).
 /// Only the callbacks we care about are overridden here.
-private class PaywallObserver: AdaptyUIPaywallsEventsObserverAdapter {
+private class PaywallObserver: AdaptyUIFlowsEventsObserverAdapter {
     let onDismiss: () -> Void
 
     init(onDismiss: @escaping () -> Void) {
@@ -85,15 +85,15 @@ private class PaywallObserver: AdaptyUIPaywallsEventsObserverAdapter {
         super.init()
     }
 
-    override func paywallViewDidPerformAction(view: AdaptyUIPaywallView, action: any AdaptyUIAction) {
-        print("[NativeUI] Paywall action: \(action)")
+    override func flowViewDidPerformAction(view: AdaptyUIFlowView, action: any AdaptyUIAction) {
+        print("[NativeUI] Flow action: \(action)")
         if action is AdaptyUIActionCloseAction {
             DispatchQueue.main.async { self.onDismiss() }
         }
     }
 
-    override func paywallViewDidFinishPurchase(
-        view: AdaptyUIPaywallView,
+    override func flowViewDidFinishPurchase(
+        view: AdaptyUIFlowView,
         product: AdaptyPaywallProduct,
         purchaseResult: any AdaptyPurchaseResult
     ) {
@@ -103,15 +103,15 @@ private class PaywallObserver: AdaptyUIPaywallsEventsObserverAdapter {
         }
     }
 
-    override func paywallViewDidFailPurchase(
-        view: AdaptyUIPaywallView,
+    override func flowViewDidFailPurchase(
+        view: AdaptyUIFlowView,
         product: AdaptyPaywallProduct,
         error: AdaptyError
     ) {
         print("[NativeUI] Purchase failed: \(error.message)")
     }
 
-    override func paywallViewDidFailRendering(view: AdaptyUIPaywallView, error: AdaptyError) {
+    override func flowViewDidReceiveError(view: AdaptyUIFlowView, error: AdaptyError) {
         print("[NativeUI] Rendering failed: \(error.message)")
     }
 }

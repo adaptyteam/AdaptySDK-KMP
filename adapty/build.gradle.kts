@@ -84,7 +84,6 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation(libs.androidx.browser)
                 implementation(libs.androidx.startup.runtime)
                 implementation(project.dependencies.platform(libs.adapty.bom))
                 implementation(libs.adapty.android.sdk)

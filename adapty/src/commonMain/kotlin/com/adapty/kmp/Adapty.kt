@@ -1,13 +1,16 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 package com.adapty.kmp
 
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.internal.plugin.constants.Constants.DEFAULT_LOAD_TIMEOUT
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyFlow
+import com.adapty.kmp.models.AdaptyFlowPaywall
 import com.adapty.kmp.models.AdaptyInstallationStatus
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
@@ -94,30 +97,28 @@ internal interface AdaptyContract {
     suspend fun getCurrentInstallationStatus(): AdaptyResult<AdaptyInstallationStatus>
 
     /**
-     * Fetches a paywall by placement ID. Read more on the [Adapty Documentation](https://docs.adapty.io/v2.0/docs/displaying-products)
+     * Fetches a flow by placement ID. Read more on the [Adapty Documentation](https://docs.adapty.io/v2.0/docs/displaying-products)
      *
-     * @param placementId Identifier of the paywall placement in Adapty Dashboard.
-     * @param locale Optional locale for localized content. (https://docs.adapty.io/docs/paywall#localizations).
-     * @param fetchPolicy Determines whether to fetch from cache or server. by default SDK will try
-     * to load data from server and will return cached data in case of failure.
-     * Otherwise use `[AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad]` to return cached data if it exists
+     * @param placementId Identifier of the placement in Adapty Dashboard.
+     * @param fetchPolicy Determines whether to fetch from cache or server. By default the SDK will try
+     * to load data from the server and will return cached data in case of failure.
+     * Otherwise use `[AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad]` to return cached data if it exists.
      * @param loadTimeout Maximum duration to wait for server response.
-     * @return [AdaptyResult] containing [AdaptyPaywall].
+     * @return [AdaptyResult] containing [AdaptyFlow].
      */
-    suspend fun getPaywall(
+    suspend fun getFlow(
         placementId: String,
-        locale: String? = null,
         fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default,
         loadTimeout: Duration = DEFAULT_LOAD_TIMEOUT
-    ): AdaptyResult<AdaptyPaywall>
+    ): AdaptyResult<AdaptyFlow>
 
     /**
-     * Retrieves the products for a given paywall.
+     * Retrieves the products for a given flow.
      *
-     * @param paywall The [AdaptyPaywall] object.
+     * @param flow The [AdaptyFlow] object.
      * @return [AdaptyResult] containing a list of [AdaptyPaywallProduct].
      */
-    suspend fun getPaywallProducts(paywall: AdaptyPaywall): AdaptyResult<List<AdaptyPaywallProduct>>
+    suspend fun getPaywallProducts(flow: AdaptyFlow): AdaptyResult<List<AdaptyPaywallProduct>>
 
     /**
      * Fetches an onboarding flow by placement ID.
@@ -128,6 +129,10 @@ internal interface AdaptyContract {
      * @param loadTimeout Maximum duration to wait for server response.
      * @return [AdaptyResult] containing [AdaptyOnboarding].
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun getOnboarding(
         placementId: String,
         locale: String? = null,
@@ -147,6 +152,10 @@ internal interface AdaptyContract {
      *
      * @return [AdaptyResult] containing [AdaptyOnboarding].
      */
+    @Deprecated(
+        "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+        level = DeprecationLevel.WARNING
+    )
     suspend fun getOnboardingForDefaultAudience(
         placementId: String,
         locale: String? = null,
@@ -207,7 +216,7 @@ internal interface AdaptyContract {
      * [Transaction](https://developer.apple.com/documentation/storekit/transaction) (SK2) for iOS or
      * string identifier (`purchase.getOrderId()`) of the purchase,
      * where the purchase is an instance of the billing library Purchase class for Android.
-     * @param variationId A string identifier of variation. You can get it using variationId property of AdaptyPaywall.
+     * @param variationId A string identifier of variation. You can get it using variationId property of AdaptyFlow.
      * @return [AdaptyResult] containing [Unit].
      */
     suspend fun reportTransaction(
@@ -308,68 +317,76 @@ internal interface AdaptyContract {
     suspend fun setFallback(assetId: String): AdaptyResult<Unit>
 
     /**
-     * Logs a paywall view for analytics purposes.
-     * Call this method to notify Adapty SDK, that particular paywall was shown to user.
-     * Adapty helps you to measure the performance of the paywalls.
-     * We automatically collect all the metrics related to purchases except for paywall views.
-     * This is because only you know when the paywall was shown to a customer.
-     * Whenever you show a paywall to your user, call .logShowPaywall(paywall) to log the event,
-     * and it will be accumulated in the paywall metrics.
+     * Logs a flow view for analytics purposes.
+     * Call this method to notify the Adapty SDK that a particular flow was shown to the user.
+     * Adapty helps you measure the performance of your flows: we automatically collect all the
+     * metrics related to purchases except for views, because only you know when a flow was shown
+     * to a customer. Whenever you show a flow, call `logShowFlow(flow)` to log the event, and it
+     * will be accumulated in the metrics.
      *
      * Read more on the [Adapty Documentation](https://docs.adapty.io/v2.0/docs/ios-displaying-products#paywall-analytics)
-     * */
-    suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit>
+     *
+     * @param flow The [AdaptyFlow] that was shown to the user.
+     */
+    suspend fun logShowFlow(flow: AdaptyFlow): AdaptyResult<Unit>
 
     /**
-     * Fetches paywall for the default audience.
-     * This method enables you to retrieve the paywall from the Default Audience without
-     * having to wait for the Adapty SDK to send all the user information required for segmentation to the server.
+     * Fetches a flow for the default audience.
+     * This method enables you to retrieve the flow from the Default Audience without having to wait
+     * for the Adapty SDK to send all the user information required for segmentation to the server.
      *
-     *
-     * @param placementId Identifier of the paywall placement. This is the value you specified when you created the placement in the Adapty Dashboard.
-     * @param locale Optional locale.
+     * @param placementId Identifier of the placement. This is the value you specified when you created the placement in the Adapty Dashboard.
      * @param fetchPolicy Fetch strategy.
-     *
-     * @return [AdaptyResult] containing [AdaptyOnboarding].
+     * @return [AdaptyResult] containing [AdaptyFlow].
      */
-    suspend fun getPaywallForDefaultAudience(
+    suspend fun getFlowForDefaultAudience(
         placementId: String,
-        locale: String? = null,
         fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default
-    ): AdaptyResult<AdaptyPaywall>
+    ): AdaptyResult<AdaptyFlow>
 
     /** Checks whether the SDK is activated. */
     suspend fun isActivated(): Boolean
 
-    /** Creates a URL for a web paywall or product. */
-    suspend fun createWebPaywallUrl(
-        paywall: AdaptyPaywall? = null,
-        product: AdaptyPaywallProduct? = null
-    ): AdaptyResult<String>
+    /**
+     * Creates a URL for a web paywall from an [AdaptyFlowPaywall].
+     *
+     * The URL is generated from the paywall without attaching product data. This is useful when
+     * the products configured in the Adapty paywall differ from those used on the web.
+     */
+    suspend fun createWebPaywallUrl(flowPaywall: AdaptyFlowPaywall): AdaptyResult<String>
 
     /**
-     * Opens a web-based paywall or a specific product.
+     * Creates a URL for a web paywall from a specific [AdaptyPaywallProduct].
      *
-     * Depending on the provided parameters, the SDK generates a web URL and opens it
-     * either in the device's external browser or in an in-app browser.
+     * The generated URL includes the product data.
+     */
+    suspend fun createWebPaywallUrl(product: AdaptyPaywallProduct): AdaptyResult<String>
+
+    /**
+     * Opens a web-based paywall from an [AdaptyFlowPaywall].
      *
-     * - If [product] is provided, the URL is generated from the paywall and includes
-     *   product data.
-     * - If only [paywall] is provided, the URL is generated from the paywall without
-     *   attaching product data. This is useful when products configured in the
-     *   Adapty paywall differ from those used on the web.
+     * The SDK generates a web URL and opens it either in the device's external browser or in an
+     * in-app browser, without attaching product data.
      *
-     * @param paywall The Adapty paywall used to generate the web URL.
-     * @param product The specific product to open. When provided, product data is
-     * added to the generated URL.
-     * @param openIn Defines where the web paywall should be opened.
-     * Defaults to [AdaptyWebPresentation.EXTERNAL_BROWSER].
-     *
+     * @param flowPaywall The flow paywall used to generate the web URL.
+     * @param openIn Where the web paywall should be opened. Defaults to [AdaptyWebPresentation.EXTERNAL_BROWSER].
      * @return [AdaptyResult] indicating whether the paywall was successfully opened.
      */
     suspend fun openWebPaywall(
-        paywall: AdaptyPaywall? = null,
-        product: AdaptyPaywallProduct? = null,
+        flowPaywall: AdaptyFlowPaywall,
+        openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER
+    ): AdaptyResult<Unit>
+
+    /**
+     * Opens a web-based paywall for a specific [AdaptyPaywallProduct]. The generated URL includes
+     * the product data.
+     *
+     * @param product The specific product to open.
+     * @param openIn Where the web paywall should be opened. Defaults to [AdaptyWebPresentation.EXTERNAL_BROWSER].
+     * @return [AdaptyResult] indicating whether the paywall was successfully opened.
+     */
+    suspend fun openWebPaywall(
+        product: AdaptyPaywallProduct,
         openIn: AdaptyWebPresentation = AdaptyWebPresentation.EXTERNAL_BROWSER
     ): AdaptyResult<Unit>
 

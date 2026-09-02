@@ -9,6 +9,9 @@ internal data class AdaptyPaywallProductResponse(
     @SerialName("vendor_product_id")
     val vendorProductId: String,
 
+    @SerialName("flow_product_id")
+    val flowProductId: String? = null,
+
     @SerialName("adapty_product_id")
     val adaptyProductId: String,
 

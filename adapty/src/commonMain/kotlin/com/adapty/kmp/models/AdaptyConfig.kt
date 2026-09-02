@@ -27,7 +27,7 @@ import KMPAdapty.adapty.BuildConfig
  * @property appleIdfaCollectionDisabled Disables IDFA collection (iOS only) if `true`. Default value is false.
  * @property backendProxyHost Custom proxy host (for internal use).
  * @property backendProxyPort Custom proxy port (for internal use).
- * @property serverCluster Region of Adapty’s backend servers (default or EU).
+ * @property serverCluster Region of Adapty’s backend servers (default, EU or CN).
  * @property crossPlatformSDKName Name of the SDK if used via another platform (e.g., Flutter, React Native).
  * @property crossPlatformSDKVersion Version of the wrapper SDK.
  * @property activateUI Enables AdaptyUI module (for displaying paywalls and onboarding).
@@ -145,11 +145,12 @@ public class AdaptyConfig private constructor(
         internal fun withCrossPlatformSDKVersion(version: String): Builder =
             apply { this.crossPlatformSDKVersion = version }
 
-        /** Sets the region of Adapty’s backend servers (default or EU). */
+        /** Sets the region of Adapty’s backend servers (default, EU or CN). */
         public fun withServerCluster(cluster: ServerCluster): Builder = apply {
             this.serverCluster = when (cluster) {
                 ServerCluster.EU -> "eu"
-                else -> "default"
+                ServerCluster.CN -> "cn"
+                ServerCluster.DEFAULT -> "default"
             }
         }
 
@@ -196,7 +197,10 @@ public class AdaptyConfig private constructor(
         DEFAULT,
 
         /** European region (EU). */
-        EU
+        EU,
+
+        /** Chinese region (CN). */
+        CN
     }
 
     /**

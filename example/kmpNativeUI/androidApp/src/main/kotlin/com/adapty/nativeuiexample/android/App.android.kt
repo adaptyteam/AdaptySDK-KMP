@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // onboarding deprecated; no flow replacement yet
+
 package com.adapty.nativeuiexample.android
 
 import android.app.Application
@@ -40,13 +42,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.adapty.kmp.Adapty
+import com.adapty.kmp.AdaptyNativeFlowView
 import com.adapty.kmp.AdaptyNativeOnboardingView
-import com.adapty.kmp.AdaptyNativePaywallView
 import com.adapty.kmp.AdaptyUI
+import com.adapty.kmp.AdaptyUIFlowsEventsObserver
 import com.adapty.kmp.AdaptyUIOnboardingsEventsObserver
-import com.adapty.kmp.AdaptyUIPaywallsEventsObserver
+import com.adapty.kmp.createNativeFlowView
 import com.adapty.kmp.createNativeOnboardingView
-import com.adapty.kmp.createNativePaywallView
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyOnboardingsAnalyticsEvent
 import com.adapty.kmp.models.AdaptyPaywallProduct
@@ -54,8 +56,8 @@ import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyUIAction
 import com.adapty.kmp.models.AdaptyUIOnboardingMeta
+import com.adapty.kmp.models.AdaptyUIFlowView
 import com.adapty.kmp.models.AdaptyUIOnboardingView
-import com.adapty.kmp.models.AdaptyUIPaywallView
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
 import com.adapty.nativeuiexample.AdaptyManager
@@ -84,6 +86,7 @@ class AppActivity : ComponentActivity() {
     }
 }
 
+@Suppress("DEPRECATION") // onboarding deprecated; no flow replacement yet
 @Composable
 private fun NativeUIExampleApp() {
     val scope = rememberCoroutineScope()
@@ -92,7 +95,7 @@ private fun NativeUIExampleApp() {
 
     var isLoading by remember { mutableStateOf(false) }
     var placementId by remember { mutableStateOf("") }
-    var nativePaywallView by remember { mutableStateOf<AdaptyNativePaywallView?>(null) }
+    var nativeFlowView by remember { mutableStateOf<AdaptyNativeFlowView?>(null) }
     var nativeOnboardingView by remember { mutableStateOf<AdaptyNativeOnboardingView?>(null) }
 
 
@@ -101,14 +104,14 @@ private fun NativeUIExampleApp() {
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         when {
-            nativePaywallView != null -> {
+            nativeFlowView != null -> {
                 // Show native paywall view embedded below a header
                 NativePaywallScreen(
                     modifier = Modifier.padding(padding),
-                    nativeView = nativePaywallView!!,
+                    nativeView = nativeFlowView!!,
                     onDismiss = {
-                        nativePaywallView?.dispose()
-                        nativePaywallView = null
+                        nativeFlowView?.dispose()
+                        nativeFlowView = null
                     }
                 )
             }
@@ -173,67 +176,67 @@ private fun NativeUIExampleApp() {
                                 }
                                 isLoading = true
                                 scope.launch {
-                                    Adapty.getPaywall(placementId)
-                                        .onSuccess { paywall ->
-                                            AppLogger.d("Paywall loaded: ${paywall.name}")
+                                    Adapty.getFlow(placementId)
+                                        .onSuccess { flow ->
+                                            AppLogger.d("Flow loaded: ${flow.name}")
                                             val activity = context as ComponentActivity
-                                            val view = AdaptyUI.createNativePaywallView(
+                                            val view = AdaptyUI.createNativeFlowView(
                                                 context = context,
                                                 viewModelStoreOwner = activity,
-                                                paywall = paywall,
-                                                observer = object : AdaptyUIPaywallsEventsObserver {
-                                                    override fun paywallViewDidPerformAction(
-                                                        view: AdaptyUIPaywallView,
+                                                flow = flow,
+                                                observer = object : AdaptyUIFlowsEventsObserver {
+                                                    override fun flowViewDidPerformAction(
+                                                        view: AdaptyUIFlowView,
                                                         action: AdaptyUIAction
                                                     ) {
                                                         AppLogger.d("Paywall action: $action")
                                                         when (action) {
                                                             is AdaptyUIAction.CloseAction,
                                                             is AdaptyUIAction.AndroidSystemBackAction -> {
-                                                                nativePaywallView?.dispose()
-                                                                nativePaywallView = null
+                                                                nativeFlowView?.dispose()
+                                                                nativeFlowView = null
                                                             }
 
                                                             else -> {}
                                                         }
                                                     }
 
-                                                    override fun paywallViewDidFinishPurchase(
-                                                        view: AdaptyUIPaywallView,
+                                                    override fun flowViewDidFinishPurchase(
+                                                        view: AdaptyUIFlowView,
                                                         product: AdaptyPaywallProduct,
                                                         purchaseResult: AdaptyPurchaseResult
                                                     ) {
                                                         AppLogger.d("Purchase finished: $purchaseResult")
                                                         if (purchaseResult !is AdaptyPurchaseResult.UserCanceled) {
-                                                            nativePaywallView?.dispose()
-                                                            nativePaywallView = null
+                                                            nativeFlowView?.dispose()
+                                                            nativeFlowView = null
                                                         }
                                                     }
 
-                                                    override fun paywallViewDidFailPurchase(
-                                                        view: AdaptyUIPaywallView,
+                                                    override fun flowViewDidFailPurchase(
+                                                        view: AdaptyUIFlowView,
                                                         product: AdaptyPaywallProduct,
                                                         error: AdaptyError
                                                     ) {
                                                         AppLogger.e("Purchase failed: $error")
                                                     }
 
-                                                    override fun paywallViewDidFailRendering(
-                                                        view: AdaptyUIPaywallView,
+                                                    override fun flowViewDidReceiveError(
+                                                        view: AdaptyUIFlowView,
                                                         error: AdaptyError
                                                     ) {
                                                         AppLogger.e("Rendering failed: $error")
                                                     }
 
-                                                    override fun paywallViewDidFinishRestore(
-                                                        view: AdaptyUIPaywallView,
+                                                    override fun flowViewDidFinishRestore(
+                                                        view: AdaptyUIFlowView,
                                                         profile: AdaptyProfile
                                                     ) {
                                                         AppLogger.d("Restore finished")
                                                     }
                                                 }
                                             )
-                                            nativePaywallView = view
+                                            nativeFlowView = view
                                         }
                                         .onError { error ->
                                             AppLogger.e("Failed to load paywall: $error")
@@ -338,7 +341,7 @@ private fun NativeUIExampleApp() {
 @Composable
 private fun NativePaywallScreen(
     modifier: Modifier = Modifier,
-    nativeView: AdaptyNativePaywallView,
+    nativeView: AdaptyNativeFlowView,
     onDismiss: () -> Unit
 ) {
     DisposableEffect(nativeView) {

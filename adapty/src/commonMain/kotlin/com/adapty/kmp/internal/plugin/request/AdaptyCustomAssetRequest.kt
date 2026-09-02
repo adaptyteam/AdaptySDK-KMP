@@ -60,9 +60,27 @@ internal sealed interface AdaptyCustomAssetRequest {
     data class LocalVideoRequest(
         @SerialName("id") val id: String,
         @SerialName("asset_id") val assetId: String? = null,
-        @SerialName("path") val path: String? = null
+        @SerialName("path") val path: String? = null,
+        @SerialName("h_res") val hRes: Double? = null,
+        @SerialName("v_res") val vRes: Double? = null,
     ) : AdaptyCustomAssetRequest
 }
+
+private const val FILE_SCHEME = "file://"
+private const val ANDROID_ASSET_URI_PREFIX = "file:///android_asset/"
+
+/**
+ * Normalizes a file location for the native side. Callers naturally pass `file://` URLs
+ * (e.g. compose-resources `Res.getUri(...)`), but native expects a plain path — iOS builds
+ * `URL(filePath:)` from it. The Android `file:///android_asset/...` form is left untouched so
+ * `transformFileLocation` can still map it to an APK asset.
+ */
+private fun String.asNativeFileLocation(): String =
+    if (startsWith(FILE_SCHEME) && !startsWith(ANDROID_ASSET_URI_PREFIX)) {
+        removePrefix(FILE_SCHEME)
+    } else {
+        this
+    }
 
 @OptIn(ExperimentalEncodingApi::class)
 internal fun AdaptyCustomAsset.asAdaptyCustomAssetRequest(id: String): AdaptyCustomAssetRequest {
@@ -75,7 +93,7 @@ internal fun AdaptyCustomAsset.asAdaptyCustomAssetRequest(id: String): AdaptyCus
         is AdaptyCustomAsset.LinearGradientAsset -> AdaptyCustomAssetRequest.LinearGradientRequest(
             id = id,
             values = this.colors.mapIndexed { index, color ->
-                val p = this.stops?.get(index)
+                val p = this.stops?.getOrNull(index)
                     ?: if (this.colors.size == 1) 0f else (index.toFloat() / (this.colors.size - 1))
                 AdaptyCustomAssetRequest.LinearGradientRequest.ColorStop(color = color, p = p)
             },
@@ -101,7 +119,7 @@ internal fun AdaptyCustomAsset.asAdaptyCustomAssetRequest(id: String): AdaptyCus
 
         is AdaptyCustomAsset.LocalImageFile -> AdaptyCustomAssetRequest.LocalImageAssetRequest(
             id = id,
-            path = this.path
+            path = this.path.asNativeFileLocation()
         )
 
         is AdaptyCustomAsset.LocalVideoResource -> AdaptyCustomAssetRequest.LocalVideoRequest(
@@ -111,7 +129,7 @@ internal fun AdaptyCustomAsset.asAdaptyCustomAssetRequest(id: String): AdaptyCus
 
         is AdaptyCustomAsset.LocalVideoFile -> AdaptyCustomAssetRequest.LocalVideoRequest(
             id = id,
-            path = this.path
+            path = this.path.asNativeFileLocation()
         )
     }
 }

@@ -1,22 +1,23 @@
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateCollectingRefundDataRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateRefundPreferenceRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyLogShowFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUICreatePaywallViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
@@ -46,15 +47,15 @@ object AdaptyPluginRequestTemplate {
             param as AdaptySetIntegrationIdentifierRequest
         )
 
-        AdaptyPluginMethod.GET_PAYWALL -> getPaywallRequestJsonString(param as AdaptyGetPaywallRequest)
+        AdaptyPluginMethod.GET_FLOW -> getFlowRequestJsonString(param as AdaptyGetFlowRequest)
         AdaptyPluginMethod.GET_PAYWALL_PRODUCTS -> getPaywallProductsRequestJsonString(param as AdaptyGetPaywallProductsRequest)
         AdaptyPluginMethod.MAKE_PURCHASE -> getMakePurchaseRequestJsonString(param as AdaptyMakePurchaseRequest)
         AdaptyPluginMethod.UPDATE_ATTRIBUTION -> getUpdateAttributionRequestJsonString(param as AdaptyUpdateAttributionRequest)
         AdaptyPluginMethod.REPORT_TRANSACTION -> getReportTransactionRequestJsonString(param as AdaptyReportTransactionRequest)
         AdaptyPluginMethod.SET_FALLBACK -> getSetFallbackPaywallsRequestJsonString(param as String)
-        AdaptyPluginMethod.LOG_SHOW_PAYWALL -> getAdaptyLogShowPaywallRequest(param as AdaptyLogShowPaywallRequest)
-        AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE -> getAdaptyGetPaywallForDefaultAudienceRequest(
-            param as AdaptyGetPaywallForDefaultAudienceRequest
+        AdaptyPluginMethod.LOG_SHOW_FLOW -> getAdaptyLogShowFlowRequest(param as AdaptyLogShowFlowRequest)
+        AdaptyPluginMethod.GET_FLOW_FOR_DEFAULT_AUDIENCE -> getAdaptyGetFlowForDefaultAudienceRequest(
+            param as AdaptyGetFlowForDefaultAudienceRequest
         )
 
         AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getEmptyJsonObjectString()
@@ -78,12 +79,12 @@ object AdaptyPluginRequestTemplate {
         AdaptyPluginMethod.SET_LOG_LEVEL -> getEmptyJsonObjectString()
 
         // UI methods
-        AdaptyPluginMethod.CREATE_PAYWALL_VIEW -> getCreatePaywallViewRequestJsonString(
-            param as AdaptyUICreatePaywallViewRequest
+        AdaptyPluginMethod.CREATE_FLOW_VIEW -> getCreateFlowViewRequestJsonString(
+            param as AdaptyUICreateFlowViewRequest
         )
 
-        AdaptyPluginMethod.PRESENT_PAYWALL_VIEW -> getPresentViewRequestJsonString(param as AdaptyUIPresentViewRequest)
-        AdaptyPluginMethod.DISMISS_PAYWALL_VIEW -> getDismissViewRequestJsonString(param as AdaptyUIDismissViewRequest)
+        AdaptyPluginMethod.PRESENT_FLOW_VIEW -> getPresentViewRequestJsonString(param as AdaptyUIPresentViewRequest)
+        AdaptyPluginMethod.DISMISS_FLOW_VIEW -> getDismissViewRequestJsonString(param as AdaptyUIDismissViewRequest)
         AdaptyPluginMethod.SHOW_DIALOG -> getShowDialogRequestJsonString(param as AdaptyUIShowDialogRequest)
         AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getCreateOnboardingViewRequestJsonString(
             param as AdaptyUICreateOnboardingViewRequest
@@ -165,12 +166,11 @@ object AdaptyPluginRequestTemplate {
         return jsonObject.toString()
     }
 
-    private fun getPaywallRequestJsonString(adaptyGetPaywallRequest: AdaptyGetPaywallRequest): String {
+    private fun getFlowRequestJsonString(adaptyGetFlowRequest: AdaptyGetFlowRequest): String {
         val jsonObject = buildJsonObject {
-            put("placement_id", adaptyGetPaywallRequest.placementId)
-            put("locale", adaptyGetPaywallRequest.locale)
-            put("load_timeout", adaptyGetPaywallRequest.loadTimeoutInSeconds)
-            adaptyGetPaywallRequest.fetchPolicy?.let { fetchPolicy ->
+            put("placement_id", adaptyGetFlowRequest.placementId)
+            put("load_timeout", adaptyGetFlowRequest.loadTimeoutInSeconds)
+            adaptyGetFlowRequest.fetchPolicy?.let { fetchPolicy ->
                 put("fetch_policy", buildFetchPolicyJsonObject(fetchPolicy))
             }
         }
@@ -199,10 +199,10 @@ object AdaptyPluginRequestTemplate {
     private fun getPaywallProductsRequestJsonString(request: AdaptyGetPaywallProductsRequest): String {
         val jsonObject = buildJsonObject {
             put(
-                "paywall",
+                "flow",
                 jsonInstance.encodeToJsonElement(
-                    AdaptyPaywallRequestResponse.serializer(),
-                    request.paywall
+                    AdaptyFlowRequestResponse.serializer(),
+                    request.flow
                 )
             )
         }
@@ -253,23 +253,22 @@ object AdaptyPluginRequestTemplate {
         }.toString()
     }
 
-    private fun getAdaptyLogShowPaywallRequest(request: AdaptyLogShowPaywallRequest): String {
+    private fun getAdaptyLogShowFlowRequest(request: AdaptyLogShowFlowRequest): String {
         val jsonObject = buildJsonObject {
             put(
-                "paywall",
+                "flow",
                 jsonInstance.encodeToJsonElement(
-                    AdaptyPaywallRequestResponse.serializer(),
-                    request.paywall
+                    AdaptyFlowRequestResponse.serializer(),
+                    request.flow
                 )
             )
         }
         return jsonObject.toString()
     }
 
-    private fun getAdaptyGetPaywallForDefaultAudienceRequest(request: AdaptyGetPaywallForDefaultAudienceRequest): String {
+    private fun getAdaptyGetFlowForDefaultAudienceRequest(request: AdaptyGetFlowForDefaultAudienceRequest): String {
         val jsonObject = buildJsonObject {
             put("placement_id", request.placementId)
-            put("locale", request.locale)
             request.fetchPolicy?.let {
                 put("fetch_policy", buildFetchPolicyJsonObject(it))
             }
@@ -313,7 +312,7 @@ object AdaptyPluginRequestTemplate {
                 put(
                     "paywall",
                     jsonInstance.encodeToJsonElement(
-                        AdaptyPaywallRequestResponse.serializer(),
+                        AdaptyFlowPaywallRequestResponse.serializer(),
                         it
                     )
                 )
@@ -336,15 +335,16 @@ object AdaptyPluginRequestTemplate {
         }.toString()
     }
 
-    private fun getCreatePaywallViewRequestJsonString(request: AdaptyUICreatePaywallViewRequest): String {
+    private fun getCreateFlowViewRequestJsonString(request: AdaptyUICreateFlowViewRequest): String {
         return buildJsonObject {
             put(
-                "paywall",
+                "flow",
                 jsonInstance.encodeToJsonElement(
-                    AdaptyPaywallRequestResponse.serializer(),
-                    request.paywall
+                    AdaptyFlowRequestResponse.serializer(),
+                    request.flow
                 )
             )
+            request.locale?.let { put("locale", it) }
             request.loadTimeOutInSeconds?.let { put("load_timeout", it) }
             put("preload_products", request.preloadProducts)
             request.customTags?.let {
@@ -357,6 +357,7 @@ object AdaptyPluginRequestTemplate {
                     it.forEach { (key, value) -> put(key, value) }
                 }
             }
+            put("enable_safe_area_paddings", request.enableSafeAreaPaddings)
         }.toString()
     }
 
