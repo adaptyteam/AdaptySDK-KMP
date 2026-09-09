@@ -16,7 +16,6 @@ import kotlin.uuid.Uuid
  * @property name the name of the flow.
  * @property variationId the active variation identifier for this flow.
  * @property remoteConfigs remote configurations, one per language.
- * @property flowVersionId optional flow version identifier.
  * @property paywalls the paywall variations contained in this flow.
  * @property hasViewConfiguration whether this flow ships a layout that AdaptyUI can render.
  */
@@ -27,7 +26,7 @@ public data class AdaptyFlow internal constructor(
     public val name: String,
     public val variationId: String,
     public val remoteConfigs: List<AdaptyRemoteConfig> = emptyList(),
-    public val flowVersionId: String? = null,
+    internal val flowVersionId: String? = null,
     public val paywalls: List<AdaptyFlowPaywall> = emptyList(),
     internal val layoutsConfiguration: AdaptyFlowLayoutsConfigurationRequestResponse? = null,
     internal val payloadData: String? = null,
