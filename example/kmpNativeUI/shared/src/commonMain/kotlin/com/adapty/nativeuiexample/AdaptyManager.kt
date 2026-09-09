@@ -2,9 +2,9 @@ package com.adapty.nativeuiexample
 
 import com.adapty.kmp.Adapty
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyResult
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
@@ -39,9 +39,10 @@ object AdaptyManager {
         }
     }
 
-    suspend fun getPaywall(placementId: String)
-            : AdaptyResult<AdaptyPaywall> = Adapty.getPaywall(placementId)
+    suspend fun getFlow(placementId: String)
+            : AdaptyResult<AdaptyFlow> = Adapty.getFlow(placementId)
 
+    @Suppress("DEPRECATION")
     suspend fun getOnboarding(placementId: String)
             : AdaptyResult<AdaptyOnboarding> = Adapty.getOnboarding(placementId)
 }

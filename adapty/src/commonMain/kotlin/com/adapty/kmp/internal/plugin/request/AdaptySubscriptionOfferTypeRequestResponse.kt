@@ -13,7 +13,10 @@ internal enum class AdaptySubscriptionOfferTypeRequestResponse {
     PROMOTIONAL,
 
     @SerialName("win_back")
-    WINBACK
+    WINBACK,
+
+    @SerialName("code")
+    CODE
 }
 
 internal fun AdaptySubscriptionOfferTypeRequestResponse.asAdaptySubscriptionOfferType(): AdaptySubscriptionOfferType {
@@ -21,6 +24,7 @@ internal fun AdaptySubscriptionOfferTypeRequestResponse.asAdaptySubscriptionOffe
         AdaptySubscriptionOfferTypeRequestResponse.INTRODUCTORY -> AdaptySubscriptionOfferType.INTRODUCTORY
         AdaptySubscriptionOfferTypeRequestResponse.PROMOTIONAL -> AdaptySubscriptionOfferType.PROMOTIONAL
         AdaptySubscriptionOfferTypeRequestResponse.WINBACK -> AdaptySubscriptionOfferType.WINBACK
+        AdaptySubscriptionOfferTypeRequestResponse.CODE -> AdaptySubscriptionOfferType.CODE
     }
 }
 
@@ -29,6 +33,7 @@ internal fun AdaptySubscriptionOfferType.asAdaptySubscriptionOfferTypeRequest():
         AdaptySubscriptionOfferType.INTRODUCTORY -> AdaptySubscriptionOfferTypeRequestResponse.INTRODUCTORY
         AdaptySubscriptionOfferType.PROMOTIONAL -> AdaptySubscriptionOfferTypeRequestResponse.PROMOTIONAL
         AdaptySubscriptionOfferType.WINBACK -> AdaptySubscriptionOfferTypeRequestResponse.WINBACK
+        AdaptySubscriptionOfferType.CODE -> AdaptySubscriptionOfferTypeRequestResponse.CODE
     }
 }
 

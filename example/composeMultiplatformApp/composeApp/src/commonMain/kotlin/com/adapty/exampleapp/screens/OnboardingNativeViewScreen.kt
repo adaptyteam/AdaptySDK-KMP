@@ -25,6 +25,7 @@ import org.jetbrains.compose.resources.painterResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Suppress("DEPRECATION") // onboarding deprecated; no flow replacement yet
 @Composable
 fun OnboardingNativeViewScreen(
     onboarding: AdaptyOnboarding,

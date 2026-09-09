@@ -105,10 +105,10 @@ import UIKit
                
                 do {
                     
-                    let configuration = try await AdaptyPlugin.getPaywallViewConfiguration(withJson: jsonString)
-                    
-                    // Create the actual paywall view
-                    let uiView = AdaptyPaywallPlatformViewWrapper(
+                    let configuration = try await AdaptyPlugin.getFlowViewConfiguration(withJson: jsonString)
+
+                    // Create the actual flow view
+                    let uiView = AdaptyFlowPlatformViewWrapper(
                         viewId: id,
                         eventHandler: handler,
                         configuration: configuration,

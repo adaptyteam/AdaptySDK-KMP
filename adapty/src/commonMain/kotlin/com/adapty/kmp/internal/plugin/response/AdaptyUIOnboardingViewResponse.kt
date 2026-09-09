@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 package com.adapty.kmp.internal.plugin.response
 
 import com.adapty.kmp.models.AdaptyUIOnboardingView

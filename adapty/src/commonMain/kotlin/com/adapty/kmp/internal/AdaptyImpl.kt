@@ -1,8 +1,11 @@
+@file:Suppress("DEPRECATION") // references the deprecated onboarding API
+
 package com.adapty.kmp.internal
 
 import com.adapty.kmp.AdaptyContract
 import com.adapty.kmp.OnInstallationDetailsListener
 import com.adapty.kmp.OnProfileUpdatedListener
+import com.adapty.kmp.OnPromotedPurchaseListener
 import com.adapty.kmp.internal.plugin.AdaptyPlugin
 import com.adapty.kmp.internal.plugin.AdaptyPluginEventHandler
 import com.adapty.kmp.internal.plugin.asAdaptyResult
@@ -13,21 +16,25 @@ import com.adapty.kmp.internal.plugin.execute
 import com.adapty.kmp.internal.plugin.request.AdaptyConfigurationRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetOnboardingRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowForDefaultAudienceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallProductsRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyGetPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIdentifyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateCollectingRefundDataRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosUpdateRefundPreferenceRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyLogShowPaywallRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyLogShowFlowRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlow
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowPaywallRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
-import com.adapty.kmp.internal.plugin.request.AdaptyPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetLogLevelRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyConfigurationRequest
@@ -35,10 +42,9 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyCustomerIdentityRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyIosRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyLogLevelRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyOnboarding
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywall
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
-import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyWebPresentationRequest
@@ -57,15 +63,18 @@ import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyCustomerIdentity
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyErrorCode
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
+import com.adapty.kmp.models.AdaptyFlow
+import com.adapty.kmp.models.AdaptyFlowPaywall
 import com.adapty.kmp.models.AdaptyInstallationStatus
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyLogLevel
 import com.adapty.kmp.models.AdaptyOnboarding
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
@@ -80,6 +89,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 
+@Suppress("OVERRIDE_DEPRECATION")
 internal class AdaptyImpl(
     private val adaptyPlugin: AdaptyPlugin,
     private val appMainScope: CoroutineScope = MainScope()
@@ -88,6 +98,17 @@ internal class AdaptyImpl(
     private var eventsListenerJob: Job? = null
     private var profileUpdateEventObserver: OnProfileUpdatedListener? = null
     private var installationDetailsEventObserver: OnInstallationDetailsListener? = null
+    private var promotedPurchaseEventObserver: OnPromotedPurchaseListener? = null
+
+    /**
+     * A promoted purchase that arrived before [setOnPromotedPurchaseListener] was called.
+     *
+     * The event collector starts in `init`, so a purchase intent delivered between `activate` and
+     * listener registration would otherwise be dropped — the common case, since a promoted
+     * purchase cold-launches the app. Held here and replayed on registration. Only the latest is
+     * kept: a newer intent supersedes an unhandled older one.
+     */
+    private var pendingPromotedPurchase: AdaptyPromotedProduct? = null
 
 
     init {
@@ -140,27 +161,43 @@ internal class AdaptyImpl(
             request = Unit,
         ).asAdaptyResult { it.asAdaptyInstallationStatus() }
 
-    override suspend fun getPaywall(
+    override suspend fun getFlow(
         placementId: String,
-        locale: String?,
         fetchPolicy: AdaptyPaywallFetchPolicy,
         loadTimeout: Duration
-    ): AdaptyResult<AdaptyPaywall> =
-        adaptyPlugin.awaitExecute<AdaptyGetPaywallRequest, AdaptyPaywallRequestResponse>(
-            method = AdaptyPluginMethod.GET_PAYWALL,
-            request = AdaptyGetPaywallRequest(
+    ): AdaptyResult<AdaptyFlow> =
+        adaptyPlugin.awaitExecute<AdaptyGetFlowRequest, AdaptyFlowRequestResponse>(
+            method = AdaptyPluginMethod.GET_FLOW,
+            request = AdaptyGetFlowRequest(
                 placementId = placementId,
-                locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest(),
                 loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
             )
-        ).asAdaptyResult { it.asAdaptyPaywall() }
+        ).asAdaptyResult { it.asAdaptyFlow() }
 
-    override suspend fun getPaywallProducts(paywall: AdaptyPaywall): AdaptyResult<List<AdaptyPaywallProduct>> =
+    override suspend fun getFlowForDefaultAudience(
+        placementId: String,
+        fetchPolicy: AdaptyPaywallFetchPolicy
+    ): AdaptyResult<AdaptyFlow> =
+        adaptyPlugin.awaitExecute<AdaptyGetFlowForDefaultAudienceRequest, AdaptyFlowRequestResponse>(
+            method = AdaptyPluginMethod.GET_FLOW_FOR_DEFAULT_AUDIENCE,
+            request = AdaptyGetFlowForDefaultAudienceRequest(
+                placementId = placementId,
+                fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest()
+            )
+        ).asAdaptyResult { it.asAdaptyFlow() }
+
+    override suspend fun getPaywallProducts(flow: AdaptyFlow): AdaptyResult<List<AdaptyPaywallProduct>> =
         adaptyPlugin.awaitExecute<AdaptyGetPaywallProductsRequest, List<AdaptyPaywallProductResponse>>(
             method = AdaptyPluginMethod.GET_PAYWALL_PRODUCTS,
-            request = AdaptyGetPaywallProductsRequest(paywall = paywall.asAdaptyPaywallRequest())
+            request = AdaptyGetPaywallProductsRequest(flow = flow.asAdaptyFlowRequest())
         ).asAdaptyResult { list -> list.map { it.asAdaptyPaywallProduct() } }
+
+    override suspend fun logShowFlow(flow: AdaptyFlow): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyLogShowFlowRequest, Boolean>(
+            method = AdaptyPluginMethod.LOG_SHOW_FLOW,
+            request = AdaptyLogShowFlowRequest(flow = flow.asAdaptyFlowRequest())
+        ).asAdaptyResult { }
 
 
     override suspend fun makePurchase(
@@ -175,20 +212,37 @@ internal class AdaptyImpl(
             )
         ).asAdaptyResult { it.asAdaptyPurchaseResult() }
 
+    override suspend fun makePromotedPurchase(
+        product: AdaptyPromotedProduct,
+    ): AdaptyResult<AdaptyPurchaseResult> {
+        if (isAndroidPlatform) return AdaptyResult.Error(
+            AdaptyError(
+                code = AdaptyErrorCode.DEVELOPER_ERROR,
+                message = "This method is only available for iOS"
+            )
+        )
+        return adaptyPlugin.awaitExecute<AdaptyMakePromotedPurchaseRequest, AdaptyPurchaseResultResponse>(
+            method = AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE,
+            request = AdaptyMakePromotedPurchaseRequest(
+                product = product.asAdaptyPromotedProductRequest(),
+            )
+        ).asAdaptyResult { it.asAdaptyPurchaseResult() }
+    }
+
     override suspend fun restorePurchases(): AdaptyResult<AdaptyProfile> =
         adaptyPlugin.awaitExecute<Unit, AdaptyProfileResponse>(
             method = AdaptyPluginMethod.RESTORE_PURCHASES,
             request = Unit
         ).asAdaptyResult { it.asAdaptyProfile() }
 
-    override suspend fun updateAttribution(
+    override suspend fun updateExternalAttribution(
         attribution: Map<String, Any>,
-        source: String
-    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyUpdateAttributionRequest, Boolean>(
-        method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
-        request = AdaptyUpdateAttributionRequest(
+        provider: AdaptyExternalAttributionProvider
+    ): AdaptyResult<Unit> = adaptyPlugin.awaitExecute<AdaptyUpdateExternalAttributionRequest, Boolean>(
+        method = AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION,
+        request = AdaptyUpdateExternalAttributionRequest(
             attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
-            source = source
+            provider = provider.value
         )
     ).asAdaptyResult { }
 
@@ -225,6 +279,18 @@ internal class AdaptyImpl(
         this.installationDetailsEventObserver = onInstallationDetailsListener
     }
 
+    override fun setOnPromotedPurchaseListener(onPromotedPurchaseListener: OnPromotedPurchaseListener?) {
+        this.promotedPurchaseEventObserver = onPromotedPurchaseListener
+        if (onPromotedPurchaseListener == null) return
+        val pending = pendingPromotedPurchase ?: return
+        pendingPromotedPurchase = null
+        // Deliver on the main scope so a replayed purchase reaches the listener on the same
+        // dispatcher as one arriving through the collector.
+        appMainScope.launch {
+            onPromotedPurchaseListener.onPromotedPurchaseReceived(pending)
+        }
+    }
+
     override fun setLogLevel(logLevel: AdaptyLogLevel) {
         applyLogLevel(logLevel)
 
@@ -242,27 +308,6 @@ internal class AdaptyImpl(
         ).asAdaptyResult { }
 
 
-    override suspend fun logShowPaywall(paywall: AdaptyPaywall): AdaptyResult<Unit> =
-        adaptyPlugin.awaitExecute<AdaptyLogShowPaywallRequest, Boolean>(
-            method = AdaptyPluginMethod.LOG_SHOW_PAYWALL,
-            request = AdaptyLogShowPaywallRequest(paywall = paywall.asAdaptyPaywallRequest())
-        ).asAdaptyResult { }
-
-    override suspend fun getPaywallForDefaultAudience(
-        placementId: String,
-        locale: String?,
-        fetchPolicy: AdaptyPaywallFetchPolicy
-    ): AdaptyResult<AdaptyPaywall> =
-        adaptyPlugin.awaitExecute<AdaptyGetPaywallForDefaultAudienceRequest, AdaptyPaywallRequestResponse>(
-            method = AdaptyPluginMethod.GET_PAYWALL_FOR_DEFAULT_AUDIENCE,
-            request = AdaptyGetPaywallForDefaultAudienceRequest(
-                placementId = placementId,
-                locale = locale.takeIf { !it.isNullOrBlank() } ?: DEFAULT_LOCALE,
-                fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest()
-            )
-        ).asAdaptyResult { it.asAdaptyPaywall() }
-
-
     override suspend fun isActivated(): Boolean {
         val response = adaptyPlugin.awaitExecute<Unit, Boolean>(
             method = AdaptyPluginMethod.IS_ACTIVATED,
@@ -275,60 +320,41 @@ internal class AdaptyImpl(
         return isActivated
     }
 
-    override suspend fun createWebPaywallUrl(
-        paywall: AdaptyPaywall?,
-        product: AdaptyPaywallProduct?
-    ): AdaptyResult<String> {
-
-        val request = when {
-            paywall != null -> AdaptyWebPaywallRequest.fromPaywall(paywall.asAdaptyPaywallRequest())
-            product != null -> AdaptyWebPaywallRequest.fromPaywallProduct(product.asAdaptyPaywallProductRequest())
-            else -> return AdaptyResult.Error(
-                AdaptyError(
-                    code = AdaptyErrorCode.WRONG_PARAMETER,
-                    message = "Either Paywall or product must be provided"
-                )
-            )
-        }
-
-        val result = adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, String>(
+    override suspend fun createWebPaywallUrl(flowPaywall: AdaptyFlowPaywall): AdaptyResult<String> =
+        adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, String>(
             method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
-            request = request
+            request = AdaptyWebPaywallRequest.fromPaywall(flowPaywall.asAdaptyFlowPaywallRequest())
         ).asAdaptyResult { it }
 
-        return result
-    }
+    override suspend fun createWebPaywallUrl(product: AdaptyPaywallProduct): AdaptyResult<String> =
+        adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, String>(
+            method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
+            request = AdaptyWebPaywallRequest.fromPaywallProduct(product.asAdaptyPaywallProductRequest())
+        ).asAdaptyResult { it }
 
     override suspend fun openWebPaywall(
-        paywall: AdaptyPaywall?,
-        product: AdaptyPaywallProduct?,
+        flowPaywall: AdaptyFlowPaywall,
         openIn: AdaptyWebPresentation
-    ): AdaptyResult<Unit> {
-        val request = when {
-            paywall != null -> AdaptyWebPaywallRequest.fromPaywall(
-                paywall = paywall.asAdaptyPaywallRequest(),
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, Boolean>(
+            method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
+            request = AdaptyWebPaywallRequest.fromPaywall(
+                paywall = flowPaywall.asAdaptyFlowPaywallRequest(),
                 webPresentationRequest = openIn.asAdaptyWebPresentationRequest()
             )
+        ).asAdaptyResult { }
 
-            product != null -> AdaptyWebPaywallRequest.fromPaywallProduct(
+    override suspend fun openWebPaywall(
+        product: AdaptyPaywallProduct,
+        openIn: AdaptyWebPresentation
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, Boolean>(
+            method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
+            request = AdaptyWebPaywallRequest.fromPaywallProduct(
                 product = product.asAdaptyPaywallProductRequest(),
                 webPresentationRequest = openIn.asAdaptyWebPresentationRequest()
             )
-
-            else -> {
-                val error = AdaptyError(
-                    code = AdaptyErrorCode.WRONG_PARAMETER,
-                    message = "Either Paywall or product must be provided"
-                )
-                return AdaptyResult.Error(error)
-            }
-        }
-
-        return adaptyPlugin.awaitExecute<AdaptyWebPaywallRequest, Boolean>(
-            method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
-            request = request
         ).asAdaptyResult { }
-    }
 
     override suspend fun presentCodeRedemptionSheet(): AdaptyResult<Unit> {
         if (isAndroidPlatform) return AdaptyResult.Error(
@@ -411,6 +437,7 @@ internal class AdaptyImpl(
             supervisorScope {
                 launch { listenForProfileUpdateEvent() }
                 launch { listenForInstallationEvent() }
+                launch { listenForPromotedPurchaseEvent() }
             }
         }
     }
@@ -423,6 +450,29 @@ internal class AdaptyImpl(
             }
             .collect { profile ->
                 profileUpdateEventObserver?.onProfileReceived(profile)
+            }
+    }
+
+    @OptIn(AdaptyKMPInternal::class)
+    private suspend fun listenForPromotedPurchaseEvent() {
+        AdaptyPluginEventHandler.promotedPurchaseFlow
+            .catch {
+                logger.log("AdaptyImpl, onPromotedPurchaseListener, error: $it")
+            }
+            .collect { product ->
+                val observer = promotedPurchaseEventObserver
+                if (observer == null) {
+                    pendingPromotedPurchase = product
+                    // This misconfiguration costs the user a purchase, so it stays visible at any log level.
+                    ConsoleLogger.log(
+                        "AdaptyImpl, received a promoted purchase for ${product.vendorProductId} " +
+                            "but no OnPromotedPurchaseListener is registered. It is held and will " +
+                            "be delivered once you call Adapty.setOnPromotedPurchaseListener(); " +
+                            "complete it with Adapty.makePromotedPurchase()."
+                    )
+                } else {
+                    observer.onPromotedPurchaseReceived(product)
+                }
             }
     }
 

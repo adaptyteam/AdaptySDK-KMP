@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // deprecated onboarding observer bridges deprecated paywall/flow APIs
+
 package com.adapty.kmp
 
 import com.adapty.kmp.internal.logger
@@ -34,6 +36,10 @@ import kotlinx.coroutines.launch
  *
  * @see AdaptyUIOnboardingView
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public interface AdaptyUIOnboardingsEventsObserver {
 
     /** Main [CoroutineScope] used for onboarding UI actions. */
@@ -116,11 +122,9 @@ public interface AdaptyUIOnboardingsEventsObserver {
     }
 
     private suspend fun presentPaywall(placementId: String) {
-        val paywallResult = Adapty.getPaywall(placementId)
-        paywallResult.onSuccess { paywall ->
-            val paywallViewResult = AdaptyUI.createPaywallView(paywall)
-            paywallViewResult
-                .onSuccess { paywallView -> paywallView.present() }
+        Adapty.getFlow(placementId).onSuccess { flow ->
+            AdaptyUI.createFlowView(flow)
+                .onSuccess { flowView -> flowView.present() }
                 .onError { logger.log("Error while presenting paywall: $it") }
         }.onError { error ->
             logger.log("Error while presenting paywall: $error")

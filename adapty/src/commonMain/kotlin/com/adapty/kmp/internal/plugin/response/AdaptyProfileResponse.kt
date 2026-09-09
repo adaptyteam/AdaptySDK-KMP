@@ -1,5 +1,6 @@
 package com.adapty.kmp.internal.plugin.response
 
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.internal.plugin.request.AdaptyCustomAttributesRequestResponse
 import com.adapty.kmp.internal.plugin.request.toTypedMap
@@ -33,7 +34,10 @@ internal data class AdaptyProfileResponse(
     val timestamp: Long,
 
     @SerialName("is_test_user")
-    val isTestUser: Boolean
+    val isTestUser: Boolean,
+
+    @SerialName("applied_attribution_sources")
+    val appliedExternalAttributionProviders: List<String>? = null,
 )
 
 internal fun AdaptyProfileResponse.asAdaptyProfile(): AdaptyProfile {
@@ -48,6 +52,8 @@ internal fun AdaptyProfileResponse.asAdaptyProfile(): AdaptyProfile {
         nonSubscriptions = nonSubscriptions?.entries?.associate { entry -> entry.key to entry.value.map { it.asAdaptyNonSubscription() } }
             ?: emptyMap(),
         customAttributes = customAttributes.toTypedMap(),
-        isTestUser = isTestUser
+        isTestUser = isTestUser,
+        appliedExternalAttributionProviders = appliedExternalAttributionProviders
+            ?.map { AdaptyExternalAttributionProvider(it) } ?: emptyList(),
     )
 }

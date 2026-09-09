@@ -11,6 +11,10 @@ package com.adapty.kmp.models
  * @property screenIndex Index of the current screen within the flow (starting from 0).
  * @property screensTotal Total number of screens in the onboarding flow.
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public data class AdaptyUIOnboardingMeta(
     public val onboardingId: String,
     public val screenClientId: String,

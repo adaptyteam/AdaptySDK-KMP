@@ -23,11 +23,14 @@ import KMPAdapty.adapty.BuildConfig
  * outside Adapty (e.g., via your own billing logic). Default value is false
  * @property customerUserId Optional unique identifier for the current user in your system.
  * @property ipAddressCollectionDisabled Disables IP address collection if `true`. Default value is false.
+ * @property adaptyAttributionEnabled Enables Adapty Attribution (User Acquisition). Opt-in since 4.1.0 —
+ * installation details are not collected and [OnInstallationDetailsListener] does not fire unless
+ * this is `true`. Default value is false.
  * @property googleAdvertisingIdCollection Enables Google Advertising ID collection when `true`. Default value is false.
  * @property appleIdfaCollectionDisabled Disables IDFA collection (iOS only) if `true`. Default value is false.
  * @property backendProxyHost Custom proxy host (for internal use).
  * @property backendProxyPort Custom proxy port (for internal use).
- * @property serverCluster Region of Adapty’s backend servers (default or EU).
+ * @property serverCluster Region of Adapty’s backend servers (default, EU or CN).
  * @property crossPlatformSDKName Name of the SDK if used via another platform (e.g., Flutter, React Native).
  * @property crossPlatformSDKVersion Version of the wrapper SDK.
  * @property activateUI Enables AdaptyUI module (for displaying paywalls and onboarding).
@@ -39,6 +42,7 @@ public class AdaptyConfig private constructor(
     internal val observerMode: Boolean,
     internal val customerUserId: String?,
     internal val ipAddressCollectionDisabled: Boolean,
+    internal val adaptyAttributionEnabled: Boolean,
     internal val googleAdvertisingIdCollection: Boolean,
     internal val googleEnablePendingPrepaidPlans: Boolean,
     internal val appleClearDataOnBackup: Boolean,
@@ -78,6 +82,7 @@ public class AdaptyConfig private constructor(
         private var customerUserId: String? = null
         private var observerMode = false
         private var ipAddressCollectionDisabled = false
+        private var adaptyAttributionEnabled = false
         private var googleAdvertisingIdCollection = false
         private var googleEnablePendingPrepaidPlans = false
         private var appleClearDataOnBackup = false
@@ -115,6 +120,15 @@ public class AdaptyConfig private constructor(
         public fun withIpAddressCollectionDisabled(disabled: Boolean): Builder =
             apply { this.ipAddressCollectionDisabled = disabled }
 
+        /**
+         * Enables Adapty Attribution (User Acquisition). Default value is false.
+         *
+         * Since 4.1.0 installation details are only collected when this is enabled, so
+         * [OnInstallationDetailsListener] will not fire until you turn it on.
+         */
+        public fun withAdaptyAttributionEnabled(enabled: Boolean): Builder =
+            apply { this.adaptyAttributionEnabled = enabled }
+
         /** Disables/Enables Google Advertising ID collection. Default value is false. */
         public fun withGoogleAdvertisingIdCollectionDisabled(disabled: Boolean): Builder =
             apply { this.googleAdvertisingIdCollection = disabled }
@@ -145,11 +159,12 @@ public class AdaptyConfig private constructor(
         internal fun withCrossPlatformSDKVersion(version: String): Builder =
             apply { this.crossPlatformSDKVersion = version }
 
-        /** Sets the region of Adapty’s backend servers (default or EU). */
+        /** Sets the region of Adapty’s backend servers (default, EU or CN). */
         public fun withServerCluster(cluster: ServerCluster): Builder = apply {
             this.serverCluster = when (cluster) {
                 ServerCluster.EU -> "eu"
-                else -> "default"
+                ServerCluster.CN -> "cn"
+                ServerCluster.DEFAULT -> "default"
             }
         }
 
@@ -175,6 +190,7 @@ public class AdaptyConfig private constructor(
                 appleClearDataOnBackup = appleClearDataOnBackup,
                 googleLocalAccessLevelAllowed = googleLocalAccessLevelAllowed,
                 ipAddressCollectionDisabled = ipAddressCollectionDisabled,
+                adaptyAttributionEnabled = adaptyAttributionEnabled,
                 backendProxyHost = backendProxyHost,
                 backendProxyPort = backendProxyPort,
                 serverCluster = serverCluster,
@@ -196,7 +212,10 @@ public class AdaptyConfig private constructor(
         DEFAULT,
 
         /** European region (EU). */
-        EU
+        EU,
+
+        /** Chinese region (CN). */
+        CN
     }
 
     /**

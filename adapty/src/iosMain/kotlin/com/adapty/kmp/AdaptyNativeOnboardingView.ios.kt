@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION") // deprecated onboarding-view wrapper bridges deprecated APIs
+
 package com.adapty.kmp
 
 import platform.UIKit.UIViewController
@@ -15,6 +17,10 @@ import platform.UIKit.UIViewController
  *
  * @see AdaptyUI.createNativeOnboardingView
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public class AdaptyNativeOnboardingView internal constructor(
     public val viewController: UIViewController,
     private val viewId: String,

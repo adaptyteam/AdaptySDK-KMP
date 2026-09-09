@@ -39,9 +39,9 @@ import com.adapty.exampleapp.components.ListTextTile
 import com.adapty.kmp.Adapty
 import com.adapty.kmp.models.AdaptyInstallationStatusDetermined
 import com.adapty.kmp.models.AdaptyInstallationStatusNotAvailable
+import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
 import com.adapty.kmp.models.AdaptyIosRefundPreference
-import com.adapty.kmp.models.AdaptyPaywall
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.onError
 import kotlinx.coroutines.launch
@@ -228,11 +228,6 @@ fun ProfileInfoSection(
 
     ListSection(headerText = "Profile") {
         ListTextTile(
-            title = "Is Test",
-            subtitle = if (profile?.isTestUser == true) "true" else "false"
-        )
-
-        ListTextTile(
             title = "Premium",
             subtitle = if (premium?.isActive == true) "Active" else "Inactive",
             subtitleColor = if (premium?.isActive == true) Color.Green else Color.Red
@@ -371,7 +366,7 @@ private fun ExampleABPaywallTestSection(
             )
 
             PaywallContentSection(
-                paywall = uiState.examplePaywall,
+                flow = uiState.examplePaywall,
                 products = uiState.examplePaywallProducts,
                 onUiEvent = onUiEvent
             )
@@ -451,7 +446,7 @@ private fun CustomPaywallSection(
             ListTextTile(title = "Paywall Id", subtitle = uiState.customPaywall.placement.id)
 
             PaywallContentSection(
-                paywall = uiState.customPaywall,
+                flow = uiState.customPaywall,
                 products = uiState.customPaywallProducts,
                 onUiEvent = onUiEvent
             )
@@ -510,7 +505,7 @@ private fun OtherActionsSection(
         ListActionTile(
             title = "Update Attribution",
             onClick = {
-                onUiEvent(AppUiEvent.OnClickUpdateAttribution)
+                onUiEvent(AppUiEvent.OnClickUpdateExternalAttribution)
             }
         )
 
@@ -532,22 +527,21 @@ private fun OtherActionsSection(
 
 @Composable
 private fun PaywallContentSection(
-    paywall: AdaptyPaywall,
+    flow: AdaptyFlow,
     products: List<AdaptyPaywallProduct>?,
     onUiEvent: (AppUiEvent) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     Column {
-        ListTextTile(title = "Name", subtitle = paywall.name)
-        ListTextTile(title = "Variation", subtitle = paywall.variationId)
-        ListTextTile(title = "Revision", subtitle = paywall.placement.revision.toString())
-        ListTextTile(title = "Locale", subtitle = paywall.remoteConfig?.locale.orEmpty())
+        ListTextTile(title = "Name", subtitle = flow.name)
+        ListTextTile(title = "Variation", subtitle = flow.variationId)
+        ListTextTile(title = "Revision", subtitle = flow.placement.revision.toString())
+        ListTextTile(title = "Locale", subtitle = flow.remoteConfigs.firstOrNull()?.locale.orEmpty())
 
         if (products == null) {
-            paywall.productIdentifiers.forEach {
-                ListTextTile(title = it.vendorProductId)
-            }
+            flow.paywalls.flatMap { it.productIdentifiers }.distinctBy { it.vendorProductId }
+                .forEach {
+                    ListTextTile(title = it.vendorProductId)
+                }
         } else {
             products.forEach { product ->
                 ListProductTile(
@@ -560,7 +554,7 @@ private fun PaywallContentSection(
         ListActionTile(
             title = "Log Show Paywall",
             onClick = {
-                onUiEvent(AppUiEvent.OnClickLogShowPaywall(paywall))
+                onUiEvent(AppUiEvent.OnClickLogShowPaywall(flow))
             }
         )
 
@@ -570,30 +564,23 @@ private fun PaywallContentSection(
                 onUiEvent(
                     AppUiEvent.OnClickReportTransaction(
                         transactionId = Constants.TEST_TRANSACTION_ID,
-                        variationId = paywall.variationId
+                        variationId = flow.variationId
                     )
                 )
             }
         )
 
-        if (paywall.hasViewConfiguration) {
-            ListActionTile(
-                title = "Present View",
-                onClick = {
-                    onUiEvent(AppUiEvent.OnClickPresentPaywallView(paywall = paywall))
-                }
-            )
-        }
+        ListActionTile(
+            title = "Present View",
+            onClick = {
+                onUiEvent(AppUiEvent.OnClickPresentPaywallView(flow = flow))
+            }
+        )
 
         ListActionTile(
             title = "Open Web Paywall",
             onClick = {
-                coroutineScope.launch {
-                    AppLogger.d("Invoking openWebPaywall, paywall: $paywall")
-                    Adapty.openWebPaywall(paywall = paywall).onError { error ->
-                        AppLogger.e("PaywallContentSection, openWebPaywall, error: $error")
-                    }
-                }
+                onUiEvent(AppUiEvent.OnClickOpenWebPaywall(flow = flow))
             }
         )
     }

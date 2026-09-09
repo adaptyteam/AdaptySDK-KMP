@@ -8,7 +8,6 @@ package com.adapty.kmp.models
  * subscription details (if applicable), and its relation to the paywall.
  *
  * @property vendorProductId Unique identifier of a product from the App Store Connect or Google Play Console.
- * @property adaptyProductId Internal Adapty product identifier.
  * @property paywallProductIndex Index of the product in the paywall.
  * @property paywallVariationId Variation ID of the parent paywall.
  * @property paywallABTestName A/B test name of the parent paywall.
@@ -24,7 +23,6 @@ package com.adapty.kmp.models
  * @property regionCode Optional region code used to format the price.
  * @property price [AdaptyPrice] Main price information for the product.
  * @property subscription Optional subscription-specific details (intro offers, trials, etc.).
- * @property payloadData Internal Optional custom payload data.
  */
 public data class AdaptyPaywallProduct internal constructor(
     val vendorProductId: String,
@@ -40,8 +38,8 @@ public data class AdaptyPaywallProduct internal constructor(
     val isFamilyShareable: Boolean,
     val regionCode: String? = null,
     val price: AdaptyPrice,
-    val subscription: AdaptyPaywallProductSubscription? = null,
-    val webPurchaseUrl: String? = null,
+    val subscription: AdaptyProductSubscription? = null,
+    internal val webPurchaseUrl: String? = null,
     internal val payloadData: String? = null
 )
 

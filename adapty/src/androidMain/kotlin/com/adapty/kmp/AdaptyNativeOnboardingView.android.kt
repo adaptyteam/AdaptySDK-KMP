@@ -1,5 +1,5 @@
 @file:OptIn(InternalAdaptyApi::class)
-@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE", "DEPRECATION")
 
 package com.adapty.kmp
 
@@ -22,6 +22,10 @@ import com.adapty.ui.onboardings.AdaptyOnboardingView
  *
  * @see AdaptyUI.createNativeOnboardingView
  */
+@Deprecated(
+    "Onboarding is deprecated as of 4.0.0 and will be removed in a future release. Migrate to the Adapty Flow Builder.",
+    level = DeprecationLevel.WARNING
+)
 public class AdaptyNativeOnboardingView internal constructor(
     public val onboardingView: AdaptyOnboardingView,
     private val viewId: String,

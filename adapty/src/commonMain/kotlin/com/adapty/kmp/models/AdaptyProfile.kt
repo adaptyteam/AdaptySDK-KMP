@@ -7,7 +7,6 @@ package com.adapty.kmp.models
  * custom attributes, and test device status.
  *
  * @property profileId The unique identifier of the profile in Adapty.
- * @property segmentId Internal segment identifier. Nullable.
  * @property customerUserId Optional identifier of the user in your system.
  * @property accessLevels A map of access level identifiers to [AccessLevel] objects.
  * The values are Can be null if the customer has no access levels.
@@ -17,8 +16,9 @@ package com.adapty.kmp.models
  * The keys are product ids from the store. The values are arrays of information about consumables.
  * Can be null if the customer has no purchases.
  * @property customAttributes User-defined key-value attributes previously set via `.updateProfile()`.
- * @property isTestUser Indicates whether the profile belongs to a test device. Read more about
- * test devices in [Adapty documentation](https://adapty.io/docs/test-devices).
+ * @property appliedExternalAttributionProviders The external attribution providers that have been
+ * applied to this profile. Unknown or future provider ids arrive unchanged — see
+ * [AdaptyExternalAttributionProvider].
  */
 public data class AdaptyProfile internal constructor(
     public val profileId: String,
@@ -28,7 +28,8 @@ public data class AdaptyProfile internal constructor(
     public val subscriptions: Map<String, Subscription>,
     public val nonSubscriptions: Map<String, List<NonSubscription>>,
     public val customAttributes: Map<String, Any>,
-    public val isTestUser: Boolean,
+    internal val isTestUser: Boolean,
+    public val appliedExternalAttributionProviders: List<AdaptyExternalAttributionProvider> = emptyList(),
 ) {
 
     /**
