@@ -11,7 +11,9 @@ import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
-import com.adapty.kmp.internal.plugin.request.AdaptyUpdateAttributionRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPresentationRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPaywallProductRequest
@@ -23,6 +25,7 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateReplacementMode
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyErrorCode
 import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
 import com.adapty.kmp.models.AdaptyIosRefundPreference
@@ -252,7 +255,37 @@ class AdaptyImplTest {
     }
 
     @Test
-    fun `updateAttribution method - verify request and response`() = runTest {
+    fun `makePromotedPurchase method - verify request and response`() = runTest {
+        if (isAndroidPlatform) return@runTest
+        val product = AdaptyFakeTestData.getPromotedProduct()
+
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.makePromotedPurchase(product = product) },
+            method = AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE,
+            param = AdaptyMakePromotedPurchaseRequest(
+                product = product.asAdaptyPromotedProductRequest()
+            ),
+            expectedSuccessData = AdaptyFakeTestData.getSuccessPurchaseResult(),
+        )
+    }
+
+    @Test
+    fun `makePromotedPurchase method - returns error on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
+        // makePromotedPurchase is iOS-only; on Android it returns an error immediately
+        val result = adaptyImpl.makePromotedPurchase(
+            product = AdaptyFakeTestData.getPromotedProduct()
+        )
+        result.fold(
+            onSuccess = { fail("Expected error on Android but got success") },
+            onError = { error ->
+                assertEquals(AdaptyErrorCode.DEVELOPER_ERROR, error.code)
+            }
+        )
+    }
+
+    @Test
+    fun `updateExternalAttribution method - verify request and response`() = runTest {
 
         val attribution = mapOf(
             "status" to "non_organic|organic|unknown",
@@ -263,16 +296,16 @@ class AdaptyImplTest {
             "creative" to "creative id"
         )
 
-        val source = "custom"
+        val provider = AdaptyExternalAttributionProvider.CUSTOM
 
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImpl.updateAttribution(attribution = attribution, source = source)
+                adaptyImpl.updateExternalAttribution(attribution = attribution, provider = provider)
             },
-            method = AdaptyPluginMethod.UPDATE_ATTRIBUTION,
-            param = AdaptyUpdateAttributionRequest(
+            method = AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION,
+            param = AdaptyUpdateExternalAttributionRequest(
                 attribution = jsonInstance.encodeToString(attribution.toAdaptyCustomAttributesRequest()),
-                source = source
+                provider = provider.value
             ),
             expectedSuccessData = Unit
         )

@@ -1,7 +1,7 @@
 package com.adapty.kmp.models
 
 /**
- * Represents detailed subscription information for a paywall product.
+ * Represents detailed subscription information for a product (paywall or promoted).
  *
  * Includes period, renewal type, and optional platform-specific identifiers and offers.
  *
@@ -13,7 +13,7 @@ package com.adapty.kmp.models
  * @property renewalType [AdaptyRenewalType] The type of subscription renewal (PREPAID, AUTORENEWABLE).
  * @property basePlanId The identifier of the base plan. Android only.
  */
-public data class AdaptyPaywallProductSubscription internal constructor(
+public data class AdaptyProductSubscription internal constructor(
     val groupIdentifier: String? = null,
     val period: AdaptySubscriptionPeriod,
     val localizedPeriod: String? = null,

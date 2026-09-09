@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class AdaptyUpdateAttributionRequest(
+internal data class AdaptyUpdateExternalAttributionRequest(
     @SerialName("attribution") val attribution: String,
-    @SerialName("source") val source: String
+    @SerialName("provider") val provider: String
 )

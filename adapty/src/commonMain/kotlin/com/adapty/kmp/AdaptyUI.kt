@@ -163,11 +163,14 @@ internal interface AdaptyUIContract {
      * Creates a flow view that can be presented to the user (cross_platform 4.0.0).
      *
      * @param flow The [AdaptyFlow] model used to build the view.
+     * @param customLayoutId The id of a custom layout to render instead of the one resolved
+     * automatically for the current device
      * @return [AdaptyResult] containing the created [AdaptyUIFlowView] or an error.
      */
     suspend fun createFlowView(
         flow: AdaptyFlow,
         locale: String? = null,
+        customLayoutId: String? = null,
         loadTimeout: Duration? = null,
         preloadProducts: Boolean = false,
         customTags: Map<String, String>? = null,

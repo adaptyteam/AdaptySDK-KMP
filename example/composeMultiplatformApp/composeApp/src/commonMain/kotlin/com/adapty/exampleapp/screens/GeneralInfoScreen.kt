@@ -228,11 +228,6 @@ fun ProfileInfoSection(
 
     ListSection(headerText = "Profile") {
         ListTextTile(
-            title = "Is Test",
-            subtitle = if (profile?.isTestUser == true) "true" else "false"
-        )
-
-        ListTextTile(
             title = "Premium",
             subtitle = if (premium?.isActive == true) "Active" else "Inactive",
             subtitleColor = if (premium?.isActive == true) Color.Green else Color.Red
@@ -510,7 +505,7 @@ private fun OtherActionsSection(
         ListActionTile(
             title = "Update Attribution",
             onClick = {
-                onUiEvent(AppUiEvent.OnClickUpdateAttribution)
+                onUiEvent(AppUiEvent.OnClickUpdateExternalAttribution)
             }
         )
 

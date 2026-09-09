@@ -21,6 +21,7 @@ internal enum class AdaptyPluginEvent(val eventName: String) {
     FLOW_VIEW_DID_RECEIVE_ANALYTIC_EVENT("flow_view_did_receive_analytic_event"),
 
     DID_LOAD_LATEST_PROFILE("did_load_latest_profile"),
+    DID_RECEIVE_PROMOTED_PURCHASE("did_receive_promoted_purchase"),
 
     // Onboarding events
     ONBOARDING_DID_FINISH_LOADING("onboarding_did_finish_loading"),

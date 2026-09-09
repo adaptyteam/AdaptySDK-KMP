@@ -37,6 +37,9 @@ internal data class AdaptyFlowRequestResponse(
     @SerialName("variations")
     val variations: List<AdaptyFlowPaywallRequestResponse> = emptyList(),
 
+    @SerialName("ui_schema")
+    val layoutsConfiguration: AdaptyFlowLayoutsConfigurationRequestResponse? = null,
+
     @SerialName("payload_data")
     val payloadData: String? = null,
 
@@ -54,6 +57,7 @@ internal fun AdaptyFlowRequestResponse.asAdaptyFlow(): AdaptyFlow =
         remoteConfigs = this.remoteConfigs?.map { it.asAdaptyPaywallRemoteConfig() } ?: emptyList(),
         flowVersionId = this.flowVersionId,
         paywalls = this.variations.map { it.asAdaptyFlowPaywall() },
+        layoutsConfiguration = this.layoutsConfiguration,
         payloadData = this.payloadData,
         responseCreatedAt = this.responseCreatedAt,
     )
@@ -68,6 +72,7 @@ internal fun AdaptyFlow.asAdaptyFlowRequest(): AdaptyFlowRequestResponse =
         remoteConfigs = this.remoteConfigs.map { it.asAdaptyPaywallRemoteConfigResponse() }.ifEmpty { null },
         flowVersionId = this.flowVersionId,
         variations = this.paywalls.map { it.asAdaptyFlowPaywallRequest() },
+        layoutsConfiguration = this.layoutsConfiguration,
         payloadData = this.payloadData,
         responseCreatedAt = this.responseCreatedAt,
     )

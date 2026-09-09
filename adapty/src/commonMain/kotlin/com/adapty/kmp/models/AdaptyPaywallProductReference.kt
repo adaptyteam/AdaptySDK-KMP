@@ -2,19 +2,11 @@ package com.adapty.kmp.models
 
 
 /**
- * Represents a reference to a product associated with a paywall.
+ * Internal reference to a product associated with a paywall, as received from the native SDK.
  *
- * Contains minimal identifying information required to map
- * to a full product object, including platform-specific offer identifiers.
- *
- * @property vendorId Unique product identifier from App Store Connect or Google Play Console.
- * @property adaptyProductId Internal Adapty product identifier.
- * @property promotionalOfferId Optional promotional offer ID for iOS (e.g., introductory or promotional pricing).
- * @property winBackOfferId Optional win-back offer ID for iOS.
- * @property basePlanId Optional base plan ID for Android subscriptions.
- * @property offerId Optional offer ID for Android subscriptions.
+ * Not part of the public API: apps use [AdaptyFlowPaywall.productIdentifiers] / [AdaptyProductIdentifier] instead.
  */
-public data class AdaptyPaywallProductReference(
+internal data class AdaptyPaywallProductReference(
     val vendorId: String,
     internal val adaptyProductId: String,
     val productType: String,

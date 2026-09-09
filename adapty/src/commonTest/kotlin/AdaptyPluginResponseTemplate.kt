@@ -10,7 +10,7 @@ import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywallProduct
-import com.adapty.kmp.models.AdaptyPaywallProductSubscription
+import com.adapty.kmp.models.AdaptyProductSubscription
 import com.adapty.kmp.models.AdaptyPeriodUnit
 import com.adapty.kmp.models.AdaptyPrice
 import com.adapty.kmp.models.AdaptyProfile
@@ -40,7 +40,7 @@ object AdaptyPluginResponseTemplate {
             AdaptyPluginMethod.ACTIVATE -> genericSuccessResponse()
             AdaptyPluginMethod.IDENTIFY -> genericSuccessResponse()
             AdaptyPluginMethod.UPDATE_PROFILE -> genericSuccessResponse()
-            AdaptyPluginMethod.UPDATE_ATTRIBUTION -> genericSuccessResponse()
+            AdaptyPluginMethod.UPDATE_EXTERNAL_ATTRIBUTION -> genericSuccessResponse()
             AdaptyPluginMethod.GET_PROFILE -> getSuccessProfileResponse(successData as AdaptyProfile)
             AdaptyPluginMethod.RESTORE_PURCHASES -> getSuccessProfileResponse(successData as AdaptyProfile)
             AdaptyPluginMethod.LOGOUT -> genericSuccessResponse()
@@ -52,6 +52,7 @@ object AdaptyPluginResponseTemplate {
             }
 
             AdaptyPluginMethod.MAKE_PURCHASE -> getSuccessPurchaseResultResponse(successData as AdaptyPurchaseResult)
+            AdaptyPluginMethod.MAKE_PROMOTED_PURCHASE -> getSuccessPurchaseResultResponse(successData as AdaptyPurchaseResult)
             AdaptyPluginMethod.REPORT_TRANSACTION -> genericSuccessResponse()
             AdaptyPluginMethod.SET_FALLBACK -> genericSuccessResponse()
             AdaptyPluginMethod.LOG_SHOW_FLOW -> genericSuccessResponse()
@@ -273,7 +274,7 @@ object AdaptyPluginResponseTemplate {
             )
         }
 
-    private fun buildSubscriptionJson(sub: AdaptyPaywallProductSubscription) = buildJsonObject {
+    private fun buildSubscriptionJson(sub: AdaptyProductSubscription) = buildJsonObject {
         put("group_identifier", sub.groupIdentifier)
         put(
             "renewal_type", when (sub.renewalType) {
@@ -462,6 +463,7 @@ object AdaptyPluginResponseTemplate {
 
         // Profile & installation events
         AdaptyPluginEvent.DID_LOAD_LATEST_PROFILE -> buildDidLoadLatestProfileEvent()
+        AdaptyPluginEvent.DID_RECEIVE_PROMOTED_PURCHASE -> buildDidReceivePromotedPurchaseEvent()
         AdaptyPluginEvent.ON_INSTALLATION_DETAILS_SUCCESS -> buildInstallationDetailsSuccessEvent()
         AdaptyPluginEvent.ON_INSTALLATION_DETAILS_FAIL -> buildInstallationDetailsFailEvent()
     }
@@ -518,7 +520,7 @@ object AdaptyPluginResponseTemplate {
             )
         ))
         put("subscription", buildSubscriptionJson(
-            AdaptyPaywallProductSubscription(
+            AdaptyProductSubscription(
                 groupIdentifier = "com.example.group",
                 renewalType = AdaptyRenewalType.AUTORENEWABLE,
                 basePlanId = "base_plan_001",
@@ -736,6 +738,30 @@ object AdaptyPluginResponseTemplate {
     }
 
     // --- Profile & installation event builders ---
+
+    private fun buildDidReceivePromotedPurchaseEvent(): String = buildJsonObject {
+        put("product", buildEventPromotedProductJson())
+    }.toString()
+
+    /**
+     * `AdaptyPromotedProduct.Response` is `AdaptyPaywallProduct.Response` without the paywall
+     * context, so it is derived from [buildEventProductJson] rather than duplicated.
+     */
+    private fun buildEventPromotedProductJson(): JsonObject = buildJsonObject {
+        val paywallOnlyKeys = setOf(
+            "adapty_product_id",
+            "paywall_product_index",
+            "paywall_variation_id",
+            "paywall_ab_test_name",
+            "paywall_name",
+            "access_level_id",
+            "product_type",
+            "web_purchase_url",
+        )
+        buildEventProductJson().forEach { (key, value) ->
+            if (key !in paywallOnlyKeys) put(key, value)
+        }
+    }
 
     private fun buildDidLoadLatestProfileEvent(): String = buildJsonObject {
         put("profile", buildEventProfileJson())

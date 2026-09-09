@@ -10,11 +10,12 @@ import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyPaywallProductReference
-import com.adapty.kmp.models.AdaptyPaywallProductSubscription
+import com.adapty.kmp.models.AdaptyProductSubscription
 import com.adapty.kmp.models.AdaptyPeriodUnit
 import com.adapty.kmp.models.AdaptyPlacement
 import com.adapty.kmp.models.AdaptyPrice
 import com.adapty.kmp.models.AdaptyProfile
+import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRemoteConfig
 import com.adapty.kmp.models.AdaptyRenewalType
@@ -191,7 +192,7 @@ internal object AdaptyFakeTestData {
             offerTags = listOf("welcome")
         )
 
-        val subscription = AdaptyPaywallProductSubscription(
+        val subscription = AdaptyProductSubscription(
             groupIdentifier = "com.example.group",
             period = subscriptionPeriod,
             localizedPeriod = "1 month",
@@ -220,6 +221,20 @@ internal object AdaptyFakeTestData {
         )
 
         return listOf(product)
+    }
+
+    fun getPromotedProduct(): AdaptyPromotedProduct {
+        val paywallProduct = getPaywallProductList().first()
+        return AdaptyPromotedProduct(
+            vendorProductId = paywallProduct.vendorProductId,
+            localizedDescription = paywallProduct.localizedDescription,
+            localizedTitle = paywallProduct.localizedTitle,
+            isFamilyShareable = paywallProduct.isFamilyShareable,
+            regionCode = paywallProduct.regionCode,
+            price = paywallProduct.price,
+            subscription = paywallProduct.subscription,
+            payloadData = null,
+        )
     }
 
 

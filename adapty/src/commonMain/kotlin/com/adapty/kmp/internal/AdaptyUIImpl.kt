@@ -199,6 +199,7 @@ internal class AdaptyUIImpl(
     override suspend fun createFlowView(
         flow: AdaptyFlow,
         locale: String?,
+        customLayoutId: String?,
         loadTimeout: Duration?,
         preloadProducts: Boolean,
         customTags: Map<String, String>?,
@@ -211,6 +212,7 @@ internal class AdaptyUIImpl(
             request = AdaptyUICreateFlowViewRequest(
                 flow = flow.asAdaptyFlowRequest(),
                 locale = locale,
+                customLayoutId = customLayoutId,
                 loadTimeOutInSeconds = loadTimeout?.inWholeMilliseconds?.toDouble()?.div(1000.0),
                 preloadProducts = preloadProducts,
                 customTags = customTags,
