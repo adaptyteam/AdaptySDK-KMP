@@ -9,6 +9,7 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun getOnboarding-zkXUZaI (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getOnboardingForDefaultAudience (Ljava/lang/String;Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyPaywallFetchPolicy;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getPaywallProducts (Lcom/adapty/kmp/models/AdaptyFlow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun getPendingStoreMessageTypes (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun getProfile (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun identify (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun isActivated (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -27,6 +28,7 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun setOnInstallationDetailsListener (Lcom/adapty/kmp/OnInstallationDetailsListener;)V
 	public fun setOnProfileUpdatedListener (Lcom/adapty/kmp/OnProfileUpdatedListener;)V
 	public fun setOnPromotedPurchaseListener (Lcom/adapty/kmp/OnPromotedPurchaseListener;)V
+	public fun showStoreMessages (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateCollectingRefundDataConsent (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateExternalAttribution (Ljava/util/Map;Lcom/adapty/kmp/models/AdaptyExternalAttributionProvider;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun updateProfile (Lcom/adapty/kmp/models/AdaptyProfileParameters;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -230,7 +232,7 @@ public final class com/adapty/kmp/models/AdaptyAndroidSubscriptionUpdateReplacem
 public final class com/adapty/kmp/models/AdaptyConfig {
 	public static final field SDK_NAME Ljava/lang/String;
 	public static final field SDK_VERSION Ljava/lang/String;
-	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/String;ZZZZZZZLjava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/adapty/kmp/models/AdaptyLogLevel;Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;Lcom/adapty/kmp/models/AdaptyCustomerIdentity;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/String;ZZZZZZZLjava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLcom/adapty/kmp/models/AdaptyLogLevel;Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;Lcom/adapty/kmp/models/AdaptyCustomerIdentity;Lcom/adapty/kmp/models/AdaptyStoreMessagesHandling;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adapty/kmp/models/AdaptyConfig$Builder {
@@ -252,6 +254,7 @@ public final class com/adapty/kmp/models/AdaptyConfig$Builder {
 	public final fun withMediaCacheConfiguration (Lcom/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
 	public final fun withObserverMode (Z)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
 	public final fun withServerCluster (Lcom/adapty/kmp/models/AdaptyConfig$ServerCluster;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
+	public final fun withStoreMessagesHandling (Lcom/adapty/kmp/models/AdaptyStoreMessagesHandling;)Lcom/adapty/kmp/models/AdaptyConfig$Builder;
 }
 
 public final class com/adapty/kmp/models/AdaptyConfig$MediaCacheConfiguration {
@@ -435,6 +438,7 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field NO_PRODUCT_IDS_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field NO_PURCHASES_TO_RESTORE Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field OPERATION_INTERRUPTED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field OPERATION_IN_PROGRESS Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PAYMENT_CANCELLED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PAYMENT_INVALID Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PAYMENT_NOT_ALLOWED Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -446,6 +450,7 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field PROFILE_WAS_CHANGED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field RECEIVE_RESTORED_TRANSACTIONS_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field REFRESH_RECEIPT_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field RESOLVER_FAILURE Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field SERVER_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field UNAUTHORIZED_REQUEST_DATA Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field UNKNOWN Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -1237,6 +1242,30 @@ public final class com/adapty/kmp/models/AdaptyResultKt {
 	public static final fun isSuccess (Lcom/adapty/kmp/models/AdaptyResult;)Z
 	public static final fun onError (Lcom/adapty/kmp/models/AdaptyResult;Lkotlin/jvm/functions/Function1;)Lcom/adapty/kmp/models/AdaptyResult;
 	public static final fun onSuccess (Lcom/adapty/kmp/models/AdaptyResult;Lkotlin/jvm/functions/Function1;)Lcom/adapty/kmp/models/AdaptyResult;
+}
+
+public final class com/adapty/kmp/models/AdaptyStoreMessageType {
+	public static final field Companion Lcom/adapty/kmp/models/AdaptyStoreMessageType$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adapty/kmp/models/AdaptyStoreMessageType$Companion {
+	public final fun getBILLING_ISSUE ()Lcom/adapty/kmp/models/AdaptyStoreMessageType;
+	public final fun getGENERIC ()Lcom/adapty/kmp/models/AdaptyStoreMessageType;
+	public final fun getPRICE_INCREASE_CONSENT ()Lcom/adapty/kmp/models/AdaptyStoreMessageType;
+	public final fun getWIN_BACK_OFFER ()Lcom/adapty/kmp/models/AdaptyStoreMessageType;
+}
+
+public final class com/adapty/kmp/models/AdaptyStoreMessagesHandling : java/lang/Enum {
+	public static final field AUTO Lcom/adapty/kmp/models/AdaptyStoreMessagesHandling;
+	public static final field MANUAL Lcom/adapty/kmp/models/AdaptyStoreMessagesHandling;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyStoreMessagesHandling;
+	public static fun values ()[Lcom/adapty/kmp/models/AdaptyStoreMessagesHandling;
 }
 
 public final class com/adapty/kmp/models/AdaptySubscriptionOffer {
