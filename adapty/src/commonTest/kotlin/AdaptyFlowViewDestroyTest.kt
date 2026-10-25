@@ -1,5 +1,6 @@
 @file:Suppress("DEPRECATION") // dismissOnboardingView is deprecated
 
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDestroyViewRequest
@@ -14,6 +15,8 @@ import kotlinx.serialization.json.put
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * Flow view `destroy` support (cross_platform 4.3.1): `adapty_ui_dismiss_flow_view` always carries
@@ -104,6 +107,18 @@ class AdaptyFlowViewDestroyTest {
                 put("id", view.id)
             }.toString()
         )
+    }
+
+    // The default close / error handlers release only presented views (destroy = isStandaloneView):
+    // embedded platform views are owned by their host and must keep being dismissed with destroy = false.
+    @OptIn(AdaptyKMPInternal::class)
+    @Test
+    fun `isStandaloneView - presented views true, embedded platform views false`() {
+        val presented = AdaptyFakeTestData.getUIFlowView()
+        val embedded = presented.copy(id = AdaptyFakeTestData.getFlow().createNativePlatformViewId())
+
+        assertTrue(presented.isStandaloneView)
+        assertFalse(embedded.isStandaloneView)
     }
 
     @Test

@@ -43,8 +43,9 @@ class AdaptyUIFlowsEventsObserverImpl(
         uiCoroutineScope.launch {
             when (action) {
                 AdaptyUIAction.CloseAction, AdaptyUIAction.AndroidSystemBackAction ->
-                    // Views from the keep-alive demo stay in memory so they can be presented again.
-                    view.dismiss(destroy = !FlowViewKeepAliveDemo.isKeptAlive(view))
+                    // Embedded views are released by their host; views from the keep-alive demo stay
+                    // in memory so they can be presented again.
+                    view.dismiss(destroy = view.isStandaloneView && !FlowViewKeepAliveDemo.isKeptAlive(view))
                 is AdaptyUIAction.OpenUrlAction -> {
                     val selectedAction = view.showDialog(
                         title = "Open URL?",

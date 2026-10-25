@@ -35,14 +35,15 @@ public interface AdaptyUIFlowsEventsObserver {
      *
      * By default:
      * - [AdaptyUIAction.CloseAction] dismisses the view and releases it
-     *   ([AdaptyUIFlowView.dismiss] with the default `destroy = true`). Override and call
-     *   `view.dismiss(destroy = false)` to keep the view for presenting again.
+     *   ([AdaptyUIFlowView.dismiss] with `destroy = true`). Override and call
+     *   `view.dismiss(destroy = false)` to keep the view for presenting again. Embedded platform
+     *   views are dismissed without being released — their host owns their lifecycle.
      * - [AdaptyUIAction.AndroidSystemBackAction] keeps the view open (4.0.0 default).
      * - [AdaptyUIAction.OpenUrlAction] opens the provided URL natively.
      */
     public fun flowViewDidPerformAction(view: AdaptyUIFlowView, action: AdaptyUIAction) {
         when (action) {
-            is AdaptyUIAction.CloseAction -> mainUiScope.launch { view.dismiss() }
+            is AdaptyUIAction.CloseAction -> mainUiScope.launch { view.dismiss(destroy = view.isStandaloneView) }
             is AdaptyUIAction.AndroidSystemBackAction -> Unit
             is AdaptyUIAction.OpenUrlAction -> AdaptyUI.openWebUrl(action.url, action.openIn)
             is AdaptyUIAction.CustomAction -> Unit
@@ -101,10 +102,10 @@ public interface AdaptyUIFlowsEventsObserver {
      * Replaces the legacy `paywallViewDidFailRendering`.
      *
      * By default (4.0.0) the view is dismissed on error, and (since 4.3.0) released along with
-     * it. Override to keep it open.
+     * it unless it is an embedded platform view. Override to keep it open.
      */
     public fun flowViewDidReceiveError(view: AdaptyUIFlowView, error: AdaptyError) {
-        mainUiScope.launch { view.dismiss() }
+        mainUiScope.launch { view.dismiss(destroy = view.isStandaloneView) }
     }
 
     /** Called when an error occurs while loading products for the flow. */

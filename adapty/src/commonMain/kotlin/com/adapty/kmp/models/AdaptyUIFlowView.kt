@@ -20,6 +20,15 @@ public data class AdaptyUIFlowView internal constructor(
 ) {
 
     /**
+     * Returns `true` if this flow view is a standalone modal screen, `false` if it is an embedded
+     * platform view. Embedded views are owned by their host, so the SDK's default handlers never
+     * release them on dismiss — do the same in a custom observer:
+     * `view.dismiss(destroy = view.isStandaloneView)`.
+     */
+    public val isStandaloneView: Boolean
+        get() = !id.startsWith(AdaptyFlow.PREFIX_NATIVE_PLATFORM_VIEW)
+
+    /**
      * Presents the flow view to the user.
      */
     public suspend fun present(

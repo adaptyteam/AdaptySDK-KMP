@@ -330,7 +330,7 @@ internal class AdaptyUIImpl(
     }
 
     override suspend fun dismissOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit> {
-        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Unit>(
+        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Boolean>(
             method = AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW,
             // Onboarding dismiss is unchanged by 4.3.0: it keeps sending destroy = false.
             request = AdaptyUIDismissViewRequest(id = view.id, destroy = false)
