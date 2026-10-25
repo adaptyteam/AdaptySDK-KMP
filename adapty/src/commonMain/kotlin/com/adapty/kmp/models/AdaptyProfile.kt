@@ -38,7 +38,9 @@ public data class AdaptyProfile internal constructor(
      * @property id Identifier of the access level.
      * @property isActive Whether this access level is currently active.
      * @property vendorProductId Product identifier from App Store or Google Play.
-     * @property offerId Promotional or introductory offer ID, if applicable.
+     * @property offerId Promotional or introductory offer ID, if applicable. Its format follows the
+     * store the purchase was made in (see [store]), not the device platform: a Google Play purchase
+     * reports its Play offer ID on iOS too, and vice versa.
      * @property store Store name (App Store, Google Play, etc.).
      * Possible values: `app_store`, `play_store`, `adapty`
      * @property activatedAt Activation timestamp in ISO 8601 format.
@@ -55,7 +57,8 @@ public data class AdaptyProfile internal constructor(
      * @property activePromotionalOfferType A type of an active promotional offer. If the value is not `null`,
      * it means that the offer was applied during the current subscription period.
      * Possible values: `free_trial`, `pay_as_you_go`, `pay_up_front`
-     * @property activePromotionalOfferId ID of active promotional offer, if any.
+     * @property activePromotionalOfferId ID of active promotional offer, if any. Like [offerId], it
+     * depends on the purchase [store], not the device platform.
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
@@ -95,7 +98,9 @@ public data class AdaptyProfile internal constructor(
      * @property vendorOriginalTransactionId An original transaction id of the purchase in a store
      * that unlocked this subscription. For auto-renewable subscription, this will be an id of the
      * first transaction in this subscription
-     * @property offerId Promotional or introductory offer ID, if any.
+     * @property offerId Promotional or introductory offer ID, if any. Its format follows the store the
+     * purchase was made in (see [store]), not the device platform: a Google Play purchase reports
+     * its Play offer ID on iOS too, and vice versa.
      * @property store Store name (App Store, Google Play, etc.). Possible values: `app_store`, `play_store`, `adapty`
      * @property activatedAt Activation date in ISO 8601 format.
      * @property renewedAt Time when the subscription was renewed. It can be `null` if the
@@ -109,7 +114,8 @@ public data class AdaptyProfile internal constructor(
      * @property activePromotionalOfferType A type of an active promotional offer. If the value is not `null`,
      * it means that the offer was applied during the current subscription period.
      * Possible values: `free_trial`, `pay_as_you_go`, `pay_up_front`
-     * @property activePromotionalOfferId Active promotional offer ID, if any.
+     * @property activePromotionalOfferId Active promotional offer ID, if any. Like [offerId], it
+     * depends on the purchase [store], not the device platform.
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
