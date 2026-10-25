@@ -19,6 +19,12 @@ package com.adapty.kmp.models
  * @property regionCode Optional region code used to format the price.
  * @property price [AdaptyPrice] Main price information for the product.
  * @property subscription Optional subscription-specific details (intro offers, trials, etc.).
+ * On iOS 26.4+ it may carry [AdaptyProductSubscription.pricingTerms]; the billing plan is sent
+ * back automatically by [com.adapty.kmp.Adapty.makePromotedPurchase].
+ *
+ * Pass the instance delivered to the listener as is: on iOS it also carries the StoreKit purchase
+ * intent required to complete the purchase, which is not part of the public API and is not
+ * preserved by [copy].
  */
 public data class AdaptyPromotedProduct internal constructor(
     val vendorProductId: String,
@@ -29,4 +35,11 @@ public data class AdaptyPromotedProduct internal constructor(
     val price: AdaptyPrice,
     val subscription: AdaptyProductSubscription? = null,
     internal val payloadData: String? = null
-)
+) {
+    /**
+     * StoreKit purchase intent identifier (`purchase_intent_id`, iOS only), sent back to native in
+     * `make_promoted_purchase`. Wire-only: kept out of the constructor so the public `copy()`
+     * signature stays stable (see the model ↔ wire round-trip convention in CLAUDE.md).
+     */
+    internal var purchaseIntentId: String? = null
+}

@@ -129,8 +129,13 @@ internal object AdaptyFakeTestData {
             adaptyProductId = "1",
             productType = "productType",
             accessLevelId = "accessLevelId",
-            promotionalOfferId = "promotionalOfferId - #3",
-            winBackOfferId = "winBackOfferId -#2",
+            pricingTerms = listOf(
+                AdaptyPaywallProductReferenceRequestResponse.PricingTerms(
+                    billingPlanId = "up_front",
+                    promotionalOfferId = "promotionalOfferId - #3",
+                    winBackOfferId = "winBackOfferId -#2",
+                )
+            ),
             basePlanId = "basePlanId - #4",
             offerId = "offerId - #5",
         )

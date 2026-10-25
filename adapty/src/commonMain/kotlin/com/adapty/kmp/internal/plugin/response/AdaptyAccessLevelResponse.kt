@@ -1,6 +1,7 @@
 package com.adapty.kmp.internal.plugin.response
 
 import com.adapty.kmp.models.AdaptyProfile
+import com.adapty.kmp.models.AdaptySubscriptionBillingPlan
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -61,7 +62,13 @@ internal data class AdaptyAccessLevelResponse(
     val cancellationReason: String? = null,
 
     @SerialName("is_refund")
-    val isRefund: Boolean
+    val isRefund: Boolean,
+
+    @SerialName("billing_plan_id")
+    val billingPlanId: String? = null, // iOS Only
+
+    @SerialName("commitment")
+    val commitment: AdaptyProfileSubscriptionCommitmentInfoResponse? = null, // iOS Only
 )
 
 internal fun AdaptyAccessLevelResponse.asAdaptyAccessLevel(): AdaptyProfile.AccessLevel {
@@ -85,6 +92,8 @@ internal fun AdaptyAccessLevelResponse.asAdaptyAccessLevel(): AdaptyProfile.Acce
         willRenew = willRenew,
         isInGracePeriod = isInGracePeriod,
         unsubscribedAt = unsubscribedAt,
-        billingIssueDetectedAt = billingIssueDetectedAt
+        billingIssueDetectedAt = billingIssueDetectedAt,
+        billingPlan = billingPlanId?.let { AdaptySubscriptionBillingPlan(it) },
+        commitmentInfo = commitment?.asAdaptyProfileSubscriptionCommitmentInfo(),
     )
 }

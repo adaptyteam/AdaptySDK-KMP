@@ -1,6 +1,7 @@
 package com.adapty.kmp.internal.plugin.response
 
 import com.adapty.kmp.models.AdaptyProfile
+import com.adapty.kmp.models.AdaptySubscriptionBillingPlan
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -67,7 +68,13 @@ internal data class AdaptySubscriptionResponse(
     val offerId: String?,
 
     @SerialName("cancellation_reason")
-    val cancellationReason: String?
+    val cancellationReason: String?,
+
+    @SerialName("billing_plan_id")
+    val billingPlanId: String? = null, // iOS Only
+
+    @SerialName("commitment")
+    val commitment: AdaptyProfileSubscriptionCommitmentInfoResponse? = null, // iOS Only
 )
 
 internal fun AdaptySubscriptionResponse.asAdaptySubscription(): AdaptyProfile.Subscription {
@@ -92,6 +99,8 @@ internal fun AdaptySubscriptionResponse.asAdaptySubscription(): AdaptyProfile.Su
         billingIssueDetectedAt = billingIssueDetectedAt,
         isSandbox = isSandbox,
         isRefund = isRefund,
-        cancellationReason = cancellationReason
+        cancellationReason = cancellationReason,
+        billingPlan = billingPlanId?.let { AdaptySubscriptionBillingPlan(it) },
+        commitmentInfo = commitment?.asAdaptyProfileSubscriptionCommitmentInfo(),
     )
 }

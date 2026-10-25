@@ -12,6 +12,11 @@ package com.adapty.kmp.models
  * @property offer [AdaptySubscriptionOffer] Optional subscription offer details (introductory, promotional, etc.).
  * @property renewalType [AdaptyRenewalType] The type of subscription renewal (PREPAID, AUTORENEWABLE).
  * @property basePlanId The identifier of the base plan. Android only.
+ * @property pricingTerms [AdaptySubscriptionPricingTerms] Billing terms of the subscription: billing
+ *   plan, price per billing period and the total commitment. iOS only (native iOS SDK 4.3+),
+ *   `null` on Android. Commitment billing plans (e.g. [AdaptySubscriptionBillingPlan.MONTHLY]) are
+ *   iOS 26.4+ only; on Android and on iOS below 26.4 the product is bought up front. The billing
+ *   plan is sent back automatically when the product is purchased.
  */
 public data class AdaptyProductSubscription internal constructor(
     val groupIdentifier: String? = null,
@@ -19,5 +24,6 @@ public data class AdaptyProductSubscription internal constructor(
     val localizedPeriod: String? = null,
     val offer: AdaptySubscriptionOffer? = null,
     val renewalType: AdaptyRenewalType,
-    val basePlanId: String? = null
+    val basePlanId: String? = null,
+    val pricingTerms: AdaptySubscriptionPricingTerms? = null,
 )

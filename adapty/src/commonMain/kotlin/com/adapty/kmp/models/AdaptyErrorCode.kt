@@ -78,6 +78,14 @@ public enum class AdaptyErrorCode(internal val value: Int) {
     REFRESH_RECEIPT_FAILED(1010),
     RECEIVE_RESTORED_TRANSACTIONS_FAILED(1011),
 
+    /**
+     * The billing plan selected for the purchase (the product's
+     * [AdaptySubscriptionPricingTerms.billingPlan]) is not available. iOS 26.4+ only
+     * (App Store commitment subscriptions); never returned on Android or on iOS below 26.4,
+     * where products are bought up front.
+     */
+    BILLING_PLAN_UNAVAILABLE(1060),
+
     /////////////////////////////
     /// Custom network codes. ///
     /////////////////////////////

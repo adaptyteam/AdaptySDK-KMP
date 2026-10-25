@@ -63,6 +63,13 @@ public data class AdaptyProfile internal constructor(
      * Will be set to `null` if the user reactivates the subscription.
      * @property billingIssueDetectedAt When a billing issue was detected, if any.
      * Subscription can still be active. Would be set to null if a charge is made.
+     * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
+     * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
+     * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
+     * 26.4+ only; on Android and on iOS below 26.4 the product is bought up front.
+     * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
+     * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
+     * Android and on iOS below 26.4 the product is bought up front.
      */
     public data class AccessLevel(
         public val id: String,
@@ -83,7 +90,9 @@ public data class AdaptyProfile internal constructor(
         public val willRenew: Boolean,
         public val isInGracePeriod: Boolean,
         public val unsubscribedAt: String?,
-        public val billingIssueDetectedAt: String?
+        public val billingIssueDetectedAt: String?,
+        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
+        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
     )
 
     /**
@@ -119,6 +128,13 @@ public data class AdaptyProfile internal constructor(
      * @property isSandbox Whether this subscription was made in a sandbox environment.
      * @property isRefund Whether this subscription was refunded.
      * @property cancellationReason Reason for cancellation, if any.
+     * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
+     * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
+     * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
+     * 26.4+ only; on Android and on iOS below 26.4 the product is bought up front.
+     * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
+     * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
+     * Android and on iOS below 26.4 the product is bought up front.
      */
     public data class Subscription(
         public val isActive: Boolean,
@@ -141,7 +157,27 @@ public data class AdaptyProfile internal constructor(
         public val billingIssueDetectedAt: String?,
         public val isSandbox: Boolean,
         public val isRefund: Boolean,
-        public val cancellationReason: String?
+        public val cancellationReason: String?,
+        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
+        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
+    )
+
+    /**
+     * Commitment progress of a subscription bought with a commitment billing plan
+     * (`AdaptyProfile.SubscriptionCommitmentInfo`, cross_platform 4.3.1).
+     *
+     * iOS 26.4+ only (App Store commitment subscriptions). On Android and on iOS below 26.4 the
+     * product is bought up front and no commitment is reported.
+     *
+     * @property billingPeriodNumber Number of the current billing period within the commitment.
+     * @property totalBillingPeriods Total number of billing periods in the commitment.
+     * @property expiresAt Time when the commitment expires, in ISO 8601 format (same format as
+     * the other profile dates, e.g. [Subscription.expiresAt]).
+     */
+    public data class SubscriptionCommitmentInfo(
+        public val billingPeriodNumber: Int,
+        public val totalBillingPeriods: Int,
+        public val expiresAt: String,
     )
 
     /**
