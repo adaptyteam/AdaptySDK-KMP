@@ -34,6 +34,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetLogLevelRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyShowStoreMessagesRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyStoreMessageTypeRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
@@ -57,6 +59,7 @@ import com.adapty.kmp.internal.plugin.response.asAdaptyInstallationStatus
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallProduct
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
 import com.adapty.kmp.internal.plugin.response.asAdaptyPurchaseResult
+import com.adapty.kmp.internal.plugin.response.asAdaptyStoreMessageType
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.isAndroidPlatform
 import com.adapty.kmp.models.AdaptyConfig
@@ -78,6 +81,7 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
@@ -92,7 +96,9 @@ import kotlin.time.Duration
 @Suppress("OVERRIDE_DEPRECATION")
 internal class AdaptyImpl(
     private val adaptyPlugin: AdaptyPlugin,
-    private val appMainScope: CoroutineScope = MainScope()
+    private val appMainScope: CoroutineScope = MainScope(),
+    /** Injectable so both platform branches of the store message methods are testable on any target. */
+    private val isAndroid: Boolean = isAndroidPlatform
 ) : AdaptyContract {
 
     private var eventsListenerJob: Job? = null
@@ -400,6 +406,26 @@ internal class AdaptyImpl(
             )
             .asAdaptyResult { it }
     }
+
+    override suspend fun getPendingStoreMessageTypes(): AdaptyResult<List<AdaptyStoreMessageType>?> {
+        // Mirrors the React Native wrapper: Google Play can't report pending messages, so Android
+        // answers "unknown" (null) without a native call rather than an error or an empty list.
+        if (isAndroid) return AdaptyResult.Success(null)
+        return adaptyPlugin.awaitExecute<Unit, List<String>>(
+            method = AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES,
+            request = Unit
+        ).asAdaptyResult { types -> types.map { it.asAdaptyStoreMessageType() } }
+    }
+
+    override suspend fun showStoreMessages(iosFilter: List<AdaptyStoreMessageType>?): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyShowStoreMessagesRequest, Boolean>(
+            method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
+            request = AdaptyShowStoreMessagesRequest(
+                // The filter is iOS-only; like the React Native wrapper, it is not sent on Android.
+                filter = if (isAndroid) null
+                else iosFilter?.map { it.asAdaptyStoreMessageTypeRequest() }
+            )
+        ).asAdaptyResult { }
 
     override suspend fun getOnboarding(
         placementId: String,

@@ -16,6 +16,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyShowStoreMessagesRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
@@ -32,7 +33,10 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
 import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyStoreMessagesHandling
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
@@ -80,6 +84,8 @@ object AdaptyPluginRequestTemplate {
         )
 
         AdaptyPluginMethod.SET_LOG_LEVEL -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.SHOW_STORE_MESSAGES -> getShowStoreMessagesRequestJsonString(param as AdaptyShowStoreMessagesRequest)
 
         // UI methods
         AdaptyPluginMethod.CREATE_FLOW_VIEW -> getCreateFlowViewRequestJsonString(
@@ -110,6 +116,15 @@ object AdaptyPluginRequestTemplate {
                 put("api_key", configuration.apiKey)
                 put("customer_user_id", configuration.customerUserId)
                 put("observer_mode", configuration.observerMode)
+                configuration.storeMessagesHandling?.let {
+                    put(
+                        "store_messages_handling",
+                        when (it) {
+                            AdaptyStoreMessagesHandling.AUTO -> "auto"
+                            AdaptyStoreMessagesHandling.MANUAL -> "manual"
+                        }
+                    )
+                }
                 put("apple_idfa_collection_disabled", configuration.appleIdfaCollectionDisabled)
                 put("google_adid_collection_disabled", configuration.googleAdvertisingIdCollection)
                 put("google_enable_pending_prepaid_plans", configuration.googleEnablePendingPrepaidPlans)
@@ -414,6 +429,14 @@ object AdaptyPluginRequestTemplate {
             )
             request.externalUrlsPresentation?.let {
                 put("external_urls_presentation", it.toSerialName())
+            }
+        }.toString()
+    }
+
+    private fun getShowStoreMessagesRequestJsonString(request: AdaptyShowStoreMessagesRequest): String {
+        return buildJsonObject {
+            request.filter?.let { filter ->
+                putJsonArray("filter") { filter.forEach { add(it) } }
             }
         }.toString()
     }

@@ -45,6 +45,10 @@ internal object AdaptyFakeTestData {
     const val PLACEMENT_ID = "test_placement_id_#3"
     const val LOCALE = "en"
 
+    // Store messages: an opaque StoreKit reason the SDK has no constant for
+    const val STORE_MESSAGE_TYPE_STOREKIT_RAW = "storekit_7"
+    const val STORE_MESSAGE_TYPE_STOREKIT_NEGATIVE_RAW = "storekit_-42"
+
     const val ONBOARDING_SCREEN_NAME = "onboarding_screen_name_#1"
     const val ONBOARDING_NAME = "onboarding_name_#4"
     const val ONBOARDING_SCREEN_ORDER = 3

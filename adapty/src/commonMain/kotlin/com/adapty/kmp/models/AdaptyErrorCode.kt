@@ -94,6 +94,12 @@ public enum class AdaptyErrorCode(internal val value: Int) {
     PROFILE_WAS_CHANGED(3006),
     UNSUPPORTED_DATA(3007),
     FETCH_TIMEOUT_ERROR(3101),
+
+    /** iOS: another operation of the same kind is running, e.g. a store message show. */
+    OPERATION_IN_PROGRESS(3201),
+
+    /** iOS: a required system resource could not be resolved, e.g. no foreground window scene to show store messages in. */
+    RESOLVER_FAILURE(3202),
     OPERATION_INTERRUPTED(9000),
 
     /////////////////////////////

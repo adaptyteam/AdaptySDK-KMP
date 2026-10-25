@@ -16,6 +16,7 @@ import com.adapty.kmp.models.AdaptyPrice
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRenewalType
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
@@ -29,6 +30,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -72,6 +74,13 @@ object AdaptyPluginResponseTemplate {
 
             AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL -> getSuccessStringResponse(successData as String)
             AdaptyPluginMethod.OPEN_WEB_PAYWALL -> genericSuccessResponse()
+            AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES -> {
+                @Suppress("UNCHECKED_CAST")
+                val types = successData as List<AdaptyStoreMessageType>
+                buildSuccessJsonString(buildJsonArray { types.forEach { add(it.value) } })
+            }
+
+            AdaptyPluginMethod.SHOW_STORE_MESSAGES -> genericSuccessResponse()
 
             // UI methods
             AdaptyPluginMethod.CREATE_FLOW_VIEW -> getSuccessFlowViewResponse(successData as AdaptyUIFlowView)

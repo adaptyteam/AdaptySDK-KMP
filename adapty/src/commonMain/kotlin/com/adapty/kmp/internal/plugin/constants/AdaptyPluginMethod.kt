@@ -26,6 +26,8 @@ internal enum class AdaptyPluginMethod(val methodName: String) {
     PRESENT_CODE_REDEMPTION_SHEET("present_code_redemption_sheet"),
     UPDATE_COLLECTING_REFUND_DATA_CONSENT("update_collecting_refund_data_consent"),
     UPDATE_REFUND_PREFERENCE("update_refund_preference"),
+    GET_PENDING_STORE_MESSAGE_TYPES("get_pending_store_message_types"),
+    SHOW_STORE_MESSAGES("show_store_messages"),
     CREATE_WEB_PAYWALL_URL("create_web_paywall_url"),
     OPEN_WEB_PAYWALL("open_web_paywall"),
     CREATE_FLOW_VIEW("adapty_ui_create_flow_view"),
