@@ -34,7 +34,9 @@ public interface AdaptyUIFlowsEventsObserver {
      * Called when the user performs an action on the flow view.
      *
      * By default:
-     * - [AdaptyUIAction.CloseAction] dismisses the view.
+     * - [AdaptyUIAction.CloseAction] dismisses the view and releases it
+     *   ([AdaptyUIFlowView.dismiss] with the default `destroy = true`). Override and call
+     *   `view.dismiss(destroy = false)` to keep the view for presenting again.
      * - [AdaptyUIAction.AndroidSystemBackAction] keeps the view open (4.0.0 default).
      * - [AdaptyUIAction.OpenUrlAction] opens the provided URL natively.
      */
@@ -98,7 +100,8 @@ public interface AdaptyUIFlowsEventsObserver {
      * Called when an error occurs in the flow (rendering, loading, etc.).
      * Replaces the legacy `paywallViewDidFailRendering`.
      *
-     * By default (4.0.0) the view is dismissed on error. Override to keep it open.
+     * By default (4.0.0) the view is dismissed on error, and (since 4.3.0) released along with
+     * it. Override to keep it open.
      */
     public fun flowViewDidReceiveError(view: AdaptyUIFlowView, error: AdaptyError) {
         mainUiScope.launch { view.dismiss() }

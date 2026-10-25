@@ -76,7 +76,8 @@ object AdaptyPluginResponseTemplate {
             // UI methods
             AdaptyPluginMethod.CREATE_FLOW_VIEW -> getSuccessFlowViewResponse(successData as AdaptyUIFlowView)
             AdaptyPluginMethod.PRESENT_FLOW_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessResponse()
+            AdaptyPluginMethod.DESTROY_FLOW_VIEW -> genericSuccessResponse()
             AdaptyPluginMethod.SHOW_DIALOG -> getSuccessDialogActionTypeResponse(successData as AdaptyUIDialogActionType)
             AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getSuccessOnboardingViewResponse(successData as AdaptyUIOnboardingView)
             AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW -> genericSuccessResponse()

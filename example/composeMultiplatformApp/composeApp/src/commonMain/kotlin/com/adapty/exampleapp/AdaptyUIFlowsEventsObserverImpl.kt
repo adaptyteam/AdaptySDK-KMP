@@ -42,7 +42,9 @@ class AdaptyUIFlowsEventsObserverImpl(
         AppLogger.d("Flow view did perform action of view $view with action $action")
         uiCoroutineScope.launch {
             when (action) {
-                AdaptyUIAction.CloseAction, AdaptyUIAction.AndroidSystemBackAction -> view.dismiss()
+                AdaptyUIAction.CloseAction, AdaptyUIAction.AndroidSystemBackAction ->
+                    // Views from the keep-alive demo stay in memory so they can be presented again.
+                    view.dismiss(destroy = !FlowViewKeepAliveDemo.isKeptAlive(view))
                 is AdaptyUIAction.OpenUrlAction -> {
                     val selectedAction = view.showDialog(
                         title = "Open URL?",

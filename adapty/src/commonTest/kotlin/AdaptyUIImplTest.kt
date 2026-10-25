@@ -86,7 +86,7 @@ class AdaptyUIImplTest {
                 adaptyUIImpl.dismissFlowView(view = view)
             },
             method = AdaptyPluginMethod.DISMISS_FLOW_VIEW,
-            param = AdaptyUIDismissViewRequest(id = view.id),
+            param = AdaptyUIDismissViewRequest(id = view.id, destroy = true),
             expectedSuccessData = Unit
         )
     }
@@ -168,7 +168,7 @@ class AdaptyUIImplTest {
                 adaptyUIImpl.dismissOnboardingView(view = view)
             },
             method = AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW,
-            param = AdaptyUIDismissViewRequest(id = view.id),
+            param = AdaptyUIDismissViewRequest(id = view.id, destroy = false),
             expectedSuccessData = Unit
         )
     }

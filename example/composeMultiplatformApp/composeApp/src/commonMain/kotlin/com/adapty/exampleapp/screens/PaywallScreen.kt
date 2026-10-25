@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.AppUiEvent
 import com.adapty.exampleapp.AppUiState
 import com.adapty.exampleapp.AppViewModel
+import com.adapty.exampleapp.FlowViewKeepAliveTiles
 import com.adapty.exampleapp.Platform
 import com.adapty.exampleapp.components.ListActionTile
 import com.adapty.exampleapp.components.ListSection
@@ -154,6 +155,7 @@ private fun PaywallsListScreen(
                                 )
                             }
                         )
+                        FlowViewKeepAliveTiles(flow = flow)
                         ListActionTile(
                             title = "Load Products and Present (FullScreen)",
                             onClick = {
