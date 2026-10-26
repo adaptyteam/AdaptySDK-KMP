@@ -126,6 +126,10 @@ private fun PaywallsListScreen(
                             subtitle = flow.variationId
                         )
                         ListTextTile(
+                            title = "Variation Name",
+                            subtitle = flow.variationName ?: "-"
+                        )
+                        ListTextTile(
                             title = "Has View",
                             subtitle = "true",
                             subtitleColor = Color(0xFF32CD32)

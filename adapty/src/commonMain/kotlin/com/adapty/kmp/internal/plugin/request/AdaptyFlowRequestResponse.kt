@@ -28,6 +28,9 @@ internal data class AdaptyFlowRequestResponse(
     @SerialName("variation_id")
     val variationId: String,
 
+    @SerialName("variation_name")
+    val variationName: String? = null,
+
     @SerialName("remote_configs")
     val remoteConfigs: List<AdaptyRemoteConfigResponse>? = null,
 
@@ -54,6 +57,7 @@ internal fun AdaptyFlowRequestResponse.asAdaptyFlow(): AdaptyFlow =
         instanceIdentity = this.flowId,
         name = this.flowName,
         variationId = this.variationId,
+        variationName = this.variationName,
         remoteConfigs = this.remoteConfigs?.map { it.asAdaptyPaywallRemoteConfig() } ?: emptyList(),
         flowVersionId = this.flowVersionId,
         paywalls = this.variations.map { it.asAdaptyFlowPaywall() },
@@ -69,6 +73,7 @@ internal fun AdaptyFlow.asAdaptyFlowRequest(): AdaptyFlowRequestResponse =
         flowId = this.instanceIdentity,
         flowName = this.name,
         variationId = this.variationId,
+        variationName = this.variationName,
         remoteConfigs = this.remoteConfigs.map { it.asAdaptyPaywallRemoteConfigResponse() }.ifEmpty { null },
         flowVersionId = this.flowVersionId,
         variations = this.paywalls.map { it.asAdaptyFlowPaywallRequest() },
