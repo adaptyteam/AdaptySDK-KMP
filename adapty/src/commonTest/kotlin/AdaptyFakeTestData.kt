@@ -19,6 +19,7 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRemoteConfig
 import com.adapty.kmp.models.AdaptyRenewalType
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
@@ -44,10 +45,6 @@ internal object AdaptyFakeTestData {
     const val VARIATION_ID = "test_variation_id_#2"
     const val PLACEMENT_ID = "test_placement_id_#3"
     const val LOCALE = "en"
-
-    // Store messages: an opaque StoreKit reason the SDK has no constant for
-    const val STORE_MESSAGE_TYPE_STOREKIT_RAW = "storekit_7"
-    const val STORE_MESSAGE_TYPE_STOREKIT_NEGATIVE_RAW = "storekit_-42"
 
     const val ONBOARDING_SCREEN_NAME = "onboarding_screen_name_#1"
     const val ONBOARDING_NAME = "onboarding_name_#4"
@@ -245,6 +242,16 @@ internal object AdaptyFakeTestData {
     fun getSuccessPurchaseResult(): AdaptyPurchaseResult {
         return AdaptyPurchaseResult.Success(profile = getProfile())
     }
+
+    fun getStoreMessageTypes(): List<AdaptyStoreMessageType> = listOf(
+        AdaptyStoreMessageType.GENERIC,
+        AdaptyStoreMessageType.PRICE_INCREASE_CONSENT,
+        AdaptyStoreMessageType.BILLING_ISSUE,
+        AdaptyStoreMessageType.WIN_BACK_OFFER,
+        // Reasons without a constant arrive as storekit_<rawValue> and must round-trip verbatim
+        AdaptyStoreMessageType("storekit_7"),
+        AdaptyStoreMessageType("storekit_-42"),
+    )
 
     fun getOnboarding(): AdaptyOnboarding {
         return AdaptyOnboarding(
