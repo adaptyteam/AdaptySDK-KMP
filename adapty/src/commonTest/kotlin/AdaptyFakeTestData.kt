@@ -42,6 +42,7 @@ internal object AdaptyFakeTestData {
     const val INTEGRATION_VALUE = "testIntegrationValue"
     const val TRANSACTION_ID = "test_transaction_id_#1"
     const val VARIATION_ID = "test_variation_id_#2"
+    const val VARIATION_NAME = "Variation A"
     const val PLACEMENT_ID = "test_placement_id_#3"
     const val LOCALE = "en"
 
@@ -139,6 +140,7 @@ internal object AdaptyFakeTestData {
             flowId = "456",
             flowName = "testPaywall",
             variationId = "1",
+            variationName = VARIATION_NAME,
             remoteConfigs = listOf(
                 AdaptyRemoteConfigResponse(locale = "en", jsonString = remoteConfigJson)
             ),
