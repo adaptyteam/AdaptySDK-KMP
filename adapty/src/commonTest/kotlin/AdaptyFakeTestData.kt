@@ -348,7 +348,8 @@ internal object AdaptyFakeTestData {
             price = paywallProduct.price,
             subscription = paywallProduct.subscription,
             payloadData = null,
-        ).also { it.purchaseIntentId = purchaseIntentId }
+            purchaseIntentId = purchaseIntentId,
+        )
     }
 
 

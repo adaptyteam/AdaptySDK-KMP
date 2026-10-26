@@ -23,8 +23,7 @@ package com.adapty.kmp.models
  * back automatically by [com.adapty.kmp.Adapty.makePromotedPurchase].
  *
  * Pass the instance delivered to the listener as is: on iOS it also carries the StoreKit purchase
- * intent required to complete the purchase, which is not part of the public API and is not
- * preserved by [copy].
+ * intent required to complete the purchase.
  */
 public data class AdaptyPromotedProduct internal constructor(
     val vendorProductId: String,
@@ -34,12 +33,6 @@ public data class AdaptyPromotedProduct internal constructor(
     val regionCode: String? = null,
     val price: AdaptyPrice,
     val subscription: AdaptyProductSubscription? = null,
-    internal val payloadData: String? = null
-) {
-    /**
-     * StoreKit purchase intent identifier (`purchase_intent_id`, iOS only), sent back to native in
-     * `make_promoted_purchase`. Wire-only: kept out of the constructor so the public `copy()`
-     * signature stays stable (see the model ↔ wire round-trip convention in CLAUDE.md).
-     */
-    internal var purchaseIntentId: String? = null
-}
+    internal val payloadData: String? = null,
+    internal val purchaseIntentId: String? = null, // iOS only, sent back in make_promoted_purchase
+)

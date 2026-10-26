@@ -44,4 +44,5 @@ internal fun AdaptyPromotedProductResponse.asAdaptyPromotedProduct(): AdaptyProm
         price = price.asAdaptyPrice(),
         subscription = subscription?.asAdaptyProductSubscription(),
         payloadData = payloadData,
-    ).also { it.purchaseIntentId = purchaseIntentId }
+        purchaseIntentId = purchaseIntentId,
+    )
