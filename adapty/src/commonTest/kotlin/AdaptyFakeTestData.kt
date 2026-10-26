@@ -43,7 +43,9 @@ internal object AdaptyFakeTestData {
     const val INTEGRATION_VALUE = "testIntegrationValue"
     const val TRANSACTION_ID = "test_transaction_id_#1"
     const val VARIATION_ID = "test_variation_id_#2"
+    const val VARIATION_NAME = "Variation A"
     const val PLACEMENT_ID = "test_placement_id_#3"
+    const val SECOND_PLACEMENT_ID = "test_placement_id_#4"
     const val LOCALE = "en"
 
     const val ONBOARDING_SCREEN_NAME = "onboarding_screen_name_#1"
@@ -66,13 +68,14 @@ internal object AdaptyFakeTestData {
 
     fun getProfile(): AdaptyProfile {
 
+        // One purchase per store: offer ids must decode whatever the device platform is.
         val accessLevels = mapOf(
             "1" to AdaptyProfile.AccessLevel(
                 id = "1",
                 isActive = true,
                 vendorProductId = "1",
-                offerId = null,
-                store = "google",
+                offerId = "intro-pay-up-front-weekly",
+                store = "play_store",
                 activatedAt = TEST_DATE,
                 startsAt = TEST_DATE,
                 renewedAt = TEST_DATE,
@@ -87,7 +90,33 @@ internal object AdaptyFakeTestData {
                 isInGracePeriod = false,
                 unsubscribedAt = TEST_DATE,
                 billingIssueDetectedAt = TEST_DATE
+            ),
+            "2" to AdaptyProfile.AccessLevel(
+                id = "2",
+                isActive = true,
+                vendorProductId = "2",
+                offerId = "com.app.intro.weekly",
+                store = "app_store",
+                activatedAt = TEST_DATE,
+                startsAt = TEST_DATE,
+                renewedAt = TEST_DATE,
+                expiresAt = TEST_DATE,
+                isLifetime = false,
+                cancellationReason = null,
+                isRefund = false,
+                activeIntroductoryOfferType = null,
+                activePromotionalOfferType = "pay_as_you_go",
+                activePromotionalOfferId = "com.app.promo.weekly",
+                willRenew = true,
+                isInGracePeriod = false,
+                unsubscribedAt = null,
+                billingIssueDetectedAt = null
             )
+        )
+
+        val subscriptions = mapOf(
+            "1" to getProfileSubscription(store = "play_store", offerId = "intro-pay-up-front-weekly", promoId = "promo-weekly-50"),
+            "2" to getProfileSubscription(store = "app_store", offerId = "com.app.intro.weekly", promoId = "com.app.promo.weekly"),
         )
 
         val customAttributes = mapOf(
@@ -100,12 +129,37 @@ internal object AdaptyFakeTestData {
             segmentId = "1",
             customerUserId = "1",
             accessLevels = accessLevels,
-            subscriptions = mapOf(),
+            subscriptions = subscriptions,
             nonSubscriptions = mapOf(),
             customAttributes = customAttributes,
             isTestUser = false
         )
     }
+
+    private fun getProfileSubscription(store: String, offerId: String, promoId: String) =
+        AdaptyProfile.Subscription(
+            isActive = true,
+            vendorProductId = "weekly.premium.599",
+            vendorTransactionId = "tx-$store",
+            vendorOriginalTransactionId = "original-tx-$store",
+            offerId = offerId,
+            store = store,
+            activatedAt = TEST_DATE,
+            renewedAt = TEST_DATE,
+            expiresAt = TEST_DATE,
+            startsAt = TEST_DATE,
+            isLifetime = false,
+            activeIntroductoryOfferType = null,
+            activePromotionalOfferType = "pay_up_front",
+            activePromotionalOfferId = promoId,
+            willRenew = true,
+            isInGracePeriod = false,
+            unsubscribedAt = null,
+            billingIssueDetectedAt = null,
+            isSandbox = true,
+            isRefund = false,
+            cancellationReason = null
+        )
 
     internal fun getFlowRequestResponse(): AdaptyFlowRequestResponse {
         val placement = AdaptyPlacementRequestResponse(
@@ -140,6 +194,7 @@ internal object AdaptyFakeTestData {
             flowId = "456",
             flowName = "testPaywall",
             variationId = "1",
+            variationName = VARIATION_NAME,
             remoteConfigs = listOf(
                 AdaptyRemoteConfigResponse(locale = "en", jsonString = remoteConfigJson)
             ),

@@ -443,6 +443,14 @@ private fun CustomPaywallSection(
                     onUiEvent(AppUiEvent.OnClickLoadCustomPaywall)
                 }
             )
+
+            ListActionTile(
+                title = "Preload (warm cache)",
+                isActive = uiState.customPaywallId.isNotEmpty(),
+                onClick = {
+                    onUiEvent(AppUiEvent.OnClickPreloadCustomPaywall)
+                }
+            )
         } else {
             ListTextTile(title = "Paywall Id", subtitle = uiState.customPaywall.placement.id)
 

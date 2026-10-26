@@ -30,6 +30,8 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
@@ -192,6 +194,26 @@ internal class AdaptyImpl(
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest()
             )
         ).asAdaptyResult { it.asAdaptyFlow() }
+
+    override suspend fun preloadFlows(
+        placementIds: List<String>,
+        loadTimeout: Duration
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyPreloadFlowsRequest, Boolean>(
+            method = AdaptyPluginMethod.PRELOAD_FLOWS,
+            request = AdaptyPreloadFlowsRequest(
+                placementIds = placementIds,
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
+            )
+        ).asAdaptyResult { }
+
+    override suspend fun preloadFlowsForDefaultAudience(
+        placementIds: List<String>
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyPreloadFlowsForDefaultAudienceRequest, Boolean>(
+            method = AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE,
+            request = AdaptyPreloadFlowsForDefaultAudienceRequest(placementIds = placementIds)
+        ).asAdaptyResult { }
 
     override suspend fun getPaywallProducts(flow: AdaptyFlow): AdaptyResult<List<AdaptyPaywallProduct>> =
         adaptyPlugin.awaitExecute<AdaptyGetPaywallProductsRequest, List<AdaptyPaywallProductResponse>>(

@@ -77,6 +77,7 @@ sealed interface AppUiEvent {
     data class OnNewFetchPolicySelected(val policy: AppUiState.DemoPaywallFetchPolicy) : AppUiEvent
     data object OnClickRefreshExamplePaywall : AppUiEvent
     data object OnClickLoadCustomPaywall : AppUiEvent
+    data object OnClickPreloadCustomPaywall : AppUiEvent
     data object OnClickRestorePurchases : AppUiEvent
     data object OnClickResetCustomPaywall : AppUiEvent
     data class OnClickReportTransaction(val transactionId: String, val variationId: String) :

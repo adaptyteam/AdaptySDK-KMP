@@ -62,6 +62,9 @@ object AdaptyPluginResponseTemplate {
                 successData as AdaptyFlow
             )
 
+            AdaptyPluginMethod.PRELOAD_FLOWS -> genericSuccessResponse()
+            AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE -> genericSuccessResponse()
+
             AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getSuccessInstallationStatusResponse()
             AdaptyPluginMethod.IS_ACTIVATED -> getSuccessBooleanResponse(successData as Boolean)
             AdaptyPluginMethod.PRESENT_CODE_REDEMPTION_SHEET -> genericSuccessResponse()

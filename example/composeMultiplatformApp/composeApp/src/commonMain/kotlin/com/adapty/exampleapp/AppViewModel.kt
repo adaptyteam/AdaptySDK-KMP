@@ -96,6 +96,10 @@ class AppViewModel : ViewModel() {
                 loadCustomPaywall()
             }
 
+            AppUiEvent.OnClickPreloadCustomPaywall -> {
+                preloadCustomPaywall()
+            }
+
             AppUiEvent.OnClickRestorePurchases -> {
                 restorePurchases()
             }
@@ -514,6 +518,24 @@ class AppViewModel : ViewModel() {
                     _uiState.update { it.copy(error = adaptyError, isLoading = false) }
                 }
         }
+    }
+
+    // Warms the placement cache only (no UI config / media). A later "Load" is served from that
+    // cache only when a cache-using fetch policy (return cache data else load / if not expired)
+    // is selected explicitly.
+    private fun preloadCustomPaywall() = viewModelScope.launch(exceptionHandler) {
+        val customPaywallId = _uiState.value.customPaywallId
+        if (customPaywallId.isEmpty()) return@launch
+
+        AppLogger.d("Preloading custom flow placement...")
+        _uiState.update { it.copy(isLoading = true) }
+        Adapty.preloadFlows(placementIds = listOf(customPaywallId))
+            .onSuccess {
+                AppLogger.d("Custom flow placement is preloaded: $customPaywallId")
+                _uiState.update { it.copy(isLoading = false) }
+            }.onError { adaptyError ->
+                _uiState.update { it.copy(error = adaptyError, isLoading = false) }
+            }
     }
 
     private fun loadCustomPaywall() = viewModelScope.launch(exceptionHandler) {
