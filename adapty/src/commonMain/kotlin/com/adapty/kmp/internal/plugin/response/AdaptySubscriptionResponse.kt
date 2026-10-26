@@ -93,6 +93,8 @@ internal fun AdaptySubscriptionResponse.asAdaptySubscription(): AdaptyProfile.Su
         activeIntroductoryOfferType = activeIntroductoryOfferType,
         activePromotionalOfferType = activePromotionalOfferType,
         activePromotionalOfferId = activePromotionalOfferId,
+        billingPlan = billingPlanId?.let { AdaptySubscriptionBillingPlan(it) },
+        commitmentInfo = commitment?.asAdaptyProfileSubscriptionCommitmentInfo(),
         willRenew = willRenew,
         isInGracePeriod = isInGracePeriod,
         unsubscribedAt = unsubscribedAt,
@@ -100,7 +102,5 @@ internal fun AdaptySubscriptionResponse.asAdaptySubscription(): AdaptyProfile.Su
         isSandbox = isSandbox,
         isRefund = isRefund,
         cancellationReason = cancellationReason,
-        billingPlan = billingPlanId?.let { AdaptySubscriptionBillingPlan(it) },
-        commitmentInfo = commitment?.asAdaptyProfileSubscriptionCommitmentInfo(),
     )
 }

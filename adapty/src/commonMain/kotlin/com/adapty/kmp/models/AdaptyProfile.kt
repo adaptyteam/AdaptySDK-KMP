@@ -56,13 +56,6 @@ public data class AdaptyProfile internal constructor(
      * it means that the offer was applied during the current subscription period.
      * Possible values: `free_trial`, `pay_as_you_go`, `pay_up_front`
      * @property activePromotionalOfferId ID of active promotional offer, if any.
-     * @property willRenew Whether the subscription will automatically renew.
-     * @property isInGracePeriod Whether the subscription is currently in grace period.
-     * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
-     * Subscription can still be active, it just means that auto-renewal turned off.
-     * Will be set to `null` if the user reactivates the subscription.
-     * @property billingIssueDetectedAt When a billing issue was detected, if any.
-     * Subscription can still be active. Would be set to null if a charge is made.
      * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
      * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
      * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
@@ -70,6 +63,13 @@ public data class AdaptyProfile internal constructor(
      * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
      * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
      * Android and on iOS below 26.4 the product is bought up front.
+     * @property willRenew Whether the subscription will automatically renew.
+     * @property isInGracePeriod Whether the subscription is currently in grace period.
+     * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
+     * Subscription can still be active, it just means that auto-renewal turned off.
+     * Will be set to `null` if the user reactivates the subscription.
+     * @property billingIssueDetectedAt When a billing issue was detected, if any.
+     * Subscription can still be active. Would be set to null if a charge is made.
      */
     public data class AccessLevel(
         public val id: String,
@@ -87,12 +87,12 @@ public data class AdaptyProfile internal constructor(
         public val activeIntroductoryOfferType: String?,
         public val activePromotionalOfferType: String?,
         public val activePromotionalOfferId: String?,
+        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
+        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
         public val willRenew: Boolean,
         public val isInGracePeriod: Boolean,
         public val unsubscribedAt: String?,
-        public val billingIssueDetectedAt: String?,
-        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
-        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
+        public val billingIssueDetectedAt: String?
     )
 
     /**
@@ -119,6 +119,13 @@ public data class AdaptyProfile internal constructor(
      * it means that the offer was applied during the current subscription period.
      * Possible values: `free_trial`, `pay_as_you_go`, `pay_up_front`
      * @property activePromotionalOfferId Active promotional offer ID, if any.
+     * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
+     * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
+     * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
+     * 26.4+ only; on Android and on iOS below 26.4 the product is bought up front.
+     * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
+     * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
+     * Android and on iOS below 26.4 the product is bought up front.
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
@@ -128,13 +135,6 @@ public data class AdaptyProfile internal constructor(
      * @property isSandbox Whether this subscription was made in a sandbox environment.
      * @property isRefund Whether this subscription was refunded.
      * @property cancellationReason Reason for cancellation, if any.
-     * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
-     * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
-     * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
-     * 26.4+ only; on Android and on iOS below 26.4 the product is bought up front.
-     * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
-     * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
-     * Android and on iOS below 26.4 the product is bought up front.
      */
     public data class Subscription(
         public val isActive: Boolean,
@@ -151,15 +151,15 @@ public data class AdaptyProfile internal constructor(
         public val activeIntroductoryOfferType: String?,
         public val activePromotionalOfferType: String?,
         public val activePromotionalOfferId: String?,
+        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
+        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
         public val willRenew: Boolean,
         public val isInGracePeriod: Boolean,
         public val unsubscribedAt: String?,
         public val billingIssueDetectedAt: String?,
         public val isSandbox: Boolean,
         public val isRefund: Boolean,
-        public val cancellationReason: String?,
-        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
-        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
+        public val cancellationReason: String?
     )
 
     /**

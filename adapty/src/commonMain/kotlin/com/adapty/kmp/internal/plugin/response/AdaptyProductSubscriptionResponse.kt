@@ -34,10 +34,10 @@ internal fun AdaptyProductSubscriptionResponse.asAdaptyProductSubscription(): Ad
         groupIdentifier = groupIdentifier,
         period = period.asAdaptySubscriptionPeriod(),
         localizedPeriod = localizedPeriod,
+        pricingTerms = pricingTerms?.asAdaptySubscriptionPricingTerms(),
         offer = offer?.asAdaptySubscriptionOffer(),
         renewalType = renewalType.asAdaptyRenewalType(),
         basePlanId = basePlanId,
-        pricingTerms = pricingTerms?.asAdaptySubscriptionPricingTerms(),
     )
 }
 

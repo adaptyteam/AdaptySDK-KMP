@@ -89,11 +89,11 @@ internal fun AdaptyAccessLevelResponse.asAdaptyAccessLevel(): AdaptyProfile.Acce
         activeIntroductoryOfferType = activeIntroductoryOfferType,
         activePromotionalOfferType = activePromotionalOfferType,
         activePromotionalOfferId = activePromotionalOfferId,
+        billingPlan = billingPlanId?.let { AdaptySubscriptionBillingPlan(it) },
+        commitmentInfo = commitment?.asAdaptyProfileSubscriptionCommitmentInfo(),
         willRenew = willRenew,
         isInGracePeriod = isInGracePeriod,
         unsubscribedAt = unsubscribedAt,
         billingIssueDetectedAt = billingIssueDetectedAt,
-        billingPlan = billingPlanId?.let { AdaptySubscriptionBillingPlan(it) },
-        commitmentInfo = commitment?.asAdaptyProfileSubscriptionCommitmentInfo(),
     )
 }
