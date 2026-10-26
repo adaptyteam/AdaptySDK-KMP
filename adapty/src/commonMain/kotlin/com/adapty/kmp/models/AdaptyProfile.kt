@@ -60,12 +60,12 @@ public data class AdaptyProfile internal constructor(
      * @property activePromotionalOfferId ID of active promotional offer, if any. Like [offerId], it
      * depends on the purchase [store], not the device platform.
      * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
-     * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
-     * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
-     * 26.4+ only; on Android and on iOS below 26.4 the product is bought up front.
+     * with (`billing_plan_id`), if any. Reported on both platforms: the profile is shared, so an App
+     * Store commitment subscription is visible on Android too. Buying with a commitment plan such as
+     * [AdaptySubscriptionBillingPlan.MONTHLY] is iOS 26.4+ only.
      * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
-     * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
-     * Android and on iOS below 26.4 the product is bought up front.
+     * subscription bought with a commitment billing plan, `null` otherwise. Reported on both
+     * platforms, like [billingPlan].
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
@@ -126,12 +126,12 @@ public data class AdaptyProfile internal constructor(
      * @property activePromotionalOfferId Active promotional offer ID, if any. Like [offerId], it
      * depends on the purchase [store], not the device platform.
      * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
-     * with (`billing_plan_id`). App Store purchases only (native iOS SDK 4.3+), `null` for Play
-     * Store purchases. Commitment plans such as [AdaptySubscriptionBillingPlan.MONTHLY] are iOS
-     * 26.4+ only; on Android and on iOS below 26.4 the product is bought up front.
+     * with (`billing_plan_id`), if any. Reported on both platforms: the profile is shared, so an App
+     * Store commitment subscription is visible on Android too. Buying with a commitment plan such as
+     * [AdaptySubscriptionBillingPlan.MONTHLY] is iOS 26.4+ only.
      * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
-     * subscription bought with a commitment billing plan, iOS 26.4+ only. `null` otherwise — on
-     * Android and on iOS below 26.4 the product is bought up front.
+     * subscription bought with a commitment billing plan, `null` otherwise. Reported on both
+     * platforms, like [billingPlan].
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
@@ -172,8 +172,9 @@ public data class AdaptyProfile internal constructor(
      * Commitment progress of a subscription bought with a commitment billing plan
      * (`AdaptyProfile.SubscriptionCommitmentInfo`, cross_platform 4.3.1).
      *
-     * iOS 26.4+ only (App Store commitment subscriptions). On Android and on iOS below 26.4 the
-     * product is bought up front and no commitment is reported.
+     * Reported on both platforms: the profile is shared, so a commitment subscription bought on the
+     * App Store is visible on Android too. Buying with a commitment is iOS 26.4+ only; on Android and
+     * on iOS below 26.4 the product is bought up front.
      *
      * @property billingPeriodNumber Number of the current billing period within the commitment.
      * @property totalBillingPeriods Total number of billing periods in the commitment.

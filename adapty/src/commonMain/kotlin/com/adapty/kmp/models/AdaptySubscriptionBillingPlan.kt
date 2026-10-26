@@ -3,10 +3,10 @@ package com.adapty.kmp.models
 /**
  * Billing plan of a subscription (cross_platform 4.3.1).
  *
- * Billing plans are reported for App Store products and purchases only (native iOS SDK 4.3+),
- * never on Android. Commitment plans such as [MONTHLY] come from App Store commitment
- * subscriptions and are iOS 26.4+ only; on Android and on iOS below 26.4 the subscription is
- * bought up front.
+ * On products ([AdaptySubscriptionPricingTerms.billingPlan]) it is iOS only. On the profile
+ * ([AdaptyProfile.AccessLevel.billingPlan], [AdaptyProfile.Subscription.billingPlan]) it is reported
+ * on both platforms, because the profile is shared. Buying with a commitment plan such as [MONTHLY]
+ * is iOS 26.4+ only; on Android and on iOS below 26.4 the subscription is bought up front.
  *
  * The known plans are exposed as constants below, but any [value] is valid: plans added by future
  * StoreKit or native SDK releases arrive unchanged rather than collapsing into an "unknown"
