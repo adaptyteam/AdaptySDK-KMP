@@ -44,6 +44,7 @@ import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
 import com.adapty.kmp.models.AdaptyIosRefundPreference
 import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.onError
+import com.adapty.kmp.models.onSuccess
 import kotlinx.coroutines.launch
 
 
@@ -527,6 +528,37 @@ private fun OtherActionsSection(
                     Adapty.presentCodeRedemptionSheet().onError { error ->
                         AppLogger.e("PaywallContentSection, presentCodeRedemptionSheet, error: $error")
                     }
+                }
+            }
+        )
+
+        // Store messages: pending types are only queued with
+        // AdaptyConfig.Builder.withStoreMessagesHandling(AdaptyStoreMessagesHandling.MANUAL) on iOS 16+.
+        ListActionTile(
+            title = "Get Pending Store Message Types",
+            onClick = {
+                coroutineScope.launch {
+                    Adapty.getPendingStoreMessageTypes()
+                        .onSuccess { types ->
+                            // null on Android: Google Play can't report pending messages
+                            AppLogger.d("Pending store message types: ${types?.map { it.value } ?: "unknown (Android)"}")
+                        }
+                        .onError { error ->
+                            AppLogger.e("getPendingStoreMessageTypes, error: $error")
+                        }
+                }
+            }
+        )
+
+        ListActionTile(
+            title = "Show Store Messages",
+            onClick = {
+                coroutineScope.launch {
+                    Adapty.showStoreMessages()
+                        .onSuccess { AppLogger.d("Store messages processed") }
+                        .onError { error ->
+                            AppLogger.e("showStoreMessages, error: $error")
+                        }
                 }
             }
         )

@@ -19,6 +19,7 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRemoteConfig
 import com.adapty.kmp.models.AdaptyRenewalType
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
@@ -296,6 +297,16 @@ internal object AdaptyFakeTestData {
     fun getSuccessPurchaseResult(): AdaptyPurchaseResult {
         return AdaptyPurchaseResult.Success(profile = getProfile())
     }
+
+    fun getStoreMessageTypes(): List<AdaptyStoreMessageType> = listOf(
+        AdaptyStoreMessageType.GENERIC,
+        AdaptyStoreMessageType.PRICE_INCREASE_CONSENT,
+        AdaptyStoreMessageType.BILLING_ISSUE,
+        AdaptyStoreMessageType.WIN_BACK_OFFER,
+        // Reasons without a constant arrive as storekit_<rawValue> and must round-trip verbatim
+        AdaptyStoreMessageType("storekit_7"),
+        AdaptyStoreMessageType("storekit_-42"),
+    )
 
     fun getOnboarding(): AdaptyOnboarding {
         return AdaptyOnboarding(
