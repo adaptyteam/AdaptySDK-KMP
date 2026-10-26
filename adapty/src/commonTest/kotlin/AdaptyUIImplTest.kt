@@ -1,8 +1,10 @@
+import com.adapty.kmp.internal.AdaptyKMPInternal
 import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDialogRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIDestroyViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
@@ -17,6 +19,8 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 
 class AdaptyUIImplTest {
@@ -89,6 +93,44 @@ class AdaptyUIImplTest {
             param = AdaptyUIDismissViewRequest(id = view.id, destroy = true),
             expectedSuccessData = Unit
         )
+    }
+
+    @Test
+    fun `dismissFlowView method - destroy false - verify request and response`() = runTest {
+        val view = AdaptyFakeTestData.getUIFlowView()
+
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyUIImpl.dismissFlowView(view = view, destroy = false)
+            },
+            method = AdaptyPluginMethod.DISMISS_FLOW_VIEW,
+            param = AdaptyUIDismissViewRequest(id = view.id, destroy = false),
+            expectedSuccessData = Unit
+        )
+    }
+
+    @Test
+    fun `destroyFlowView method - verify request and response`() = runTest {
+        val view = AdaptyFakeTestData.getUIFlowView()
+
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyUIImpl.destroyFlowView(view = view)
+            },
+            method = AdaptyPluginMethod.DESTROY_FLOW_VIEW,
+            param = AdaptyUIDestroyViewRequest(id = view.id),
+            expectedSuccessData = Unit
+        )
+    }
+
+    @OptIn(AdaptyKMPInternal::class)
+    @Test
+    fun `isStandaloneView - presented flow view true, embedded platform view false`() {
+        val presented = AdaptyFakeTestData.getUIFlowView()
+        val embedded = presented.copy(id = AdaptyFakeTestData.getFlow().createNativePlatformViewId())
+
+        assertTrue(presented.isStandaloneView)
+        assertFalse(embedded.isStandaloneView)
     }
 
     @Test
