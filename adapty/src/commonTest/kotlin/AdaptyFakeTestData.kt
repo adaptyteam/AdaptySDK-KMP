@@ -44,6 +44,7 @@ internal object AdaptyFakeTestData {
     const val VARIATION_ID = "test_variation_id_#2"
     const val VARIATION_NAME = "Variation A"
     const val PLACEMENT_ID = "test_placement_id_#3"
+    const val SECOND_PLACEMENT_ID = "test_placement_id_#4"
     const val LOCALE = "en"
 
     const val ONBOARDING_SCREEN_NAME = "onboarding_screen_name_#1"

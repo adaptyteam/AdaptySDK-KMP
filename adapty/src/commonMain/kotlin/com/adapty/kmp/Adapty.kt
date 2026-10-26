@@ -381,6 +381,72 @@ internal interface AdaptyContract {
         fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default
     ): AdaptyResult<AdaptyFlow>
 
+    /**
+     * Warms up the cache for the given flow placements.
+     *
+     * Sends the same request as [getFlow] for each placement — all placements are loaded in
+     * parallel — and stores the result in the SDK cache. Nothing is returned. This is useful,
+     * for example, for cross-placement A/B tests, where you want the flows for several
+     * placements to be available before the user reaches them.
+     *
+     * What preloading does **not** do:
+     * - It does not load UI configurations (view configs) or media (e.g. paywall images) in the
+     *   background — only the placement data is cached, so the first flow view creation still
+     *   goes to the network for those.
+     * - It has no fetch policy: preloading itself always goes to the network.
+     *
+     * To benefit from the warmed cache, call [getFlow] with a cache-using fetch policy passed
+     * **explicitly** — [AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad] or
+     * [AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad]. Then [getFlow] is served
+     * from the cache and sends one request fewer. With the default policy
+     * ([AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData]) [getFlow] still goes to the
+     * network, and the preloaded data only serves as a fallback.
+     *
+     * Example:
+     * ```
+     * Adapty.preloadFlows(placementIds = listOf("onboarding_flow", "settings_paywall"))
+     *
+     * val flow = Adapty.getFlow(
+     *     placementId = "onboarding_flow",
+     *     fetchPolicy = AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad
+     * )
+     * ```
+     *
+     * Requires the SDK to be activated.
+     *
+     * @param placementIds Identifiers of the placements to preload, as specified in the Adapty Dashboard.
+     * @param loadTimeout Maximum duration to wait for server response.
+     * @return [AdaptyResult] that succeeds once every placement has been stored in the cache.
+     * Fails with a single aggregated [com.adapty.kmp.models.AdaptyError] if any placement failed
+     * to load; the placements that did load stay in the cache.
+     */
+    suspend fun preloadFlows(
+        placementIds: List<String>,
+        loadTimeout: Duration = DEFAULT_LOAD_TIMEOUT
+    ): AdaptyResult<Unit>
+
+    /**
+     * Warms up the cache for the given flow placements using the Default Audience (All Users).
+     *
+     * The same trade-offs as [getFlowForDefaultAudience] apply: faster fetching without waiting
+     * for the user information required for segmentation, but no targeting by country,
+     * attribution or custom attributes. Unlike [preloadFlows], there is no load timeout.
+     *
+     * See [preloadFlows] for what preloading does and does not cover — including that a later
+     * flow fetch only reads the warmed cache when [AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad]
+     * or [AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad] is passed explicitly.
+     *
+     * Requires the SDK to be activated.
+     *
+     * @param placementIds Identifiers of the placements to preload, as specified in the Adapty Dashboard.
+     * @return [AdaptyResult] that succeeds once every placement has been stored in the cache.
+     * Fails with a single aggregated [com.adapty.kmp.models.AdaptyError] if any placement failed
+     * to load; the placements that did load stay in the cache.
+     */
+    suspend fun preloadFlowsForDefaultAudience(
+        placementIds: List<String>
+    ): AdaptyResult<Unit>
+
     /** Checks whether the SDK is activated. */
     suspend fun isActivated(): Boolean
 
