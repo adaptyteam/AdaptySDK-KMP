@@ -169,6 +169,11 @@ internal interface AdaptyContract {
     /**
      * Performs a purchase for the specified product. Read more on the [Adapty Documentation](https://docs.adapty.io/docs/making-purchases)
      *
+     * On iOS 26.4+, if the product carries [com.adapty.kmp.models.AdaptyProductSubscription.pricingTerms], its billing plan
+     * (e.g. monthly installments of a commitment subscription) is sent along automatically — pick
+     * the plan by picking the product. On Android, and on iOS below 26.4, the product is bought
+     * up front.
+     *
      * @param product The product to purchase.
      * @param parameters Optional parameters for purchase configuration.
      * @return [AdaptyResult] containing [AdaptyPurchaseResult].
@@ -183,6 +188,10 @@ internal interface AdaptyContract {
      *
      * Call this with the product delivered to [OnPromotedPurchaseListener] once your app is ready
      * to complete the purchase. iOS only — on other platforms the call fails with an error.
+     *
+     * Pass the product object received by the listener as is: on iOS it carries the StoreKit
+     * purchase intent required to complete the purchase (and, on iOS 26.4+, the billing plan from
+     * [com.adapty.kmp.models.AdaptyProductSubscription.pricingTerms]), so a copied or hand-built product fails.
      *
      * @param product The promoted product to purchase.
      * @return [AdaptyResult] containing [AdaptyPurchaseResult].

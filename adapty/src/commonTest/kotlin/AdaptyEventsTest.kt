@@ -1305,6 +1305,11 @@ class AdaptyEventsTest {
         assertEquals(true, product.isFamilyShareable)
         assertEquals(9.99, product.price.amount)
         assertEquals("intro_offer", product.subscription?.offer?.offerIdentifier?.id)
+        assertEquals(
+            AdaptyFakeTestData.getSubscriptionPricingTerms(),
+            product.subscription?.pricingTerms
+        )
+        assertEquals(AdaptyFakeTestData.PURCHASE_INTENT_ID, product.purchaseIntentId)
     }
 
     @Test

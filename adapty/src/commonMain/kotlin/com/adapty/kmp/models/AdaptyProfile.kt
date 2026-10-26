@@ -59,6 +59,13 @@ public data class AdaptyProfile internal constructor(
      * Possible values: `free_trial`, `pay_as_you_go`, `pay_up_front`
      * @property activePromotionalOfferId ID of active promotional offer, if any. Like [offerId], it
      * depends on the purchase [store], not the device platform.
+     * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
+     * with (`billing_plan_id`), if any. Reported on both platforms: the profile is shared, so an App
+     * Store commitment subscription is visible on Android too. Buying with a commitment plan such as
+     * [AdaptySubscriptionBillingPlan.MONTHLY] is iOS 26.4+ only.
+     * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
+     * subscription bought with a commitment billing plan, `null` otherwise. Reported on both
+     * platforms, like [billingPlan].
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
@@ -83,6 +90,8 @@ public data class AdaptyProfile internal constructor(
         public val activeIntroductoryOfferType: String?,
         public val activePromotionalOfferType: String?,
         public val activePromotionalOfferId: String?,
+        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
+        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
         public val willRenew: Boolean,
         public val isInGracePeriod: Boolean,
         public val unsubscribedAt: String?,
@@ -116,6 +125,13 @@ public data class AdaptyProfile internal constructor(
      * Possible values: `free_trial`, `pay_as_you_go`, `pay_up_front`
      * @property activePromotionalOfferId Active promotional offer ID, if any. Like [offerId], it
      * depends on the purchase [store], not the device platform.
+     * @property billingPlan [AdaptySubscriptionBillingPlan] Billing plan the subscription was bought
+     * with (`billing_plan_id`), if any. Reported on both platforms: the profile is shared, so an App
+     * Store commitment subscription is visible on Android too. Buying with a commitment plan such as
+     * [AdaptySubscriptionBillingPlan.MONTHLY] is iOS 26.4+ only.
+     * @property commitmentInfo [SubscriptionCommitmentInfo] Commitment progress (`commitment`) of a
+     * subscription bought with a commitment billing plan, `null` otherwise. Reported on both
+     * platforms, like [billingPlan].
      * @property willRenew Whether the subscription will automatically renew.
      * @property isInGracePeriod Whether the subscription is currently in grace period.
      * @property unsubscribedAt Time when the auto-renewable subscription was cancelled.
@@ -141,6 +157,8 @@ public data class AdaptyProfile internal constructor(
         public val activeIntroductoryOfferType: String?,
         public val activePromotionalOfferType: String?,
         public val activePromotionalOfferId: String?,
+        public val billingPlan: AdaptySubscriptionBillingPlan? = null,
+        public val commitmentInfo: SubscriptionCommitmentInfo? = null,
         public val willRenew: Boolean,
         public val isInGracePeriod: Boolean,
         public val unsubscribedAt: String?,
@@ -148,6 +166,25 @@ public data class AdaptyProfile internal constructor(
         public val isSandbox: Boolean,
         public val isRefund: Boolean,
         public val cancellationReason: String?
+    )
+
+    /**
+     * Commitment progress of a subscription bought with a commitment billing plan
+     * (`AdaptyProfile.SubscriptionCommitmentInfo`, cross_platform 4.3.1).
+     *
+     * Reported on both platforms: the profile is shared, so a commitment subscription bought on the
+     * App Store is visible on Android too. Buying with a commitment is iOS 26.4+ only; on Android and
+     * on iOS below 26.4 the product is bought up front.
+     *
+     * @property billingPeriodNumber Number of the current billing period within the commitment.
+     * @property totalBillingPeriods Total number of billing periods in the commitment.
+     * @property expiresAt Time when the commitment expires, in ISO 8601 format (same format as
+     * the other profile dates, e.g. [Subscription.expiresAt]).
+     */
+    public data class SubscriptionCommitmentInfo(
+        public val billingPeriodNumber: Int,
+        public val totalBillingPeriods: Int,
+        public val expiresAt: String,
     )
 
     /**
