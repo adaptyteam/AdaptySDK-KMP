@@ -12,6 +12,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
@@ -33,8 +35,10 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
 import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyProfileParameters
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
 
 object AdaptyPluginRequestTemplate {
@@ -60,6 +64,11 @@ object AdaptyPluginRequestTemplate {
         AdaptyPluginMethod.LOG_SHOW_FLOW -> getAdaptyLogShowFlowRequest(param as AdaptyLogShowFlowRequest)
         AdaptyPluginMethod.GET_FLOW_FOR_DEFAULT_AUDIENCE -> getAdaptyGetFlowForDefaultAudienceRequest(
             param as AdaptyGetFlowForDefaultAudienceRequest
+        )
+
+        AdaptyPluginMethod.PRELOAD_FLOWS -> getPreloadFlowsRequestJsonString(param as AdaptyPreloadFlowsRequest)
+        AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE -> getPreloadFlowsForDefaultAudienceRequestJsonString(
+            param as AdaptyPreloadFlowsForDefaultAudienceRequest
         )
 
         AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getEmptyJsonObjectString()
@@ -292,6 +301,25 @@ object AdaptyPluginRequestTemplate {
             }
         }
         return jsonObject.toString()
+    }
+
+    private fun getPreloadFlowsRequestJsonString(request: AdaptyPreloadFlowsRequest): String {
+        return buildJsonObject {
+            putJsonArray("placement_ids") {
+                request.placementIds.forEach { add(it) }
+            }
+            request.loadTimeoutInSeconds?.let { put("load_timeout", it) }
+        }.toString()
+    }
+
+    private fun getPreloadFlowsForDefaultAudienceRequestJsonString(
+        request: AdaptyPreloadFlowsForDefaultAudienceRequest
+    ): String {
+        return buildJsonObject {
+            putJsonArray("placement_ids") {
+                request.placementIds.forEach { add(it) }
+            }
+        }.toString()
     }
 
     private fun getOnboardingRequestJsonString(request: AdaptyGetOnboardingRequest): String {

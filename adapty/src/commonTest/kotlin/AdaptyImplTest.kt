@@ -9,6 +9,8 @@ import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
@@ -44,6 +46,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -193,6 +196,25 @@ class AdaptyImplTest {
     }
 
     @Test
+    fun `preloadFlows method - verify request and response`() = runTest {
+        val placementIds = listOf(AdaptyFakeTestData.PLACEMENT_ID, AdaptyFakeTestData.SECOND_PLACEMENT_ID)
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.preloadFlows(
+                    placementIds = placementIds,
+                    loadTimeout = 1500.milliseconds
+                )
+            },
+            method = AdaptyPluginMethod.PRELOAD_FLOWS,
+            param = AdaptyPreloadFlowsRequest(
+                placementIds = placementIds,
+                loadTimeoutInSeconds = 1.5
+            ),
+            expectedSuccessData = Unit
+        )
+    }
+
+    @Test
     fun `getFlowForDefaultAudience method - verify request and response`() = runTest {
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
@@ -207,6 +229,17 @@ class AdaptyImplTest {
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
             expectedSuccessData = AdaptyFakeTestData.getFlow()
+        )
+    }
+
+    @Test
+    fun `preloadFlowsForDefaultAudience method - verify request and response`() = runTest {
+        val placementIds = listOf(AdaptyFakeTestData.PLACEMENT_ID, AdaptyFakeTestData.SECOND_PLACEMENT_ID)
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.preloadFlowsForDefaultAudience(placementIds = placementIds) },
+            method = AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE,
+            param = AdaptyPreloadFlowsForDefaultAudienceRequest(placementIds = placementIds),
+            expectedSuccessData = Unit
         )
     }
 
