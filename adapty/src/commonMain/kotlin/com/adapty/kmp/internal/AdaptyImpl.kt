@@ -98,9 +98,7 @@ import kotlin.time.Duration
 @Suppress("OVERRIDE_DEPRECATION")
 internal class AdaptyImpl(
     private val adaptyPlugin: AdaptyPlugin,
-    private val appMainScope: CoroutineScope = MainScope(),
-    /** Injectable so both platform branches of the store message methods are testable on any target. */
-    private val isAndroid: Boolean = isAndroidPlatform
+    private val appMainScope: CoroutineScope = MainScope()
 ) : AdaptyContract {
 
     private var eventsListenerJob: Job? = null
@@ -432,7 +430,7 @@ internal class AdaptyImpl(
     override suspend fun getPendingStoreMessageTypes(): AdaptyResult<List<AdaptyStoreMessageType>?> {
         // Mirrors the React Native wrapper: Google Play can't report pending messages, so Android
         // answers "unknown" (null) without a native call rather than an error or an empty list.
-        if (isAndroid) return AdaptyResult.Success(null)
+        if (isAndroidPlatform) return AdaptyResult.Success(null)
         return adaptyPlugin.awaitExecute<Unit, List<String>>(
             method = AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES,
             request = Unit
@@ -444,7 +442,7 @@ internal class AdaptyImpl(
             method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
             request = AdaptyShowStoreMessagesRequest(
                 // The filter is iOS-only; like the React Native wrapper, it is not sent on Android.
-                filter = if (isAndroid) null
+                filter = if (isAndroidPlatform) null
                 else iosFilter?.map { it.asAdaptyStoreMessageTypeRequest() }
             )
         ).asAdaptyResult { }

@@ -72,12 +72,6 @@ class AdaptyImplTest {
         )
     }
 
-    private fun adaptyImplFor(isAndroid: Boolean) = AdaptyImpl(
-        adaptyPlugin = fakeAdaptyPlugin,
-        appMainScope = TestScope(),
-        isAndroid = isAndroid
-    )
-
     @Test
     fun `activate method - verify request json and handle success and error`() = runTest {
         val config = AdaptyConfig.Builder(AdaptyFakeTestData.API_KEY)
@@ -573,9 +567,10 @@ class AdaptyImplTest {
 
     @Test
     fun `getPendingStoreMessageTypes method - verify request and response`() = runTest {
+        if (isAndroidPlatform) return@runTest
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                when (val result = adaptyImplFor(isAndroid = false).getPendingStoreMessageTypes()) {
+                when (val result = adaptyImpl.getPendingStoreMessageTypes()) {
                     is AdaptyResult.Success -> AdaptyResult.Success(result.value ?: fail("Expected types on iOS"))
                     is AdaptyResult.Error -> result
                 }
@@ -587,7 +582,8 @@ class AdaptyImplTest {
 
     @Test
     fun `getPendingStoreMessageTypes method - returns null on Android without calling native`() = runTest {
-        val result = adaptyImplFor(isAndroid = true).getPendingStoreMessageTypes()
+        if (!isAndroidPlatform) return@runTest
+        val result = adaptyImpl.getPendingStoreMessageTypes()
 
         assertEquals(AdaptyResult.Success(null), result)
         assertNull(fakeAdaptyPlugin.capturedRequestMethodName)
@@ -595,11 +591,12 @@ class AdaptyImplTest {
 
     @Test
     fun `showStoreMessages method - verify request and response`() = runTest {
+        if (isAndroidPlatform) return@runTest
         val types = AdaptyFakeTestData.getStoreMessageTypes()
         // null filter is omitted (show all), an empty filter is sent as [] (show none)
         listOf(null, emptyList(), types).forEach { filter ->
             fakeAdaptyPlugin.verifyApiCallResultBehavior(
-                apiCall = { adaptyImplFor(isAndroid = false).showStoreMessages(iosFilter = filter) },
+                apiCall = { adaptyImpl.showStoreMessages(iosFilter = filter) },
                 method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
                 param = AdaptyShowStoreMessagesRequest(filter = filter?.map { it.value }),
                 expectedSuccessData = Unit
@@ -609,6 +606,7 @@ class AdaptyImplTest {
 
     @Test
     fun `showStoreMessages method - maps store message error codes`() = runTest {
+        if (isAndroidPlatform) return@runTest
         listOf(
             3201 to AdaptyErrorCode.OPERATION_IN_PROGRESS,
             3202 to AdaptyErrorCode.RESOLVER_FAILURE,
@@ -617,7 +615,7 @@ class AdaptyImplTest {
             val error = AdaptyError(code = expectedCode, message = "message", detail = "detail")
             fakeAdaptyPlugin.simulateErrorResponse(error)
 
-            val result = adaptyImplFor(isAndroid = false).showStoreMessages()
+            val result = adaptyImpl.showStoreMessages()
 
             assertEquals(AdaptyResult.Error(error), result)
         }
@@ -625,9 +623,10 @@ class AdaptyImplTest {
 
     @Test
     fun `showStoreMessages method - does not send the iOS filter on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
-                adaptyImplFor(isAndroid = true)
+                adaptyImpl
                     .showStoreMessages(iosFilter = AdaptyFakeTestData.getStoreMessageTypes())
             },
             method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
