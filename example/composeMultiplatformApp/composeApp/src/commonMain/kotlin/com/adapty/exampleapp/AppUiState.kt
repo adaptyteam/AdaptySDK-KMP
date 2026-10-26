@@ -10,6 +10,7 @@ import com.adapty.kmp.models.AdaptyPaywallProduct
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 import com.adapty.kmp.models.AdaptyWebPresentation
+import com.adapty.kmp.models.AdaptyUIFlowView
 import kotlin.time.Duration.Companion.seconds
 
 data class AppUiState(
@@ -33,6 +34,7 @@ data class AppUiState(
     val isLoadingOnboard: Boolean = false,
     val nativeOnboardingView: AdaptyOnboarding? = null,
     val nativePaywallView: AdaptyFlow? = null,
+    val keptAliveFlowView: AdaptyUIFlowView? = null,
     val error: Throwable? = null
 ) {
     enum class DemoPaywallFetchPolicy {
@@ -101,6 +103,10 @@ sealed interface AppUiEvent {
         val iosPresentationStyle: AdaptyUIIOSPresentationStyle
     ) :
         AppUiEvent
+
+    data class OnClickPresentKeepAliveFlowView(val flow: AdaptyFlow) : AppUiEvent
+    data object OnClickPresentKeptFlowView : AppUiEvent
+    data object OnClickDestroyKeptFlowView : AppUiEvent
 
     data class OnNewOnboardingIdAdded(val onboardingId: String) : AppUiEvent
     data class OnClickPresentOnboarding(

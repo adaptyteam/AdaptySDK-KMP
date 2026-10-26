@@ -26,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.AppUiEvent
 import com.adapty.exampleapp.AppUiState
 import com.adapty.exampleapp.AppViewModel
-import com.adapty.exampleapp.FlowViewKeepAliveTiles
 import com.adapty.exampleapp.Platform
 import com.adapty.exampleapp.components.ListActionTile
 import com.adapty.exampleapp.components.ListSection
@@ -159,7 +158,20 @@ private fun PaywallsListScreen(
                                 )
                             }
                         )
-                        FlowViewKeepAliveTiles(flow = flow)
+                        ListActionTile(
+                            title = "Present (keep on close)",
+                            onClick = { onUiEvent(AppUiEvent.OnClickPresentKeepAliveFlowView(flow = flow)) }
+                        )
+                        ListActionTile(
+                            title = "Present kept view",
+                            isActive = uiState.keptAliveFlowView != null,
+                            onClick = { onUiEvent(AppUiEvent.OnClickPresentKeptFlowView) }
+                        )
+                        ListActionTile(
+                            title = "Destroy kept view",
+                            isActive = uiState.keptAliveFlowView != null,
+                            onClick = { onUiEvent(AppUiEvent.OnClickDestroyKeptFlowView) }
+                        )
                         ListActionTile(
                             title = "Load Products and Present (FullScreen)",
                             onClick = {

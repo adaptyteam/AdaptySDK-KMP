@@ -68,7 +68,8 @@ fun App() {
             AdaptyUI.setFlowsEventsObserver(
                 AdaptyUIFlowsEventsObserverImpl(
                     uiCoroutineScope = coroutineScope,
-                    uriHandler = localUriHandler
+                    uriHandler = localUriHandler,
+                    isKeptAlive = appViewModel::isKeptAlive
                 )
             )
             AdaptyUI.setOnboardingsEventsObserver(
