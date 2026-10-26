@@ -21,6 +21,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequ
 import com.adapty.kmp.internal.plugin.request.AdaptyIosRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIDestroyViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
@@ -97,6 +98,7 @@ object AdaptyPluginRequestTemplate {
 
         AdaptyPluginMethod.PRESENT_FLOW_VIEW -> getPresentViewRequestJsonString(param as AdaptyUIPresentViewRequest)
         AdaptyPluginMethod.DISMISS_FLOW_VIEW -> getDismissViewRequestJsonString(param as AdaptyUIDismissViewRequest)
+        AdaptyPluginMethod.DESTROY_FLOW_VIEW -> getDestroyViewRequestJsonString(param as AdaptyUIDestroyViewRequest)
         AdaptyPluginMethod.SHOW_DIALOG -> getShowDialogRequestJsonString(param as AdaptyUIShowDialogRequest)
         AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getCreateOnboardingViewRequestJsonString(
             param as AdaptyUICreateOnboardingViewRequest
@@ -416,6 +418,12 @@ object AdaptyPluginRequestTemplate {
         return buildJsonObject {
             put("id", request.id)
             put("destroy", request.destroy)
+        }.toString()
+    }
+
+    private fun getDestroyViewRequestJsonString(request: AdaptyUIDestroyViewRequest): String {
+        return buildJsonObject {
+            put("id", request.id)
         }.toString()
     }
 

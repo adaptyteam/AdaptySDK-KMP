@@ -185,8 +185,37 @@ internal interface AdaptyUIContract {
         iosPresentationStyle: AdaptyUIIOSPresentationStyle = AdaptyUIIOSPresentationStyle.FULLSCREEN
     ): AdaptyResult<Unit>
 
-    /** Dismisses the provided flow view (cross_platform 4.0.0). */
-    suspend fun dismissFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit>
+    /**
+     * Dismisses the provided flow view.
+     *
+     * By default ([destroy] = `true`) the native view is released along with the dismissal, and
+     * [view] cannot be presented again.
+     *
+     * Pass `destroy = false` to keep the native view alive instead: it can be presented again
+     * with [presentFlowView], resuming on the screen the user left and with the state the flow
+     * had built up. Event observers are global, so nothing needs to be re-registered. A view kept
+     * this way is held in memory until it is released with [destroyFlowView].
+     *
+     * **Behavior change (4.3.0):** earlier versions always kept the dismissed view alive
+     * (equivalent to `destroy = false`) with no way to release it. The default is now `true`.
+     *
+     * @param view The flow view to dismiss.
+     * @param destroy Whether to release the native view after it is dismissed. Defaults to `true`.
+     * @return [AdaptyResult] indicating success or failure.
+     */
+    suspend fun dismissFlowView(view: AdaptyUIFlowView, destroy: Boolean = true): AdaptyResult<Unit>
+
+    /**
+     * Releases a native flow view that was kept alive by `dismissFlowView(view, destroy = false)`.
+     *
+     * Not needed after a default dismiss, which already releases the view. After this call the
+     * view cannot be presented.
+     *
+     * @param view The flow view to release.
+     * @return [AdaptyResult] indicating success or failure (for example if the view was already
+     * released).
+     */
+    suspend fun destroyFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit>
 
     /**
      * Creates an onboarding view from the provided [AdaptyOnboarding] model.

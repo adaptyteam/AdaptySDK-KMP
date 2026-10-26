@@ -79,11 +79,12 @@ object AdaptyPluginResponseTemplate {
             // UI methods
             AdaptyPluginMethod.CREATE_FLOW_VIEW -> getSuccessFlowViewResponse(successData as AdaptyUIFlowView)
             AdaptyPluginMethod.PRESENT_FLOW_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessResponse()
+            AdaptyPluginMethod.DESTROY_FLOW_VIEW -> genericSuccessResponse()
             AdaptyPluginMethod.SHOW_DIALOG -> getSuccessDialogActionTypeResponse(successData as AdaptyUIDialogActionType)
             AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getSuccessOnboardingViewResponse(successData as AdaptyUIOnboardingView)
             AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> genericSuccessResponse()
 
             else -> throw Exception(
                 "Unknown method type. Please, provide response json template in " +
@@ -96,13 +97,6 @@ object AdaptyPluginResponseTemplate {
     fun genericSuccessResponse(): String {
         val jsonResponse = buildJsonObject {
             put("success", true)
-        }
-        return jsonResponse.toString()
-    }
-
-    fun genericSuccessUnitResponse(): String {
-        val jsonResponse = buildJsonObject {
-            put("success", buildJsonObject {})
         }
         return jsonResponse.toString()
     }
