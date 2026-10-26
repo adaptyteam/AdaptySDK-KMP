@@ -459,8 +459,9 @@ public final class com/adapty/kmp/models/AdaptyFlow {
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Ljava/util/List;
-	public final fun component7 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component8 ()Ljava/util/List;
 	public final fun createNativePlatformViewId ()Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getHasViewConfiguration ()Z
@@ -470,6 +471,7 @@ public final class com/adapty/kmp/models/AdaptyFlow {
 	public final fun getPlacement ()Lcom/adapty/kmp/models/AdaptyPlacement;
 	public final fun getRemoteConfigs ()Ljava/util/List;
 	public final fun getVariationId ()Ljava/lang/String;
+	public final fun getVariationName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
