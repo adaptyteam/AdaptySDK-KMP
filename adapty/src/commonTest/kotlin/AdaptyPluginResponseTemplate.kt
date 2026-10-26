@@ -16,6 +16,7 @@ import com.adapty.kmp.models.AdaptyPrice
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRenewalType
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
@@ -30,6 +31,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -61,6 +63,9 @@ object AdaptyPluginResponseTemplate {
                 successData as AdaptyFlow
             )
 
+            AdaptyPluginMethod.PRELOAD_FLOWS -> genericSuccessResponse()
+            AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE -> genericSuccessResponse()
+
             AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getSuccessInstallationStatusResponse()
             AdaptyPluginMethod.IS_ACTIVATED -> getSuccessBooleanResponse(successData as Boolean)
             AdaptyPluginMethod.PRESENT_CODE_REDEMPTION_SHEET -> genericSuccessResponse()
@@ -73,15 +78,23 @@ object AdaptyPluginResponseTemplate {
 
             AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL -> getSuccessStringResponse(successData as String)
             AdaptyPluginMethod.OPEN_WEB_PAYWALL -> genericSuccessResponse()
+            AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES -> {
+                @Suppress("UNCHECKED_CAST")
+                val types = successData as List<AdaptyStoreMessageType>
+                buildSuccessJsonString(buildJsonArray { types.forEach { add(it.value) } })
+            }
+
+            AdaptyPluginMethod.SHOW_STORE_MESSAGES -> genericSuccessResponse()
 
             // UI methods
             AdaptyPluginMethod.CREATE_FLOW_VIEW -> getSuccessFlowViewResponse(successData as AdaptyUIFlowView)
             AdaptyPluginMethod.PRESENT_FLOW_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessResponse()
+            AdaptyPluginMethod.DESTROY_FLOW_VIEW -> genericSuccessResponse()
             AdaptyPluginMethod.SHOW_DIALOG -> getSuccessDialogActionTypeResponse(successData as AdaptyUIDialogActionType)
             AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getSuccessOnboardingViewResponse(successData as AdaptyUIOnboardingView)
             AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> genericSuccessResponse()
 
             else -> throw Exception(
                 "Unknown method type. Please, provide response json template in " +
@@ -94,13 +107,6 @@ object AdaptyPluginResponseTemplate {
     fun genericSuccessResponse(): String {
         val jsonResponse = buildJsonObject {
             put("success", true)
-        }
-        return jsonResponse.toString()
-    }
-
-    fun genericSuccessUnitResponse(): String {
-        val jsonResponse = buildJsonObject {
-            put("success", buildJsonObject {})
         }
         return jsonResponse.toString()
     }

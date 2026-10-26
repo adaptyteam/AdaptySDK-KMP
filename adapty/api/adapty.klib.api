@@ -79,6 +79,7 @@ final enum class com.adapty.kmp.models/AdaptyErrorCode : kotlin/Enum<com.adapty.
     enum entry NO_PRODUCT_IDS_FOUND // com.adapty.kmp.models/AdaptyErrorCode.NO_PRODUCT_IDS_FOUND|null[0]
     enum entry NO_PURCHASES_TO_RESTORE // com.adapty.kmp.models/AdaptyErrorCode.NO_PURCHASES_TO_RESTORE|null[0]
     enum entry OPERATION_INTERRUPTED // com.adapty.kmp.models/AdaptyErrorCode.OPERATION_INTERRUPTED|null[0]
+    enum entry OPERATION_IN_PROGRESS // com.adapty.kmp.models/AdaptyErrorCode.OPERATION_IN_PROGRESS|null[0]
     enum entry PAYMENT_CANCELLED // com.adapty.kmp.models/AdaptyErrorCode.PAYMENT_CANCELLED|null[0]
     enum entry PAYMENT_INVALID // com.adapty.kmp.models/AdaptyErrorCode.PAYMENT_INVALID|null[0]
     enum entry PAYMENT_NOT_ALLOWED // com.adapty.kmp.models/AdaptyErrorCode.PAYMENT_NOT_ALLOWED|null[0]
@@ -90,6 +91,7 @@ final enum class com.adapty.kmp.models/AdaptyErrorCode : kotlin/Enum<com.adapty.
     enum entry PROFILE_WAS_CHANGED // com.adapty.kmp.models/AdaptyErrorCode.PROFILE_WAS_CHANGED|null[0]
     enum entry RECEIVE_RESTORED_TRANSACTIONS_FAILED // com.adapty.kmp.models/AdaptyErrorCode.RECEIVE_RESTORED_TRANSACTIONS_FAILED|null[0]
     enum entry REFRESH_RECEIPT_FAILED // com.adapty.kmp.models/AdaptyErrorCode.REFRESH_RECEIPT_FAILED|null[0]
+    enum entry RESOLVER_FAILURE // com.adapty.kmp.models/AdaptyErrorCode.RESOLVER_FAILURE|null[0]
     enum entry SERVER_ERROR // com.adapty.kmp.models/AdaptyErrorCode.SERVER_ERROR|null[0]
     enum entry UNAUTHORIZED_REQUEST_DATA // com.adapty.kmp.models/AdaptyErrorCode.UNAUTHORIZED_REQUEST_DATA|null[0]
     enum entry UNKNOWN // com.adapty.kmp.models/AdaptyErrorCode.UNKNOWN|null[0]
@@ -152,6 +154,17 @@ final enum class com.adapty.kmp.models/AdaptyRenewalType : kotlin/Enum<com.adapt
 
     final fun valueOf(kotlin/String): com.adapty.kmp.models/AdaptyRenewalType // com.adapty.kmp.models/AdaptyRenewalType.valueOf|valueOf#static(kotlin.String){}[0]
     final fun values(): kotlin/Array<com.adapty.kmp.models/AdaptyRenewalType> // com.adapty.kmp.models/AdaptyRenewalType.values|values#static(){}[0]
+}
+
+final enum class com.adapty.kmp.models/AdaptyStoreMessagesHandling : kotlin/Enum<com.adapty.kmp.models/AdaptyStoreMessagesHandling> { // com.adapty.kmp.models/AdaptyStoreMessagesHandling|null[0]
+    enum entry AUTO // com.adapty.kmp.models/AdaptyStoreMessagesHandling.AUTO|null[0]
+    enum entry MANUAL // com.adapty.kmp.models/AdaptyStoreMessagesHandling.MANUAL|null[0]
+
+    final val entries // com.adapty.kmp.models/AdaptyStoreMessagesHandling.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.adapty.kmp.models/AdaptyStoreMessagesHandling> // com.adapty.kmp.models/AdaptyStoreMessagesHandling.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.adapty.kmp.models/AdaptyStoreMessagesHandling // com.adapty.kmp.models/AdaptyStoreMessagesHandling.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.adapty.kmp.models/AdaptyStoreMessagesHandling> // com.adapty.kmp.models/AdaptyStoreMessagesHandling.values|values#static(){}[0]
 }
 
 final enum class com.adapty.kmp.models/AdaptySubscriptionOfferPaymentMode : kotlin/Enum<com.adapty.kmp.models/AdaptySubscriptionOfferPaymentMode> { // com.adapty.kmp.models/AdaptySubscriptionOfferPaymentMode|null[0]
@@ -576,6 +589,7 @@ final class com.adapty.kmp.models/AdaptyConfig { // com.adapty.kmp.models/Adapty
         final fun withMediaCacheConfiguration(com.adapty.kmp.models/AdaptyConfig.MediaCacheConfiguration): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withMediaCacheConfiguration|withMediaCacheConfiguration(com.adapty.kmp.models.AdaptyConfig.MediaCacheConfiguration){}[0]
         final fun withObserverMode(kotlin/Boolean): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withObserverMode|withObserverMode(kotlin.Boolean){}[0]
         final fun withServerCluster(com.adapty.kmp.models/AdaptyConfig.ServerCluster): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withServerCluster|withServerCluster(com.adapty.kmp.models.AdaptyConfig.ServerCluster){}[0]
+        final fun withStoreMessagesHandling(com.adapty.kmp.models/AdaptyStoreMessagesHandling): com.adapty.kmp.models/AdaptyConfig.Builder // com.adapty.kmp.models/AdaptyConfig.Builder.withStoreMessagesHandling|withStoreMessagesHandling(com.adapty.kmp.models.AdaptyStoreMessagesHandling){}[0]
     }
 
     final class MediaCacheConfiguration { // com.adapty.kmp.models/AdaptyConfig.MediaCacheConfiguration|null[0]
@@ -1397,6 +1411,28 @@ final class com.adapty.kmp.models/AdaptyRemoteConfig { // com.adapty.kmp.models/
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyRemoteConfig.toString|toString(){}[0]
 }
 
+final class com.adapty.kmp.models/AdaptyStoreMessageType { // com.adapty.kmp.models/AdaptyStoreMessageType|null[0]
+    constructor <init>(kotlin/String) // com.adapty.kmp.models/AdaptyStoreMessageType.<init>|<init>(kotlin.String){}[0]
+
+    final val value // com.adapty.kmp.models/AdaptyStoreMessageType.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.adapty.kmp.models/AdaptyStoreMessageType.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyStoreMessageType.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyStoreMessageType.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyStoreMessageType.toString|toString(){}[0]
+
+    final object Companion { // com.adapty.kmp.models/AdaptyStoreMessageType.Companion|null[0]
+        final val BILLING_ISSUE // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.BILLING_ISSUE|{}BILLING_ISSUE[0]
+            final fun <get-BILLING_ISSUE>(): com.adapty.kmp.models/AdaptyStoreMessageType // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.BILLING_ISSUE.<get-BILLING_ISSUE>|<get-BILLING_ISSUE>(){}[0]
+        final val GENERIC // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.GENERIC|{}GENERIC[0]
+            final fun <get-GENERIC>(): com.adapty.kmp.models/AdaptyStoreMessageType // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.GENERIC.<get-GENERIC>|<get-GENERIC>(){}[0]
+        final val PRICE_INCREASE_CONSENT // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.PRICE_INCREASE_CONSENT|{}PRICE_INCREASE_CONSENT[0]
+            final fun <get-PRICE_INCREASE_CONSENT>(): com.adapty.kmp.models/AdaptyStoreMessageType // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.PRICE_INCREASE_CONSENT.<get-PRICE_INCREASE_CONSENT>|<get-PRICE_INCREASE_CONSENT>(){}[0]
+        final val WIN_BACK_OFFER // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.WIN_BACK_OFFER|{}WIN_BACK_OFFER[0]
+            final fun <get-WIN_BACK_OFFER>(): com.adapty.kmp.models/AdaptyStoreMessageType // com.adapty.kmp.models/AdaptyStoreMessageType.Companion.WIN_BACK_OFFER.<get-WIN_BACK_OFFER>|<get-WIN_BACK_OFFER>(){}[0]
+    }
+}
+
 final class com.adapty.kmp.models/AdaptySubscriptionBillingPlan { // com.adapty.kmp.models/AdaptySubscriptionBillingPlan|null[0]
     constructor <init>(kotlin/String) // com.adapty.kmp.models/AdaptySubscriptionBillingPlan.<init>|<init>(kotlin.String){}[0]
 
@@ -1543,6 +1579,8 @@ final class com.adapty.kmp.models/AdaptyUIDialog { // com.adapty.kmp.models/Adap
 final class com.adapty.kmp.models/AdaptyUIFlowView { // com.adapty.kmp.models/AdaptyUIFlowView|null[0]
     final val id // com.adapty.kmp.models/AdaptyUIFlowView.id|{}id[0]
         final fun <get-id>(): kotlin/String // com.adapty.kmp.models/AdaptyUIFlowView.id.<get-id>|<get-id>(){}[0]
+    final val isStandaloneView // com.adapty.kmp.models/AdaptyUIFlowView.isStandaloneView|{}isStandaloneView[0]
+        final fun <get-isStandaloneView>(): kotlin/Boolean // com.adapty.kmp.models/AdaptyUIFlowView.isStandaloneView.<get-isStandaloneView>|<get-isStandaloneView>(){}[0]
     final val locale // com.adapty.kmp.models/AdaptyUIFlowView.locale|{}locale[0]
         final fun <get-locale>(): kotlin/String? // com.adapty.kmp.models/AdaptyUIFlowView.locale.<get-locale>|<get-locale>(){}[0]
     final val placementId // com.adapty.kmp.models/AdaptyUIFlowView.placementId|{}placementId[0]
@@ -1558,7 +1596,8 @@ final class com.adapty.kmp.models/AdaptyUIFlowView { // com.adapty.kmp.models/Ad
     final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyUIFlowView.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyUIFlowView.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIFlowView.toString|toString(){}[0]
-    final suspend fun dismiss(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.dismiss|dismiss(){}[0]
+    final suspend fun destroy(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.destroy|destroy(){}[0]
+    final suspend fun dismiss(kotlin/Boolean = ...): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.dismiss|dismiss(kotlin.Boolean){}[0]
     final suspend fun present(com.adapty.kmp.models/AdaptyUIIOSPresentationStyle = ...): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.present|present(com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIFlowView.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
@@ -1749,6 +1788,7 @@ final object com.adapty.kmp/Adapty : com.adapty.kmp/AdaptyContract { // com.adap
     final suspend fun getOnboarding(kotlin/String, kotlin/String?, com.adapty.kmp.models/AdaptyPaywallFetchPolicy, kotlin.time/Duration): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyOnboarding> // com.adapty.kmp/Adapty.getOnboarding|getOnboarding(kotlin.String;kotlin.String?;com.adapty.kmp.models.AdaptyPaywallFetchPolicy;kotlin.time.Duration){}[0]
     final suspend fun getOnboardingForDefaultAudience(kotlin/String, kotlin/String?, com.adapty.kmp.models/AdaptyPaywallFetchPolicy): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyOnboarding> // com.adapty.kmp/Adapty.getOnboardingForDefaultAudience|getOnboardingForDefaultAudience(kotlin.String;kotlin.String?;com.adapty.kmp.models.AdaptyPaywallFetchPolicy){}[0]
     final suspend fun getPaywallProducts(com.adapty.kmp.models/AdaptyFlow): com.adapty.kmp.models/AdaptyResult<kotlin.collections/List<com.adapty.kmp.models/AdaptyPaywallProduct>> // com.adapty.kmp/Adapty.getPaywallProducts|getPaywallProducts(com.adapty.kmp.models.AdaptyFlow){}[0]
+    final suspend fun getPendingStoreMessageTypes(): com.adapty.kmp.models/AdaptyResult<kotlin.collections/List<com.adapty.kmp.models/AdaptyStoreMessageType>?> // com.adapty.kmp/Adapty.getPendingStoreMessageTypes|getPendingStoreMessageTypes(){}[0]
     final suspend fun getProfile(): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyProfile> // com.adapty.kmp/Adapty.getProfile|getProfile(){}[0]
     final suspend fun identify(kotlin/String, kotlin/String?, kotlin/String?): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.identify|identify(kotlin.String;kotlin.String?;kotlin.String?){}[0]
     final suspend fun isActivated(): kotlin/Boolean // com.adapty.kmp/Adapty.isActivated|isActivated(){}[0]
@@ -1758,11 +1798,14 @@ final object com.adapty.kmp/Adapty : com.adapty.kmp/AdaptyContract { // com.adap
     final suspend fun makePurchase(com.adapty.kmp.models/AdaptyPaywallProduct, com.adapty.kmp.models/AdaptyPurchaseParameters?): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyPurchaseResult> // com.adapty.kmp/Adapty.makePurchase|makePurchase(com.adapty.kmp.models.AdaptyPaywallProduct;com.adapty.kmp.models.AdaptyPurchaseParameters?){}[0]
     final suspend fun openWebPaywall(com.adapty.kmp.models/AdaptyFlowPaywall, com.adapty.kmp.models/AdaptyWebPresentation): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.openWebPaywall|openWebPaywall(com.adapty.kmp.models.AdaptyFlowPaywall;com.adapty.kmp.models.AdaptyWebPresentation){}[0]
     final suspend fun openWebPaywall(com.adapty.kmp.models/AdaptyPaywallProduct, com.adapty.kmp.models/AdaptyWebPresentation): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.openWebPaywall|openWebPaywall(com.adapty.kmp.models.AdaptyPaywallProduct;com.adapty.kmp.models.AdaptyWebPresentation){}[0]
+    final suspend fun preloadFlows(kotlin.collections/List<kotlin/String>, kotlin.time/Duration): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.preloadFlows|preloadFlows(kotlin.collections.List<kotlin.String>;kotlin.time.Duration){}[0]
+    final suspend fun preloadFlowsForDefaultAudience(kotlin.collections/List<kotlin/String>): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.preloadFlowsForDefaultAudience|preloadFlowsForDefaultAudience(kotlin.collections.List<kotlin.String>){}[0]
     final suspend fun presentCodeRedemptionSheet(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.presentCodeRedemptionSheet|presentCodeRedemptionSheet(){}[0]
     final suspend fun reportTransaction(kotlin/String, kotlin/String?): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.reportTransaction|reportTransaction(kotlin.String;kotlin.String?){}[0]
     final suspend fun restorePurchases(): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyProfile> // com.adapty.kmp/Adapty.restorePurchases|restorePurchases(){}[0]
     final suspend fun setFallback(kotlin/String): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.setFallback|setFallback(kotlin.String){}[0]
     final suspend fun setIntegrationIdentifier(kotlin/String, kotlin/String): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.setIntegrationIdentifier|setIntegrationIdentifier(kotlin.String;kotlin.String){}[0]
+    final suspend fun showStoreMessages(kotlin.collections/List<com.adapty.kmp.models/AdaptyStoreMessageType>?): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.showStoreMessages|showStoreMessages(kotlin.collections.List<com.adapty.kmp.models.AdaptyStoreMessageType>?){}[0]
     final suspend fun updateCollectingRefundDataConsent(kotlin/Boolean): com.adapty.kmp.models/AdaptyResult<kotlin/Boolean> // com.adapty.kmp/Adapty.updateCollectingRefundDataConsent|updateCollectingRefundDataConsent(kotlin.Boolean){}[0]
     final suspend fun updateExternalAttribution(kotlin.collections/Map<kotlin/String, kotlin/Any>, com.adapty.kmp.models/AdaptyExternalAttributionProvider): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.updateExternalAttribution|updateExternalAttribution(kotlin.collections.Map<kotlin.String,kotlin.Any>;com.adapty.kmp.models.AdaptyExternalAttributionProvider){}[0]
     final suspend fun updateProfile(com.adapty.kmp.models/AdaptyProfileParameters): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/Adapty.updateProfile|updateProfile(com.adapty.kmp.models.AdaptyProfileParameters){}[0]
@@ -1782,7 +1825,8 @@ final object com.adapty.kmp/AdaptyUI : com.adapty.kmp/AdaptyUIContract { // com.
     final fun unregisterOnboardingEventsListener(kotlin/String) // com.adapty.kmp/AdaptyUI.unregisterOnboardingEventsListener|unregisterOnboardingEventsListener(kotlin.String){}[0]
     final suspend fun createFlowView(com.adapty.kmp.models/AdaptyFlow, kotlin/String?, kotlin/String?, kotlin.time/Duration?, kotlin/Boolean, kotlin.collections/Map<kotlin/String, kotlin/String>?, kotlin.collections/Map<kotlin/String, kotlinx.datetime/LocalDateTime>?, kotlin.collections/Map<kotlin/String, com.adapty.kmp.models/AdaptyCustomAsset>?, kotlin.collections/Map<com.adapty.kmp.models/AdaptyProductIdentifier, com.adapty.kmp.models/AdaptyPurchaseParameters>?): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIFlowView> // com.adapty.kmp/AdaptyUI.createFlowView|createFlowView(com.adapty.kmp.models.AdaptyFlow;kotlin.String?;kotlin.String?;kotlin.time.Duration?;kotlin.Boolean;kotlin.collections.Map<kotlin.String,kotlin.String>?;kotlin.collections.Map<kotlin.String,kotlinx.datetime.LocalDateTime>?;kotlin.collections.Map<kotlin.String,com.adapty.kmp.models.AdaptyCustomAsset>?;kotlin.collections.Map<com.adapty.kmp.models.AdaptyProductIdentifier,com.adapty.kmp.models.AdaptyPurchaseParameters>?){}[0]
     final suspend fun createOnboardingView(com.adapty.kmp.models/AdaptyOnboarding, com.adapty.kmp.models/AdaptyWebPresentation): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIOnboardingView> // com.adapty.kmp/AdaptyUI.createOnboardingView|createOnboardingView(com.adapty.kmp.models.AdaptyOnboarding;com.adapty.kmp.models.AdaptyWebPresentation){}[0]
-    final suspend fun dismissFlowView(com.adapty.kmp.models/AdaptyUIFlowView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.dismissFlowView|dismissFlowView(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
+    final suspend fun destroyFlowView(com.adapty.kmp.models/AdaptyUIFlowView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.destroyFlowView|destroyFlowView(com.adapty.kmp.models.AdaptyUIFlowView){}[0]
+    final suspend fun dismissFlowView(com.adapty.kmp.models/AdaptyUIFlowView, kotlin/Boolean): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.dismissFlowView|dismissFlowView(com.adapty.kmp.models.AdaptyUIFlowView;kotlin.Boolean){}[0]
     final suspend fun dismissOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.dismissOnboardingView|dismissOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView){}[0]
     final suspend fun presentFlowView(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyUIIOSPresentationStyle): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentFlowView|presentFlowView(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
     final suspend fun presentOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView, com.adapty.kmp.models/AdaptyUIIOSPresentationStyle): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentOnboardingView|presentOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView;com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]

@@ -159,6 +159,20 @@ private fun PaywallsListScreen(
                             }
                         )
                         ListActionTile(
+                            title = "Present (keep on close)",
+                            onClick = { onUiEvent(AppUiEvent.OnClickPresentKeepAliveFlowView(flow = flow)) }
+                        )
+                        ListActionTile(
+                            title = "Present kept view",
+                            isActive = uiState.keptAliveFlowView != null,
+                            onClick = { onUiEvent(AppUiEvent.OnClickPresentKeptFlowView) }
+                        )
+                        ListActionTile(
+                            title = "Destroy kept view",
+                            isActive = uiState.keptAliveFlowView != null,
+                            onClick = { onUiEvent(AppUiEvent.OnClickDestroyKeptFlowView) }
+                        )
+                        ListActionTile(
                             title = "Load Products and Present (FullScreen)",
                             onClick = {
                                 onUiEvent(
