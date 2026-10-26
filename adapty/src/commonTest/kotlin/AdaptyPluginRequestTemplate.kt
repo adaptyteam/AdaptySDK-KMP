@@ -12,13 +12,17 @@ import com.adapty.kmp.internal.plugin.request.AdaptyFlowPaywallRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyFlowRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallProductRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPromotedProductRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPurchaseParametersRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyShowStoreMessagesRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyIosRefundPreferenceRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIDestroyViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIIOSPresentationStyleRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
@@ -32,8 +36,12 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.utils.toJsonObject
 import com.adapty.kmp.models.AdaptyConfig
 import com.adapty.kmp.models.AdaptyProfileParameters
+import com.adapty.kmp.models.AdaptyStoreMessagesHandling
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
 
 object AdaptyPluginRequestTemplate {
@@ -61,6 +69,11 @@ object AdaptyPluginRequestTemplate {
             param as AdaptyGetFlowForDefaultAudienceRequest
         )
 
+        AdaptyPluginMethod.PRELOAD_FLOWS -> getPreloadFlowsRequestJsonString(param as AdaptyPreloadFlowsRequest)
+        AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE -> getPreloadFlowsForDefaultAudienceRequestJsonString(
+            param as AdaptyPreloadFlowsForDefaultAudienceRequest
+        )
+
         AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getEmptyJsonObjectString()
         AdaptyPluginMethod.IS_ACTIVATED -> getEmptyJsonObjectString()
         AdaptyPluginMethod.PRESENT_CODE_REDEMPTION_SHEET -> getEmptyJsonObjectString()
@@ -80,6 +93,8 @@ object AdaptyPluginRequestTemplate {
         )
 
         AdaptyPluginMethod.SET_LOG_LEVEL -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES -> getEmptyJsonObjectString()
+        AdaptyPluginMethod.SHOW_STORE_MESSAGES -> getShowStoreMessagesRequestJsonString(param as AdaptyShowStoreMessagesRequest)
 
         // UI methods
         AdaptyPluginMethod.CREATE_FLOW_VIEW -> getCreateFlowViewRequestJsonString(
@@ -88,6 +103,7 @@ object AdaptyPluginRequestTemplate {
 
         AdaptyPluginMethod.PRESENT_FLOW_VIEW -> getPresentViewRequestJsonString(param as AdaptyUIPresentViewRequest)
         AdaptyPluginMethod.DISMISS_FLOW_VIEW -> getDismissViewRequestJsonString(param as AdaptyUIDismissViewRequest)
+        AdaptyPluginMethod.DESTROY_FLOW_VIEW -> getDestroyViewRequestJsonString(param as AdaptyUIDestroyViewRequest)
         AdaptyPluginMethod.SHOW_DIALOG -> getShowDialogRequestJsonString(param as AdaptyUIShowDialogRequest)
         AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getCreateOnboardingViewRequestJsonString(
             param as AdaptyUICreateOnboardingViewRequest
@@ -110,6 +126,15 @@ object AdaptyPluginRequestTemplate {
                 put("api_key", configuration.apiKey)
                 put("customer_user_id", configuration.customerUserId)
                 put("observer_mode", configuration.observerMode)
+                configuration.storeMessagesHandling?.let {
+                    put(
+                        "store_messages_handling",
+                        when (it) {
+                            AdaptyStoreMessagesHandling.AUTO -> "auto"
+                            AdaptyStoreMessagesHandling.MANUAL -> "manual"
+                        }
+                    )
+                }
                 put("apple_idfa_collection_disabled", configuration.appleIdfaCollectionDisabled)
                 put("google_adid_collection_disabled", configuration.googleAdvertisingIdCollection)
                 put("google_enable_pending_prepaid_plans", configuration.googleEnablePendingPrepaidPlans)
@@ -292,6 +317,25 @@ object AdaptyPluginRequestTemplate {
         return jsonObject.toString()
     }
 
+    private fun getPreloadFlowsRequestJsonString(request: AdaptyPreloadFlowsRequest): String {
+        return buildJsonObject {
+            putJsonArray("placement_ids") {
+                request.placementIds.forEach { add(it) }
+            }
+            request.loadTimeoutInSeconds?.let { put("load_timeout", it) }
+        }.toString()
+    }
+
+    private fun getPreloadFlowsForDefaultAudienceRequestJsonString(
+        request: AdaptyPreloadFlowsForDefaultAudienceRequest
+    ): String {
+        return buildJsonObject {
+            putJsonArray("placement_ids") {
+                request.placementIds.forEach { add(it) }
+            }
+        }.toString()
+    }
+
     private fun getOnboardingRequestJsonString(request: AdaptyGetOnboardingRequest): String {
         return buildJsonObject {
             put("placement_id", request.placementId)
@@ -391,6 +435,12 @@ object AdaptyPluginRequestTemplate {
         }.toString()
     }
 
+    private fun getDestroyViewRequestJsonString(request: AdaptyUIDestroyViewRequest): String {
+        return buildJsonObject {
+            put("id", request.id)
+        }.toString()
+    }
+
     private fun getShowDialogRequestJsonString(request: AdaptyUIShowDialogRequest): String {
         return buildJsonObject {
             put("id", request.id)
@@ -414,6 +464,14 @@ object AdaptyPluginRequestTemplate {
             )
             request.externalUrlsPresentation?.let {
                 put("external_urls_presentation", it.toSerialName())
+            }
+        }.toString()
+    }
+
+    private fun getShowStoreMessagesRequestJsonString(request: AdaptyShowStoreMessagesRequest): String {
+        return buildJsonObject {
+            request.filter?.let { filter ->
+                putJsonArray("filter") { filter.forEach { add(it) } }
             }
         }.toString()
     }

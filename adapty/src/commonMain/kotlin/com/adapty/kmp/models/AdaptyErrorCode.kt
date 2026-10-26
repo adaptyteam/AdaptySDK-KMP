@@ -78,6 +78,14 @@ public enum class AdaptyErrorCode(internal val value: Int) {
     REFRESH_RECEIPT_FAILED(1010),
     RECEIVE_RESTORED_TRANSACTIONS_FAILED(1011),
 
+    /**
+     * The billing plan selected for the purchase (the product's
+     * [AdaptySubscriptionPricingTerms.billingPlan]) is not available. iOS 26.4+ only
+     * (App Store commitment subscriptions); never returned on Android or on iOS below 26.4,
+     * where products are bought up front.
+     */
+    BILLING_PLAN_UNAVAILABLE(1060),
+
     /////////////////////////////
     /// Custom network codes. ///
     /////////////////////////////
@@ -94,6 +102,12 @@ public enum class AdaptyErrorCode(internal val value: Int) {
     PROFILE_WAS_CHANGED(3006),
     UNSUPPORTED_DATA(3007),
     FETCH_TIMEOUT_ERROR(3101),
+
+    /** iOS: another operation of the same kind is running, e.g. a store message show. */
+    OPERATION_IN_PROGRESS(3201),
+
+    /** iOS: a required system resource could not be resolved, e.g. no foreground window scene to show store messages in. */
+    RESOLVER_FAILURE(3202),
     OPERATION_INTERRUPTED(9000),
 
     /////////////////////////////

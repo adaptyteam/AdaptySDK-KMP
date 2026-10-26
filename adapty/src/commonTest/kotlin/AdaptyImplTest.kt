@@ -9,8 +9,11 @@ import com.adapty.kmp.internal.plugin.request.AdaptyGetFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyLogShowFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyPaywallFetchPolicyRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyShowStoreMessagesRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
 import com.adapty.kmp.internal.plugin.request.asAdaptyPromotedProductRequest
@@ -25,6 +28,7 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateParameters
 import com.adapty.kmp.models.AdaptyAndroidSubscriptionUpdateReplacementMode
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyExternalAttributionProvider
 import com.adapty.kmp.models.AdaptyErrorCode
 import com.adapty.kmp.models.AdaptyInstallationStatusNotDetermined
@@ -34,16 +38,29 @@ import com.adapty.kmp.models.AdaptyPaywallFetchPolicy
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyProfileParameters
 import com.adapty.kmp.models.AdaptyPurchaseParameters
+import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyStoreMessagesHandling
 import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.fold
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.addJsonObject
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonArray
+import kotlinx.serialization.json.putJsonObject
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -73,6 +90,7 @@ class AdaptyImplTest {
             .withServerCluster(AdaptyConfig.ServerCluster.EU)
             .withLogLevel(AdaptyLogLevel.DEBUG)
             .withActivateUI(false)
+            .withStoreMessagesHandling(AdaptyStoreMessagesHandling.MANUAL)
             .build()
 
 
@@ -83,6 +101,24 @@ class AdaptyImplTest {
             param = config,
             expectedSuccessData = Unit
         )
+    }
+
+    @Test
+    fun `activate method - store messages handling is omitted when not set and sent as auto`() = runTest {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        mapOf(
+            null to null,
+            AdaptyStoreMessagesHandling.AUTO to JsonPrimitive("auto"),
+        ).forEach { (handling, expected) ->
+            val builder = AdaptyConfig.Builder(AdaptyFakeTestData.API_KEY)
+            handling?.let { builder.withStoreMessagesHandling(it) }
+            adaptyImpl.activate(builder.build())
+
+            val configuration = jsonInstance
+                .parseToJsonElement(fakeAdaptyPlugin.capturedRequestJsonString ?: "")
+                .jsonObject.getValue("configuration").jsonObject
+            assertEquals(expected, configuration["store_messages_handling"])
+        }
     }
 
 
@@ -193,6 +229,25 @@ class AdaptyImplTest {
     }
 
     @Test
+    fun `preloadFlows method - verify request and response`() = runTest {
+        val placementIds = listOf(AdaptyFakeTestData.PLACEMENT_ID, AdaptyFakeTestData.SECOND_PLACEMENT_ID)
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.preloadFlows(
+                    placementIds = placementIds,
+                    loadTimeout = 1500.milliseconds
+                )
+            },
+            method = AdaptyPluginMethod.PRELOAD_FLOWS,
+            param = AdaptyPreloadFlowsRequest(
+                placementIds = placementIds,
+                loadTimeoutInSeconds = 1.5
+            ),
+            expectedSuccessData = Unit
+        )
+    }
+
+    @Test
     fun `getFlowForDefaultAudience method - verify request and response`() = runTest {
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
             apiCall = {
@@ -207,6 +262,17 @@ class AdaptyImplTest {
                 fetchPolicy = AdaptyPaywallFetchPolicyRequest.ReturnCacheDataElseLoad
             ),
             expectedSuccessData = AdaptyFakeTestData.getFlow()
+        )
+    }
+
+    @Test
+    fun `preloadFlowsForDefaultAudience method - verify request and response`() = runTest {
+        val placementIds = listOf(AdaptyFakeTestData.PLACEMENT_ID, AdaptyFakeTestData.SECOND_PLACEMENT_ID)
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = { adaptyImpl.preloadFlowsForDefaultAudience(placementIds = placementIds) },
+            method = AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE,
+            param = AdaptyPreloadFlowsForDefaultAudienceRequest(placementIds = placementIds),
+            expectedSuccessData = Unit
         )
     }
 
@@ -255,6 +321,84 @@ class AdaptyImplTest {
     }
 
     @Test
+    fun `makePurchase method - sends billing plan id next to the subscription offer`() = runTest {
+        val product = AdaptyFakeTestData.getPaywallProductList()[0]
+        fakeAdaptyPlugin.simulateSuccessResponseForMethod(
+            AdaptyPluginMethod.MAKE_PURCHASE,
+            AdaptyFakeTestData.getSuccessPurchaseResult()
+        )
+
+        adaptyImpl.makePurchase(product = product, parameters = null)
+        assertEquals(
+            buildJsonObject {
+                putJsonObject("pricing_terms") { put("billing_plan_id", "monthly") }
+                putJsonObject("offer") {
+                    putJsonObject("offer_identifier") {
+                        put("id", "intro_offer")
+                        put("type", "introductory")
+                    }
+                }
+            },
+            fakeAdaptyPlugin.capturedRequestJson.getValue("product").jsonObject["subscription"]
+        )
+
+        val productWithoutOffer = product.copy(subscription = product.subscription?.copy(offer = null))
+        adaptyImpl.makePurchase(product = productWithoutOffer, parameters = null)
+        assertEquals(
+            buildJsonObject {
+                putJsonObject("pricing_terms") { put("billing_plan_id", "monthly") }
+            },
+            fakeAdaptyPlugin.capturedRequestJson.getValue("product").jsonObject["subscription"]
+        )
+    }
+
+    @Test
+    fun `makePurchase method - omits pricing terms and subscription when the product has none`() = runTest {
+        val androidProduct = AdaptyFakeTestData.getPaywallProductList()[1]
+        fakeAdaptyPlugin.simulateSuccessResponseForMethod(
+            AdaptyPluginMethod.MAKE_PURCHASE,
+            AdaptyFakeTestData.getSuccessPurchaseResult()
+        )
+
+        adaptyImpl.makePurchase(product = androidProduct, parameters = null)
+        assertEquals(
+            buildJsonObject {
+                putJsonObject("offer") {
+                    putJsonObject("offer_identifier") {
+                        put("id", "android_offer")
+                        put("type", "promotional")
+                    }
+                }
+            },
+            fakeAdaptyPlugin.capturedRequestJson.getValue("product").jsonObject["subscription"]
+        )
+
+        val productWithoutPlanOrOffer = androidProduct.copy(
+            subscription = androidProduct.subscription?.copy(offer = null)
+        )
+        adaptyImpl.makePurchase(product = productWithoutPlanOrOffer, parameters = null)
+        assertFalse("subscription" in fakeAdaptyPlugin.capturedRequestJson.getValue("product").jsonObject)
+    }
+
+    @Test
+    fun `makePurchase method - error 1060 maps to BILLING_PLAN_UNAVAILABLE`() = runTest {
+        fakeAdaptyPlugin.simulateErrorResponse(
+            AdaptyError(code = AdaptyErrorCode.BILLING_PLAN_UNAVAILABLE, message = "Billing plan unavailable")
+        )
+
+        val result = adaptyImpl.makePurchase(
+            product = AdaptyFakeTestData.getPaywallProductList()[0],
+            parameters = null
+        )
+
+        assertEquals(1060, AdaptyErrorCode.BILLING_PLAN_UNAVAILABLE.value)
+        result.fold(
+            onSuccess = { fail("Expected error but got success") },
+            onError = { error -> assertEquals(AdaptyErrorCode.BILLING_PLAN_UNAVAILABLE, error.code) }
+        )
+    }
+
+    @Test
     fun `makePromotedPurchase method - verify request and response`() = runTest {
         if (isAndroidPlatform) return@runTest
         val product = AdaptyFakeTestData.getPromotedProduct()
@@ -267,6 +411,41 @@ class AdaptyImplTest {
             ),
             expectedSuccessData = AdaptyFakeTestData.getSuccessPurchaseResult(),
         )
+    }
+
+    @Test
+    fun `makePromotedPurchase request - sends purchase intent id and billing plan id`() {
+        val request = AdaptyMakePromotedPurchaseRequest(
+            product = AdaptyFakeTestData.getPromotedProduct().asAdaptyPromotedProductRequest()
+        )
+        assertEquals(
+            buildJsonObject {
+                putJsonObject("product") {
+                    put("purchase_intent_id", AdaptyFakeTestData.PURCHASE_INTENT_ID)
+                    put("vendor_product_id", AdaptyFakeTestData.PRODUCT_ID)
+                    putJsonObject("subscription") {
+                        putJsonObject("pricing_terms") { put("billing_plan_id", "monthly") }
+                        putJsonObject("offer") {
+                            putJsonObject("offer_identifier") {
+                                put("id", "intro_offer")
+                                put("type", "introductory")
+                            }
+                        }
+                    }
+                }
+            },
+            jsonInstance.encodeToJsonElement(AdaptyMakePromotedPurchaseRequest.serializer(), request)
+        )
+
+        val requestWithoutIntent = AdaptyMakePromotedPurchaseRequest(
+            product = AdaptyFakeTestData.getPromotedProduct(purchaseIntentId = null)
+                .asAdaptyPromotedProductRequest()
+        )
+        val productJson = jsonInstance.encodeToJsonElement(
+            AdaptyMakePromotedPurchaseRequest.serializer(),
+            requestWithoutIntent
+        ).jsonObject.getValue("product").jsonObject
+        assertFalse("purchase_intent_id" in productJson)
     }
 
     @Test
@@ -353,6 +532,39 @@ class AdaptyImplTest {
             param = AdaptyLogShowFlowRequest(flow = flow.asAdaptyFlowRequest()),
             expectedSuccessData = Unit
         )
+    }
+
+    @Test
+    fun `logShowFlow method - sends product reference pricing terms back unchanged`() = runTest {
+        val nativeProduct = AdaptyFakeTestData.getFlowRequestResponse().variations.single().products.single()
+        fakeAdaptyPlugin.simulateSuccessResponse()
+
+        adaptyImpl.logShowFlow(flow = AdaptyFakeTestData.getFlow())
+
+        val expectedProduct = buildJsonObject {
+            nativeProduct.flowProductId?.let { put("flow_product_id", it) }
+            put("vendor_product_id", nativeProduct.vendorProductId)
+            put("adapty_product_id", nativeProduct.adaptyProductId)
+            put("product_type", nativeProduct.productType)
+            put("access_level_id", nativeProduct.accessLevelId)
+            nativeProduct.basePlanId?.let { put("base_plan_id", it) }
+            nativeProduct.offerId?.let { put("offer_id", it) }
+            nativeProduct.pricingTerms?.let { pricingTerms ->
+                putJsonArray("pricing_terms") {
+                    pricingTerms.forEach { terms ->
+                        addJsonObject {
+                            put("billing_plan_id", terms.billingPlanId)
+                            terms.promotionalOfferId?.let { put("promotional_offer_id", it) }
+                            terms.winBackOfferId?.let { put("win_back_offer_id", it) }
+                        }
+                    }
+                }
+            }
+        }
+        val sentProducts = fakeAdaptyPlugin.capturedRequestJson.getValue("flow").jsonObject
+            .getValue("variations").jsonArray.single().jsonObject
+            .getValue("products")
+        assertEquals(buildJsonArray { add(expectedProduct) }, sentProducts)
     }
 
     @Test
@@ -447,6 +659,24 @@ class AdaptyImplTest {
     }
 
     @Test
+    fun `createWebPaywallUrl with product method - verify request and response`() = runTest {
+        val product = AdaptyFakeTestData.getPaywallProductList()[0]
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.createWebPaywallUrl(product = product)
+            },
+            method = AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL,
+            param = AdaptyWebPaywallRequest.fromPaywallProduct(product.asAdaptyPaywallProductRequest()),
+            expectedSuccessData = "https://pay.adapty.io/test",
+        )
+        assertEquals(
+            buildJsonObject { put("billing_plan_id", "monthly") },
+            fakeAdaptyPlugin.capturedRequestJson.getValue("product").jsonObject
+                .getValue("subscription").jsonObject["pricing_terms"]
+        )
+    }
+
+    @Test
     fun `openWebPaywall method - verify request and response`() = runTest {
         val flowPaywall = AdaptyFakeTestData.getFlow().paywalls.first()
         fakeAdaptyPlugin.verifyApiCallResultBehavior(
@@ -462,6 +692,30 @@ class AdaptyImplTest {
                 webPresentationRequest = AdaptyWebPresentationRequest.IN_APP_BROWSER
             ),
             expectedSuccessData = Unit
+        )
+    }
+
+    @Test
+    fun `openWebPaywall with product method - verify request and response`() = runTest {
+        val product = AdaptyFakeTestData.getPaywallProductList()[0]
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl.openWebPaywall(
+                    product = product,
+                    openIn = AdaptyWebPresentation.IN_APP_BROWSER
+                )
+            },
+            method = AdaptyPluginMethod.OPEN_WEB_PAYWALL,
+            param = AdaptyWebPaywallRequest.fromPaywallProduct(
+                product = product.asAdaptyPaywallProductRequest(),
+                webPresentationRequest = AdaptyWebPresentationRequest.IN_APP_BROWSER
+            ),
+            expectedSuccessData = Unit
+        )
+        assertEquals(
+            buildJsonObject { put("billing_plan_id", "monthly") },
+            fakeAdaptyPlugin.capturedRequestJson.getValue("product").jsonObject
+                .getValue("subscription").jsonObject["pricing_terms"]
         )
     }
 
@@ -503,6 +757,76 @@ class AdaptyImplTest {
             onError = { error ->
                 assertEquals(AdaptyErrorCode.DEVELOPER_ERROR, error.code)
             }
+        )
+    }
+
+    @Test
+    fun `getPendingStoreMessageTypes method - verify request and response`() = runTest {
+        if (isAndroidPlatform) return@runTest
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                when (val result = adaptyImpl.getPendingStoreMessageTypes()) {
+                    is AdaptyResult.Success -> AdaptyResult.Success(result.value ?: fail("Expected types on iOS"))
+                    is AdaptyResult.Error -> result
+                }
+            },
+            method = AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES,
+            expectedSuccessData = AdaptyFakeTestData.getStoreMessageTypes()
+        )
+    }
+
+    @Test
+    fun `getPendingStoreMessageTypes method - returns null on Android without calling native`() = runTest {
+        if (!isAndroidPlatform) return@runTest
+        val result = adaptyImpl.getPendingStoreMessageTypes()
+
+        assertEquals(AdaptyResult.Success(null), result)
+        assertNull(fakeAdaptyPlugin.capturedRequestMethodName)
+    }
+
+    @Test
+    fun `showStoreMessages method - verify request and response`() = runTest {
+        if (isAndroidPlatform) return@runTest
+        val types = AdaptyFakeTestData.getStoreMessageTypes()
+        // null filter is omitted (show all), an empty filter is sent as [] (show none)
+        listOf(null, emptyList(), types).forEach { filter ->
+            fakeAdaptyPlugin.verifyApiCallResultBehavior(
+                apiCall = { adaptyImpl.showStoreMessages(iosFilter = filter) },
+                method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
+                param = AdaptyShowStoreMessagesRequest(filter = filter?.map { it.value }),
+                expectedSuccessData = Unit
+            )
+        }
+    }
+
+    @Test
+    fun `showStoreMessages method - maps store message error codes`() = runTest {
+        if (isAndroidPlatform) return@runTest
+        listOf(
+            3201 to AdaptyErrorCode.OPERATION_IN_PROGRESS,
+            3202 to AdaptyErrorCode.RESOLVER_FAILURE,
+        ).forEach { (rawCode, expectedCode) ->
+            assertEquals(rawCode, expectedCode.value)
+            val error = AdaptyError(code = expectedCode, message = "message", detail = "detail")
+            fakeAdaptyPlugin.simulateErrorResponse(error)
+
+            val result = adaptyImpl.showStoreMessages()
+
+            assertEquals(AdaptyResult.Error(error), result)
+        }
+    }
+
+    @Test
+    fun `showStoreMessages method - does not send the iOS filter on Android`() = runTest {
+        if (!isAndroidPlatform) return@runTest
+        fakeAdaptyPlugin.verifyApiCallResultBehavior(
+            apiCall = {
+                adaptyImpl
+                    .showStoreMessages(iosFilter = AdaptyFakeTestData.getStoreMessageTypes())
+            },
+            method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
+            param = AdaptyShowStoreMessagesRequest(filter = null),
+            expectedSuccessData = Unit
         )
     }
 

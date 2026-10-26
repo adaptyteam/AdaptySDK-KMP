@@ -35,6 +35,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
+import com.adapty.kmp.models.AdaptyUIFlowView
 import kotlin.time.ExperimentalTime
 
 class AppViewModel : ViewModel() {
@@ -94,6 +95,10 @@ class AppViewModel : ViewModel() {
 
             AppUiEvent.OnClickLoadCustomPaywall -> {
                 loadCustomPaywall()
+            }
+
+            AppUiEvent.OnClickPreloadCustomPaywall -> {
+                preloadCustomPaywall()
             }
 
             AppUiEvent.OnClickRestorePurchases -> {
@@ -210,6 +215,10 @@ class AppViewModel : ViewModel() {
                 iosPresentationStyle = event.iosPresentationStyle
             )
 
+            is AppUiEvent.OnClickPresentKeepAliveFlowView -> presentKeepAliveFlowView(flow = event.flow)
+            AppUiEvent.OnClickPresentKeptFlowView -> presentKeptFlowView()
+            AppUiEvent.OnClickDestroyKeptFlowView -> destroyKeptFlowView()
+
             is AppUiEvent.OnNewOnboardingIdAdded -> {
                 _uiState.update { currentState ->
                     currentState.copy(savedOnboardingIds = setOf(event.onboardingId) + currentState.savedOnboardingIds)
@@ -310,6 +319,31 @@ class AppViewModel : ViewModel() {
                 .onError { error -> _uiState.update { it.copy(error = error) } }
             _uiState.update { it.copy(isLoading = false) }
         }
+
+    // Closing this view dismisses it with destroy = false (see AdaptyUIFlowsEventsObserverImpl),
+    // so it can be presented again, resuming where the user left off, until it is destroyed.
+    private fun presentKeepAliveFlowView(flow: AdaptyFlow) = viewModelScope.launch {
+        AdaptyUI.createFlowView(flow = flow)
+            .onSuccess { view ->
+                _uiState.update { it.copy(keptAliveFlowView = view) }
+                view.present()
+            }
+            .onError { error -> _uiState.update { it.copy(error = error) } }
+    }
+
+    private fun presentKeptFlowView() = viewModelScope.launch {
+        val view = _uiState.value.keptAliveFlowView ?: return@launch
+        view.present().onError { error -> _uiState.update { it.copy(error = error) } }
+    }
+
+    private fun destroyKeptFlowView() = viewModelScope.launch {
+        val view = _uiState.value.keptAliveFlowView ?: return@launch
+        view.destroy()
+            .onSuccess { _uiState.update { it.copy(keptAliveFlowView = null) } }
+            .onError { error -> _uiState.update { it.copy(error = error) } }
+    }
+
+    fun isKeptAlive(view: AdaptyUIFlowView): Boolean = _uiState.value.keptAliveFlowView?.id == view.id
 
 
     @OptIn(ExperimentalResourceApi::class)
@@ -514,6 +548,24 @@ class AppViewModel : ViewModel() {
                     _uiState.update { it.copy(error = adaptyError, isLoading = false) }
                 }
         }
+    }
+
+    // Warms the placement cache only (no UI config / media). A later "Load" is served from that
+    // cache only when a cache-using fetch policy (return cache data else load / if not expired)
+    // is selected explicitly.
+    private fun preloadCustomPaywall() = viewModelScope.launch(exceptionHandler) {
+        val customPaywallId = _uiState.value.customPaywallId
+        if (customPaywallId.isEmpty()) return@launch
+
+        AppLogger.d("Preloading custom flow placement...")
+        _uiState.update { it.copy(isLoading = true) }
+        Adapty.preloadFlows(placementIds = listOf(customPaywallId))
+            .onSuccess {
+                AppLogger.d("Custom flow placement is preloaded: $customPaywallId")
+                _uiState.update { it.copy(isLoading = false) }
+            }.onError { adaptyError ->
+                _uiState.update { it.copy(error = adaptyError, isLoading = false) }
+            }
     }
 
     private fun loadCustomPaywall() = viewModelScope.launch(exceptionHandler) {

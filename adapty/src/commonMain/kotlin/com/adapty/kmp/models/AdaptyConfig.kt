@@ -36,6 +36,8 @@ import KMPAdapty.adapty.BuildConfig
  * @property activateUI Enables AdaptyUI module (for displaying paywalls and onboarding).
  * @property logLevel The level of logging output. Defaults to [AdaptyLogLevel.INFO].
  * @property mediaCache Configuration for caching media assets used in AdaptyUI.
+ * @property storeMessagesHandling Who decides when store messages are shown. `null` (the default)
+ * leaves the native SDK default, [AdaptyStoreMessagesHandling.AUTO]. Requires iOS 16+ on iOS.
  */
 public class AdaptyConfig private constructor(
     internal val apiKey: String,
@@ -56,7 +58,8 @@ public class AdaptyConfig private constructor(
     internal val activateUI: Boolean,
     internal val logLevel: AdaptyLogLevel?,
     internal val mediaCache: MediaCacheConfiguration,
-    internal val customerIdentity: AdaptyCustomerIdentity?
+    internal val customerIdentity: AdaptyCustomerIdentity?,
+    internal val storeMessagesHandling: AdaptyStoreMessagesHandling?
 ) {
     internal companion object {
         const val SDK_NAME = "kmp"
@@ -97,6 +100,7 @@ public class AdaptyConfig private constructor(
         private var logLevel: AdaptyLogLevel? = AdaptyLogLevel.INFO
         private var mediaCache: MediaCacheConfiguration = MediaCacheConfiguration()
         private var customerIdentity: AdaptyCustomerIdentity? = null
+        private var storeMessagesHandling: AdaptyStoreMessagesHandling? = null
 
 
         /** Unique identifier for the current user in your system */
@@ -178,6 +182,23 @@ public class AdaptyConfig private constructor(
         public fun withMediaCacheConfiguration(config: MediaCacheConfiguration): Builder =
             apply { this.mediaCache = config }
 
+        /**
+         * Controls who decides when store messages are shown: App Store messages (price increase
+         * consent, billing issue, win-back offer, etc.) on iOS, Google Play in-app messages (e.g. a
+         * declined payment) on Android.
+         *
+         * - [AdaptyStoreMessagesHandling.AUTO] (default): iOS — StoreKit presents them
+         *   automatically. Android — the SDK requests them on every `Activity.onResume`.
+         * - [AdaptyStoreMessagesHandling.MANUAL]: messages are shown only when the app calls
+         *   [com.adapty.kmp.Adapty.showStoreMessages]. On iOS the SDK also keeps them in a queue
+         *   readable via [com.adapty.kmp.Adapty.getPendingStoreMessageTypes].
+         *
+         * When not called, the native SDK default ([AdaptyStoreMessagesHandling.AUTO]) applies.
+         * Has no effect below iOS 16.
+         */
+        public fun withStoreMessagesHandling(handling: AdaptyStoreMessagesHandling): Builder =
+            apply { this.storeMessagesHandling = handling }
+
 
         public fun build(): AdaptyConfig {
             return AdaptyConfig(
@@ -199,7 +220,8 @@ public class AdaptyConfig private constructor(
                 activateUI = activateUI,
                 logLevel = logLevel,
                 mediaCache = mediaCache,
-                customerIdentity = customerIdentity
+                customerIdentity = customerIdentity,
+                storeMessagesHandling = storeMessagesHandling
             )
         }
     }

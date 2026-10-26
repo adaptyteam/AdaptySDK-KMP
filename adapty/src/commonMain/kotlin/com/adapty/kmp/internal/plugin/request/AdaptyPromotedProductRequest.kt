@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class AdaptyPromotedProductRequest(
+    @SerialName("purchase_intent_id")
+    val purchaseIntentId: String? = null, // iOS Only (required by native iOS 4.3+)
+
     @SerialName("vendor_product_id")
     val vendorProductId: String,
 
@@ -18,7 +21,8 @@ internal data class AdaptyPromotedProductRequest(
 
 internal fun AdaptyPromotedProduct.asAdaptyPromotedProductRequest(): AdaptyPromotedProductRequest =
     AdaptyPromotedProductRequest(
+        purchaseIntentId = purchaseIntentId,
         vendorProductId = vendorProductId,
-        subscription = subscription?.offer?.offerIdentifier?.asAdaptyProductSubscriptionRequest(),
+        subscription = subscription?.asAdaptyProductSubscriptionRequest(),
         payloadData = payloadData,
     )

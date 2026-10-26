@@ -19,12 +19,16 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRemoteConfig
 import com.adapty.kmp.models.AdaptyRenewalType
+import com.adapty.kmp.models.AdaptyStoreMessageType
+import com.adapty.kmp.models.AdaptySubscriptionBillingPlan
+import com.adapty.kmp.models.AdaptySubscriptionCommitmentInfo
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
 import com.adapty.kmp.models.AdaptySubscriptionOfferPhase
 import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
+import com.adapty.kmp.models.AdaptySubscriptionPricingTerms
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIFlowView
@@ -42,7 +46,9 @@ internal object AdaptyFakeTestData {
     const val INTEGRATION_VALUE = "testIntegrationValue"
     const val TRANSACTION_ID = "test_transaction_id_#1"
     const val VARIATION_ID = "test_variation_id_#2"
+    const val VARIATION_NAME = "Variation A"
     const val PLACEMENT_ID = "test_placement_id_#3"
+    const val SECOND_PLACEMENT_ID = "test_placement_id_#4"
     const val LOCALE = "en"
 
     const val ONBOARDING_SCREEN_NAME = "onboarding_screen_name_#1"
@@ -61,17 +67,19 @@ internal object AdaptyFakeTestData {
     const val TOTAL_SCREENS = 5
     const val PRODUCT_ID = "com.example.product.monthly"
     const val ADAPTY_PRODUCT_ID = "adapty_product_001"
+    const val PURCHASE_INTENT_ID = "purchase_intent_id_#1"
 
 
     fun getProfile(): AdaptyProfile {
 
+        // One purchase per store: offer ids must decode whatever the device platform is.
         val accessLevels = mapOf(
             "1" to AdaptyProfile.AccessLevel(
                 id = "1",
                 isActive = true,
                 vendorProductId = "1",
-                offerId = null,
-                store = "google",
+                offerId = "intro-pay-up-front-weekly",
+                store = "play_store",
                 activatedAt = TEST_DATE,
                 startsAt = TEST_DATE,
                 renewedAt = TEST_DATE,
@@ -86,7 +94,80 @@ internal object AdaptyFakeTestData {
                 isInGracePeriod = false,
                 unsubscribedAt = TEST_DATE,
                 billingIssueDetectedAt = TEST_DATE
+            ),
+            "2" to AdaptyProfile.AccessLevel(
+                id = "2",
+                isActive = true,
+                vendorProductId = "2",
+                offerId = "com.app.intro.weekly",
+                store = "app_store",
+                activatedAt = TEST_DATE,
+                startsAt = TEST_DATE,
+                renewedAt = TEST_DATE,
+                expiresAt = TEST_DATE,
+                isLifetime = false,
+                cancellationReason = null,
+                isRefund = false,
+                activeIntroductoryOfferType = null,
+                activePromotionalOfferType = "pay_as_you_go",
+                activePromotionalOfferId = "com.app.promo.weekly",
+                willRenew = true,
+                isInGracePeriod = false,
+                unsubscribedAt = null,
+                billingIssueDetectedAt = null
+            ),
+            "premium" to AdaptyProfile.AccessLevel(
+                id = "premium",
+                isActive = true,
+                vendorProductId = PRODUCT_ID,
+                store = "app_store",
+                activatedAt = TEST_DATE,
+                startsAt = null,
+                renewedAt = TEST_DATE,
+                expiresAt = TEST_DATE,
+                isLifetime = false,
+                cancellationReason = null,
+                isRefund = false,
+                activeIntroductoryOfferType = null,
+                activePromotionalOfferType = null,
+                activePromotionalOfferId = null,
+                billingPlan = AdaptySubscriptionBillingPlan.MONTHLY,
+                commitmentInfo = getProfileCommitmentInfo(),
+                willRenew = true,
+                isInGracePeriod = false,
+                unsubscribedAt = null,
+                billingIssueDetectedAt = null
             )
+        )
+
+        val subscriptions = mapOf(
+            "1" to getProfileSubscription(store = "play_store", offerId = "intro-pay-up-front-weekly", promoId = "promo-weekly-50"),
+            "2" to getProfileSubscription(store = "app_store", offerId = "com.app.intro.weekly", promoId = "com.app.promo.weekly"),
+            PRODUCT_ID to AdaptyProfile.Subscription(
+                isActive = true,
+                vendorProductId = PRODUCT_ID,
+                vendorTransactionId = TRANSACTION_ID,
+                vendorOriginalTransactionId = TRANSACTION_ID,
+                offerId = null,
+                store = "app_store",
+                activatedAt = TEST_DATE,
+                renewedAt = TEST_DATE,
+                expiresAt = TEST_DATE,
+                startsAt = null,
+                isLifetime = false,
+                activeIntroductoryOfferType = null,
+                activePromotionalOfferType = null,
+                activePromotionalOfferId = null,
+                billingPlan = AdaptySubscriptionBillingPlan.MONTHLY,
+                commitmentInfo = getProfileCommitmentInfo(),
+                willRenew = true,
+                isInGracePeriod = false,
+                unsubscribedAt = null,
+                billingIssueDetectedAt = null,
+                isSandbox = true,
+                isRefund = false,
+                cancellationReason = null
+            ),
         )
 
         val customAttributes = mapOf(
@@ -99,12 +180,44 @@ internal object AdaptyFakeTestData {
             segmentId = "1",
             customerUserId = "1",
             accessLevels = accessLevels,
-            subscriptions = mapOf(),
+            subscriptions = subscriptions,
             nonSubscriptions = mapOf(),
             customAttributes = customAttributes,
             isTestUser = false
         )
     }
+
+    private fun getProfileSubscription(store: String, offerId: String, promoId: String) =
+        AdaptyProfile.Subscription(
+            isActive = true,
+            vendorProductId = "weekly.premium.599",
+            vendorTransactionId = "tx-$store",
+            vendorOriginalTransactionId = "original-tx-$store",
+            offerId = offerId,
+            store = store,
+            activatedAt = TEST_DATE,
+            renewedAt = TEST_DATE,
+            expiresAt = TEST_DATE,
+            startsAt = TEST_DATE,
+            isLifetime = false,
+            activeIntroductoryOfferType = null,
+            activePromotionalOfferType = "pay_up_front",
+            activePromotionalOfferId = promoId,
+            willRenew = true,
+            isInGracePeriod = false,
+            unsubscribedAt = null,
+            billingIssueDetectedAt = null,
+            isSandbox = true,
+            isRefund = false,
+            cancellationReason = null
+        )
+
+    fun getProfileCommitmentInfo(): AdaptyProfile.SubscriptionCommitmentInfo =
+        AdaptyProfile.SubscriptionCommitmentInfo(
+            billingPeriodNumber = 3,
+            totalBillingPeriods = 12,
+            expiresAt = TEST_DATE
+        )
 
     internal fun getFlowRequestResponse(): AdaptyFlowRequestResponse {
         val placement = AdaptyPlacementRequestResponse(
@@ -129,8 +242,20 @@ internal object AdaptyFakeTestData {
             adaptyProductId = "1",
             productType = "productType",
             accessLevelId = "accessLevelId",
-            promotionalOfferId = "promotionalOfferId - #3",
-            winBackOfferId = "winBackOfferId -#2",
+            pricingTerms = listOf(
+                AdaptyPaywallProductReferenceRequestResponse.PricingTerms(
+                    billingPlanId = "up_front",
+                    promotionalOfferId = "promotionalOfferId - #3",
+                    winBackOfferId = "winBackOfferId -#2",
+                ),
+                AdaptyPaywallProductReferenceRequestResponse.PricingTerms(
+                    billingPlanId = "monthly",
+                    promotionalOfferId = "promotionalOfferId - #6",
+                ),
+                AdaptyPaywallProductReferenceRequestResponse.PricingTerms(
+                    billingPlanId = "future_billing_plan",
+                ),
+            ),
             basePlanId = "basePlanId - #4",
             offerId = "offerId - #5",
         )
@@ -139,6 +264,7 @@ internal object AdaptyFakeTestData {
             flowId = "456",
             flowName = "testPaywall",
             variationId = "1",
+            variationName = VARIATION_NAME,
             remoteConfigs = listOf(
                 AdaptyRemoteConfigResponse(locale = "en", jsonString = remoteConfigJson)
             ),
@@ -196,6 +322,7 @@ internal object AdaptyFakeTestData {
             groupIdentifier = "com.example.group",
             period = subscriptionPeriod,
             localizedPeriod = "1 month",
+            pricingTerms = getSubscriptionPricingTerms(),
             offer = offer,
             renewalType = AdaptyRenewalType.AUTORENEWABLE,
             basePlanId = "base_plan_001"
@@ -220,10 +347,50 @@ internal object AdaptyFakeTestData {
             webPurchaseUrl = "https://example.com",
         )
 
-        return listOf(product)
+        val androidProduct = product.copy(
+            vendorProductId = "com.example.product.android",
+            paywallProductIndex = 2,
+            regionCode = null,
+            subscription = AdaptyProductSubscription(
+                period = subscriptionPeriod,
+                localizedPeriod = "1 month",
+                offer = AdaptySubscriptionOffer(
+                    offerIdentifier = AdaptySubscriptionOfferIdentifier(
+                        id = "android_offer",
+                        type = AdaptySubscriptionOfferType.PROMOTIONAL
+                    ),
+                    phases = listOf(offerPhase),
+                    offerTags = emptyList()
+                ),
+                renewalType = AdaptyRenewalType.PREPAID,
+                basePlanId = "base_plan_002"
+            )
+        )
+
+        return listOf(product, androidProduct)
     }
 
-    fun getPromotedProduct(): AdaptyPromotedProduct {
+    fun getSubscriptionPricingTerms(): AdaptySubscriptionPricingTerms = AdaptySubscriptionPricingTerms(
+        billingPlan = AdaptySubscriptionBillingPlan.MONTHLY,
+        billingPrice = AdaptyPrice(
+            currencyCode = "USD",
+            currencySymbol = "$",
+            amount = 6.99,
+            localizedString = "$6.99"
+        ),
+        billingPeriod = AdaptySubscriptionPeriod(unit = AdaptyPeriodUnit.MONTH, numberOfUnits = 1),
+        commitmentInfo = AdaptySubscriptionCommitmentInfo(
+            price = AdaptyPrice(
+                currencyCode = "USD",
+                currencySymbol = "$",
+                amount = 83.88,
+                localizedString = "$83.88"
+            ),
+            period = AdaptySubscriptionPeriod(unit = AdaptyPeriodUnit.YEAR, numberOfUnits = 1)
+        )
+    )
+
+    fun getPromotedProduct(purchaseIntentId: String? = PURCHASE_INTENT_ID): AdaptyPromotedProduct {
         val paywallProduct = getPaywallProductList().first()
         return AdaptyPromotedProduct(
             vendorProductId = paywallProduct.vendorProductId,
@@ -234,6 +401,7 @@ internal object AdaptyFakeTestData {
             price = paywallProduct.price,
             subscription = paywallProduct.subscription,
             payloadData = null,
+            purchaseIntentId = purchaseIntentId,
         )
     }
 
@@ -241,6 +409,16 @@ internal object AdaptyFakeTestData {
     fun getSuccessPurchaseResult(): AdaptyPurchaseResult {
         return AdaptyPurchaseResult.Success(profile = getProfile())
     }
+
+    fun getStoreMessageTypes(): List<AdaptyStoreMessageType> = listOf(
+        AdaptyStoreMessageType.GENERIC,
+        AdaptyStoreMessageType.PRICE_INCREASE_CONSENT,
+        AdaptyStoreMessageType.BILLING_ISSUE,
+        AdaptyStoreMessageType.WIN_BACK_OFFER,
+        // Reasons without a constant arrive as storekit_<rawValue> and must round-trip verbatim
+        AdaptyStoreMessageType("storekit_7"),
+        AdaptyStoreMessageType("storekit_-42"),
+    )
 
     fun getOnboarding(): AdaptyOnboarding {
         return AdaptyOnboarding(

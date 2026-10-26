@@ -20,6 +20,7 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptyWebPresentation
 import kotlin.time.Duration
 
@@ -168,6 +169,11 @@ internal interface AdaptyContract {
     /**
      * Performs a purchase for the specified product. Read more on the [Adapty Documentation](https://docs.adapty.io/docs/making-purchases)
      *
+     * On iOS 26.4+, if the product carries [com.adapty.kmp.models.AdaptyProductSubscription.pricingTerms], its billing plan
+     * (e.g. monthly installments of a commitment subscription) is sent along automatically — pick
+     * the plan by picking the product. On Android, and on iOS below 26.4, the product is bought
+     * up front.
+     *
      * @param product The product to purchase.
      * @param parameters Optional parameters for purchase configuration.
      * @return [AdaptyResult] containing [AdaptyPurchaseResult].
@@ -182,6 +188,10 @@ internal interface AdaptyContract {
      *
      * Call this with the product delivered to [OnPromotedPurchaseListener] once your app is ready
      * to complete the purchase. iOS only — on other platforms the call fails with an error.
+     *
+     * Pass the product object received by the listener as is: on iOS it carries the StoreKit
+     * purchase intent required to complete the purchase (and, on iOS 26.4+, the billing plan from
+     * [com.adapty.kmp.models.AdaptyProductSubscription.pricingTerms]), so a copied or hand-built product fails.
      *
      * @param product The promoted product to purchase.
      * @return [AdaptyResult] containing [AdaptyPurchaseResult].
@@ -381,6 +391,72 @@ internal interface AdaptyContract {
         fetchPolicy: AdaptyPaywallFetchPolicy = AdaptyPaywallFetchPolicy.Default
     ): AdaptyResult<AdaptyFlow>
 
+    /**
+     * Warms up the cache for the given flow placements.
+     *
+     * Sends the same request as [getFlow] for each placement — all placements are loaded in
+     * parallel — and stores the result in the SDK cache. Nothing is returned. This is useful,
+     * for example, for cross-placement A/B tests, where you want the flows for several
+     * placements to be available before the user reaches them.
+     *
+     * What preloading does **not** do:
+     * - It does not load UI configurations (view configs) or media (e.g. paywall images) in the
+     *   background — only the placement data is cached, so the first flow view creation still
+     *   goes to the network for those.
+     * - It has no fetch policy: preloading itself always goes to the network.
+     *
+     * To benefit from the warmed cache, call [getFlow] with a cache-using fetch policy passed
+     * **explicitly** — [AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad] or
+     * [AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad]. Then [getFlow] is served
+     * from the cache and sends one request fewer. With the default policy
+     * ([AdaptyPaywallFetchPolicy.ReloadRevalidatingCacheData]) [getFlow] still goes to the
+     * network, and the preloaded data only serves as a fallback.
+     *
+     * Example:
+     * ```
+     * Adapty.preloadFlows(placementIds = listOf("onboarding_flow", "settings_paywall"))
+     *
+     * val flow = Adapty.getFlow(
+     *     placementId = "onboarding_flow",
+     *     fetchPolicy = AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad
+     * )
+     * ```
+     *
+     * Requires the SDK to be activated.
+     *
+     * @param placementIds Identifiers of the placements to preload, as specified in the Adapty Dashboard.
+     * @param loadTimeout Maximum duration to wait for server response.
+     * @return [AdaptyResult] that succeeds once every placement has been stored in the cache.
+     * Fails with a single aggregated [com.adapty.kmp.models.AdaptyError] if any placement failed
+     * to load; the placements that did load stay in the cache.
+     */
+    suspend fun preloadFlows(
+        placementIds: List<String>,
+        loadTimeout: Duration = DEFAULT_LOAD_TIMEOUT
+    ): AdaptyResult<Unit>
+
+    /**
+     * Warms up the cache for the given flow placements using the Default Audience (All Users).
+     *
+     * The same trade-offs as [getFlowForDefaultAudience] apply: faster fetching without waiting
+     * for the user information required for segmentation, but no targeting by country,
+     * attribution or custom attributes. Unlike [preloadFlows], there is no load timeout.
+     *
+     * See [preloadFlows] for what preloading does and does not cover — including that a later
+     * flow fetch only reads the warmed cache when [AdaptyPaywallFetchPolicy.ReturnCacheDataElseLoad]
+     * or [AdaptyPaywallFetchPolicy.ReturnCacheDataIfNotExpiredElseLoad] is passed explicitly.
+     *
+     * Requires the SDK to be activated.
+     *
+     * @param placementIds Identifiers of the placements to preload, as specified in the Adapty Dashboard.
+     * @return [AdaptyResult] that succeeds once every placement has been stored in the cache.
+     * Fails with a single aggregated [com.adapty.kmp.models.AdaptyError] if any placement failed
+     * to load; the placements that did load stay in the cache.
+     */
+    suspend fun preloadFlowsForDefaultAudience(
+        placementIds: List<String>
+    ): AdaptyResult<Unit>
+
     /** Checks whether the SDK is activated. */
     suspend fun isActivated(): Boolean
 
@@ -435,5 +511,68 @@ internal interface AdaptyContract {
 
     /** Ios ONLY. Updates the user's consent for collecting refund data on iOS. */
     suspend fun updateCollectingRefundDataConsent(consent: Boolean): AdaptyResult<Boolean>
+
+    /**
+     * Gets the types of store messages currently waiting in the SDK queue.
+     *
+     * iOS 16+ only. The queue is kept only when the SDK is activated with
+     * [com.adapty.kmp.models.AdaptyStoreMessagesHandling.MANUAL]
+     * (see [AdaptyConfig.Builder.withStoreMessagesHandling]); in `AUTO` mode and before activation the
+     * result is always empty. The result is a snapshot of unique types in no particular order — there
+     * is no event for newly arrived messages.
+     *
+     * An empty list means [showStoreMessages] has nothing to show right now. `null` means the store
+     * cannot report pending messages: on Android Google Play decides on show, so this returns
+     * `AdaptyResult.Success(null)` without calling the native SDK — call [showStoreMessages] there.
+     * Below iOS 16 the native method is unavailable and the call returns an error.
+     *
+     * Example:
+     * ```
+     * Adapty.getPendingStoreMessageTypes().onSuccess { types ->
+     *     when {
+     *         // The store can't report pending messages (Android): let it decide
+     *         types == null -> Adapty.showStoreMessages()
+     *         AdaptyStoreMessageType.BILLING_ISSUE in types -> {
+     *             // Explain the billing issue in your own UI first, then show the system message
+     *             Adapty.showStoreMessages(iosFilter = listOf(AdaptyStoreMessageType.BILLING_ISSUE))
+     *         }
+     *     }
+     * }
+     * ```
+     *
+     * @return [AdaptyResult] with the pending types, or `null` where the store cannot report them (Android).
+     */
+    suspend fun getPendingStoreMessageTypes(): AdaptyResult<List<AdaptyStoreMessageType>?>
+
+    /**
+     * Shows pending store messages: App Store messages on iOS, Google Play in-app messages on Android.
+     *
+     * Intended for [com.adapty.kmp.models.AdaptyStoreMessagesHandling.MANUAL]
+     * (see [AdaptyConfig.Builder.withStoreMessagesHandling]), but works in both modes.
+     *
+     * **iOS (16+):** messages are shown one by one; a successfully shown message leaves the queue, a
+     * message that failed to show stays for a retry. Pass `null` [iosFilter] (the default) to show
+     * every pending message — including types unknown to the SDK — or an empty list to show none.
+     * Errors: [com.adapty.kmp.models.AdaptyErrorCode.OPERATION_IN_PROGRESS] if another show is
+     * running, [com.adapty.kmp.models.AdaptyErrorCode.RESOLVER_FAILURE] if no foreground window scene
+     * is available. Below iOS 16 the native method is unavailable and the call returns an error.
+     *
+     * **Android:** shows every applicable Google Play in-app message; [iosFilter] is ignored and not
+     * sent. Google Play decides whether a message exists: there are no test messages, so this can't be
+     * verified with a test account, and in production a message is shown at most about once per day.
+     *
+     * Example:
+     * ```
+     * // Show everything that is pending, e.g. after onboarding is finished
+     * Adapty.showStoreMessages()
+     *
+     * // iOS: show just the price increase consent; Android shows everything
+     * Adapty.showStoreMessages(iosFilter = listOf(AdaptyStoreMessageType.PRICE_INCREASE_CONSENT))
+     * ```
+     *
+     * @param iosFilter iOS only. The message types to show, or `null` to show all pending messages.
+     * @return [AdaptyResult] that succeeds once the messages have been processed.
+     */
+    suspend fun showStoreMessages(iosFilter: List<AdaptyStoreMessageType>? = null): AdaptyResult<Unit>
 
 }
