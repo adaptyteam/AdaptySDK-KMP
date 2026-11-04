@@ -1,6 +1,7 @@
 package com.adapty.kmp.internal.plugin.request
 
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyLogLevel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -56,7 +57,9 @@ internal fun AdaptyConfig.MediaCacheConfiguration.asAdaptyMediaCacheConfiguratio
 }
 
 
-internal fun AdaptyConfig.asAdaptyConfigurationRequest(): AdaptyConfigurationRequest {
+internal fun AdaptyConfig.asAdaptyConfigurationRequest(
+    logLevel: AdaptyLogLevel? = this.logLevel
+): AdaptyConfigurationRequest {
 
     val configurationData = AdaptyConfigurationRequestData(
         apiKey = apiKey,

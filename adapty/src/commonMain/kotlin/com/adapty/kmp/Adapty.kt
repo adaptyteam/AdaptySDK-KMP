@@ -348,7 +348,12 @@ internal interface AdaptyContract {
     fun setOnInstallationDetailsListener(onInstallationDetailsListener: OnInstallationDetailsListener?)
 
 
-    /** Sets the SDK log level. */
+    /**
+     * Sets the SDK log level.
+     *
+     * You can call it before [activate]: [activate] keeps this level unless the configuration sets one
+     * with [AdaptyConfig.Builder.withLogLevel].
+     */
     fun setLogLevel(logLevel: AdaptyLogLevel)
 
     /**

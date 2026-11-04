@@ -102,6 +102,7 @@ internal class AdaptyImpl(
 ) : AdaptyContract {
 
     private var eventsListenerJob: Job? = null
+    private var logLevel: AdaptyLogLevel = AdaptyLogLevel.INFO
     private var profileUpdateEventObserver: OnProfileUpdatedListener? = null
     private var installationDetailsEventObserver: OnInstallationDetailsListener? = null
     private var promotedPurchaseEventObserver: OnPromotedPurchaseListener? = null
@@ -123,11 +124,14 @@ internal class AdaptyImpl(
 
 
     override suspend fun activate(configuration: AdaptyConfig): AdaptyResult<Unit> {
-        configuration.logLevel?.let { applyLogLevel(it) }
+        // The configuration's level, else the current one (set with setLogLevel, INFO by default). Always sent:
+        // without it the native SDKs fall back to their own defaults, which is no logs at all on Android.
+        val logLevel = configuration.logLevel ?: this.logLevel
+        applyLogLevel(logLevel)
         adaptyPlugin.initialize()
         return adaptyPlugin.awaitExecute<AdaptyConfigurationRequest, Boolean>(
             method = AdaptyPluginMethod.ACTIVATE,
-            request = configuration.asAdaptyConfigurationRequest()
+            request = configuration.asAdaptyConfigurationRequest(logLevel = logLevel)
         ).asAdaptyResult {}
     }
 
@@ -318,6 +322,7 @@ internal class AdaptyImpl(
     }
 
     override fun setLogLevel(logLevel: AdaptyLogLevel) {
+        this.logLevel = logLevel
         applyLogLevel(logLevel)
 
         adaptyPlugin.execute<AdaptySetLogLevelRequest, Unit>(
