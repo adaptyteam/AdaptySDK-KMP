@@ -246,11 +246,16 @@ internal interface AdaptyContract {
      * string identifier (`purchase.getOrderId()`) of the purchase,
      * where the purchase is an instance of the billing library Purchase class for Android.
      * @param variationId A string identifier of variation. You can get it using variationId property of AdaptyFlow.
+     * @param appleJwsTransaction iOS only: the signed StoreKit 2 transaction (its `jwsRepresentation`),
+     * the same value as [com.adapty.kmp.models.AdaptyPurchaseResult.Success.appleJwsTransaction]. In observer mode on iOS
+     * pass the transaction's JWS — StoreKit 2 purchase libraries expose it; Adapty forwards it to its backend as is,
+     * without looking it up by [transactionId]. Ignored on Android.
      * @return [AdaptyResult] containing [Unit].
      */
     suspend fun reportTransaction(
         transactionId: String,
-        variationId: String? = null
+        variationId: String? = null,
+        appleJwsTransaction: String? = null
     ): AdaptyResult<Unit>
 
     /** Logs out the current user. */

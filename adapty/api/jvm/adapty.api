@@ -22,7 +22,7 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun preloadFlows-8Mi8wO0 (Ljava/util/List;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun preloadFlowsForDefaultAudience (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun presentCodeRedemptionSheet (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setFallback (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setIntegrationIdentifier (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

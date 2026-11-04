@@ -284,6 +284,7 @@ object AdaptyPluginRequestTemplate {
         val jsonObject = buildJsonObject {
             put("transaction_id", adaptyReportTransactionRequest.transactionId)
             put("variation_id", adaptyReportTransactionRequest.variationId)
+            adaptyReportTransactionRequest.appleJwsTransaction?.let { put("apple_jws_transaction", it) }
         }
         return jsonObject.toString()
     }
