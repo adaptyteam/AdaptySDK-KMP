@@ -496,13 +496,16 @@ class AdaptyImplTest {
             apiCall = {
                 adaptyImpl.reportTransaction(
                     transactionId = AdaptyFakeTestData.TRANSACTION_ID,
-                    variationId = AdaptyFakeTestData.VARIATION_ID
+                    variationId = AdaptyFakeTestData.VARIATION_ID,
+                    appleJwsTransaction = AdaptyFakeTestData.APPLE_JWS_TRANSACTION
                 )
             },
             method = AdaptyPluginMethod.REPORT_TRANSACTION,
             param = AdaptyReportTransactionRequest(
                 transactionId = AdaptyFakeTestData.TRANSACTION_ID,
                 variationId = AdaptyFakeTestData.VARIATION_ID,
+                // iOS only: not sent on Android
+                appleJwsTransaction = AdaptyFakeTestData.APPLE_JWS_TRANSACTION.takeUnless { isAndroidPlatform },
             ),
             expectedSuccessData = Unit,
         )

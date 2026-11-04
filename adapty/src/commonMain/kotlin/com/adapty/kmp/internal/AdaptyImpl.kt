@@ -282,13 +282,15 @@ internal class AdaptyImpl(
 
     override suspend fun reportTransaction(
         transactionId: String,
-        variationId: String?
+        variationId: String?,
+        appleJwsTransaction: String?
     ): AdaptyResult<Unit> =
         adaptyPlugin.awaitExecute<AdaptyReportTransactionRequest, Boolean>(
             method = AdaptyPluginMethod.REPORT_TRANSACTION,
             request = AdaptyReportTransactionRequest(
                 transactionId = transactionId,
-                variationId = variationId
+                variationId = variationId,
+                appleJwsTransaction = if (isAndroidPlatform) null else appleJwsTransaction
             )
         ).asAdaptyResult { }
 
