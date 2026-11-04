@@ -34,7 +34,8 @@ import KMPAdapty.adapty.BuildConfig
  * @property crossPlatformSDKName Name of the SDK if used via another platform (e.g., Flutter, React Native).
  * @property crossPlatformSDKVersion Version of the wrapper SDK.
  * @property activateUI Enables AdaptyUI module (for displaying paywalls and onboarding).
- * @property logLevel The level of logging output. Defaults to [AdaptyLogLevel.INFO].
+ * @property logLevel The level of logging output, or `null` when not set: `activate` then keeps the
+ * level set with `Adapty.setLogLevel` before it, or [AdaptyLogLevel.INFO] if none was set.
  * @property mediaCache Configuration for caching media assets used in AdaptyUI.
  * @property storeMessagesHandling Who decides when store messages are shown. `null` (the default)
  * leaves the native SDK default, [AdaptyStoreMessagesHandling.AUTO]. Requires iOS 16+ on iOS.
@@ -97,7 +98,7 @@ public class AdaptyConfig private constructor(
         private var crossPlatformSDKName: String = SDK_NAME
         private var crossPlatformSDKVersion: String = SDK_VERSION
         private var activateUI: Boolean = false
-        private var logLevel: AdaptyLogLevel? = AdaptyLogLevel.INFO
+        private var logLevel: AdaptyLogLevel? = null
         private var mediaCache: MediaCacheConfiguration = MediaCacheConfiguration()
         private var customerIdentity: AdaptyCustomerIdentity? = null
         private var storeMessagesHandling: AdaptyStoreMessagesHandling? = null
@@ -175,7 +176,10 @@ public class AdaptyConfig private constructor(
         /** Enables AdaptyUI integration (for paywalls, onboarding, etc). */
         public fun withActivateUI(enabled: Boolean): Builder = apply { this.activateUI = enabled }
 
-        /** Sets the desired log level for Adapty logs. */
+        /**
+         * Sets the desired log level for Adapty logs. When this is not called, `activate` keeps the
+         * level set with `Adapty.setLogLevel` before it, or [AdaptyLogLevel.INFO] if none was set.
+         */
         public fun withLogLevel(level: AdaptyLogLevel): Builder = apply { this.logLevel = level }
 
         /** Configures media caching (for AdaptyUI assets). */

@@ -44,6 +44,7 @@ import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.fold
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.addJsonObject
 import kotlinx.serialization.json.buildJsonArray
@@ -119,6 +120,26 @@ class AdaptyImplTest {
                 .jsonObject.getValue("configuration").jsonObject
             assertEquals(expected, configuration["store_messages_handling"])
         }
+    }
+
+    @Test
+    fun `activate method - keeps the level set with setLogLevel unless the configuration sets one`() = runTest {
+        fakeAdaptyPlugin.simulateSuccessResponse()
+        suspend fun activatedLogLevel(config: AdaptyConfig): JsonElement? {
+            adaptyImpl.activate(config)
+            return jsonInstance
+                .parseToJsonElement(fakeAdaptyPlugin.capturedRequestJsonString ?: "")
+                .jsonObject.getValue("configuration").jsonObject["log_level"]
+        }
+        val withoutLevel = AdaptyConfig.Builder(AdaptyFakeTestData.API_KEY).build()
+
+        assertEquals(JsonPrimitive("info"), activatedLogLevel(withoutLevel))
+
+        adaptyImpl.setLogLevel(AdaptyLogLevel.VERBOSE)
+        assertEquals(JsonPrimitive("verbose"), activatedLogLevel(withoutLevel))
+
+        val withLevel = AdaptyConfig.Builder(AdaptyFakeTestData.API_KEY).withLogLevel(AdaptyLogLevel.WARN).build()
+        assertEquals(JsonPrimitive("warn"), activatedLogLevel(withLevel))
     }
 
 
