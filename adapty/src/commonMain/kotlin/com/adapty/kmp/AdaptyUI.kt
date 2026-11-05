@@ -205,6 +205,11 @@ internal interface AdaptyUIContract {
      */
     suspend fun dismissFlowView(view: AdaptyUIFlowView, destroy: Boolean = true): AdaptyResult<Unit>
 
+    /** Pre-4.3.0 signature, kept so binaries compiled against it keep linking. */
+    @Deprecated("Kept for binary compatibility", level = DeprecationLevel.HIDDEN)
+    suspend fun dismissFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit> =
+        dismissFlowView(view = view, destroy = true)
+
     /**
      * Releases a native flow view that was kept alive by `dismissFlowView(view, destroy = false)`.
      *

@@ -323,6 +323,9 @@ class AppViewModel : ViewModel() {
     // Closing this view dismisses it with destroy = false (see AdaptyUIFlowsEventsObserverImpl),
     // so it can be presented again, resuming where the user left off, until it is destroyed.
     private fun presentKeepAliveFlowView(flow: AdaptyFlow) = viewModelScope.launch {
+        // Release the previously kept view first: it was dismissed with destroy = false.
+        _uiState.value.keptAliveFlowView?.destroy()
+        _uiState.update { it.copy(keptAliveFlowView = null) }
         AdaptyUI.createFlowView(flow = flow)
             .onSuccess { view ->
                 _uiState.update { it.copy(keptAliveFlowView = view) }

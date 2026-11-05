@@ -64,6 +64,10 @@ public data class AdaptyUIFlowView internal constructor(
         return AdaptyUI.dismissFlowView(view = this, destroy = destroy)
     }
 
+    /** Pre-4.3.0 signature, kept so binaries compiled against it keep linking. */
+    @Deprecated("Kept for binary compatibility", level = DeprecationLevel.HIDDEN)
+    public suspend fun dismiss(): AdaptyResult<Unit> = dismiss(destroy = true)
+
     /**
      * Releases the native view kept alive by `dismiss(destroy = false)`.
      *

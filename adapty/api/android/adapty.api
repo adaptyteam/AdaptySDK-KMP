@@ -23,6 +23,7 @@ public final class com/adapty/kmp/Adapty : com/adapty/kmp/AdaptyContract {
 	public fun preloadFlowsForDefaultAudience (Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun presentCodeRedemptionSheet (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public synthetic fun reportTransaction (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setFallback (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setIntegrationIdentifier (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -57,6 +58,7 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public fun createFlowView-8_Fu-04 (Lcom/adapty/kmp/models/AdaptyFlow;Ljava/lang/String;Ljava/lang/String;Lkotlin/time/Duration;ZLjava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun createOnboardingView (Lcom/adapty/kmp/models/AdaptyOnboarding;Lcom/adapty/kmp/models/AdaptyWebPresentation;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun destroyFlowView (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public synthetic fun dismissFlowView (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun dismissFlowView (Lcom/adapty/kmp/models/AdaptyUIFlowView;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun dismissOnboardingView (Lcom/adapty/kmp/models/AdaptyUIOnboardingView;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun openWebUrl (Ljava/lang/String;Lcom/adapty/kmp/models/AdaptyWebPresentation;)V
@@ -1492,6 +1494,7 @@ public final class com/adapty/kmp/models/AdaptyUIFlowView {
 	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyUIFlowView;
 	public static synthetic fun copy$default (Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adapty/kmp/models/AdaptyUIFlowView;
 	public final fun destroy (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final synthetic fun dismiss (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun dismiss (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun dismiss$default (Lcom/adapty/kmp/models/AdaptyUIFlowView;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public fun equals (Ljava/lang/Object;)Z

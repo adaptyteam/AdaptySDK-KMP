@@ -258,6 +258,17 @@ internal interface AdaptyContract {
         appleJwsTransaction: String? = null
     ): AdaptyResult<Unit>
 
+    /** Pre-4.3.0 signature, kept so binaries compiled against it keep linking. */
+    @Deprecated("Kept for binary compatibility", level = DeprecationLevel.HIDDEN)
+    suspend fun reportTransaction(
+        transactionId: String,
+        variationId: String? = null
+    ): AdaptyResult<Unit> = reportTransaction(
+        transactionId = transactionId,
+        variationId = variationId,
+        appleJwsTransaction = null
+    )
+
     /** Logs out the current user. */
     suspend fun logout(): AdaptyResult<Unit>
 
