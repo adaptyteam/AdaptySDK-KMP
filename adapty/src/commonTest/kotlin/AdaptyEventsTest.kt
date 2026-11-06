@@ -1241,7 +1241,18 @@ class AdaptyEventsTest {
         assertNotNull(accessLevel)
         assertEquals(true, accessLevel.isActive)
         assertEquals("1", accessLevel.vendorProductId)
-        assertEquals("google", accessLevel.store)
+        assertEquals("play_store", accessLevel.store)
+
+        // Offer ids come through for both stores, regardless of the device platform.
+        assertEquals("intro-pay-up-front-weekly", accessLevel.offerId)
+        val appStoreAccessLevel = profile.accessLevels["2"]
+        assertNotNull(appStoreAccessLevel)
+        assertEquals("com.app.intro.weekly", appStoreAccessLevel.offerId)
+        assertEquals("com.app.promo.weekly", appStoreAccessLevel.activePromotionalOfferId)
+        assertEquals("intro-pay-up-front-weekly", profile.subscriptions["1"]?.offerId)
+        assertEquals("promo-weekly-50", profile.subscriptions["1"]?.activePromotionalOfferId)
+        assertEquals("com.app.intro.weekly", profile.subscriptions["2"]?.offerId)
+        assertEquals("com.app.promo.weekly", profile.subscriptions["2"]?.activePromotionalOfferId)
 
         assertEquals("test_value", profile.customAttributes["test_attribute"])
     }
@@ -1294,6 +1305,11 @@ class AdaptyEventsTest {
         assertEquals(true, product.isFamilyShareable)
         assertEquals(9.99, product.price.amount)
         assertEquals("intro_offer", product.subscription?.offer?.offerIdentifier?.id)
+        assertEquals(
+            AdaptyFakeTestData.getSubscriptionPricingTerms(),
+            product.subscription?.pricingTerms
+        )
+        assertEquals(AdaptyFakeTestData.PURCHASE_INTENT_ID, product.purchaseIntentId)
     }
 
     @Test

@@ -1,12 +1,18 @@
 import com.adapty.kmp.internal.plugin.AdaptyPlugin
 import com.adapty.kmp.internal.plugin.constants.AdaptyPluginMethod
+import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.models.AdaptyError
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 
 internal class FakeAdaptyPlugin : AdaptyPlugin {
 
     var capturedRequestJsonString: String? = null
     var capturedRequestMethodName: String? = null
     private var responseJsonString: String? = null
+
+    val capturedRequestJson: JsonObject
+        get() = jsonInstance.parseToJsonElement(capturedRequestJsonString ?: "{}").jsonObject
 
     override fun initialize() {}
 

@@ -16,12 +16,14 @@ import com.adapty.kmp.models.AdaptyPrice
 import com.adapty.kmp.models.AdaptyProfile
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyRenewalType
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptySubscriptionOffer
 import com.adapty.kmp.models.AdaptySubscriptionOfferIdentifier
 import com.adapty.kmp.models.AdaptySubscriptionOfferPaymentMode
 import com.adapty.kmp.models.AdaptySubscriptionOfferPhase
 import com.adapty.kmp.models.AdaptySubscriptionOfferType
 import com.adapty.kmp.models.AdaptySubscriptionPeriod
+import com.adapty.kmp.models.AdaptySubscriptionPricingTerms
 import com.adapty.kmp.models.AdaptyUIDialogActionType
 import com.adapty.kmp.models.AdaptyUIOnboardingView
 import com.adapty.kmp.models.AdaptyUIFlowView
@@ -29,6 +31,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.add
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -60,6 +63,9 @@ object AdaptyPluginResponseTemplate {
                 successData as AdaptyFlow
             )
 
+            AdaptyPluginMethod.PRELOAD_FLOWS -> genericSuccessResponse()
+            AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE -> genericSuccessResponse()
+
             AdaptyPluginMethod.GET_CURRENT_INSTALLATION_STATUS -> getSuccessInstallationStatusResponse()
             AdaptyPluginMethod.IS_ACTIVATED -> getSuccessBooleanResponse(successData as Boolean)
             AdaptyPluginMethod.PRESENT_CODE_REDEMPTION_SHEET -> genericSuccessResponse()
@@ -72,15 +78,23 @@ object AdaptyPluginResponseTemplate {
 
             AdaptyPluginMethod.CREATE_WEB_PAYWALL_URL -> getSuccessStringResponse(successData as String)
             AdaptyPluginMethod.OPEN_WEB_PAYWALL -> genericSuccessResponse()
+            AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES -> {
+                @Suppress("UNCHECKED_CAST")
+                val types = successData as List<AdaptyStoreMessageType>
+                buildSuccessJsonString(buildJsonArray { types.forEach { add(it.value) } })
+            }
+
+            AdaptyPluginMethod.SHOW_STORE_MESSAGES -> genericSuccessResponse()
 
             // UI methods
             AdaptyPluginMethod.CREATE_FLOW_VIEW -> getSuccessFlowViewResponse(successData as AdaptyUIFlowView)
             AdaptyPluginMethod.PRESENT_FLOW_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_FLOW_VIEW -> genericSuccessResponse()
+            AdaptyPluginMethod.DESTROY_FLOW_VIEW -> genericSuccessResponse()
             AdaptyPluginMethod.SHOW_DIALOG -> getSuccessDialogActionTypeResponse(successData as AdaptyUIDialogActionType)
             AdaptyPluginMethod.CREATE_ONBOARDING_VIEW -> getSuccessOnboardingViewResponse(successData as AdaptyUIOnboardingView)
             AdaptyPluginMethod.PRESENT_ONBOARDING_VIEW -> genericSuccessResponse()
-            AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> genericSuccessUnitResponse()
+            AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW -> genericSuccessResponse()
 
             else -> throw Exception(
                 "Unknown method type. Please, provide response json template in " +
@@ -93,13 +107,6 @@ object AdaptyPluginResponseTemplate {
     fun genericSuccessResponse(): String {
         val jsonResponse = buildJsonObject {
             put("success", true)
-        }
-        return jsonResponse.toString()
-    }
-
-    fun genericSuccessUnitResponse(): String {
-        val jsonResponse = buildJsonObject {
-            put("success", buildJsonObject {})
         }
         return jsonResponse.toString()
     }
@@ -138,6 +145,8 @@ object AdaptyPluginResponseTemplate {
                     put("active_promotional_offer_type", accessLevel.activePromotionalOfferType)
                     put("active_promotional_offer_id", accessLevel.activePromotionalOfferId)
                     accessLevel.offerId?.let { put("offer_id", it) } // Include only if not null
+                    accessLevel.billingPlan?.let { put("billing_plan_id", it.value) }
+                    accessLevel.commitmentInfo?.let { put("commitment", buildProfileCommitmentInfoJson(it)) }
                     put("will_renew", accessLevel.willRenew)
                     put("is_in_grace_period", accessLevel.isInGracePeriod)
                     put("unsubscribed_at", accessLevel.unsubscribedAt)
@@ -173,6 +182,8 @@ object AdaptyPluginResponseTemplate {
                     put("active_promotional_offer_id", subscription.activePromotionalOfferId)
                     put("offer_id", subscription.offerId)
                     put("cancellation_reason", subscription.cancellationReason)
+                    subscription.billingPlan?.let { put("billing_plan_id", it.value) }
+                    subscription.commitmentInfo?.let { put("commitment", buildProfileCommitmentInfoJson(it)) }
                 })
             }
         }
@@ -206,6 +217,13 @@ object AdaptyPluginResponseTemplate {
         put("timestamp", JsonPrimitive(AdaptyFakeTestData.CURRENT_TIMESTAMP_MILLIS))
         put("is_test_user", adaptyProfile.isTestUser)
     }
+
+    private fun buildProfileCommitmentInfoJson(commitmentInfo: AdaptyProfile.SubscriptionCommitmentInfo) =
+        buildJsonObject {
+            put("billing_period_number", commitmentInfo.billingPeriodNumber)
+            put("total_billing_periods", commitmentInfo.totalBillingPeriods)
+            put("expires_at", commitmentInfo.expiresAt)
+        }
 
     private fun getSuccessFlowResponse(adaptyFlow: AdaptyFlow): String {
         val flowJson = jsonInstance.encodeToJsonElement(
@@ -285,6 +303,7 @@ object AdaptyPluginResponseTemplate {
         put("base_plan_id", sub.basePlanId)
         put("period", buildSubscriptionPeriodJson(sub.period))
         put("localized_period", sub.localizedPeriod)
+        sub.pricingTerms?.let { put("pricing_terms", buildSubscriptionPricingTermsJson(it)) }
 
         sub.offer?.let { offer ->
             put("offer", buildJsonObject {
@@ -329,6 +348,17 @@ object AdaptyPluginResponseTemplate {
             })
         }
     }
+
+    private fun buildSubscriptionPricingTermsJson(pricingTerms: AdaptySubscriptionPricingTerms) =
+        buildJsonObject {
+            put("billing_plan_id", pricingTerms.billingPlan.value)
+            put("billing_price", buildPriceJson(pricingTerms.billingPrice))
+            put("billing_period", buildSubscriptionPeriodJson(pricingTerms.billingPeriod))
+            put("commitment_info", buildJsonObject {
+                put("price", buildPriceJson(pricingTerms.commitmentInfo.price))
+                put("period", buildSubscriptionPeriodJson(pricingTerms.commitmentInfo.period))
+            })
+        }
 
     private fun getSuccessPurchaseResultResponse(adaptyPurchaseResult: AdaptyPurchaseResult): String {
         val resultJson = buildJsonObject {
@@ -526,6 +556,7 @@ object AdaptyPluginResponseTemplate {
                 basePlanId = "base_plan_001",
                 period = AdaptySubscriptionPeriod(unit = AdaptyPeriodUnit.MONTH, numberOfUnits = 1),
                 localizedPeriod = "1 month",
+                pricingTerms = AdaptyFakeTestData.getSubscriptionPricingTerms(),
                 offer = AdaptySubscriptionOffer(
                     offerIdentifier = AdaptySubscriptionOfferIdentifier(
                         id = "intro_offer",
@@ -748,6 +779,7 @@ object AdaptyPluginResponseTemplate {
      * context, so it is derived from [buildEventProductJson] rather than duplicated.
      */
     private fun buildEventPromotedProductJson(): JsonObject = buildJsonObject {
+        put("purchase_intent_id", AdaptyFakeTestData.PURCHASE_INTENT_ID)
         val paywallOnlyKeys = setOf(
             "adapty_product_id",
             "paywall_product_index",

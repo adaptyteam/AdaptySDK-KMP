@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 class AdaptyUIFlowsEventsObserverImpl(
     private val uriHandler: UriHandler,
     private val uiCoroutineScope: CoroutineScope = MainScope(),
+    private val isKeptAlive: (AdaptyUIFlowView) -> Boolean = { false },
 ) :
     AdaptyUIFlowsEventsObserver {
     override fun flowViewDidFinishRestore(view: AdaptyUIFlowView, profile: AdaptyProfile) {
@@ -42,7 +43,10 @@ class AdaptyUIFlowsEventsObserverImpl(
         AppLogger.d("Flow view did perform action of view $view with action $action")
         uiCoroutineScope.launch {
             when (action) {
-                AdaptyUIAction.CloseAction, AdaptyUIAction.AndroidSystemBackAction -> view.dismiss()
+                AdaptyUIAction.CloseAction, AdaptyUIAction.AndroidSystemBackAction ->
+                    // Embedded views are released by their host; views from the keep-alive demo stay
+                    // in memory so they can be presented again.
+                    view.dismiss(destroy = view.isStandaloneView && !isKeptAlive(view))
                 is AdaptyUIAction.OpenUrlAction -> {
                     val selectedAction = view.showDialog(
                         title = "Open URL?",

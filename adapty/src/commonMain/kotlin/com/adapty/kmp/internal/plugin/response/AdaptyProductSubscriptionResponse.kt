@@ -22,7 +22,10 @@ internal data class AdaptyProductSubscriptionResponse(
     val renewalType: AdaptyRenewalTypeResponse = AdaptyRenewalTypeResponse.AUTORENEWABLE,
 
     @SerialName("base_plan_id")
-    val basePlanId: String? = null
+    val basePlanId: String? = null,
+
+    @SerialName("pricing_terms")
+    val pricingTerms: AdaptySubscriptionPricingTermsResponse? = null, // iOS 26.4+ only
 )
 
 internal fun AdaptyProductSubscriptionResponse.asAdaptyProductSubscription(): AdaptyProductSubscription {
@@ -31,9 +34,10 @@ internal fun AdaptyProductSubscriptionResponse.asAdaptyProductSubscription(): Ad
         groupIdentifier = groupIdentifier,
         period = period.asAdaptySubscriptionPeriod(),
         localizedPeriod = localizedPeriod,
+        pricingTerms = pricingTerms?.asAdaptySubscriptionPricingTerms(),
         offer = offer?.asAdaptySubscriptionOffer(),
         renewalType = renewalType.asAdaptyRenewalType(),
-        basePlanId = basePlanId
+        basePlanId = basePlanId,
     )
 }
 

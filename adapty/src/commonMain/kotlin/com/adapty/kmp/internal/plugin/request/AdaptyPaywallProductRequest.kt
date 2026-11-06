@@ -46,7 +46,7 @@ internal fun AdaptyPaywallProduct.asAdaptyPaywallProductRequest(): AdaptyPaywall
         vendorProductId = vendorProductId,
         adaptyProductId = adaptyProductId,
         paywallProductIndex = paywallProductIndex,
-        subscription = subscription?.offer?.offerIdentifier?.asAdaptyProductSubscriptionRequest(),
+        subscription = subscription?.asAdaptyProductSubscriptionRequest(),
         paywallVariationId = paywallVariationId,
         paywallABTestName = paywallABTestName,
         paywallName = paywallName,

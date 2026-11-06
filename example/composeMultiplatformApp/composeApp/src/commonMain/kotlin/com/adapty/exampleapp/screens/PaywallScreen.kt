@@ -126,6 +126,10 @@ private fun PaywallsListScreen(
                             subtitle = flow.variationId
                         )
                         ListTextTile(
+                            title = "Variation Name",
+                            subtitle = flow.variationName ?: "-"
+                        )
+                        ListTextTile(
                             title = "Has View",
                             subtitle = "true",
                             subtitleColor = Color(0xFF32CD32)
@@ -153,6 +157,20 @@ private fun PaywallsListScreen(
                                     )
                                 )
                             }
+                        )
+                        ListActionTile(
+                            title = "Present (keep on close)",
+                            onClick = { onUiEvent(AppUiEvent.OnClickPresentKeepAliveFlowView(flow = flow)) }
+                        )
+                        ListActionTile(
+                            title = "Present kept view",
+                            isActive = uiState.keptAliveFlowView != null,
+                            onClick = { onUiEvent(AppUiEvent.OnClickPresentKeptFlowView) }
+                        )
+                        ListActionTile(
+                            title = "Destroy kept view",
+                            isActive = uiState.keptAliveFlowView != null,
+                            onClick = { onUiEvent(AppUiEvent.OnClickDestroyKeptFlowView) }
                         )
                         ListActionTile(
                             title = "Load Products and Present (FullScreen)",

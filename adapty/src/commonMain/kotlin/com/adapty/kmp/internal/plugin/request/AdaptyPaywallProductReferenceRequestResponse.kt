@@ -4,6 +4,7 @@ import com.adapty.kmp.models.AdaptyPaywallProductReference
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/** Wire representation of `AdaptyFlowPaywall.ProductReference` (cross_platform 4.3.1). */
 @Serializable
 internal data class AdaptyPaywallProductReferenceRequestResponse(
     @SerialName("flow_product_id")
@@ -21,18 +22,27 @@ internal data class AdaptyPaywallProductReferenceRequestResponse(
     @SerialName("access_level_id")
     val accessLevelId: String,
 
-    @SerialName("promotional_offer_id")
-    val promotionalOfferId: String? = null, // iOS Only
-
-    @SerialName("win_back_offer_id")
-    val winBackOfferId: String? = null, // iOS Only
-
     @SerialName("base_plan_id")
     val basePlanId: String? = null, // Android Only
 
     @SerialName("offer_id")
-    val offerId: String? = null // Android Only
-)
+    val offerId: String? = null, // Android Only
+
+    @SerialName("pricing_terms")
+    val pricingTerms: List<PricingTerms>? = null, // iOS Only
+) {
+    @Serializable
+    internal data class PricingTerms(
+        @SerialName("billing_plan_id")
+        val billingPlanId: String,
+
+        @SerialName("promotional_offer_id")
+        val promotionalOfferId: String? = null,
+
+        @SerialName("win_back_offer_id")
+        val winBackOfferId: String? = null,
+    )
+}
 
 internal fun AdaptyPaywallProductReferenceRequestResponse.asAdaptyPaywallProductReference(): AdaptyPaywallProductReference {
     return AdaptyPaywallProductReference(
@@ -40,10 +50,15 @@ internal fun AdaptyPaywallProductReferenceRequestResponse.asAdaptyPaywallProduct
         adaptyProductId = this.adaptyProductId,
         productType = this.productType,
         accessLevelId = this.accessLevelId,
-        promotionalOfferId = this.promotionalOfferId,
-        winBackOfferId = this.winBackOfferId,
         basePlanId = this.basePlanId,
         offerId = this.offerId,
+        pricingTerms = this.pricingTerms?.map {
+            AdaptyPaywallProductReference.PricingTerms(
+                billingPlanId = it.billingPlanId,
+                promotionalOfferId = it.promotionalOfferId,
+                winBackOfferId = it.winBackOfferId,
+            )
+        },
         flowProductId = this.flowProductId,
     )
 }
@@ -55,9 +70,14 @@ internal fun AdaptyPaywallProductReference.asAdaptyPaywallProductReferenceReques
         adaptyProductId = this.adaptyProductId,
         productType = this.productType,
         accessLevelId = this.accessLevelId,
-        promotionalOfferId = this.promotionalOfferId,
-        winBackOfferId = this.winBackOfferId,
         basePlanId = this.basePlanId,
-        offerId = this.offerId
+        offerId = this.offerId,
+        pricingTerms = this.pricingTerms?.map {
+            AdaptyPaywallProductReferenceRequestResponse.PricingTerms(
+                billingPlanId = it.billingPlanId,
+                promotionalOfferId = it.promotionalOfferId,
+                winBackOfferId = it.winBackOfferId,
+            )
+        },
     )
 }

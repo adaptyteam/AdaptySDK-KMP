@@ -21,6 +21,7 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUIOpenUrlRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDialogRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUIDestroyViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIShowDialogRequest
@@ -240,10 +241,21 @@ internal class AdaptyUIImpl(
         ).asAdaptyResult { }
     }
 
-    override suspend fun dismissFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit> {
-        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Unit>(
+    // No local per-view state is torn down here: standalone flow views are routed through the
+    // global observer, so a view kept with destroy = false keeps receiving events after re-present.
+    // Both responses are `{ "success": true }` per the contract, so they decode as Boolean (like
+    // present); decoding `true` as Unit fails and would turn a native success into an error.
+    override suspend fun dismissFlowView(view: AdaptyUIFlowView, destroy: Boolean): AdaptyResult<Unit> {
+        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Boolean>(
             method = AdaptyPluginMethod.DISMISS_FLOW_VIEW,
-            request = AdaptyUIDismissViewRequest(id = view.id),
+            request = AdaptyUIDismissViewRequest(id = view.id, destroy = destroy),
+        ).asAdaptyResult { }
+    }
+
+    override suspend fun destroyFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit> {
+        return adaptyPlugin.awaitExecute<AdaptyUIDestroyViewRequest, Boolean>(
+            method = AdaptyPluginMethod.DESTROY_FLOW_VIEW,
+            request = AdaptyUIDestroyViewRequest(id = view.id),
         ).asAdaptyResult { }
     }
 
@@ -318,9 +330,10 @@ internal class AdaptyUIImpl(
     }
 
     override suspend fun dismissOnboardingView(view: AdaptyUIOnboardingView): AdaptyResult<Unit> {
-        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Unit>(
+        return adaptyPlugin.awaitExecute<AdaptyUIDismissViewRequest, Boolean>(
             method = AdaptyPluginMethod.DISMISS_ONBOARDING_VIEW,
-            request = AdaptyUIDismissViewRequest(id = view.id)
+            // Onboarding dismiss is unchanged by 4.3.0: it keeps sending destroy = false.
+            request = AdaptyUIDismissViewRequest(id = view.id, destroy = false)
         ).asAdaptyResult { }
     }
 

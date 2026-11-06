@@ -30,10 +30,14 @@ import com.adapty.kmp.internal.plugin.request.asAdaptyFlowRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePromotedPurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyMakePurchaseRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyOnboardingRequestResponse
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsForDefaultAudienceRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyPreloadFlowsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyReportTransactionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetFallbackPaywallsRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetIntegrationIdentifierRequest
 import com.adapty.kmp.internal.plugin.request.AdaptySetLogLevelRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyShowStoreMessagesRequest
+import com.adapty.kmp.internal.plugin.request.asAdaptyStoreMessageTypeRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateExternalAttributionRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUpdateProfileRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyWebPaywallRequest
@@ -57,6 +61,7 @@ import com.adapty.kmp.internal.plugin.response.asAdaptyInstallationStatus
 import com.adapty.kmp.internal.plugin.response.asAdaptyPaywallProduct
 import com.adapty.kmp.internal.plugin.response.asAdaptyProfile
 import com.adapty.kmp.internal.plugin.response.asAdaptyPurchaseResult
+import com.adapty.kmp.internal.plugin.response.asAdaptyStoreMessageType
 import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.isAndroidPlatform
 import com.adapty.kmp.models.AdaptyConfig
@@ -78,6 +83,7 @@ import com.adapty.kmp.models.AdaptyPromotedProduct
 import com.adapty.kmp.models.AdaptyPurchaseParameters
 import com.adapty.kmp.models.AdaptyPurchaseResult
 import com.adapty.kmp.models.AdaptyResult
+import com.adapty.kmp.models.AdaptyStoreMessageType
 import com.adapty.kmp.models.AdaptyWebPresentation
 import com.adapty.kmp.models.onError
 import com.adapty.kmp.models.onSuccess
@@ -96,6 +102,7 @@ internal class AdaptyImpl(
 ) : AdaptyContract {
 
     private var eventsListenerJob: Job? = null
+    private var logLevel: AdaptyLogLevel = AdaptyLogLevel.INFO
     private var profileUpdateEventObserver: OnProfileUpdatedListener? = null
     private var installationDetailsEventObserver: OnInstallationDetailsListener? = null
     private var promotedPurchaseEventObserver: OnPromotedPurchaseListener? = null
@@ -117,11 +124,14 @@ internal class AdaptyImpl(
 
 
     override suspend fun activate(configuration: AdaptyConfig): AdaptyResult<Unit> {
-        configuration.logLevel?.let { applyLogLevel(it) }
+        // The configuration's level, else the current one (set with setLogLevel, INFO by default). Always sent:
+        // without it the native SDKs fall back to their own defaults, which is no logs at all on Android.
+        val logLevel = configuration.logLevel ?: this.logLevel
+        applyLogLevel(logLevel)
         adaptyPlugin.initialize()
         return adaptyPlugin.awaitExecute<AdaptyConfigurationRequest, Boolean>(
             method = AdaptyPluginMethod.ACTIVATE,
-            request = configuration.asAdaptyConfigurationRequest()
+            request = configuration.asAdaptyConfigurationRequest(logLevel = logLevel)
         ).asAdaptyResult {}
     }
 
@@ -186,6 +196,26 @@ internal class AdaptyImpl(
                 fetchPolicy = fetchPolicy.asAdaptyPaywallFetchPolicyRequest()
             )
         ).asAdaptyResult { it.asAdaptyFlow() }
+
+    override suspend fun preloadFlows(
+        placementIds: List<String>,
+        loadTimeout: Duration
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyPreloadFlowsRequest, Boolean>(
+            method = AdaptyPluginMethod.PRELOAD_FLOWS,
+            request = AdaptyPreloadFlowsRequest(
+                placementIds = placementIds,
+                loadTimeoutInSeconds = loadTimeout.inWholeMilliseconds.toDouble() / 1000.0
+            )
+        ).asAdaptyResult { }
+
+    override suspend fun preloadFlowsForDefaultAudience(
+        placementIds: List<String>
+    ): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyPreloadFlowsForDefaultAudienceRequest, Boolean>(
+            method = AdaptyPluginMethod.PRELOAD_FLOWS_FOR_DEFAULT_AUDIENCE,
+            request = AdaptyPreloadFlowsForDefaultAudienceRequest(placementIds = placementIds)
+        ).asAdaptyResult { }
 
     override suspend fun getPaywallProducts(flow: AdaptyFlow): AdaptyResult<List<AdaptyPaywallProduct>> =
         adaptyPlugin.awaitExecute<AdaptyGetPaywallProductsRequest, List<AdaptyPaywallProductResponse>>(
@@ -256,13 +286,15 @@ internal class AdaptyImpl(
 
     override suspend fun reportTransaction(
         transactionId: String,
-        variationId: String?
+        variationId: String?,
+        appleJwsTransaction: String?
     ): AdaptyResult<Unit> =
         adaptyPlugin.awaitExecute<AdaptyReportTransactionRequest, Boolean>(
             method = AdaptyPluginMethod.REPORT_TRANSACTION,
             request = AdaptyReportTransactionRequest(
                 transactionId = transactionId,
-                variationId = variationId
+                variationId = variationId,
+                appleJwsTransaction = if (isAndroidPlatform) null else appleJwsTransaction
             )
         ).asAdaptyResult { }
 
@@ -292,6 +324,7 @@ internal class AdaptyImpl(
     }
 
     override fun setLogLevel(logLevel: AdaptyLogLevel) {
+        this.logLevel = logLevel
         applyLogLevel(logLevel)
 
         adaptyPlugin.execute<AdaptySetLogLevelRequest, Unit>(
@@ -400,6 +433,26 @@ internal class AdaptyImpl(
             )
             .asAdaptyResult { it }
     }
+
+    override suspend fun getPendingStoreMessageTypes(): AdaptyResult<List<AdaptyStoreMessageType>?> {
+        // Mirrors the React Native wrapper: Google Play can't report pending messages, so Android
+        // answers "unknown" (null) without a native call rather than an error or an empty list.
+        if (isAndroidPlatform) return AdaptyResult.Success(null)
+        return adaptyPlugin.awaitExecute<Unit, List<String>>(
+            method = AdaptyPluginMethod.GET_PENDING_STORE_MESSAGE_TYPES,
+            request = Unit
+        ).asAdaptyResult { types -> types.map { it.asAdaptyStoreMessageType() } }
+    }
+
+    override suspend fun showStoreMessages(iosFilter: List<AdaptyStoreMessageType>?): AdaptyResult<Unit> =
+        adaptyPlugin.awaitExecute<AdaptyShowStoreMessagesRequest, Boolean>(
+            method = AdaptyPluginMethod.SHOW_STORE_MESSAGES,
+            request = AdaptyShowStoreMessagesRequest(
+                // The filter is iOS-only; like the React Native wrapper, it is not sent on Android.
+                filter = if (isAndroidPlatform) null
+                else iosFilter?.map { it.asAdaptyStoreMessageTypeRequest() }
+            )
+        ).asAdaptyResult { }
 
     override suspend fun getOnboarding(
         placementId: String,

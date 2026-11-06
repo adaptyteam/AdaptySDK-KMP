@@ -1,6 +1,7 @@
 package com.adapty.kmp.internal.plugin.request
 
 import com.adapty.kmp.models.AdaptyConfig
+import com.adapty.kmp.models.AdaptyLogLevel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,6 +16,7 @@ internal data class AdaptyConfigurationRequestData(
     @SerialName("customer_user_id") val customerUserId: String? = null,
     @SerialName("customer_identity_parameters") val customerIdentityParameters: AdaptyCustomerIdentityRequest? = null,
     @SerialName("observer_mode") val observerMode: Boolean = false,
+    @SerialName("store_messages_handling") val storeMessagesHandling: AdaptyStoreMessagesHandlingRequest? = null,
     @SerialName("apple_idfa_collection_disabled") val appleIdfaCollectionDisabled: Boolean = false,
     @SerialName("google_adid_collection_disabled") val googleAdidCollectionDisabled: Boolean = false,
     @SerialName("google_enable_pending_prepaid_plans") val googleEnablePendingPrepaidPlans: Boolean = false,
@@ -55,13 +57,16 @@ internal fun AdaptyConfig.MediaCacheConfiguration.asAdaptyMediaCacheConfiguratio
 }
 
 
-internal fun AdaptyConfig.asAdaptyConfigurationRequest(): AdaptyConfigurationRequest {
+internal fun AdaptyConfig.asAdaptyConfigurationRequest(
+    logLevel: AdaptyLogLevel? = this.logLevel
+): AdaptyConfigurationRequest {
 
     val configurationData = AdaptyConfigurationRequestData(
         apiKey = apiKey,
         customerUserId = customerUserId,
         customerIdentityParameters = customerIdentity?.asAdaptyCustomerIdentityRequest(),
         observerMode = observerMode,
+        storeMessagesHandling = storeMessagesHandling?.asAdaptyStoreMessagesHandlingRequest(),
         appleIdfaCollectionDisabled = appleIdfaCollectionDisabled,
         googleAdidCollectionDisabled = googleAdvertisingIdCollection,
         googleEnablePendingPrepaidPlans = googleEnablePendingPrepaidPlans,

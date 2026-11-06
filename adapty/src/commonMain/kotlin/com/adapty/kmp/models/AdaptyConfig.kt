@@ -34,8 +34,11 @@ import KMPAdapty.adapty.BuildConfig
  * @property crossPlatformSDKName Name of the SDK if used via another platform (e.g., Flutter, React Native).
  * @property crossPlatformSDKVersion Version of the wrapper SDK.
  * @property activateUI Enables AdaptyUI module (for displaying paywalls and onboarding).
- * @property logLevel The level of logging output. Defaults to [AdaptyLogLevel.INFO].
+ * @property logLevel The level of logging output, or `null` when not set: `activate` then keeps the
+ * level set with `Adapty.setLogLevel` before it, or [AdaptyLogLevel.INFO] if none was set.
  * @property mediaCache Configuration for caching media assets used in AdaptyUI.
+ * @property storeMessagesHandling Who decides when store messages are shown. `null` (the default)
+ * leaves the native SDK default, [AdaptyStoreMessagesHandling.AUTO]. Requires iOS 16+ on iOS.
  */
 public class AdaptyConfig private constructor(
     internal val apiKey: String,
@@ -56,7 +59,8 @@ public class AdaptyConfig private constructor(
     internal val activateUI: Boolean,
     internal val logLevel: AdaptyLogLevel?,
     internal val mediaCache: MediaCacheConfiguration,
-    internal val customerIdentity: AdaptyCustomerIdentity?
+    internal val customerIdentity: AdaptyCustomerIdentity?,
+    internal val storeMessagesHandling: AdaptyStoreMessagesHandling?
 ) {
     internal companion object {
         const val SDK_NAME = "kmp"
@@ -94,9 +98,10 @@ public class AdaptyConfig private constructor(
         private var crossPlatformSDKName: String = SDK_NAME
         private var crossPlatformSDKVersion: String = SDK_VERSION
         private var activateUI: Boolean = false
-        private var logLevel: AdaptyLogLevel? = AdaptyLogLevel.INFO
+        private var logLevel: AdaptyLogLevel? = null
         private var mediaCache: MediaCacheConfiguration = MediaCacheConfiguration()
         private var customerIdentity: AdaptyCustomerIdentity? = null
+        private var storeMessagesHandling: AdaptyStoreMessagesHandling? = null
 
 
         /** Unique identifier for the current user in your system */
@@ -171,12 +176,32 @@ public class AdaptyConfig private constructor(
         /** Enables AdaptyUI integration (for paywalls, onboarding, etc). */
         public fun withActivateUI(enabled: Boolean): Builder = apply { this.activateUI = enabled }
 
-        /** Sets the desired log level for Adapty logs. */
+        /**
+         * Sets the desired log level for Adapty logs. When this is not called, `activate` keeps the
+         * level set with `Adapty.setLogLevel` before it, or [AdaptyLogLevel.INFO] if none was set.
+         */
         public fun withLogLevel(level: AdaptyLogLevel): Builder = apply { this.logLevel = level }
 
         /** Configures media caching (for AdaptyUI assets). */
         public fun withMediaCacheConfiguration(config: MediaCacheConfiguration): Builder =
             apply { this.mediaCache = config }
+
+        /**
+         * Controls who decides when store messages are shown: App Store messages (price increase
+         * consent, billing issue, win-back offer, etc.) on iOS, Google Play in-app messages (e.g. a
+         * declined payment) on Android.
+         *
+         * - [AdaptyStoreMessagesHandling.AUTO] (default): iOS — StoreKit presents them
+         *   automatically. Android — the SDK requests them on every `Activity.onResume`.
+         * - [AdaptyStoreMessagesHandling.MANUAL]: messages are shown only when the app calls
+         *   [com.adapty.kmp.Adapty.showStoreMessages]. On iOS the SDK also keeps them in a queue
+         *   readable via [com.adapty.kmp.Adapty.getPendingStoreMessageTypes].
+         *
+         * When not called, the native SDK default ([AdaptyStoreMessagesHandling.AUTO]) applies.
+         * Has no effect below iOS 16.
+         */
+        public fun withStoreMessagesHandling(handling: AdaptyStoreMessagesHandling): Builder =
+            apply { this.storeMessagesHandling = handling }
 
 
         public fun build(): AdaptyConfig {
@@ -199,7 +224,8 @@ public class AdaptyConfig private constructor(
                 activateUI = activateUI,
                 logLevel = logLevel,
                 mediaCache = mediaCache,
-                customerIdentity = customerIdentity
+                customerIdentity = customerIdentity,
+                storeMessagesHandling = storeMessagesHandling
             )
         }
     }
