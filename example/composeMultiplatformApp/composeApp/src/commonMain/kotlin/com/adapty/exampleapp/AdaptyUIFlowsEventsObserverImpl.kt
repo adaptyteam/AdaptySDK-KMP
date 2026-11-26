@@ -70,7 +70,7 @@ class AdaptyUIFlowsEventsObserverImpl(
 
                 is AdaptyUIAction.CustomAction -> {
                     // The flow script waits for the app's answer in its `applicationMsg` SDK event.
-                    if (action.action == "confirm_upgrade") {
+                    if (action.action == Constants.CONFIRM_UPGRADE_ACTION_ID) {
                         val customerUserId = Adapty.getProfile().getOrNull()?.customerUserId
                         view.sendAppMessage(mapOf("action" to "confirmed", "userCustomId" to customerUserId))
                     }
