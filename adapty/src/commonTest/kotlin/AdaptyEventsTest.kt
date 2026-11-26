@@ -23,7 +23,12 @@ import com.adapty.kmp.internal.utils.jsonInstance
 import com.adapty.kmp.internal.AdaptyImpl
 import com.adapty.kmp.models.AdaptyPromotedProduct
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.put
 import kotlinx.serialization.json.jsonPrimitive
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyOnboardingsAnalyticsEvent
@@ -507,6 +512,45 @@ class AdaptyEventsTest {
         val action = capturedAction
         assertIs<AdaptyUIAction.CustomAction>(action)
         assertEquals("my_custom_action", action.action)
+        assertNull(action.arguments)
+    }
+
+    @Test
+    fun `flow view did perform action - custom with arguments`() = runTest(testDispatcher) {
+        val arguments = buildJsonObject {
+            put("plan", "annual")
+            put("confirmed", true)
+            put("count", 3)
+            put("price", 9.99)
+            put("whole", 2.0)
+            put("note", JsonNull)
+            put("tags", buildJsonArray { add("a"); add(1); add(JsonNull) })
+            put("user", buildJsonObject { put("id", "u1"); put("age", 30) })
+        }
+        sendEventAndWait(
+            AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
+            AdaptyPluginResponseTemplate.getEventJsonString(
+                AdaptyPluginEvent.FLOW_VIEW_DID_PERFORM_ACTION,
+                mapOf("action_type" to "custom", "action_value" to "my_custom_action", "action_arguments" to arguments)
+            )
+        )
+
+        val action = capturedAction
+        assertIs<AdaptyUIAction.CustomAction>(action)
+        assertEquals("my_custom_action", action.action)
+        assertEquals(
+            mapOf(
+                "plan" to "annual",
+                "confirmed" to true,
+                "count" to 3,
+                "price" to 9.99,
+                "whole" to 2.0,
+                "note" to null,
+                "tags" to listOf("a", 1, null),
+                "user" to mapOf("id" to "u1", "age" to 30),
+            ),
+            action.arguments
+        )
     }
 
     @Test
