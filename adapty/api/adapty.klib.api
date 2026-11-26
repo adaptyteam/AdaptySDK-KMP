@@ -503,13 +503,16 @@ sealed interface com.adapty.kmp.models/AdaptyPurchaseResult { // com.adapty.kmp.
 
 sealed interface com.adapty.kmp.models/AdaptyUIAction { // com.adapty.kmp.models/AdaptyUIAction|null[0]
     final class CustomAction : com.adapty.kmp.models/AdaptyUIAction { // com.adapty.kmp.models/AdaptyUIAction.CustomAction|null[0]
-        constructor <init>(kotlin/String) // com.adapty.kmp.models/AdaptyUIAction.CustomAction.<init>|<init>(kotlin.String){}[0]
+        constructor <init>(kotlin/String, kotlin.collections/Map<kotlin/String, kotlin/Any?>? = ...) // com.adapty.kmp.models/AdaptyUIAction.CustomAction.<init>|<init>(kotlin.String;kotlin.collections.Map<kotlin.String,kotlin.Any?>?){}[0]
 
         final val action // com.adapty.kmp.models/AdaptyUIAction.CustomAction.action|{}action[0]
             final fun <get-action>(): kotlin/String // com.adapty.kmp.models/AdaptyUIAction.CustomAction.action.<get-action>|<get-action>(){}[0]
+        final val arguments // com.adapty.kmp.models/AdaptyUIAction.CustomAction.arguments|{}arguments[0]
+            final fun <get-arguments>(): kotlin.collections/Map<kotlin/String, kotlin/Any?>? // com.adapty.kmp.models/AdaptyUIAction.CustomAction.arguments.<get-arguments>|<get-arguments>(){}[0]
 
         final fun component1(): kotlin/String // com.adapty.kmp.models/AdaptyUIAction.CustomAction.component1|component1(){}[0]
-        final fun copy(kotlin/String = ...): com.adapty.kmp.models/AdaptyUIAction.CustomAction // com.adapty.kmp.models/AdaptyUIAction.CustomAction.copy|copy(kotlin.String){}[0]
+        final fun component2(): kotlin.collections/Map<kotlin/String, kotlin/Any?>? // com.adapty.kmp.models/AdaptyUIAction.CustomAction.component2|component2(){}[0]
+        final fun copy(kotlin/String = ..., kotlin.collections/Map<kotlin/String, kotlin/Any?>? = ...): com.adapty.kmp.models/AdaptyUIAction.CustomAction // com.adapty.kmp.models/AdaptyUIAction.CustomAction.copy|copy(kotlin.String;kotlin.collections.Map<kotlin.String,kotlin.Any?>?){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // com.adapty.kmp.models/AdaptyUIAction.CustomAction.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // com.adapty.kmp.models/AdaptyUIAction.CustomAction.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.adapty.kmp.models/AdaptyUIAction.CustomAction.toString|toString(){}[0]

@@ -600,12 +600,14 @@ object AdaptyPluginResponseTemplate {
         val actionType = params["action_type"] as? String ?: "close"
         val actionValue = params["action_value"] as? String
         val actionOpenIn = params["action_open_in"] as? String
+        val actionArguments = params["action_arguments"] as? JsonObject
         return buildJsonObject {
             put("view", buildEventViewJson())
             put("action", buildJsonObject {
                 put("type", actionType)
                 actionValue?.let { put("value", it) }
                 actionOpenIn?.let { put("open_in", it) }
+                actionArguments?.let { put("arguments", it) }
             })
         }.toString()
     }
