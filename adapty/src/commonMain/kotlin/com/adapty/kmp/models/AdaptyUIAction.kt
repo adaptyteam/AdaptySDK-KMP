@@ -32,5 +32,12 @@ public sealed interface AdaptyUIAction {
     public data class CustomAction(
         val action: String,
         val arguments: Map<String, Any?>? = null,
-    ) : AdaptyUIAction
+    ) : AdaptyUIAction {
+
+        @Deprecated("Kept for binary compatibility", level = DeprecationLevel.HIDDEN)
+        public constructor(action: String) : this(action, null)
+
+        @Deprecated("Kept for binary compatibility", level = DeprecationLevel.HIDDEN)
+        public fun copy(action: String = this.action): CustomAction = CustomAction(action, arguments)
+    }
 }
