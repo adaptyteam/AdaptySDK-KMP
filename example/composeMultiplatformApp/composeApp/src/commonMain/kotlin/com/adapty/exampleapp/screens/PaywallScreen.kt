@@ -26,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adapty.exampleapp.AppUiEvent
 import com.adapty.exampleapp.AppUiState
 import com.adapty.exampleapp.AppViewModel
-import com.adapty.exampleapp.Constants
 import com.adapty.exampleapp.Platform
 import com.adapty.exampleapp.components.ListActionTile
 import com.adapty.exampleapp.components.ListSection
@@ -38,7 +37,7 @@ import com.adapty.kmp.models.AdaptyUIIOSPresentationStyle
 @Composable
 fun PaywallsScreen(modifier: Modifier, viewModel: AppViewModel = viewModel()) {
     var showDialog by remember { mutableStateOf(false) }
-    var currentPaywallId by remember { mutableStateOf(Constants.CUSTOM_ELEMENTS_PLACEMENT_ID) }
+    var currentPaywallId by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
