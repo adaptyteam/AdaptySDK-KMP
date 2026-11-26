@@ -89,3 +89,19 @@ internal fun JsonObject.toMapOfAny(): Map<String, Any> = this.mapValues { (_, va
         else -> value.toString()
     }
 }
+
+internal fun JsonObject.toMapOfAnyOrNull(): Map<String, Any?> = mapValues { (_, value) -> value.toAnyOrNull() }
+
+private fun JsonElement.toAnyOrNull(): Any? = when (this) {
+    JsonNull -> null
+    is JsonPrimitive -> when {
+        isString -> content
+        booleanOrNull != null -> boolean
+        intOrNull != null -> int
+        longOrNull != null -> long
+        doubleOrNull != null -> double
+        else -> content
+    }
+    is JsonObject -> toMapOfAnyOrNull()
+    is JsonArray -> map { it.toAnyOrNull() }
+}
