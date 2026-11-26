@@ -82,6 +82,21 @@ public data class AdaptyUIFlowView internal constructor(
     }
 
     /**
+     * Sends [payload] to the script of this flow as the `applicationMsg` SDK event.
+     *
+     * Send once [com.adapty.kmp.AdaptyUIFlowsEventsObserver.flowViewDidAppear] is called: on Android
+     * a message sent before the script starts is dropped while the call still succeeds. When the
+     * order matters, wait for each call to complete before sending the next. See
+     * [AdaptyUI.sendAppMessage] for the details.
+     *
+     * @param payload The message: `String`, `Boolean`, numbers, `null`, lists and nested maps.
+     * @return [AdaptyResult] indicating success or failure.
+     */
+    public suspend fun sendAppMessage(payload: Map<String, Any?>): AdaptyResult<Unit> {
+        return AdaptyUI.sendAppMessage(view = this, payload = payload)
+    }
+
+    /**
      * Presents a dialog on top of the flow view.
      */
     public suspend fun showDialog(
