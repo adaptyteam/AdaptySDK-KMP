@@ -411,6 +411,7 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field ACTIVATE_ONCE_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ADAPTY_NOT_ACTIVATED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ADAPTY_NOT_INITIALIZED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ADAPTY_UI_ACTIVATE_ONCE Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ADAPTY_UI_NOT_ACTIVATED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ANALYTICS_DISABLED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field AUTHENTICATION_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -456,6 +457,7 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field PAYMENT_NOT_ALLOWED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PENDING_PURCHASE Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PLATFORM_NOT_SUPPORTED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PLATFORM_VIEW Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PRIVACY_ACKNOWLEDGEMENT_REQUIRED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PRODUCT_NOT_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PRODUCT_PURCHASE_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;

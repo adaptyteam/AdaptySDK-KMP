@@ -122,6 +122,9 @@ public enum class AdaptyErrorCode(internal val value: Int) {
     /** iOS: a flow view was requested while AdaptyUI was not activated. */
     ADAPTY_UI_NOT_ACTIVATED(4003),
 
+    /** iOS: AdaptyUI was activated more than once. */
+    ADAPTY_UI_ACTIVATE_ONCE(4005),
+
     /** iOS: the flow has an element of an unexpected type. */
     WRONG_COMPONENT_TYPE(4103),
 
@@ -142,6 +145,9 @@ public enum class AdaptyErrorCode(internal val value: Int) {
 
     /** iOS: the web view of an onboarding failed. */
     WEB_KIT(4200),
+
+    /** The native platform view of a flow failed to initialize. */
+    PLATFORM_VIEW(4300),
 
     OPERATION_INTERRUPTED(9000),
 
