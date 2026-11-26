@@ -32,7 +32,7 @@ class ExampleCustomElementsResolver : AdaptyCustomElementsResolver {
                 text = context.annotatedString("text")
                     ?: AnnotatedString("Renewed twice already. Support answered as quickly as promised."),
                 author = context.text("author")?.toString() ?: "Marta S.",
-                rating = (context.payloadMap?.get("rating") as? Long)?.toInt() ?: 5,
+                rating = (context.payloadMap?.get("rating") as? Number)?.toInt() ?: 5,
             )
         }
 
