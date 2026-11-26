@@ -86,13 +86,6 @@ Follow our [quickstart guide](https://adapty.io/docs/kmp-sdk-overview#get-starte
 
 [Here](example/) you can find a demo application for Adapty. Before running the app, you will need to configure the project.
 
-**Flow custom elements.** Custom elements of a flow are drawn by native code: there is no KMP API for them, so the app registers a resolver with each native SDK at startup. See the `composeMultiplatformApp` example:
-
-- Android: [`CustomElements.kt`](example/composeMultiplatformApp/composeApp/src/androidMain/kotlin/com/adapty/exampleapp/CustomElements.kt), registered in `App.android.kt`. Add `io.adapty:android-ui` to the app module without a version: the KMP SDK provides it. Don't add the Adapty BOM or a version of your own.
-- iOS: [`CustomElements.swift`](example/composeMultiplatformApp/iosApp/iosApp/CustomElements.swift), registered in `iOSApp.swift`. It imports `AdaptyUI` and `AdaptyUIBuilder` from the `AdaptySDK-iOS` Swift package, pinned to the exact iOS SDK version this KMP SDK uses (4.4.1).
-
-To try it, open the Paywalls tab, add the `rt.custom.elements` placement (prefilled), present it and open **Review card**.
-
 📹 **Watch our video guide** for step-by-step integration:
 
 [![Adapty SDK KMP Integration Guide](https://img.youtube.com/vi/JfwJvwnloNw/hqdefault.jpg)](https://www.youtube.com/watch?v=JfwJvwnloNw)
