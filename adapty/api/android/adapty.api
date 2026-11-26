@@ -408,7 +408,9 @@ public final class com/adapty/kmp/models/AdaptyError : java/lang/Exception {
 
 public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field ACTIVATE_ONCE_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ADAPTY_NOT_ACTIVATED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ADAPTY_NOT_INITIALIZED Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field ADAPTY_UI_NOT_ACTIVATED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ANALYTICS_DISABLED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field AUTHENTICATION_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field BAD_REQUEST Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -432,6 +434,7 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field FEATURE_NOT_SUPPORTED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field FETCH_TIMEOUT_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field INTERNAL_PLUGIN_ERROR Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field INVALID_ACTION_URL Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field INVALID_JSON Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field INVALID_OFFER_IDENTIFIER Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field INVALID_OFFER_PRICE Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -439,7 +442,9 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field ITEM_ALREADY_OWNED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ITEM_NOT_OWNED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field ITEM_UNAVAILABLE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field JS_EXCEPTION Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field MISSING_OFFER_PARAMS Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field NAVIGATOR_NOT_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field NETWORK_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field NO_PRODUCT_IDS_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field NO_PURCHASES_TO_RESTORE Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -449,6 +454,7 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field PAYMENT_INVALID Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PAYMENT_NOT_ALLOWED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PENDING_PURCHASE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field PLATFORM_NOT_SUPPORTED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PRIVACY_ACKNOWLEDGEMENT_REQUIRED Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PRODUCT_NOT_FOUND Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field PRODUCT_PURCHASE_FAILED Lcom/adapty/kmp/models/AdaptyErrorCode;
@@ -461,6 +467,10 @@ public final class com/adapty/kmp/models/AdaptyErrorCode : java/lang/Enum {
 	public static final field UNAUTHORIZED_REQUEST_DATA Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field UNKNOWN Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field UNSUPPORTED_DATA Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field UNSUPPORTED_URL_SCHEME Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field WEB_KIT Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field WRONG_ASSET_TYPE Lcom/adapty/kmp/models/AdaptyErrorCode;
+	public static final field WRONG_COMPONENT_TYPE Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static final field WRONG_PARAMETER Lcom/adapty/kmp/models/AdaptyErrorCode;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adapty/kmp/models/AdaptyErrorCode;

@@ -100,7 +100,7 @@ import UIKit
         let containerView = UIViewController()
         let handler = KMPAdaptySwiftEventHandler(onEvent: onEvent)
 
-        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, visionOS 1.0, *){
+        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, visionOS 1.0, *){
             Task { @MainActor in
                
                 do {
@@ -130,7 +130,7 @@ import UIKit
                 }
             }
         } else {
-            print("Paywall Native UI requires iOS 15.0 or later.")
+            print("Flow Native UI requires iOS 16.0 or later.")
         }
 
         return containerView

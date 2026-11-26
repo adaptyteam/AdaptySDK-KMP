@@ -108,6 +108,41 @@ public enum class AdaptyErrorCode(internal val value: Int) {
 
     /** iOS: a required system resource could not be resolved, e.g. no foreground window scene to show store messages in. */
     RESOLVER_FAILURE(3202),
+
+    ////////////////////////
+    /// Custom UI codes. ///
+    ////////////////////////
+
+    /** The flow can't be shown here. On iOS, the device's iOS is below 16, which flows require. */
+    PLATFORM_NOT_SUPPORTED(4001),
+
+    /** iOS: an onboarding was requested while AdaptyUI was not activated. */
+    ADAPTY_NOT_ACTIVATED(4002),
+
+    /** iOS: a flow view was requested while AdaptyUI was not activated. */
+    ADAPTY_UI_NOT_ACTIVATED(4003),
+
+    /** iOS: the flow has an element of an unexpected type. */
+    WRONG_COMPONENT_TYPE(4103),
+
+    /** The flow has an asset of an unexpected type. */
+    WRONG_ASSET_TYPE(4104),
+
+    /** The flow script threw an exception. */
+    JS_EXCEPTION(4105),
+
+    /** The flow script went to a navigator the flow doesn't have. */
+    NAVIGATOR_NOT_FOUND(4106),
+
+    /** An open-URL action of the flow has no valid URL. */
+    INVALID_ACTION_URL(4107),
+
+    /** iOS: an open-URL action asked for the in-app browser with a URL only the external browser can open, such as `mailto:`. */
+    UNSUPPORTED_URL_SCHEME(4108),
+
+    /** iOS: the web view of an onboarding failed. */
+    WEB_KIT(4200),
+
     OPERATION_INTERRUPTED(9000),
 
     /////////////////////////////
