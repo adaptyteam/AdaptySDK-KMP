@@ -126,11 +126,22 @@ import UIKit
                         uiView.bottomAnchor.constraint(equalTo: containerView.view.bottomAnchor),
                     ])
                 } catch {
-                    print("Failed to get paywall configuration: \(error)")
+                    // The view stays empty: report the error createFlowView would fail with
+                    print("Failed to get flow configuration: \(error)")
+                    handler.handle(event: FlowViewErrorEvent(
+                        view: FlowViewIdentity(viewId: id, flowJson: jsonString),
+                        error: FlowViewError(error)
+                    ))
                 }
             }
         } else {
-            print("Flow Native UI requires iOS 16.0 or later.")
+            print("Adapty flows require iOS 16.0 or newer")
+            Task { @MainActor in
+                handler.handle(event: FlowViewErrorEvent(
+                    view: FlowViewIdentity(viewId: id, flowJson: jsonString),
+                    error: .ui(.platformNotSupported)
+                ))
+            }
         }
 
         return containerView
@@ -161,4 +172,98 @@ final class KMPAdaptySwiftEventHandler: EventHandler {
     }
     
     
+}
+
+/// `flow_view_did_receive_error` of an embedded flow view that never showed its flow:
+/// below iOS 16, or when the flow fails to load.
+private struct FlowViewErrorEvent: AdaptyPluginEvent {
+    let id = "flow_view_did_receive_error"
+    let view: FlowViewIdentity
+    let error: FlowViewError
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case view
+        case error
+    }
+}
+
+/// Error of an embedded flow view, encoded like the bridge's own errors
+/// (`adapty_code`, `message`, `detail`) with the code createFlowView fails with.
+private enum FlowViewError: Encodable {
+    case adapty(AdaptyError)
+    case ui(AdaptyUIError)
+    case plugin(AdaptyPluginError)
+    case other(code: Int, message: String, detail: String)
+
+    init(_ error: Error) {
+        switch error {
+        case let error as AdaptyError:
+            self = .adapty(error)
+        case let error as AdaptyUIError:
+            self = .ui(error)
+        case let error as AdaptyPluginError:
+            self = .plugin(error)
+        case let error as DecodingError:
+            let message = "Request params of method:adapty_ui_create_flow_view is invalid"
+            self = .other(
+                code: AdaptyError.ErrorCode.decodingFailed.rawValue,
+                message: "\(message): \(error.localizedDescription)",
+                detail: "AdaptyPluginError.decodingFailed: \(message) \(String(describing: error))"
+            )
+        default:
+            self = .other(
+                code: AdaptyError.ErrorCode.unknown.rawValue,
+                message: "Unknown: \(error.localizedDescription)",
+                detail: "AdaptyPluginError.unknown: \(String(describing: error))"
+            )
+        }
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case code = "adapty_code"
+        case message
+        case detail
+    }
+
+    func encode(to encoder: Encoder) throws {
+        switch self {
+        case let .adapty(error):
+            try error.encode(to: encoder)
+        case let .ui(error):
+            try error.encode(to: encoder)
+        case let .plugin(error):
+            try error.encode(to: encoder)
+        case let .other(code, message, detail):
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(code, forKey: .code)
+            try container.encode(message, forKey: .message)
+            try container.encode(detail, forKey: .detail)
+        }
+    }
+}
+
+/// `AdaptyUI.FlowView` of an embedded view that was never built: the view id and
+/// the placement and variation of the flow from the create request.
+private struct FlowViewIdentity: Encodable {
+    let id: String
+    let placementId: String
+    let variationId: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case placementId = "placement_id"
+        case variationId = "variation_id"
+    }
+
+    init(viewId: String, flowJson: String) {
+        let params = flowJson.data(using: .utf8)
+            .flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+        let flow = params?["flow"] as? [String: Any]
+        let placement = flow?["placement"] as? [String: Any]
+
+        id = viewId
+        placementId = placement?["developer_id"] as? String ?? ""
+        variationId = flow?["variation_id"] as? String ?? ""
+    }
 }
