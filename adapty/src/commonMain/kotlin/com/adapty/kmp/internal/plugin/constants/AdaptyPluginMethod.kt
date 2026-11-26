@@ -36,6 +36,7 @@ internal enum class AdaptyPluginMethod(val methodName: String) {
     PRESENT_FLOW_VIEW("adapty_ui_present_flow_view"),
     DISMISS_FLOW_VIEW("adapty_ui_dismiss_flow_view"),
     DESTROY_FLOW_VIEW("adapty_ui_destroy_flow_view"),
+    SEND_APP_MESSAGE("adapty_ui_send_app_message"),
     SHOW_DIALOG("adapty_ui_show_dialog"),
 
 
