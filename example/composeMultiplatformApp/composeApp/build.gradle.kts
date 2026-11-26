@@ -56,8 +56,6 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            // io.adapty:android-ui, for the flow custom elements resolver (see CustomElements.kt).
-            // No version: the Adapty KMP SDK provides it.
             implementation(libs.adapty.android.ui)
         }
         commonMain.dependencies {

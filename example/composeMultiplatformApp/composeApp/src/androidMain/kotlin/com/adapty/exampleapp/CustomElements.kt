@@ -15,19 +15,10 @@ import androidx.compose.ui.unit.sp
 import com.adapty.ui.AdaptyCustomElementContent
 import com.adapty.ui.AdaptyCustomElementsResolver
 
-/**
- * Draws the custom elements of flows with Compose. Registered in [AndroidApp] with the native
- * `com.adapty.ui.AdaptyUI.setCustomElementsResolver`. Try it with the `rt.custom.elements` placement.
- *
- * The resolver matches the Type and ID set for the custom element in the Adapty Flow Builder.
- * Returning `null` shows the fallback set for that element in the builder.
- */
 class ExampleCustomElementsResolver : AdaptyCustomElementsResolver {
 
     override fun resolve(type: String, id: String): AdaptyCustomElementContent? = when (type) {
         "review_card" -> AdaptyCustomElementContent.compose { context ->
-            // The element can carry strings and a JSON payload from the builder:
-            // read them through the context and fall back to defaults when they're not set.
             ReviewCard(
                 text = context.annotatedString("text")
                     ?: AnnotatedString("Renewed twice already. Support answered as quickly as promised."),

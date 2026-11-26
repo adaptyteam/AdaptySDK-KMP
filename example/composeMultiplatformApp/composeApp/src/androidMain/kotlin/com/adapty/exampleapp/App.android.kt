@@ -15,8 +15,6 @@ class AndroidApp : Application() {
         super.onCreate()
         AppInitializer.initialize()
 
-        // Flows draw their custom elements with this resolver (see CustomElements.kt).
-        // AdaptyUI here is the native Android one (io.adapty:android-ui), not the KMP one.
         AdaptyUI.setCustomElementsResolver(ExampleCustomElementsResolver())
     }
 }
