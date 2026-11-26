@@ -85,7 +85,9 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.androidx.startup.runtime)
-                implementation(project.dependencies.platform(libs.adapty.bom))
+                // api, not implementation: apps add io.adapty:android-ui without a version and
+                // take it from this BOM. Only the BOM: the artifacts stay implementation.
+                api(project.dependencies.platform(libs.adapty.bom))
                 implementation(libs.adapty.android.sdk)
                 implementation(libs.adapty.android.ui)
                 implementation(libs.adapty.internal.crossplatform)
