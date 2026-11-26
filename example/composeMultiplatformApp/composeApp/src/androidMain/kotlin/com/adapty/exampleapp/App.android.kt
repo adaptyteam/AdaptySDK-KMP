@@ -7,12 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.adapty.ui.AdaptyUI
 
 
 class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AppInitializer.initialize()
+
+        AdaptyUI.setCustomElementsResolver(ExampleCustomElementsResolver())
     }
 }
 

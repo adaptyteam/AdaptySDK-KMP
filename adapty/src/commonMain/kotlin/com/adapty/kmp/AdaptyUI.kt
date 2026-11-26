@@ -4,6 +4,7 @@ package com.adapty.kmp
 
 import com.adapty.kmp.internal.AdaptyUIImpl
 import com.adapty.kmp.models.AdaptyCustomAsset
+import com.adapty.kmp.models.AdaptyErrorCode
 import com.adapty.kmp.models.AdaptyFlow
 import com.adapty.kmp.models.AdaptyOnboarding
 import com.adapty.kmp.models.AdaptyProductIdentifier
@@ -221,6 +222,32 @@ internal interface AdaptyUIContract {
      * released).
      */
     suspend fun destroyFlowView(view: AdaptyUIFlowView): AdaptyResult<Unit>
+
+    /**
+     * Sends [payload] to the script of the flow shown in [view]. The script receives it as the
+     * `applicationMsg` SDK event. Works for a view from [createFlowView] and for an embedded one
+     * (the view passed to [AdaptyUIFlowsEventsObserver] callbacks).
+     *
+     * Completes once the message is passed to the flow, not once the script has handled it. When
+     * the order matters, send messages one at a time and wait for each call to complete before
+     * sending the next.
+     *
+     * Send once [AdaptyUIFlowsEventsObserver.flowViewDidAppear] is called: the script starts only
+     * after the view is presented, and on Android a message sent before that is dropped while the
+     * call still succeeds.
+     *
+     * Platform differences: on Android, a message sent to an embedded view that has been removed is
+     * lost and the call succeeds; iOS fails with [AdaptyErrorCode.WRONG_PARAMETER]. On iOS below 16
+     * the call fails with [AdaptyErrorCode.PLATFORM_NOT_SUPPORTED].
+     *
+     * @param view The flow view to send the message to.
+     * @param payload The message. Values can be `String`, `Boolean`, numbers, `null`, lists and
+     * nested maps with `String` keys.
+     * @return [AdaptyResult] indicating success or failure. Fails with
+     * [AdaptyErrorCode.WRONG_PARAMETER] if [payload] holds a value JSON can't hold (another type, or
+     * a `NaN` / infinite number); nothing is sent then.
+     */
+    suspend fun sendAppMessage(view: AdaptyUIFlowView, payload: Map<String, Any?>): AdaptyResult<Unit>
 
     /**
      * Creates an onboarding view from the provided [AdaptyOnboarding] model.

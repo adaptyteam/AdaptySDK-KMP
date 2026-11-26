@@ -1,3 +1,4 @@
+import AdaptyUI
 import SwiftUI
 import ComposeApp
 
@@ -11,6 +12,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         
         AppInitializer.shared.initialize()
+
+        AdaptyUI.setCustomElementsResolver(ExampleCustomElements())
         
         return true
     }
