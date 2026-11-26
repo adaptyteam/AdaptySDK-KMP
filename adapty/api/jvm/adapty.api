@@ -52,6 +52,7 @@ public final class com/adapty/kmp/AdaptyUI : com/adapty/kmp/AdaptyUIContract {
 	public fun registerFlowEventsListener (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;Ljava/lang/String;)V
 	public fun registerOnboardingEventsListener (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;Ljava/lang/String;)V
 	public fun requestAppReview ()V
+	public fun sendAppMessage (Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun setFlowsEventsObserver (Lcom/adapty/kmp/AdaptyUIFlowsEventsObserver;)V
 	public fun setObserverModeResolver (Lcom/adapty/kmp/AdaptyUIObserverModeResolver;)V
 	public fun setOnboardingsEventsObserver (Lcom/adapty/kmp/AdaptyUIOnboardingsEventsObserver;)V
@@ -1494,6 +1495,7 @@ public final class com/adapty/kmp/models/AdaptyUIFlowView {
 	public final fun isStandaloneView ()Z
 	public final fun present (Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun present$default (Lcom/adapty/kmp/models/AdaptyUIFlowView;Lcom/adapty/kmp/models/AdaptyUIIOSPresentationStyle;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun sendAppMessage (Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun showDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun showDialog$default (Lcom/adapty/kmp/models/AdaptyUIFlowView;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public fun toString ()Ljava/lang/String;

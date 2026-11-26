@@ -89,3 +89,26 @@ internal fun JsonObject.toMapOfAny(): Map<String, Any> = this.mapValues { (_, va
         else -> value.toString()
     }
 }
+
+/** Encodes a JSON-like value; throws [IllegalArgumentException] for a value JSON can't hold. */
+internal fun Any?.toJsonElementOrThrow(): JsonElement = when (this) {
+    null -> JsonNull
+    is Boolean -> JsonPrimitive(this)
+    is String -> JsonPrimitive(this)
+    is Double -> {
+        require(isFinite()) { "$this is not a valid JSON number" }
+        JsonPrimitive(this)
+    }
+    is Float -> {
+        require(isFinite()) { "$this is not a valid JSON number" }
+        JsonPrimitive(this)
+    }
+    is Number -> JsonPrimitive(this)
+    is Map<*, *> -> JsonObject(entries.associate { (key, value) ->
+        require(key is String) { "Map key $key is not a String" }
+        key to value.toJsonElementOrThrow()
+    })
+    is Iterable<*> -> JsonArray(map { it.toJsonElementOrThrow() })
+    is Array<*> -> JsonArray(map { it.toJsonElementOrThrow() })
+    else -> throw IllegalArgumentException("${this::class.simpleName} is not a JSON value")
+}

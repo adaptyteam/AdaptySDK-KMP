@@ -1610,6 +1610,7 @@ final class com.adapty.kmp.models/AdaptyUIFlowView { // com.adapty.kmp.models/Ad
     final suspend fun dismiss(): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.dismiss|dismiss(){}[0]
     final suspend fun dismiss(kotlin/Boolean = ...): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.dismiss|dismiss(kotlin.Boolean){}[0]
     final suspend fun present(com.adapty.kmp.models/AdaptyUIIOSPresentationStyle = ...): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.present|present(com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
+    final suspend fun sendAppMessage(kotlin.collections/Map<kotlin/String, kotlin/Any?>): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp.models/AdaptyUIFlowView.sendAppMessage|sendAppMessage(kotlin.collections.Map<kotlin.String,kotlin.Any?>){}[0]
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ...): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp.models/AdaptyUIFlowView.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
 
@@ -1843,6 +1844,7 @@ final object com.adapty.kmp/AdaptyUI : com.adapty.kmp/AdaptyUIContract { // com.
     final suspend fun dismissOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.dismissOnboardingView|dismissOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView){}[0]
     final suspend fun presentFlowView(com.adapty.kmp.models/AdaptyUIFlowView, com.adapty.kmp.models/AdaptyUIIOSPresentationStyle): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentFlowView|presentFlowView(com.adapty.kmp.models.AdaptyUIFlowView;com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
     final suspend fun presentOnboardingView(com.adapty.kmp.models/AdaptyUIOnboardingView, com.adapty.kmp.models/AdaptyUIIOSPresentationStyle): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.presentOnboardingView|presentOnboardingView(com.adapty.kmp.models.AdaptyUIOnboardingView;com.adapty.kmp.models.AdaptyUIIOSPresentationStyle){}[0]
+    final suspend fun sendAppMessage(com.adapty.kmp.models/AdaptyUIFlowView, kotlin.collections/Map<kotlin/String, kotlin/Any?>): com.adapty.kmp.models/AdaptyResult<kotlin/Unit> // com.adapty.kmp/AdaptyUI.sendAppMessage|sendAppMessage(com.adapty.kmp.models.AdaptyUIFlowView;kotlin.collections.Map<kotlin.String,kotlin.Any?>){}[0]
     final suspend fun showDialog(kotlin/String, kotlin/String, kotlin/String, kotlin/String, kotlin/String?): com.adapty.kmp.models/AdaptyResult<com.adapty.kmp.models/AdaptyUIDialogActionType> // com.adapty.kmp/AdaptyUI.showDialog|showDialog(kotlin.String;kotlin.String;kotlin.String;kotlin.String;kotlin.String?){}[0]
 }
 

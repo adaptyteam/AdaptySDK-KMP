@@ -22,6 +22,13 @@ import com.adapty.kmp.internal.plugin.request.AdaptyUICreateOnboardingViewReques
 import com.adapty.kmp.internal.plugin.request.AdaptyUICreateFlowViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDialogRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDestroyViewRequest
+import com.adapty.kmp.internal.plugin.request.AdaptyUISendAppMessageRequest
+import com.adapty.kmp.internal.utils.toJsonElementOrThrow
+import com.adapty.kmp.models.AdaptyError
+import com.adapty.kmp.models.AdaptyErrorCode
+import kotlinx.serialization.json.JsonObject
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import com.adapty.kmp.internal.plugin.request.AdaptyUIDismissViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIPresentViewRequest
 import com.adapty.kmp.internal.plugin.request.AdaptyUIShowDialogRequest
@@ -256,6 +263,32 @@ internal class AdaptyUIImpl(
         return adaptyPlugin.awaitExecute<AdaptyUIDestroyViewRequest, Boolean>(
             method = AdaptyPluginMethod.DESTROY_FLOW_VIEW,
             request = AdaptyUIDestroyViewRequest(id = view.id),
+        ).asAdaptyResult { }
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun sendAppMessage(
+        view: AdaptyUIFlowView,
+        payload: Map<String, Any?>
+    ): AdaptyResult<Unit> {
+        val payloadJson = try {
+            payload.toJsonElementOrThrow() as JsonObject
+        } catch (e: IllegalArgumentException) {
+            return AdaptyResult.Error(
+                AdaptyError(
+                    code = AdaptyErrorCode.WRONG_PARAMETER,
+                    message = "Failed to encode the app message payload",
+                    detail = e.message,
+                )
+            )
+        }
+        return adaptyPlugin.awaitExecute<AdaptyUISendAppMessageRequest, Boolean>(
+            method = AdaptyPluginMethod.SEND_APP_MESSAGE,
+            request = AdaptyUISendAppMessageRequest(
+                id = view.id,
+                messageId = Uuid.random().toString(),
+                payload = payloadJson,
+            ),
         ).asAdaptyResult { }
     }
 

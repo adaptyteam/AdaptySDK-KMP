@@ -1,6 +1,7 @@
 package com.adapty.exampleapp
 
 import androidx.compose.ui.platform.UriHandler
+import com.adapty.kmp.Adapty
 import com.adapty.kmp.AdaptyUIFlowsEventsObserver
 import com.adapty.kmp.models.AdaptyError
 import com.adapty.kmp.models.AdaptyPaywallProduct
@@ -67,7 +68,13 @@ class AdaptyUIFlowsEventsObserverImpl(
                     }
                 }
 
-                is AdaptyUIAction.CustomAction -> Unit
+                is AdaptyUIAction.CustomAction -> {
+                    // The flow script waits for the app's answer in its `applicationMsg` SDK event.
+                    if (action.action == "confirm_upgrade") {
+                        val customerUserId = Adapty.getProfile().getOrNull()?.customerUserId
+                        view.sendAppMessage(mapOf("action" to "confirmed", "userCustomId" to customerUserId))
+                    }
+                }
             }
         }
     }
