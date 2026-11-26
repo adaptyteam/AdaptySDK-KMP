@@ -45,7 +45,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(project.dependencies.platform(libs.adapty.bom))
+                api(project.dependencies.platform(libs.adapty.bom))
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.adapty.android.sdk)
                 implementation(libs.adapty.android.ui)
